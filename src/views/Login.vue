@@ -34,9 +34,25 @@
                       <icon name="unlock"></icon>
                     </span>
                   </b-input-group-prepend>
-                  <b-form-input v-model="user.password" placeholder="Password"></b-form-input>
+                  <b-form-input type="password" v-model="user.password" placeholder="Password"></b-form-input>
                 </b-input-group>
-                <b-button block variant="primary" class="mt-3">登陆</b-button>
+                <div class="row justify-content-between mx-0 mt-2">
+                  <b-form-checkbox
+                    id="checkbox-1"
+                    v-model="user.remember"
+                    name="checkbox-1"
+                    :value="true"
+                    :unchecked-value="false"
+                  >Remember</b-form-checkbox>
+                  <b-link href="#">Forgot Password?</b-link>
+                </div>
+                <b-button
+                  @click="loginHandle"
+                  @keyup.enter="loginHandle"
+                  block
+                  variant="primary"
+                  class="mt-3"
+                >登陆</b-button>
               </div>
 
               <div class="dl-choose px-5 my-3">
@@ -47,10 +63,7 @@
                     :key="index"
                     class="text-left mt-1"
                   >
-                    <b-form-radio
-                      v-model="user.login_type"
-                      :value="permission"
-                    >{{permissionMatch[permission - 1]}}</b-form-radio>
+                    <b-form-radio v-model="user.login_type" :value="permission[0]">{{permission[1]}}</b-form-radio>
                   </b-col>
                 </b-row>
               </div>
@@ -96,31 +109,29 @@
 
 <script>
 import TopHeader from "@/components/header/TopHeader";
-// import modal from "components/modal/modal";
 import { mapState } from "vuex";
 import accountService from "../services/accountService";
 import { STORAGE_KEY_USER } from "../store/storageKey";
-import { PERMISSION_MATCH } from "../config";
+
 export default {
   components: {
     TopHeader
-    /*modal*/
   },
   data() {
     return {
       tipModal: false,
       contentDetailFlag: false,
-      error: "",
       user: {
         username: "",
         password: "",
-        login_type: 1
+        login_type: -1,
+        remember: true
       },
       is_director: false,
       is_manage: false,
       is_admin: false,
       is_general: false,
-      permissions: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      permissions: [],
       qrcodeImage: {
         ios: "",
         android: ""
@@ -132,8 +143,7 @@ export default {
         file_name: "",
         create_time: "",
         title: "最新公告"
-      },
-      permissionMatch: PERMISSION_MATCH
+      }
     };
   },
   computed: {
@@ -141,38 +151,33 @@ export default {
   },
   created() {
     this.getQrcode();
-    // this.getNotice();
   },
   methods: {
     loginHandle() {
-      const USER = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
-      if (USER) {
-        this.tipModal = true;
-        return;
-      }
+      this.$cookie.delete(STORAGE_KEY_USER);
       accountService.login(this.user).then(data => {
-        this.$cookie.delete(STORAGE_KEY_USER);
-        this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
-        this.$store.dispatch("login", data);
-        if (data.identity === 3 || data.identity === 4) {
-          this.$router.push("/manager/workflow");
-        }
-        if (data.identity === 1) {
-          if (data.last_experiment_id && data.last_experiment_status === 2) {
-            this.$router.push({
-              name: "doingExperiment",
-              params: {
-                exp_Id: data.last_experiment_id,
-                exp_Name: data.last_experiment_name
-              }
-            });
-          } else {
-            this.$router.push("/experiment");
-          }
-        }
-        if (data.identity === 2) {
-          this.$router.push("/mentor");
-        }
+        alert("successfully logged in, role_id: " + data.identity)
+        // this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
+        // this.$store.dispatch("login", data);
+        // if (data.identity === 3 || data.identity === 4) {
+        //   this.$router.push("/manager/workflow");
+        // }
+        // if (data.identity === 1) {
+        //   if (data.last_experiment_id && data.last_experiment_status === 2) {
+        //     this.$router.push({
+        //       name: "doingExperiment",
+        //       params: {
+        //         exp_Id: data.last_experiment_id,
+        //         exp_Name: data.last_experiment_name
+        //       }
+        //     });
+        //   } else {
+        //     this.$router.push("/experiment");
+        //   }
+        // }
+        // if (data.identity === 2) {
+        //   this.$router.push("/mentor");
+        // }
       });
     },
     getQrcode() {
@@ -180,43 +185,13 @@ export default {
         this.qrcodeImage.ios = data.ios;
         this.qrcodeImage.android = data.android;
       });
-    },
-    getNotice() {
-      accountService.getNotice().then(data => {
-        this.calcContentLen(data.content);
-        this.noticeInfo.content = data.content ? data.content : "";
-        this.noticeInfo.attach = data.attach ? data.attach : "";
-        this.noticeInfo.file_name = data.file_name ? data.file_name : "";
-        this.noticeInfo.create_time = data.create_time ? data.create_time : "";
-        this.noticeInfo.title = data.title ? data.title : "最新公告";
-      });
-    },
-    calcContentLen(content) {
-      let contentWid = 0;
-      if (content !== "" && content.length > 0) {
-        var span = document.createElement("span");
-        var width = span.offsetWidth;
-        span.style.visibility = "hidden";
-        span.style.fontSize = "12px";
-        span.style.fontFamily =
-          '"Microsoft Yahei", Tahoma, Helvetica, Arial, 宋体, sans-serif';
-        span.style.display = "inline-block";
-        document.body.appendChild(span);
-        if (typeof span.textContent != "undefined") {
-          span.textContent = content;
-        } else {
-          span.innerText = content;
-        }
-        contentWid = parseFloat(window.getComputedStyle(span).width) - width;
-        document.body.removeChild(span);
-      }
-      this.noticeInfo.contentWid = contentWid;
     }
   },
   watch: {
     "user.username": {
       handler: function() {
-        this.error = "";
+        this.permissions = [];
+        this.user.login_type = -1;
         accountService
           .getUserIdentity({ username: this.user.username })
           .then(data => {
@@ -224,6 +199,10 @@ export default {
             this.is_manage = data.is_manage;
             this.is_admin = data.is_admin;
             this.is_general = true;
+            this.permissions = data.roles;
+            if (this.permissions.length > 0) {
+              this.user.login_type = this.permissions[0][0];
+            }
           });
       },
       deep: true

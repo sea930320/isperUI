@@ -44,8 +44,8 @@ new Vue({
       // 检查是否存在session
       const user = JSON.parse(this.$cookie.get(STORAGE_KEY_USER))
       if (!user) {
-        if (!this.$route.name || this.$route.name === 'home') {
-          this.$router.push('/')
+        if (!this.$route.name || ['home', 'register'].includes(this.$route.name)) {
+          this.$router.push(this.$route.fullPath)
         } else {
           this.$router.push('/login')
         }

@@ -18,6 +18,7 @@
                 </div>
                 <div class="login-btn px-2">
                   <b-button to="login" variant="light" class="px-3">登陆</b-button>
+                  <b-button to="register" variant="light" class="px-3">注册</b-button>
                 </div>
               </div>
             </b-card>
