@@ -1,0 +1,27 @@
+.login-container {
+    .qrcode-info {
+        border-top: 2px solid grey;
+
+        .qrcode-title {
+            font-weight: 700
+        }
+
+        .qrcodeImgBox {
+            .qrcodeImage {
+                display: inline-block;
+                margin: 0;
+                padding: 0;
+                width: 100px;
+                height: 100px;
+                border: 1px solid #e6e6e6;
+                text-indent: -10000px
+            }
+
+            .qrcodeDesc {
+                height: 26px;
+                line-height: 26px;
+            }
+        }
+
+    }
+}
