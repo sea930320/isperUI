@@ -1,31 +1,77 @@
 <template>
-  <div class="top-header bg-light mb-5">
-    <div class="container d-flex justify-content-start py-2 my-2">
-      <div class="logo mr-3">
-        <b-link href="/">
-          <img src="@/assets/logo.png">
-        </b-link>
-      </div>
-      <h1 class="m-0">
-        <slot name="pageTitle"></slot>
-      </h1>
-    </div>
+  <div class="top-header header-bg">
+    <b-navbar toggleable="lg" type="dark" class="container py-0">
+      <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" href="/">ISPER - 2019</b-navbar-brand>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <slot name="pageMenu"></slot>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto" v-if="userInfo && userInfo.role">
+          <b-nav-item-dropdown right>
+            <template slot="button-content" class="text-white">
+              <icon name="users"></icon>&nbsp;&nbsp; Personal Center
+            </template>
+            <b-dropdown-item :href="prefixRoute + 'personal-info'">Personal Info</b-dropdown-item>
+            <b-dropdown-item :href="prefixRoute + 'password-reset'">Password Reset</b-dropdown-item>
+            <b-dropdown-item :href="prefixRoute + 'assistant-set'">Assistant Set</b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item right @click="logoutHandler">
+            <icon name="sign-out-alt"></icon>
+          </b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+import { STORAGE_KEY_USER } from "@/store/storageKey";
+
 export default {
-  computed: {},
-  methods: {}
+  created() {},
+  computed: {
+    ...mapState(["userInfo"]),
+    prefixRoute() {
+      const role = this.userInfo.role;
+      if ([1, 2, 3].includes(role)) {
+        return "/manager/";
+      } else if ([4].includes(role)) {
+        return "/instructor/";
+      } else if ([6, 7, 8].includes(role)) {
+        return "/assistant/";
+      } else {
+        return "/user/";
+      }
+    }
+  },
+  methods: {
+    ...mapActions({
+      logoutAction: "logout"
+    }),
+    logoutHandler() {
+      this.$cookie.delete(STORAGE_KEY_USER);
+      this.logoutAction();
+      this.$router.push({ path: "/login" });
+    }
+  }
 };
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .top-header {
   .logo {
+    background-color: $logo-bg-color;
+    a {
+      font-size: 25px;
+    }
     img {
       width: 50px;
     }
+  }
+  .navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.7);
   }
 }
 </style>

@@ -1,0 +1,43 @@
+$header-bg-color : #081120;
+$main-bg-color : #ebe9ea;
+$logo-bg-color: #1e66dc;
+$placeholder-color: #ccc;
+
+.header-bg {
+    background-color: $header-bg-color;
+}
+
+.main-bg {
+    background-color: $main-bg-color;
+}
+
+.nounderline-hover:hover,
+.nounderline-hover:focus {
+    text-decoration: none !important;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: $placeholder-color;
+}
+
+/* WebKit, Blink, Edge */
+.form-control:-moz-placeholder {
+    color: $placeholder-color;
+}
+
+/* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder {
+    color: $placeholder-color;
+}
+
+/* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder {
+    color: $placeholder-color;
+}
+
+/* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder {
+    color: $placeholder-color;
+}
+
+/* Microsoft Edge */

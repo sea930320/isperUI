@@ -1,0 +1,24 @@
+<template>
+  <div class="manager-container main-bg">
+    <TopHeader>
+      <template v-slot:pageMenu>
+        <b-nav-item href="#">流程管理</b-nav-item>
+        <b-nav-item href="#">项目管理</b-nav-item>
+        <b-nav-item href="#">用户管理</b-nav-item>
+        <b-nav-item href="#">课程管理</b-nav-item>
+      </template>
+    </TopHeader>
+    <div class="container pt-3" style="min-height: calc(100vh - 62px)">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+<script>
+import TopHeader from "@/components/header/TopHeader";
+export default {
+  components: {
+    TopHeader
+  },
+  created() {}
+};
+</script>

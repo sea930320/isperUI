@@ -108,8 +108,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import TopHeader from "@/components/header/TopHeader";
-import { mapState } from "vuex";
 import accountService from "../services/accountService";
 import { STORAGE_KEY_USER } from "../store/storageKey";
 
@@ -150,18 +150,23 @@ export default {
     ...mapState(["userInfo"])
   },
   created() {
+    this.$cookie.delete(STORAGE_KEY_USER);
+    this.logoutAction();
     this.getQrcode();
   },
   methods: {
+    ...mapActions({
+      loginAction: "login",
+      logoutAction: "logout"
+    }),
     loginHandle() {
-      this.$cookie.delete(STORAGE_KEY_USER);
       accountService.login(this.user).then(data => {
-        alert("successfully logged in, role_id: " + data.identity)
-        // this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
-        // this.$store.dispatch("login", data);
-        // if (data.identity === 3 || data.identity === 4) {
-        //   this.$router.push("/manager/workflow");
-        // }
+        alert("successfully logged in, role_id: " + data.role);
+        this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
+        this.loginAction(data);
+        if ([1, 2, 3].includes(data.role)) {
+          this.$router.push("/manager/workflow");
+        }
         // if (data.identity === 1) {
         //   if (data.last_experiment_id && data.last_experiment_status === 2) {
         //     this.$router.push({

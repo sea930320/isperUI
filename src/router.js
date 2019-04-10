@@ -9,20 +9,43 @@ import {
 
 Vue.use(VueRouter)
 
+const personalCenterRoutes = [{
+  path: 'personal-info',
+  component: () => import('@/views/personal-center/PersonalInfo.vue')
+}, ]
+
 const routes = [{
     path: '/',
     name: 'home',
-    component: () => import('./views/Home.vue')
+    component: () => import('@/views/Home.vue')
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('./views/Login.vue')
+    component: () => import('@/views/Login.vue')
   },
   {
     path: '/register',
     name: 'register',
-    component: () => import('./views/Register.vue')
+    component: () => import('@/views/Register.vue')
+  },
+  {
+    path: '/manager', // 管理员主页
+    meta: {
+      requiresAuth: true
+    },
+    component: () => import('@/views/layout/Manager.vue'),
+    children: [
+      ...personalCenterRoutes,
+      {
+        path: '',
+        redirect: 'workflow'
+      }, {
+        path: 'workflow',
+        name: 'manager-workflow',
+        component: () => import('@/views/manager/workflow/WorkflowIndex.vue'),
+      }
+    ]
   }
 ]
 

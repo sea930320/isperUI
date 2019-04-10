@@ -72,6 +72,20 @@ class AccountService {
       url: '/system/notice'
     })
   }
+
+  /**
+   * Update Account
+   * @param data
+   * @returns {{pre, visitor}|*}
+   */
+  updateAccount(data) {
+    return xhr({
+      method: 'post',
+      url: '/account/user/update',
+      params: data
+    })
+  }
+
 }
 
 // 实例化后导出，全局单例
