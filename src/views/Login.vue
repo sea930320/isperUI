@@ -44,7 +44,7 @@
                     :value="true"
                     :unchecked-value="false"
                   >Remember</b-form-checkbox>
-                  <b-link href="#">Forgot Password?</b-link>
+                  <b-link to="#">Forgot Password?</b-link>
                 </div>
                 <b-button
                   @click="loginHandle"

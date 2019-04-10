@@ -43,7 +43,7 @@
                       style="fontSize: 18px"
                     >
                       {{notification.category}}
-                      <b-link :href="notification.all_link">View All >></b-link>
+                      <b-link :to="notification.all_link">View All >></b-link>
                     </div>
                     <!-- <hr class="p-0 m-0"> -->
                     <b-list-group>
@@ -52,7 +52,7 @@
                         :key="index"
                         class="notification-list-item p-1"
                       >
-                        <b-link :href="post.link">{{post.title}}</b-link>
+                        <b-link :to="post.link">{{post.title}}</b-link>
                       </b-list-group-item>
                     </b-list-group>
                   </b-col>

@@ -13,6 +13,7 @@ import qs from 'qs'
 const ERR_OK = 0
 const NOT_LOGIN = 10003
 
+axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
   response => {
     // 当返回信息为未登录或者登录失效的时候重定向为登录页面

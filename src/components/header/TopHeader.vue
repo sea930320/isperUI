@@ -1,7 +1,7 @@
 <template>
   <div class="top-header header-bg">
     <b-navbar toggleable="lg" type="dark" class="container py-0">
-      <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" href="/">ISPER - 2019</b-navbar-brand>
+      <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" to="/">ISPER - 2019</b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
@@ -12,9 +12,9 @@
             <template slot="button-content" class="text-white">
               <icon name="users"></icon>&nbsp;&nbsp; Personal Center
             </template>
-            <b-dropdown-item :href="prefixRoute + 'personal-info'">Personal Info</b-dropdown-item>
-            <b-dropdown-item :href="prefixRoute + 'password-reset'">Password Reset</b-dropdown-item>
-            <b-dropdown-item :href="prefixRoute + 'assistant-set'">Assistant Set</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'personal-info'">Personal Info</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'password-reset'">Password Reset</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'assistant-set'">Assistant Set</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item right @click="logoutHandler">
             <icon name="sign-out-alt"></icon>
