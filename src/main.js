@@ -6,6 +6,7 @@ import BootstrapVue from 'bootstrap-vue'
 import VueCookie from 'vue-cookie'
 import VueResource from 'vue-resource'
 import Toasted from 'vue-toasted';
+import VeeValidate from 'vee-validate';
 
 import {
   STORAGE_KEY_USER
@@ -28,6 +29,7 @@ Vue.use(BootstrapVue)
 Vue.use(Toasted, {
   duration: 1500
 })
+Vue.use(VeeValidate);
 
 new Vue({
   router,

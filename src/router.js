@@ -12,6 +12,9 @@ Vue.use(VueRouter)
 const personalCenterRoutes = [{
   path: 'personal-info',
   component: () => import('@/views/personal-center/PersonalInfo.vue')
+}, {
+  path: 'password-reset',
+  component: () => import('@/views/personal-center/PasswordReset.vue')
 }, ]
 
 const routes = [{

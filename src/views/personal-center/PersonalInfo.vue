@@ -3,7 +3,7 @@
     <b-card no-body>
       <b-form @submit.prevent="updateInfo">
         <b-card-header>
-          <h4>Personal Info</h4>
+          <PersonalCenterTab activeTab="0"/>
         </b-card-header>
         <b-card-body class="text-left">
           <b-form-group label-cols="4" label-cols-lg="2" label="User Name *" label-for="userName">
@@ -18,7 +18,7 @@
             label="Phone Number *"
             label-for="phoneNumber"
           >
-            <b-input-group prepend="+86" class="mt-2">
+            <b-input-group prepend="+86">
               <b-form-input
                 type="text"
                 v-model="userInfo.phone"
@@ -80,13 +80,13 @@ import { mapState, mapActions } from "vuex";
 import ImageUpload from "vue-image-crop-upload";
 import accountService from "@/services/accountService";
 import { STORAGE_KEY_USER } from "@/store/storageKey";
+import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
 
 export default {
   name: "personal-info",
-  components: { ImageUpload },
+  components: { ImageUpload, PersonalCenterTab },
   data() {
     return {
-      user: {},
       phoneVerified: false,
       rootPath: process.env.VUE_APP_ENDPOINT,
       apiRootPath: process.env.VUE_APP_API_ENDPOINT,
