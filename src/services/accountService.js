@@ -86,6 +86,31 @@ class AccountService {
     })
   }
 
+  /**
+   * Update Password
+   * @param data
+   * @returns {{pre, visitor}|*}
+   */
+  updatePassword(data) {
+    return xhr({
+      method: 'post',
+      url: '/account/password/update',
+      params: data
+    })
+  }
+
+  /**
+   * Send Verifiy Code
+   * @param data
+   * @returns {{pre, visitor}|*}
+   */
+  sendCode(data) {
+    return xhr({
+      method: 'post',
+      url: '/account/send/code',
+      params: data
+    })
+  }
 }
 
 // 实例化后导出，全局单例

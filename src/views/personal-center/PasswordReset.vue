@@ -53,7 +53,7 @@
               />
               <b-input-group-append is-text>{{maskedPhone}}</b-input-group-append>
               <b-input-group-append>
-                <b-button variant="primary">Send</b-button>
+                <b-button variant="primary" @click="sendVerificationCode">Send</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
@@ -69,7 +69,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-// import accountService from "@/services/accountService";
+import accountService from "@/services/accountService";
 // import { STORAGE_KEY_USER } from "@/store/storageKey";
 import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
 
@@ -84,16 +84,7 @@ export default {
         new_confirm: null,
         verification_code: null
       },
-      err: {},
-      rootPath: process.env.VUE_APP_ENDPOINT,
-      apiRootPath: process.env.VUE_APP_API_ENDPOINT,
-      avatarOption: {
-        show: false,
-        params: {},
-        headers: {
-          smail: "*_~"
-        }
-      }
+      err: {}
     };
   },
   computed: {
@@ -147,11 +138,22 @@ export default {
           if (!this.validate()) {
             return;
           }
+          this.password.id = this.userInfo.id;
+          this.password.login_type = this.userInfo.role;
+          accountService.updatePassword(this.password).then(() => {
+            this.$toasted.success("Password Successfully updated");
+          });
         })
         .catch(() => {
           this.validate();
         });
-      this.password.id = this.userInfo.id;
+    },
+    sendVerificationCode() {
+      accountService.sendCode({
+        to: this.userInfo.phone
+      }).then(() => {
+        this.$toasted.success("Password Successfully updated");
+      });
     }
   }
 };
