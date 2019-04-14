@@ -15,7 +15,10 @@ const personalCenterRoutes = [{
 }, {
   path: 'password-reset',
   component: () => import('@/views/personal-center/PasswordReset.vue')
-}, ]
+}, {
+  path: 'assistant-set',
+  component: () => import('@/views/personal-center/AssistantSet.vue')
+}]
 
 const routes = [{
     path: '/',

@@ -70,7 +70,6 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import accountService from "@/services/accountService";
-// import { STORAGE_KEY_USER } from "@/store/storageKey";
 import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
 
 export default {
