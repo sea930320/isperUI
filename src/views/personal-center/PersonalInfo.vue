@@ -23,14 +23,22 @@
                 type="text"
                 v-model="userInfo.phone"
                 name="phoneNumber"
-                @change="phoneVerified = false"
+                :disabled="session_expire_time > 0 || sendLabel !='Send'"
                 required
               />
             </b-input-group>
             <b-input-group class="mt-2">
-              <b-form-input placeholder="Verification Code"></b-form-input>
+              <b-form-input
+                type="number"
+                v-model="verificationCode"
+                placeholder="Verification Code"
+              ></b-form-input>
               <b-input-group-append>
-                <b-button variant="primary">Send</b-button>
+                <b-button
+                  variant="primary"
+                  @click="sendVerificationCode"
+                  :disabled="session_expire_time > 0 || sendLabel !='Send'"
+                >{{(session_expire_time &lt;= 0) ? sendLabel: session_expire_time + ' s'}}</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
@@ -87,7 +95,6 @@ export default {
   components: { ImageUpload, PersonalCenterTab },
   data() {
     return {
-      phoneVerified: false,
       rootPath: process.env.VUE_APP_ENDPOINT,
       apiRootPath: process.env.VUE_APP_API_ENDPOINT,
       avatarOption: {
@@ -96,7 +103,11 @@ export default {
         headers: {
           smail: "*_~"
         }
-      }
+      },
+      session_expire_time: 0,
+      sendLabel: "Send",
+      timer: null,
+      verificationCode: ""
     };
   },
   computed: {
@@ -106,7 +117,8 @@ export default {
         !this.userInfo.id ||
         !this.userInfo.name ||
         !this.userInfo.username ||
-        !this.userInfo.phone /*||!this.phoneVerified*/
+        !this.userInfo.phone ||
+        !this.verificationCode
       ) {
         return false;
       }
@@ -122,8 +134,15 @@ export default {
       if (!this.validate) {
         return;
       }
-      accountService.updateAccount(this.userInfo).then(() => {
-        this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(this.userInfo));
+      let user = Object.assign({}, this.userInfo);
+      user.verification_code = this.verificationCode;
+      accountService.updateAccount(user).then(() => {
+        this.session_expire_time = 0;
+        this.verificationCode = ''
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
+        this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(user));
         this.$toasted.success("Account Successfully updated");
       });
     },
@@ -138,7 +157,41 @@ export default {
       this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(this.userInfo));
     },
     // eslint-disable-next-line
-    cropUploadFail(status, field) {}
+    cropUploadFail(status, field) {},
+    sendVerificationCode() {
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      this.sendLabel = "Sending...";
+      accountService
+        .sendCode({
+          to: this.userInfo.phone
+        })
+        .then(
+          () => {
+            this.$toasted.success("Please check your phone");
+            this.startTimer();
+            this.sendLabel = "Send";
+          },
+          () => {
+            this.sendLabel = "Send";
+          }
+        )
+        .catch(() => {
+          this.sendLabel = "Send";
+        });
+    },
+    startTimer() {
+      this.session_expire_time = 300;
+      this.timer = setInterval(() => {
+        if (this.session_expire_time <= 0) {
+          this.session_expire_time = 0;
+          clearInterval(this.timer);
+          return;
+        }
+        this.session_expire_time--;
+      }, 1000);
+    }
   }
 };
 </script>

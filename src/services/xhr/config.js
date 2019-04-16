@@ -8,6 +8,7 @@
 export const rootPath = process.env.VUE_APP_API_ENDPOINT
 
 // XHR 错误处理
-export const errHandler = () => {
+export const errHandler = (reject, err) => {
   // Vue.toasted.error('请求 API 失败')
+  reject(err)
 }

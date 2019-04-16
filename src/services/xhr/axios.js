@@ -37,7 +37,7 @@ const xhr = ({
   url,
   params = null
 }) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     if (method === 'get') {
       axios.get(rootPath + url, {
           params: params
@@ -51,9 +51,10 @@ const xhr = ({
             VueCookie.delete(STORAGE_KEY_USER)
           } else {
             Vue.toasted.error(data.m)
+            reject(data.m)
           }
         })
-        .catch(errHandler)
+        .catch(err => errHandler(reject, err))
     } else if (method === 'post') {
       axios.post(rootPath + url, qs.stringify(params), {
           headers: {
@@ -66,9 +67,10 @@ const xhr = ({
             resolve(data.d)
           } else {
             Vue.toasted.error(data.m)
+            reject(data.m)
           }
         })
-        .catch(errHandler)
+        .catch(err => errHandler(reject, err))
     } else {
       //
     }

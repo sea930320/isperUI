@@ -13,7 +13,7 @@
             :description="err['old-p']"
           >
             <b-form-input
-              type="text"
+              type="password"
               v-model="password.old"
               name="old-password"
               v-validate="'required|min:5'"
@@ -26,10 +26,10 @@
             :description="err['new-p']"
           >
             <b-form-input
-              type="text"
+              type="password"
               v-model="password.new"
               name="new-password"
-              v-validate="'required|min:5|max:35'"
+              v-validate="'required|min:5'"
             />
           </b-form-group>
           <b-form-group
@@ -39,21 +39,31 @@
             :description="err['new-p-c']"
           >
             <b-form-input
-              type="text"
+              type="password"
               v-model="password.new_confirm"
               name="new-password-confirmation"
             />
           </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="Verification Code *">
+          <b-form-group
+            label-cols="4"
+            label-cols-lg="2"
+            label="Verification Code *"
+            :description="err['verification-code']"
+          >
             <b-input-group>
               <b-form-input
                 type="text"
                 v-model="password.verification_code"
                 name="verification-code"
+                v-validate="'required|min:5'"
               />
               <b-input-group-append is-text>{{maskedPhone}}</b-input-group-append>
               <b-input-group-append>
-                <b-button variant="primary" @click="sendVerificationCode">Send</b-button>
+                <b-button
+                  variant="primary"
+                  @click="sendVerificationCode"
+                  :disabled="session_expire_time > 0 || sendLabel !='Send'"
+                >{{(session_expire_time &lt;= 0) ? sendLabel: session_expire_time + ' s'}}</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
@@ -83,7 +93,10 @@ export default {
         new_confirm: null,
         verification_code: null
       },
-      err: {}
+      err: {},
+      session_expire_time: 0,
+      sendLabel: "Send",
+      timer: null
     };
   },
   computed: {
@@ -120,9 +133,19 @@ export default {
               .first("new-password")
               .replace("new-password", "New Password")
           : "",
-        "new-p-c": this.notSameValidation()
+        "new-p-c": this.notSameValidation(),
+        "verification-code": this.errors.has("verification-code")
+          ? this.errors
+              .first("verification-code")
+              .replace("verification-code", "Verification Code")
+          : ""
       });
-      if (this.err["old-p"] || this.err["new-p"] || this.err["new-p-c"]) {
+      if (
+        this.err["old-p"] ||
+        this.err["new-p"] ||
+        this.err["new-p-c"] ||
+        this.err["verification-code"]
+      ) {
         return false;
       } else return true;
     },
@@ -140,6 +163,17 @@ export default {
           this.password.id = this.userInfo.id;
           this.password.login_type = this.userInfo.role;
           accountService.updatePassword(this.password).then(() => {
+            this.err = {};
+            this.password = {
+              old: null,
+              new: null,
+              new_confirm: null,
+              verification_code: null
+            };
+            this.session_expire_time = 0;
+            if (this.timer) {
+              clearInterval(this.timer);
+            }
             this.$toasted.success("Password Successfully updated");
           });
         })
@@ -148,11 +182,38 @@ export default {
         });
     },
     sendVerificationCode() {
-      accountService.sendCode({
-        to: this.userInfo.phone
-      }).then(() => {
-        this.$toasted.success("Password Successfully updated");
-      });
+      if (this.timer) {
+        clearInterval(this.timer);
+      }
+      this.sendLabel = "Sending...";
+      accountService
+        .sendCode({
+          to: this.userInfo.phone
+        })
+        .then(
+          () => {
+            this.$toasted.success("Please check your phone");
+            this.startTimer();
+            this.sendLabel = "Send";
+          },
+          () => {
+            this.sendLabel = "Send";
+          }
+        )
+        .catch(() => {
+          this.sendLabel = "Send";
+        });
+    },
+    startTimer() {
+      this.session_expire_time = 300;
+      this.timer = setInterval(() => {
+        if (this.session_expire_time <= 0) {
+          this.session_expire_time = 0;
+          clearInterval(this.timer);
+          return;
+        }
+        this.session_expire_time--;
+      }, 1000);
     }
   }
 };
