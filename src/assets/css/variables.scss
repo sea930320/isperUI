@@ -19,6 +19,12 @@ $placeholder-color: #ccc;
     width: 80%;
 }
 
+@media (min-width: 1200px) {
+    .container {
+        max-width: 90%;
+    }
+}
+
 .nounderline-hover:hover,
 .nounderline-hover:focus {
     text-decoration: none !important;

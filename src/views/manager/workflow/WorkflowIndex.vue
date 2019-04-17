@@ -48,8 +48,7 @@
           @click="showBigImg(row.item.animation1)"
         >查看</a>
         <div v-else>
-          <!-- <toggleUpload :item="workflow" @uploadSuccess="uploadAnimationSuccess"></toggleUpload> -->
-          Upload--1
+          <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
         </div>
       </template>
       <template slot="rend_ani_2" slot-scope="row">
@@ -61,8 +60,7 @@
           @click="showBigImg(row.item.animation2)"
         >查看</a>
         <div v-else>
-          <!-- <toggleUpload :item="workflow" :keyId="2" @uploadSuccess="uploadAnimationSuccess"></toggleUpload> -->
-          Upload--2
+          <toggle-upload :item="row.item" :keyId="2" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
         </div>
       </template>
       <template slot="experiment_type_label" slot-scope="row">
@@ -123,7 +121,7 @@
       />
     </b-row>
     <!-- 查看大图Modal -->
-    <imageView :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></imageView>
+    <image-view :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></image-view>
   </div>
 </template>
 
@@ -131,17 +129,19 @@
 import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
+import ToggleUpload from "@/components/upload/ToggleUpload";
 import workflowService from "@/services/workflowService";
-import imageView from "@/components/imageView/imageView";
+import ImageView from "@/components/imageView/ImageView";
 import _ from "lodash";
-// import arrayUtils from "@/utils/arrayUtils";
+import arrayUtils from "@/utils/arrayUtils";
 import dateUtils from "@/utils/dateUtils";
 
 export default {
   name: "workflow-index",
   components: {
     Loading,
-    imageView
+    ImageView,
+    ToggleUpload
   },
   filters: {
     expType,
@@ -206,7 +206,7 @@ export default {
       queryParam: {
         status: "",
         page: 1,
-        size: 2
+        size: 15
       },
       queryDebounceParam: {
         search: ""
@@ -322,6 +322,12 @@ export default {
       // this.workflows.total++;
       this.newProcessAdded = false;
       this.newFlowStatus = true;
+    },
+    // 上传渲染动画成功回调
+    uploadAnimationSuccess(data) {
+      let item = arrayUtils.find(this.workflows.list, data);
+      item.animation1 = data.animation1;
+      item.animation2 = data.animation2;
     }
   }
 };
