@@ -7,14 +7,14 @@
       <b-card no-body>
         <b-form @submit.prevent="register">
           <b-card-header>
-            <h4>Sign Up</h4>
+            <h4>个人信息</h4>
           </b-card-header>
           <b-card-body class="text-left">
-            <b-form-group label-cols="4" label-cols-lg="2" label="User Name" label-for="userName">
+            <b-form-group label-cols="4" label-cols-lg="2" label="姓 名" label-for="userName">
               <b-form-input
                 type="text"
                 v-model="user.name"
-                placeholder="Input User Name"
+                placeholder="请输入姓名"
                 name="userName"
                 required
               />
@@ -22,20 +22,20 @@
             <b-form-group
               label-cols="4"
               label-cols-lg="2"
-              label="Phone Number"
+              label="手 机"
               label-for="phoneNumber"
             >
               <b-form-input
                 type="text"
                 v-model="user.phone"
-                placeholder="Input Phone Number"
+                placeholder="请输入手机号"
                 name="phoneNumber"
               />
             </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label="QQ ID" label-for="qqID">
-              <b-form-input type="text" v-model="user.qq" placeholder="Input QQ ID" name="qqID"/>
+            <b-form-group label-cols="4" label-cols-lg="2" label="QQ" label-for="qqID">
+              <b-form-input type="text" v-model="user.qq" placeholder="请输入QQ" name="qqID"/>
             </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="2" label="Avatar" label-for="avatar">
+            <b-form-group label-cols="4" label-cols-lg="2" label="头像" label-for="avatar">
               <div @click="toggleShow" style="cursor:pointer; width: 100px">
                 <b-img-lazy
                   thumbnail
@@ -50,13 +50,13 @@
             </b-form-group>
 
             <div class="text-center my-3" style="border-bottom: 1px solid gray;">
-              <h5>Login information</h5>
+              <h5>登录信息</h5>
             </div>
-            <b-form-group label-cols="4" label-cols-lg="2" label="User ID" label-for="userID">
+            <b-form-group label-cols="4" label-cols-lg="2" label="用户名" label-for="userID">
               <b-form-input
                 type="text"
                 v-model="user.username"
-                placeholder="Input User ID"
+                placeholder="请输入用户名"
                 name="userID"
                 required
               />
@@ -74,11 +74,11 @@
                 name="company"
               />
             </b-form-group>-->
-            <b-form-group label-cols="4" label-cols-lg="2" label="Password" label-for="password">
+            <b-form-group label-cols="4" label-cols-lg="2" label="密 码" label-for="password">
               <b-form-input
                 type="text"
                 v-model="user.password"
-                placeholder="Input Password"
+                placeholder="请输入密码"
                 name="password"
                 required
               />
@@ -86,13 +86,13 @@
             <b-form-group
               label-cols="4"
               label-cols-lg="2"
-              label="Password Confirmation"
+              label="密码确认"
               label-for="password_confirmation"
             >
               <b-form-input
                 type="text"
                 v-model="user.passwordConfirmation"
-                placeholder="Password Confirmation"
+                placeholder="请再次输入密码"
                 name="password_confirmation"
                 required
               />

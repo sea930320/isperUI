@@ -17,7 +17,7 @@
             <b-card-body class="text-center">
               <h3>ISPER</h3>
               <h4>ISPER -- 2019</h4>
-              <div>Description</div>
+              <div>智慧法治与智慧课堂系统</div>
 
               <div class="login-box px-5">
                 <b-input-group>
@@ -26,7 +26,7 @@
                       <icon name="user"></icon>
                     </span>
                   </b-input-group-prepend>
-                  <b-form-input v-model.lazy="user.username" placeholder="User Name"></b-form-input>
+                  <b-form-input v-model.lazy="user.username" placeholder="请输入用户名"></b-form-input>
                 </b-input-group>
                 <b-input-group class="mt-3">
                   <b-input-group-prepend>
@@ -34,7 +34,7 @@
                       <icon name="unlock"></icon>
                     </span>
                   </b-input-group-prepend>
-                  <b-form-input type="password" v-model="user.password" placeholder="Password"></b-form-input>
+                  <b-form-input type="password" v-model="user.password" placeholder="请输入密码"></b-form-input>
                 </b-input-group>
                 <div class="row justify-content-between mx-0 mt-2">
                   <b-form-checkbox
@@ -43,8 +43,8 @@
                     name="checkbox-1"
                     :value="true"
                     :unchecked-value="false"
-                  >Remember</b-form-checkbox>
-                  <b-link to="#">Forgot Password?</b-link>
+                  >记住密码</b-form-checkbox>
+                  <b-link to="#">忘记密码?</b-link>
                 </div>
                 <b-button
                   @click="loginHandle"

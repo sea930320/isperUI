@@ -14,7 +14,7 @@
                 </div>
                 <div class="logo-text px-2">
                   <h2>ISPER--2019</h2>
-                  <h5>Description</h5>
+                  <h5>智慧法治与智慧课堂系统</h5>
                 </div>
                 <div class="login-btn px-2">
                   <b-button to="login" variant="light" class="px-3">登陆</b-button>
@@ -43,7 +43,7 @@
                       style="fontSize: 18px"
                     >
                       {{notification.category}}
-                      <b-link :to="notification.all_link">View All >></b-link>
+                      <b-link :to="notification.all_link">更多>></b-link>
                     </div>
                     <!-- <hr class="p-0 m-0"> -->
                     <b-list-group>
@@ -76,79 +76,79 @@ export default {
     return {
       notificationList: [
         {
-          category: "xxx1",
+          category: "公告通知",
           bgcolor: "#2a3970",
           posts: [
             {
-              title: "aaaaa",
+              title: "2017-2018学年优秀本科生颁奖典礼举行",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "学校2018年就业质量报告来了",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "校友会2019中国财经类大学排名出炉。。。",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "庆：2018年中南大学年度汉字出炉",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "学校启动教职工大病医疗互助机制",
               link: "#"
             }
           ]
         },
         {
-          category: "xxx2",
+          category: "实验观摩",
           bgcolor: "#d75852",
           posts: [
             {
-              title: "aaaaa",
+              title: "2018药品管理法实验",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "律师调解通用模拟实验3",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "省级人大常委会立法过程实验提案阶段2",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "蔡获侵权责任纠纷案民事诉讼审前实验",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "美美形体中心个体工商户设立登记的模拟实验2",
               link: "#"
             }
           ]
         },
         {
-          category: "xxx3",
+          category: "问卷调查",
           bgcolor: "#4e73ff",
           posts: [
             {
-              title: "aaaaa",
+              title: "关于2018届毕业生就业情况的问卷调查",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "学校2018年ISPER系统UI用户体验调查",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "江夏区食品监管与质量抽检调查",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "大学生心理健康问卷调查",
               link: "#"
             },
             {
-              title: "aaaaa",
+              title: "大学生身体素质问卷调查",
               link: "#"
             }
           ]
