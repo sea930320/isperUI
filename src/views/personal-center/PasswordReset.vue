@@ -9,7 +9,7 @@
           <b-form-group
             label-cols="4"
             label-cols-lg="2"
-            label="Old Password *"
+            label="旧密码 *"
             :description="err['old-p']"
           >
             <b-form-input
@@ -22,7 +22,7 @@
           <b-form-group
             label-cols="4"
             label-cols-lg="2"
-            label="New Password *"
+            label="新密码 *"
             :description="err['new-p']"
           >
             <b-form-input
@@ -35,7 +35,7 @@
           <b-form-group
             label-cols="4"
             label-cols-lg="2"
-            label="New Password Confirmation *"
+            label="密码确认 *"
             :description="err['new-p-c']"
           >
             <b-form-input
@@ -47,7 +47,7 @@
           <b-form-group
             label-cols="4"
             label-cols-lg="2"
-            label="Verification Code *"
+            label="手机验证码 *"
             :description="err['verification-code']"
           >
             <b-input-group>
@@ -69,8 +69,8 @@
           </b-form-group>
         </b-card-body>
         <b-card-footer class="text-muted">
-          <b-button class="mr-2" type="submit" variant="primary">Update</b-button>
-          <b-button type="button">Cancel</b-button>
+          <b-button class="mr-2" type="submit" variant="primary">修改</b-button>
+          <b-button type="button">取消</b-button>
         </b-card-footer>
       </b-form>
     </b-card>
@@ -95,7 +95,7 @@ export default {
       },
       err: {},
       session_expire_time: 0,
-      sendLabel: "Send",
+      sendLabel: "获取",
       timer: null
     };
   },

@@ -9,7 +9,7 @@
           <b-col cols="4">
             <b-card no-body>
               <b-card-header class="assistant-add">
-                Assistant Add
+                配置助理
                 <b-button variant="href" class="float-right">
                   <icon name="plus-circle"></icon>
                 </b-button>
@@ -20,16 +20,16 @@
                     button
                     class="d-flex justify-content-between align-items-center"
                   >
-                    User 1
-                    <b-button size="sm">Edit</b-button>
+                    助理1
+                    <b-button size="sm">取消绑定</b-button>
                   </b-list-group-item>
                   <b-list-group-item
                     button
                     class="d-flex justify-content-between align-items-center"
                     active
                   >
-                    User 2
-                    <b-button size="sm">Edit</b-button>
+                    助理2
+                    <b-button size="sm">取消绑定</b-button>
                   </b-list-group-item>
                 </b-list-group>
               </b-card-body>
@@ -41,14 +41,14 @@
                 <table class="table table-bordered">
                   <thead class="thead-light">
                     <tr>
-                      <th class="w-25">First Cat</th>
-                      <th class="w-25">Second Cat</th>
-                      <th class="w-50">Allowed Actions</th>
+                      <th class="w-25">一级菜单</th>
+                      <th class="w-25">二级菜单</th>
+                      <th class="w-50">操作</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>System Manage</td>
+                      <td>系统功能</td>
                       <td colspan="2" class="m-0 p-0">
                         <b-row no-gutters class>
                           <b-col cols="4" class="p-1">
@@ -57,7 +57,7 @@
                               name="checkbox-1"
                               value="accepted"
                               unchecked-value="not_accepted"
-                            >Process Management</b-form-checkbox>
+                            >流程管理</b-form-checkbox>
                           </b-col>
                           <b-col cols="8"></b-col>
                         </b-row>
@@ -68,14 +68,14 @@
                               name="checkbox-1"
                               value="accepted"
                               unchecked-value="not_accepted"
-                            >Project Management</b-form-checkbox>
+                            >项目管理</b-form-checkbox>
                           </b-col>
                           <b-col cols="8"></b-col>
                         </b-row>
                       </td>
                     </tr>
                     <tr>
-                      <td>System Cat</td>
+                      <td>系统设置</td>
                       <td colspan="2"></td>
                     </tr>
                   </tbody>
@@ -86,7 +86,7 @@
         </b-row>
       </b-card-body>
       <b-card-footer class="text-muted">
-        <b-button class type="submit" variant="primary">Ok</b-button>
+        <b-button class type="submit" variant="primary">保存</b-button>
       </b-card-footer>
     </b-card>
   </div>

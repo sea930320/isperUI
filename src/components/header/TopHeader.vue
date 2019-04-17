@@ -10,11 +10,11 @@
         <b-navbar-nav class="ml-auto" v-if="userInfo && userInfo.role">
           <b-nav-item-dropdown right>
             <template slot="button-content" class="text-white">
-              <icon name="users"></icon>&nbsp;&nbsp; Personal Center
+              <icon name="users"></icon>&nbsp;&nbsp; 个人中心
             </template>
-            <b-dropdown-item :to="prefixRoute + 'personal-info'">Personal Info</b-dropdown-item>
-            <b-dropdown-item :to="prefixRoute + 'password-reset'">Password Reset</b-dropdown-item>
-            <b-dropdown-item :to="prefixRoute + 'assistant-set'">Assistant Set</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'personal-info'">个人信息</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'password-reset'">重置密码</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'assistant-set'">配置助理</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item right @click="logoutHandler">
             <icon name="sign-out-alt"></icon>

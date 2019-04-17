@@ -6,16 +6,16 @@
           <PersonalCenterTab activeTab="0"/>
         </b-card-header>
         <b-card-body class="text-left">
-          <b-form-group label-cols="4" label-cols-lg="2" label="User Name *" label-for="userName">
+          <b-form-group label-cols="4" label-cols-lg="2" label="姓名 *" label-for="userName">
             <b-form-input type="text" v-model="userInfo.name" name="userName" required/>
           </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="User ID *" label-for="userId">
+          <b-form-group label-cols="4" label-cols-lg="2" label="用户名 *" label-for="userId">
             <b-form-input type="text" v-model="userInfo.username" name="userId" required/>
           </b-form-group>
           <b-form-group
             label-cols="4"
             label-cols-lg="2"
-            label="Phone Number *"
+            label="手机 *"
             label-for="phoneNumber"
           >
             <b-input-group prepend="+86">
@@ -31,7 +31,7 @@
               <b-form-input
                 type="number"
                 v-model="verificationCode"
-                placeholder="Verification Code"
+                placeholder="手机验证码"
               ></b-form-input>
               <b-input-group-append>
                 <b-button
@@ -42,10 +42,10 @@
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="QQ ID" label-for="qqID">
+          <b-form-group label-cols="4" label-cols-lg="2" label="QQ" label-for="qqID">
             <b-form-input type="text" v-model="userInfo.qq" name="qqID"/>
           </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="Avatar" label-for="avatar">
+          <b-form-group label-cols="4" label-cols-lg="2" label="头像" label-for="avatar">
             <div @click="toggleShow" style="cursor:pointer; width: 100px">
               <b-img-lazy
                 thumbnail
@@ -60,8 +60,8 @@
           </b-form-group>
         </b-card-body>
         <b-card-footer class="text-muted">
-          <b-button class="mr-2" type="submit" variant="primary" :disabled="!validate">Update</b-button>
-          <b-button type="button">Cancel</b-button>
+          <b-button class="mr-2" type="submit" variant="primary" :disabled="!validate">修改</b-button>
+          <b-button type="button">取消</b-button>
         </b-card-footer>
       </b-form>
     </b-card>
@@ -105,7 +105,7 @@ export default {
         }
       },
       session_expire_time: 0,
-      sendLabel: "Send",
+      sendLabel: "获取",
       timer: null,
       verificationCode: ""
     };
