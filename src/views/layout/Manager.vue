@@ -2,7 +2,7 @@
   <div class="manager-container main-bg">
     <TopHeader>
       <template v-slot:pageMenu>
-        <b-nav-item to="#">流程管理</b-nav-item>
+        <b-nav-item to="/manager/workflow">流程管理</b-nav-item>
         <b-nav-item to="#">项目管理</b-nav-item>
         <b-nav-item to="#">用户管理</b-nav-item>
         <b-nav-item to="#">课程管理</b-nav-item>

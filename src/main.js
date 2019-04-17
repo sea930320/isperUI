@@ -7,6 +7,10 @@ import VueCookie from 'vue-cookie'
 import VueResource from 'vue-resource'
 import Toasted from 'vue-toasted';
 import VeeValidate from 'vee-validate';
+import globalMixin from './mixins/global-mixin'
+import DataProcessMixin from "./mixins/data-process";
+import lodash from 'lodash'
+import VueLodash from 'vue-lodash'
 
 import {
   STORAGE_KEY_USER
@@ -26,10 +30,15 @@ Vue.config.productionTip = false
 Vue.use(VueResource)
 Vue.use(VueCookie)
 Vue.use(BootstrapVue)
+Vue.use(VueLodash, lodash)
 Vue.use(Toasted, {
   duration: 1500
 })
-Vue.use(VeeValidate);
+Vue.use(VeeValidate, {
+  fieldsBagName: 'veeFields'
+});
+Vue.mixin(globalMixin)
+Vue.mixin(DataProcessMixin)
 
 new Vue({
   router,
