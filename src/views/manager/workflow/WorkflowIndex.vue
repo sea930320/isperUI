@@ -118,7 +118,7 @@
         :per-page="queryParam.size"
         limit="5"
         v-model="queryParam.page"
-      />
+      ></b-pagination>
     </b-row>
     <!-- 查看大图Modal -->
     <image-view :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></image-view>
@@ -128,10 +128,10 @@
 <script>
 import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState } from "vuex";
-import Loading from "@/components/loading/Loading";
+import Loading from "@/components/loading/loading";
 import ToggleUpload from "@/components/upload/ToggleUpload";
 import workflowService from "@/services/workflowService";
-import ImageView from "@/components/imageView/ImageView";
+import ImageView from "@/components/imageView/imageView";
 import _ from "lodash";
 import arrayUtils from "@/utils/arrayUtils";
 import dateUtils from "@/utils/dateUtils";
