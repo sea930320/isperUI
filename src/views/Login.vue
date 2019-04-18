@@ -161,28 +161,12 @@ export default {
     }),
     loginHandle() {
       accountService.login(this.user).then(data => {
-        alert("successfully logged in, role_id: " + data.role);
+//        alert("successfully logged in, role_id: " + data.role);
         this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
         this.loginAction(data);
         if ([1, 2, 3].includes(data.role)) {
           this.$router.push("/manager/workflow");
         }
-        // if (data.identity === 1) {
-        //   if (data.last_experiment_id && data.last_experiment_status === 2) {
-        //     this.$router.push({
-        //       name: "doingExperiment",
-        //       params: {
-        //         exp_Id: data.last_experiment_id,
-        //         exp_Name: data.last_experiment_name
-        //       }
-        //     });
-        //   } else {
-        //     this.$router.push("/experiment");
-        //   }
-        // }
-        // if (data.identity === 2) {
-        //   this.$router.push("/mentor");
-        // }
       });
     },
     getQrcode() {
