@@ -74,9 +74,22 @@ class AccountService {
   }
 
   /**
+   * Create Account
+   * @param data
+   * @returns {Promise}
+   */
+  createAccount(data) {
+    return xhr({
+      method: 'post',
+      url: '/account/user/create',
+      params: data
+    })
+  }
+
+  /**
    * Update Account
    * @param data
-   * @returns {{pre, visitor}|*}
+   * @returns {Promise}
    */
   updateAccount(data) {
     return xhr({
@@ -89,7 +102,7 @@ class AccountService {
   /**
    * Update Password
    * @param data
-   * @returns {{pre, visitor}|*}
+   * @returns {Promise}
    */
   updatePassword(data) {
     return xhr({
@@ -102,13 +115,25 @@ class AccountService {
   /**
    * Send Verifiy Code
    * @param data
-   * @returns {{pre, visitor}|*}
+   * @returns {Promise}
    */
   sendCode(data) {
     return xhr({
       method: 'post',
       url: '/account/send/code',
       params: data
+    })
+  }
+
+  /**
+   * 获取所有账户
+   * @return {Promise}
+   */
+  getDefaultCompanies(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/default-group',
+      params: options
     })
   }
 }

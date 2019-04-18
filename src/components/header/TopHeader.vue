@@ -1,7 +1,14 @@
 <template>
   <div class="top-header header-bg">
     <b-navbar toggleable="lg" type="dark" class="container py-0">
-      <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" to="/">ISPER - 2019</b-navbar-brand>
+      <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" to="/">
+        <div class="d-flex justify-content-center p-0">
+          <div class="px-3">
+            <img src="@/assets/imgIsper/3.png">
+          </div>
+          <div class="align-self-center">ISPER - 2019</div>
+        </div>
+      </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>

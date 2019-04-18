@@ -1,23 +1,28 @@
 <template>
   <div class="login-container">
-    <TopHeader>
-      <template v-slot:pageTitle>首页界面——登陆（新设计）</template>
-    </TopHeader>
-    <b-container>
+    <TopHeader></TopHeader>
+    <b-container class="my-5">
       <b-card no-body class="overflow-hidden">
         <b-row no-gutters>
-          <b-col cols="6" style="overflow: hidden">
-            <b-card-img
-              src="https://picsum.photos/400/400/?image=20"
-              class="rounded-0"
-              style="width: auto; height: 100%"
-            ></b-card-img>
+          <b-col lg="6" sm="12" style="overflow: hidden">
+            <img src="@/assets/imgIsper/4.jpg" class="rounded-0 left-img">
+            <div class="img-mask">
+              <div class="mask-title">劳动分工是提高劳动生产力的 主要原因</div>
+              <div class="mask-body d-flex justify-content-between mt-3">
+                <div class="mask-body-text">亚当斯密</div>
+                <div class="mask-body-icon">
+                  <icon name="chevron-right"></icon>
+                </div>
+              </div>
+            </div>
           </b-col>
-          <b-col cols="6">
+          <b-col lg="6" sm="12">
             <b-card-body class="text-center">
-              <h3>ISPER</h3>
-              <h4>ISPER -- 2019</h4>
-              <div>智慧法治与智慧课堂系统</div>
+              <div class="logo">
+                <img src="@/assets/imgIsper/2.png" class="rounded-0">
+              </div>
+              <h4>ISPER—2019</h4>
+              <div class="mb-2">智慧法治与智慧课堂系统</div>
 
               <div class="login-box px-5">
                 <b-input-group>
@@ -26,7 +31,11 @@
                       <icon name="user"></icon>
                     </span>
                   </b-input-group-prepend>
-                  <b-form-input v-model.lazy="user.username" placeholder="请输入用户名"></b-form-input>
+                  <b-form-input
+                    :value="user.username"
+                    placeholder="请输入用户名"
+                    @change.native="user.username = $event.target.value"
+                  ></b-form-input>
                 </b-input-group>
                 <b-input-group class="mt-3">
                   <b-input-group-prepend>
@@ -52,7 +61,7 @@
                   block
                   variant="primary"
                   class="mt-3"
-                >登陆</b-button>
+                >登录</b-button>
               </div>
 
               <div class="dl-choose px-5 my-3">
@@ -150,9 +159,11 @@ export default {
     ...mapState(["userInfo"])
   },
   created() {
-    this.$cookie.delete(STORAGE_KEY_USER);
-    this.logoutAction();
-    this.getQrcode();
+    if (this.isLoggedIn) {
+      this.firstPageGo();
+    } else {
+      this.getQrcode();
+    }
   },
   methods: {
     ...mapActions({
@@ -161,29 +172,20 @@ export default {
     }),
     loginHandle() {
       accountService.login(this.user).then(data => {
-        alert("successfully logged in, role_id: " + data.role);
+        this.$toasted.success("successfully logged in, role_id: " + data.role);
+        this.firstPageGo(data);
+      });
+    },
+    firstPageGo(data = null) {
+      if (!data) {
+        data = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
+      } else {
         this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
         this.loginAction(data);
-        if ([1, 2, 3].includes(data.role)) {
-          this.$router.push("/manager/workflow");
-        }
-        // if (data.identity === 1) {
-        //   if (data.last_experiment_id && data.last_experiment_status === 2) {
-        //     this.$router.push({
-        //       name: "doingExperiment",
-        //       params: {
-        //         exp_Id: data.last_experiment_id,
-        //         exp_Name: data.last_experiment_name
-        //       }
-        //     });
-        //   } else {
-        //     this.$router.push("/experiment");
-        //   }
-        // }
-        // if (data.identity === 2) {
-        //   this.$router.push("/mentor");
-        // }
-      });
+      }
+      if ([1, 2, 3].includes(data.role)) {
+        this.$router.push("/manager/workflow");
+      }
     },
     getQrcode() {
       accountService.getQrcode().then(data => {
@@ -215,6 +217,6 @@ export default {
   }
 };
 </script>
-<style type="text/css" lang="scss" rel="stylesheet/scss">
+<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
 @import "../assets/css/login.scss";
 </style>

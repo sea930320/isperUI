@@ -5,7 +5,7 @@
       {{success ? '已上传' : '上传'}}
     </a>
     <my-upload
-      url="/api/file/upload"
+      :url="apiRootPath + '/account/file/upload'"
       :only-single="true"
       :value="uploadShow"
       field="file"
@@ -29,6 +29,7 @@ export default {
   },
   data() {
     return {
+      apiRootPath: process.env.VUE_APP_API_ENDPOINT,
       uploadShow: false,
       success: false,
       key: 0

@@ -2,6 +2,7 @@ $header-bg-color : #081120;
 $main-bg-color : #ebe9ea;
 $logo-bg-color: #1e66dc;
 $placeholder-color: #ccc;
+$text-color-1: #2a396f;
 
 .header-bg {
     background-color: $header-bg-color;
@@ -19,9 +20,17 @@ $placeholder-color: #ccc;
     width: 80%;
 }
 
+.text-color-1 {
+    color: $text-color-1;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 90%;
+    }
+
+    .container.original {
+        max-width: 1024px;
     }
 }
 

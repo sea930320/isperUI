@@ -62,7 +62,7 @@
                 <b-button
                   variant="primary"
                   @click="sendVerificationCode"
-                  :disabled="session_expire_time > 0 || sendLabel !='Send'"
+                  :disabled="session_expire_time > 0 || sendLabel !='获取'"
                 >{{(session_expire_time &lt;= 0) ? sendLabel: session_expire_time + ' s'}}</b-button>
               </b-input-group-append>
             </b-input-group>
@@ -185,7 +185,7 @@ export default {
       if (this.timer) {
         clearInterval(this.timer);
       }
-      this.sendLabel = "Sending...";
+      this.sendLabel = "发送中...";
       accountService
         .sendCode({
           to: this.userInfo.phone
@@ -194,14 +194,14 @@ export default {
           () => {
             this.$toasted.success("Please check your phone");
             this.startTimer();
-            this.sendLabel = "Send";
+            this.sendLabel = "获取";
           },
           () => {
-            this.sendLabel = "Send";
+            this.sendLabel = "获取";
           }
         )
         .catch(() => {
-          this.sendLabel = "Send";
+          this.sendLabel = "获取";
         });
     },
     startTimer() {
