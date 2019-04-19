@@ -118,6 +118,7 @@
         :per-page="queryParam.size"
         limit="5"
         v-model="queryParam.page"
+
       />
     </b-row>
     <!-- 查看大图Modal -->

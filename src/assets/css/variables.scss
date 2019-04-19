@@ -4,6 +4,8 @@ $logo-bg-color: #1e66dc;
 $placeholder-color: #ccc;
 $text-color-1: #2a396f;
 
+$subtable-header-color:#909090;
+
 .header-bg {
     background-color: $header-bg-color;
 }
@@ -61,6 +63,20 @@ $text-color-1: #2a396f;
 /* Internet Explorer 10-11 */
 .form-control::-ms-input-placeholder {
     color: $placeholder-color;
+}
+
+.subtable thead{
+    background-color: $subtable-header-color;
+}
+.subtable{
+    width:100%;
+    table-layout:fixed;
+    word-wrap:break-word;
+    padding:5px;
+    overflow-y:auto;
+}
+.subtable_div{
+    height:600px;border:1px solid darkgrey;padding:0px
 }
 
 /* Microsoft Edge */

@@ -172,6 +172,7 @@ export default {
     }),
     loginHandle() {
       accountService.login(this.user).then(data => {
+<<<<<<< HEAD
         this.$toasted.success("successfully logged in, role_id: " + data.role);
         this.firstPageGo(data);
       });
@@ -186,6 +187,15 @@ export default {
       if ([1, 2, 3].includes(data.role)) {
         this.$router.push("/manager/workflow");
       }
+=======
+//        alert("successfully logged in, role_id: " + data.role);
+        this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(data));
+        this.loginAction(data);
+        if ([1, 2, 3].includes(data.role)) {
+          this.$router.push("/manager/workflow");
+        }
+      });
+>>>>>>> github/11_projectManagement
     },
     getQrcode() {
       accountService.getQrcode().then(data => {
