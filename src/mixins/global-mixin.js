@@ -1,3 +1,5 @@
+import { STORAGE_KEY_USER } from "@/store/storageKey";
+
 export default {
     data: function () {
         return {
@@ -37,6 +39,16 @@ export default {
             if (/(iPhone|iPad|iPod)/.test(navigator.platform)) return 'IOS'
             if (/OPR/.test(navigator.userAgent)) return 'Opera'
             if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) return 'Safari'
+        }
+    },
+    computed: {
+        isLoggedIn() {
+            const USER = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
+            if (USER) {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }

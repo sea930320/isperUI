@@ -24,4 +24,44 @@
         }
 
     }
+
+    .left-img {
+        margin-left: 37%;
+        transform: translateX(-50%);
+        width: auto;
+        height: 710px
+    }
+
+    .img-mask {
+        position: absolute;
+        background: #27376ce6;
+        top: 35%;
+        width: 80%;
+        left: 10%;
+        border-radius: 4px;
+        padding: 10px 30px;
+        color: white;
+        text-align: left;
+        font-size: 25px;
+        font-weight: bold;
+
+        .mask-body-text {
+            border-top: 5px solid #d75852;
+        }
+
+        .mask-body-icon {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            background: white;
+            border-radius: 42px;
+            color: black;
+            font-weight: 900;
+            margin-top: 8px;
+
+            svg {
+                margin-top: -10px;
+            }
+        }
+    }
 }

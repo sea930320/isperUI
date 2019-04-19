@@ -11,6 +11,9 @@ import globalMixin from './mixins/global-mixin'
 import DataProcessMixin from "./mixins/data-process";
 import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
 
 import {
   STORAGE_KEY_USER
@@ -24,21 +27,23 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //Font awesome
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
-Vue.component('icon', Icon)
+Vue.component('icon', Icon);
 
-Vue.config.productionTip = false
-Vue.use(VueResource)
-Vue.use(VueCookie)
-Vue.use(BootstrapVue)
-Vue.use(VueLodash, lodash)
+Vue.config.productionTip = false;
+Vue.use(VueResource);
+Vue.use(VueCookie);
+Vue.use(BootstrapVue);
+Vue.use(VueLodash, lodash);
 Vue.use(Toasted, {
   duration: 1500
-})
+});
 Vue.use(VeeValidate, {
   fieldsBagName: 'veeFields'
 });
-Vue.mixin(globalMixin)
-Vue.mixin(DataProcessMixin)
+Vue.mixin(globalMixin);
+Vue.mixin(DataProcessMixin);
+Vue.use(VueFormWizard);
+
 
 new Vue({
   router,
@@ -53,7 +58,7 @@ new Vue({
   methods: {
     checkLogin() {
       // 检查是否存在session
-      const user = JSON.parse(this.$cookie.get(STORAGE_KEY_USER))
+      const user = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
       if (!user) {
         if (!this.$route.name || ['home', 'register'].includes(this.$route.name)) {
           this.$router.push(this.$route.fullPath)

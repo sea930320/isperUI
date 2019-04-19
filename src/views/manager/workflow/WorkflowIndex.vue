@@ -128,10 +128,10 @@
 <script>
 import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState } from "vuex";
-import Loading from "@/components/loading/loading";
+import Loading from "@/components/loading/Loading";
 import ToggleUpload from "@/components/upload/ToggleUpload";
 import workflowService from "@/services/workflowService";
-import ImageView from "@/components/imageView/imageView";
+import ImageView from "@/components/imageView/ImageView";
 import _ from "lodash";
 import arrayUtils from "@/utils/arrayUtils";
 import dateUtils from "@/utils/dateUtils";
