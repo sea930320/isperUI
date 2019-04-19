@@ -50,6 +50,10 @@ const routes = [{
         path: 'workflow',
         name: 'manager-workflow',
         component: () => import('@/views/manager/workflow/WorkflowIndex.vue'),
+      }, {
+        path: 'group',
+        name: 'manager-group',
+        component: () => import('@/views/manager/group/GroupIndex.vue'),
       }
     ]
   }
