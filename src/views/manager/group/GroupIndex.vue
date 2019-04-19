@@ -1,5 +1,5 @@
 <template>
-  <div class="workflow-index">
+  <div class="group-index">
     <loading v-if="isRunning"></loading>
     <b-row>
       <b-col lg="3" md="6" sm="12" class="mb-3 mt-4">
@@ -292,8 +292,8 @@ export default {
 };
 </script>
 
-<style type="text/css" lang="scss" rel="stylesheet/scss">
-.workflow-index {
+<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
+.group-index {
   .field-sn {
     width: 7%;
     text-align: left !important;
