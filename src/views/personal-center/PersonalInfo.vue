@@ -5,7 +5,7 @@
         <b-card-header>
           <PersonalCenterTab activeTab="0"/>
         </b-card-header>
-        <b-card-body class="text-left">
+        <b-card-body class="text-center">
           <b-form-group label-cols="4" label-cols-lg="2" label="姓名 *" label-for="userName">
             <b-form-input type="text" v-model="userInfo.name" name="userName" required/>
           </b-form-group>
