@@ -18,7 +18,14 @@
             </b-col>
             <b-col lg="9" md="6" sm="12" class="align-self-center mb-3 mt-5">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary" v-b-modal.newGroup>添加集群</b-button>
+                    <b-button :size="template_size" variant="outline-primary" v-b-modal.newGroup @click="newGroup = {
+                        name: '',
+                        comment: '',
+                        default: null,
+                        publish: null,
+                        managerName: '',
+                        managerPass: ''
+                    }">添加集群</b-button>
                     <b-modal hide-footer id="newGroup" title="添加集群">
                         <div>
                             <b-form @submit="onSubmit" class="container w-80 pt-3">
@@ -32,7 +39,7 @@
                                 </b-form-group>
                                 <b-form-group id="input-group-2" label-for="input-2">
                                     <b-form-textarea
-                                            id="input-2"
+                                            id="input-21"
                                             rows="3"
                                             no-resize
                                             v-model="newGroup.comment"
@@ -50,7 +57,7 @@
                                 <br/>
                                 <b-form-group id="input-group-2" class="text-left" label="创建管理员 :" label-for="input-2">
                                     <b-form-input
-                                            id="input-2"
+                                            id="input-22"
                                             v-model="newGroup.managerName"
                                             required
                                             placeholder="管理员账号"
@@ -58,7 +65,7 @@
                                 </b-form-group>
                                 <b-form-group id="input-group-2" label-for="input-2">
                                     <b-form-input
-                                            id="input-2"
+                                            id="input-23"
                                             v-model="newGroup.managerPass"
                                             required
                                             placeholder="管理员密码"
@@ -237,7 +244,6 @@
             }
         },
         watch: {
-            // 监控查询参数，如有变化 查询列表数据
             queryParam: {
                 handler() {
                     this.queryWorkflowList();
@@ -254,6 +260,8 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
+                this.$['#newGroup'].hide();
+                this.run();
                 alert(JSON.stringify(this.newGroup))
             },
             // 查询流程列表数据

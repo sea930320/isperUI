@@ -4,11 +4,6 @@ import xhr from './xhr/'
  */
 class GroupService {
 
-  /**
-   * 获取流程列表
-   * @param  {Object} 查询参数
-   * @return {Object} groups
-   */
   fetchList(options) {
     return xhr({
       method: 'get',
@@ -17,11 +12,6 @@ class GroupService {
     })
   }
 
-  /**
-   * 创建流程
-   * @param  {Object}
-   * @return {Object} group
-   */
   create(data) {
     return xhr({
       method: 'post',
