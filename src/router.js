@@ -21,10 +21,10 @@ const personalCenterRoutes = [{
 }]
 
 const routes = [{
-    path: '/',
-    name: 'home',
-    component: () => import('@/views/Home.vue')
-},
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/Home.vue')
+    },
     {
         path: '/login',
         name: 'login',
@@ -49,15 +49,19 @@ const routes = [{
             }, {
                 path: 'workflow',
                 name: 'manager-workflow',
-                component: () => import('@/views/manager/workflow/WorkflowIndex.vue'),
+                component: () => import('@/views/manager/workflow/WorkflowIndex.vue')
             }, {
                 path: 'project',
                 name: 'manager-project',
-                component: () => import('@/views/manager/project/ProjectIndex.vue'),
+                component: () => import('@/views/manager/project/ProjectIndex.vue')
             }, {
                 path: 'project/create_project_wizard',
                 name: 'create-project-wizard',
-                component: () => import('@/views/manager/project/CreateProjectWizard.vue'),
+                component: () => import('@/views/manager/project/CreateProjectWizard.vue')
+            }, {
+                path: 'group',
+                name: 'manager-group',
+                component: () => import('@/views/manager/group/GroupIndex.vue')
             }
         ]
     }

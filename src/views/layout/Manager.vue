@@ -4,6 +4,7 @@
       <template v-slot:pageMenu>
         <b-nav-item to="/manager/workflow">流程管理</b-nav-item>
         <b-nav-item to="/manager/project">项目管理</b-nav-item>
+        <b-nav-item to="/manager/group">集群管理</b-nav-item>
         <b-nav-item to="#">用户管理</b-nav-item>
         <b-nav-item to="#">课程管理</b-nav-item>
       </template>

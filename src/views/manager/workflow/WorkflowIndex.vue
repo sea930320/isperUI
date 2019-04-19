@@ -118,8 +118,7 @@
         :per-page="queryParam.size"
         limit="5"
         v-model="queryParam.page"
-
-      />
+      ></b-pagination>
     </b-row>
     <!-- 查看大图Modal -->
     <image-view :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></image-view>
