@@ -26,7 +26,7 @@
                         managerName: '',
                         managerPass: ''
                     }">添加集群</b-button>
-                    <b-modal hide-footer id="newGroup" title="添加集群">
+                    <b-modal hide-footer id="newGroup" ref="newGroup" title="添加集群">
                         <div>
                             <b-form @submit="onSubmit" class="container w-80 pt-3">
                                 <b-form-group id="input-group-1" label-for="name">
@@ -133,9 +133,9 @@
 <script>
     import {expType, level, abilityTarget} from "@/filters/fun";
     import {mapState} from "vuex";
-    import Loading from "@/components/loading/loading";
+    import Loading from "@/components/loading/Loading";
     import GroupService from "@/services/groupService";
-    import ImageView from "@/components/imageView/imageView";
+    import ImageView from "@/components/imageView/ImageView";
     import _ from "lodash";
     import BRow from "bootstrap-vue/src/components/layout/row";
 
@@ -260,9 +260,26 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                this.$['#newGroup'].hide();
+                this.$refs['newGroup'].hide();
                 this.run();
-                alert(JSON.stringify(this.newGroup))
+                GroupService
+                    .create(this.newGroup)
+                    .then(data => {
+                        data.results.forEach(item => {
+                            if (item.checked === undefined) {
+                                item.checked = false;
+                            }
+                            if (item.locked === undefined) {
+                                item.locked = false;
+                            }
+                        });
+                        this.allgroup.list = data.results;
+                        this.allgroup.total = data.paging.count;
+                        this.$emit("data-ready");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             },
             // 查询流程列表数据
             queryWorkflowList() {
