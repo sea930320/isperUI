@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div class="group-index">
     <loading v-if="isRunning"></loading>
     <b-row>
@@ -9,18 +8,6 @@
         </b-row>
         <b-input-group :size="template_size">
           <b-input-group-prepend>
-=======
-    <div class="workflow-index">
-        <loading v-if="isRunning"></loading>
-        <b-row>
-            <b-col lg="3" md="6" sm="12" class="mb-3 mt-4">
-                <b-row style="fontSize: 18px">
-                    <icon name="home" style="width: 22px; height: 25px;" class="ml-3 mb-3 mr-3"></icon>
-                    集群管理
-                </b-row>
-                <b-input-group :size="template_size">
-                    <b-input-group-prepend>
->>>>>>> github/12_groupManagement
             <span class="input-group-text">
               <icon name="search"></icon>
             </span>
@@ -320,7 +307,6 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-<<<<<<< HEAD
 .group-index {
   .field-sn {
     width: 7%;
@@ -347,32 +333,4 @@
     text-align: left !important;
   }
 }
-=======
-    .workflow-index {
-        .field-sn {
-            width: 7%;
-            text-align: left !important;
-        }
-        .field-name {
-            width: 10%;
-            text-align: left !important;
-        }
-        .field-creator {
-            width: 38%;
-            text-align: left !important;
-        }
-        .field-create_time {
-            width: 12%;
-            text-align: left !important;
-        }
-        .field-rend_ani_1 {
-            width: 18%;
-            text-align: left !important;
-        }
-        .field-rend_ani_2 {
-            width: 15%;
-            text-align: left !important;
-        }
-    }
->>>>>>> github/12_groupManagement
 </style>
