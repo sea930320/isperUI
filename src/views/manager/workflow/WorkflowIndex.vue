@@ -21,10 +21,13 @@
       </b-col>
       <b-col lg="5" md="6" sm="12" class="align-self-center mb-3">
         <b-button-group class="float-right">
+          <b-button :size="template_size" variant="outline-primary">公开</b-button>
+          <b-button :size="template_size" variant="outline-primary">不公开</b-button>
           <b-button :size="template_size" variant="outline-primary" @click="newProcess">新建流程</b-button>
           <b-button :size="template_size" variant="outline-primary">发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary">复制为未发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary">共享</b-button>
+          <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
         </b-button-group>
       </b-col>
     </b-row>
@@ -182,12 +185,12 @@ export default {
           class: "text-center field-rend_ani_2"
         },
         experiment_type_label: {
-          label: "实验类型标签",
+          label: "事务类型",
           sortable: false,
           class: "text-center field-experiment_type_label"
         },
         experiment_task_label: {
-          label: "实验任务标签",
+          label: "流程标签",
           sortable: false,
           class: "text-center field-experiment_task_label"
         },
