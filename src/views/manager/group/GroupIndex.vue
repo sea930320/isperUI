@@ -292,7 +292,7 @@ export default {
 };
 </script>
 
-<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
+<style type="text/css" lang="scss" rel="stylesheet/scss">
 .group-index {
   .field-sn {
     width: 7%;
