@@ -48,7 +48,7 @@
             <template slot="mission_type" slot-scope="row">
                 {{row.item.course}}
             </template>
-            <template slot="edit_control" slot-scope="row">
+            <template slot="edit_control" slot-scope="">
                 <b-button-group class="float-right">
                     <b-button :size="template_size" variant="outline-success">
                         <icon name="edit"></icon> 编辑
@@ -82,10 +82,10 @@
     import { mapState } from "vuex";
     import Loading from "@/components/loading/Loading";
     import ProjectService from "@/services/projectService";
-    import imageView from "@/components/imageView/imageView";
+    import imageView from "@/components/imageView/ImageView";
     import _ from "lodash";
     // import arrayUtils from "@/utils/arrayUtils";
-    import dateUtils from "@/utils/dateUtils";
+    // import dateUtils from "@/utils/dateUtils";
 
     export default {
         name: "project-index",
