@@ -29,7 +29,7 @@ class GroupService {
         })
     }
 
-    updateWorkflow(data) {
+    update(data) {
         return xhr({
             method: 'post',
             url: '/group/update',
@@ -37,28 +37,26 @@ class GroupService {
         })
     }
 
-    /**
-     * 发布流程
-     * @param  {String}
-     * @return {Object}
-     */
-    publishWorkflow(data) {
+    addManager(data) {
         return xhr({
             method: 'post',
-            url: '/group/publish',
+            url: '/group/addManager',
             params: data
         })
     }
 
-    /**
-     * 复制流程
-     * @param  {String}
-     * @return {Object}
-     */
-    copyWorkflow(data) {
+    updateManager(data) {
         return xhr({
             method: 'post',
-            url: '/group/flow/copy',
+            url: '/group/updateManager',
+            params: data
+        })
+    }
+
+    pResetManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/resetManager',
             params: data
         })
     }
