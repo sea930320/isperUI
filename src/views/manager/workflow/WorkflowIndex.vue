@@ -83,13 +83,18 @@
         <span v-else>已发布</span>
       </template>
       <template slot="action" slot-scope="row">
-        <a class="btn-link" href="javascript:;" v-if="row.item.edited" @click="saveWorkflow(row)">保存</a>
-        <a class="btn-link" href="javascript:;" v-else @click="editWorkflow(row)">编辑</a>
+        <a
+          class="btn-link"
+          href="javascript:;"
+          v-if="row.item.edited"
+          @click="saveWorkflow(row.item)"
+        >保存</a>
+        <a class="btn-link" href="javascript:;" v-else @click="editWorkflow(row.item)">编辑</a>
         <a
           class="btn-link"
           href="javascript:;"
           v-if="row.item.status == 2"
-          @click="viewXmlHandler(row)"
+          @click="viewXmlHandler(row.item)"
         >查看</a>
         <router-link
           v-if="!!row.item.id && row.item.status == 1"
@@ -99,18 +104,18 @@
           class="btn-link"
           href="javascript:;"
           v-if="row.item.status == 2"
-          @click="toSetPage(row)"
+          @click="toSetPage(row.item)"
         >设置</a>
         <a href="javascript:;" @click="deleteWorkflowClick(row)">删除</a>
         <a
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 0"
-          @click="lockWorkflowClick(row)"
+          @click="lockWorkflowClick(row.item)"
         >保护</a>
         <a
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 1"
-          @click="unlockWorkflowClick(row)"
+          @click="unlockWorkflowClick(row.item)"
         >解除保护</a>
       </template>
     </b-table>
@@ -300,6 +305,34 @@ export default {
       this.animationImgSrc = animation.url;
       this.bigImgModal = true;
     },
+    // 验证编辑的流程数据
+    validateData(workflow) {
+      if (workflow.name === "") {
+        this.$toasted.error("请输入流程名称");
+        return false;
+      }
+      if (workflow.name.length > 20) {
+        this.$toasted.error("流程名称应不超过20字");
+        return false;
+      }
+      if (!workflow.animation1) {
+        this.$toasted.error("请上传渲染动画1");
+        return false;
+      }
+      if (!workflow.animation2) {
+        this.$toasted.error("请上传渲染动画2");
+        return false;
+      }
+      if (workflow.task_label === "") {
+        this.$toasted.error("请输入流程的实验任务标签");
+        return false;
+      }
+      if (workflow.task_label.length > 20) {
+        this.$toasted.error("实验任务标签应不超过20字");
+        return false;
+      }
+      return true;
+    },
     // 新建流程
     newProcess() {
       if (this.queryParam.status === "") {
@@ -331,12 +364,43 @@ export default {
       let item = arrayUtils.find(this.workflows.list, data);
       item.animation1 = data.animation1;
       item.animation2 = data.animation2;
+    },
+    saveWorkflowData(workflow) {
+      let data = {
+        name: workflow.name,
+        animation1: workflow.animation1.id,
+        animation2: workflow.animation2.id,
+        type_label: workflow.type_label,
+        task_label: workflow.task_label
+      };
+      if (workflow.id) data.flow_id = workflow.id;
+      return data;
+    },
+    // 保存编辑的流程
+    saveWorkflow(workflow) {
+      if (this.validateData(workflow)) {
+        let data = this.saveWorkflowData(workflow);
+        if (workflow.id) {
+          // 更新流程
+          workflowService.updateWorkflow(data).then(() => {
+            this.$toasted.success("更新流程成功");
+            this.queryWorkflowList();
+          });
+        } else {
+          // 创建新流程
+          workflowService.create(data).then(() => {
+            this.$toasted.success("保存新建流程成功");
+            this.queryWorkflowList();
+          });
+        }
+        this.newFlowStatus = false;
+      }
     }
   }
 };
 </script>
 
-<style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
+<style type="text/css" lang="scss" rel="stylesheet/scss">
 .workflow-index {
   .field-sn {
     width: 7%;
@@ -367,6 +431,10 @@ export default {
   }
   .field-action {
     width: 20%;
+  }
+  .table th,
+  .table td {
+    vertical-align: middle;
   }
 }
 </style>
