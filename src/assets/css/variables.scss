@@ -1,9 +1,8 @@
-$header-bg-color : #081120;
+$header-bg-color : #253568;
 $main-bg-color : #ebe9ea;
 $logo-bg-color: #1e66dc;
 $placeholder-color: #ccc;
 $text-color-1: #2a396f;
-
 $subtable-header-color:#909090;
 
 .header-bg {
@@ -65,18 +64,22 @@ $subtable-header-color:#909090;
     color: $placeholder-color;
 }
 
-.subtable thead{
+.subtable thead {
     background-color: $subtable-header-color;
 }
-.subtable{
-    width:100%;
-    table-layout:fixed;
-    word-wrap:break-word;
-    padding:5px;
-    overflow-y:auto;
+
+.subtable {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+    padding: 5px;
+    overflow-y: auto;
 }
-.subtable_div{
-    height:600px;border:1px solid darkgrey;padding:0px
+
+.subtable_div {
+    height: 600px;
+    border: 1px solid darkgrey;
+    padding: 0px
 }
 
 /* Microsoft Edge */
