@@ -21,8 +21,8 @@
                     <b-button :size="template_size" variant="outline-primary" v-b-modal.newGroup @click="newGroup = {
                         name: '',
                         comment: '',
-                        default: null,
-                        publish: null,
+                        default: 0,
+                        publish: 1,
                         managerName: '',
                         managerPass: ''
                     }">添加集群
@@ -48,12 +48,12 @@
                                             placeholder="集群描述"
                                     ></b-form-textarea>
                                 </b-form-group>
-                                <b-form-radio-group v-model="newGroup.default" :options="options1" :state="state1"
+                                <b-form-radio-group v-model="newGroup.default" :options="options1"
                                                     name="default">
                                     <span class="float-left">是否为默认集群 :</span>
                                 </b-form-radio-group>
                                 <br/>
-                                <b-form-radio-group v-model="newGroup.publish" :options="options2" :state="state2"
+                                <b-form-radio-group v-model="newGroup.publish" :options="options2"
                                                     name="publish">
                                     <span class="float-left">是否为公开集群 :</span>
                                 </b-form-radio-group>
@@ -118,12 +118,47 @@
                     <span v-for="manager in row.item.groupManagers" :key="manager.id">{{ manager.name + ', ' }}</span>
                 </div>
             </template>
-            <template slot="action">
+            <template slot="action" slot-scope="row">
                 <b-button-group>
-                    <b-button :size="template_size" variant="outline-primary">
+                    <b-button :key="row.item.id" :size="template_size" variant="outline-primary"  @click="alert(row.item.id)">
                         <icon name="edit" style="width: 20px"></icon>
                         编辑
                     </b-button>
+                    <!--<b-modal hide-footer id="editGroup" title="修改集群">-->
+                        <!--<div>-->
+                            <!--<b-form @submit="onSubmit" class="container w-80 pt-3">-->
+                                <!--<b-form-group id="input-group-1" label-for="name">-->
+                                    <!--<b-form-input-->
+                                            <!--id="name"-->
+                                            <!--v-model="editItem.name"-->
+                                            <!--required-->
+                                            <!--placeholder="集群名称"-->
+                                    <!--&gt;</b-form-input>-->
+                                <!--</b-form-group>-->
+                                <!--<b-form-group id="input-group-2" label-for="input-2">-->
+                                    <!--<b-form-textarea-->
+                                            <!--id="input-21"-->
+                                            <!--rows="3"-->
+                                            <!--no-resize-->
+                                            <!--v-model="editItem.comment"-->
+                                            <!--required-->
+                                            <!--placeholder="集群描述"-->
+                                    <!--&gt;</b-form-textarea>-->
+                                <!--</b-form-group>-->
+                                <!--<b-form-radio-group v-model="editItem.default" :options="options1"-->
+                                                    <!--name="default">-->
+                                    <!--<span class="float-left">是否为默认集群 :</span>-->
+                                <!--</b-form-radio-group>-->
+                                <!--<br/>-->
+                                <!--<b-form-radio-group v-model="editItem.publish" :options="options2"-->
+                                                    <!--name="publish">-->
+                                    <!--<span class="float-left">是否为公开集群 :</span>-->
+                                <!--</b-form-radio-group>-->
+                                <!--<br/>-->
+                                <!--<b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>-->
+                            <!--</b-form>-->
+                        <!--</div>-->
+                    <!--</b-modal>-->
                     <b-button :size="template_size" variant="outline-primary">
                         <icon name="user-plus" style="width: 20px"></icon>
                         配置管理员
@@ -169,6 +204,7 @@
         data() {
             return {
                 selected: [],
+                editItem: {},
                 columns: {
                     check: {
                         label: "",
@@ -235,8 +271,8 @@
                 newGroup: {
                     name: '',
                     comment: '',
-                    default: null,
-                    publish: null,
+                    default: 0,
+                    publish: 1,
                     managerName: '',
                     managerPass: ''
                 },
@@ -257,12 +293,6 @@
         },
         computed: {
             ...mapState(["userInfo"]),
-            state1() {
-                return Boolean(this.newGroup.default !== null)
-            },
-            state2() {
-                return Boolean(this.newGroup.publish !== null)
-            }
         },
         watch: {
             queryParam: {
@@ -364,7 +394,37 @@
                     .catch(() => {
                         this.$emit("data-failed");
                     });
-            }
+            },
+            // editGroupSave(row) {
+            //     GroupService
+            //         .deleteGroups({ids: JSON.stringify(this.selected)})
+            //         .then(res => {
+            //             if (res.results === 'success')
+            //                 GroupService
+            //                     .fetchList({...this.queryParam, ...this.queryDebounceParam})
+            //                     .then(data => {
+            //                         data.results.forEach(item => {
+            //                             if (item.checked === undefined) {
+            //                                 item.checked = false;
+            //                             }
+            //                             if (item.locked === undefined) {
+            //                                 item.locked = false;
+            //                             }
+            //                         });
+            //                         this.allgroup.list = data.results;
+            //                         this.allgroup.total = data.paging.count;
+            //                         this.$emit("data-ready");
+            //                     })
+            //                     .catch(() => {
+            //                         this.$emit("data-failed");
+            //                     });
+            //             else
+            //                 this.$emit("data-failed");
+            //         })
+            //         .catch(() => {
+            //             this.$emit("data-failed");
+            //         });
+            // }
         }
     };
 </script>
