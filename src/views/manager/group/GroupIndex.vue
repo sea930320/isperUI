@@ -1,5 +1,5 @@
 <template>
-    <div class="workflow-index">
+    <div class="group-index">
         <loading v-if="isRunning"></loading>
         <b-row>
             <b-col lg="3" md="6" sm="12" class="mb-3 mt-4">
@@ -9,9 +9,9 @@
                 </b-row>
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
-            <span class="input-group-text">
-              <icon name="search"></icon>
-            </span>
+                        <span class="input-group-text">
+                          <icon name="search"></icon>
+                        </span>
                     </b-input-group-prepend>
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder=""/>
                 </b-input-group>
@@ -25,7 +25,8 @@
                         publish: null,
                         managerName: '',
                         managerPass: ''
-                    }">添加集群</b-button>
+                    }">添加集群
+                    </b-button>
                     <b-modal hide-footer id="newGroup" ref="newGroup" title="添加集群">
                         <div>
                             <b-form @submit="onSubmit" class="container w-80 pt-3">
@@ -47,11 +48,13 @@
                                             placeholder="集群描述"
                                     ></b-form-textarea>
                                 </b-form-group>
-                                <b-form-radio-group v-model="newGroup.default" :options="options1" :state="state1" name="default">
+                                <b-form-radio-group v-model="newGroup.default" :options="options1" :state="state1"
+                                                    name="default">
                                     <span class="float-left">是否为默认集群 :</span>
                                 </b-form-radio-group>
                                 <br/>
-                                <b-form-radio-group v-model="newGroup.publish" :options="options2" :state="state2" name="publish">
+                                <b-form-radio-group v-model="newGroup.publish" :options="options2" :state="state2"
+                                                    name="publish">
                                     <span class="float-left">是否为公开集群 :</span>
                                 </b-form-radio-group>
                                 <br/>
@@ -61,6 +64,7 @@
                                             v-model="newGroup.managerName"
                                             required
                                             placeholder="管理员账号"
+                                            autocomplete="username"
                                     ></b-form-input>
                                 </b-form-group>
                                 <b-form-group id="input-group-2" label-for="input-2">
@@ -70,17 +74,28 @@
                                             required
                                             placeholder="管理员密码"
                                             type="password"
+                                            autocomplete="new-password"
                                     ></b-form-input>
                                 </b-form-group>
                                 <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
                             </b-form>
                         </div>
                     </b-modal>
-                    <b-button :size="template_size" variant="outline-primary">删除集群</b-button>
+                    <b-button :size="template_size" variant="outline-primary" @click="this.deleteGroup">删除集群</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
         <b-table :items="allgroup.list" small striped hover :fields="columns" head-variant style="fontSize: 18px">
+            <template slot="check" slot-scope="row">
+                <b-form-checkbox
+                        :id="row.item.id.toString()"
+                        v-model="selected"
+                        name="checkbox"
+                        :value="row.item.id"
+                        unchecked-value=""
+                >
+                </b-form-checkbox>
+            </template>
             <template slot="id" slot-scope="row">{{ row.item.id }}</template>
             <template slot="name" slot-scope="row">
                 <span class="text">{{row.item.name}}</span>
@@ -153,7 +168,13 @@
         },
         data() {
             return {
+                selected: [],
                 columns: {
+                    check: {
+                        label: "",
+                        sortable: false,
+                        class: "text-center field-check"
+                    },
                     id: {
                         label: "ID",
                         sortable: false,
@@ -220,12 +241,12 @@
                     managerPass: ''
                 },
                 options1: [
-                    { text: '是', value: 1 },
-                    { text: '否', value: 0 }
+                    {text: '是', value: 1},
+                    {text: '否', value: 0}
                 ],
                 options2: [
-                    { text: '是', value: 1 },
-                    { text: '否', value: 0 }
+                    {text: '是', value: 1},
+                    {text: '否', value: 0}
                 ]
             };
         },
@@ -264,18 +285,28 @@
                 this.run();
                 GroupService
                     .create(this.newGroup)
-                    .then(data => {
-                        data.results.forEach(item => {
-                            if (item.checked === undefined) {
-                                item.checked = false;
-                            }
-                            if (item.locked === undefined) {
-                                item.locked = false;
-                            }
-                        });
-                        this.allgroup.list = data.results;
-                        this.allgroup.total = data.paging.count;
-                        this.$emit("data-ready");
+                    .then((res) => {
+                        if (res.results === 'success')
+                            GroupService
+                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .then(data => {
+                                    data.results.forEach(item => {
+                                        if (item.checked === undefined) {
+                                            item.checked = false;
+                                        }
+                                        if (item.locked === undefined) {
+                                            item.locked = false;
+                                        }
+                                    });
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    this.$emit("data-ready");
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else
+                            this.$emit("data-failed");
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -303,22 +334,57 @@
                         this.$emit("data-failed");
                     });
             },
+            deleteGroup() {
+                this.run();
+                GroupService
+                    .deleteGroups({ids: JSON.stringify(this.selected)})
+                    .then(res => {
+                        if (res.results === 'success')
+                            GroupService
+                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .then(data => {
+                                    data.results.forEach(item => {
+                                        if (item.checked === undefined) {
+                                            item.checked = false;
+                                        }
+                                        if (item.locked === undefined) {
+                                            item.locked = false;
+                                        }
+                                    });
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    this.$emit("data-ready");
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            }
         }
     };
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    .workflow-index {
+    .group-index {
+        .field-check {
+            width: 2%;
+            text-align: left !important;
+        }
         .field-sn {
             width: 7%;
             text-align: left !important;
         }
         .field-name {
-            width: 10%;
+            width: 15%;
             text-align: left !important;
         }
         .field-creator {
-            width: 38%;
+            width: 33%;
             text-align: left !important;
         }
         .field-create_time {
