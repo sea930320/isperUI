@@ -106,7 +106,7 @@
           v-if="row.item.status == 2"
           @click="toSetPage(row.item)"
         >设置</a>
-        <a href="javascript:;" @click="deleteWorkflowClick(row)">删除</a>
+        <a href="javascript:;" @click="deleteWorkflowClick(row.item)">删除</a>
         <a
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 0"
@@ -130,16 +130,31 @@
     </b-row>
     <!-- 查看大图Modal -->
     <image-view :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></image-view>
+    <!-- 查看流程图 -->
+    <view-xml :visible="xmlModalShow" :xml="workflowXml" @on-close="xmlModalShow = false"></view-xml>
+    <b-modal v-model="deleteModal" title="删除提醒" size="lg" :showPerson="true">
+      <b-container fluid>
+        <div v-if="relatedProjects.length == 0" class="modal-msg">
+          <p class="message">是否确认删除本流程</p>
+          <p class="tip">(为慎重起见，删除项目请通过快捷键“Ctr+Delete”来实现)</p>
+        </div>
+      </b-container>
+      <div slot="modal-footer" class="w-100">
+        <b-button variant="danger" class="float-center mr-2" @click="deleteModal=false">确定</b-button>
+        <b-button variant="secondary" class="float-center" @click="deleteModal=false">取消</b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { expType, level, abilityTarget } from "@/filters/fun";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Loading from "@/components/loading/Loading";
 import ToggleUpload from "@/components/upload/ToggleUpload";
 import workflowService from "@/services/workflowService";
 import ImageView from "@/components/imageView/ImageView";
+import ViewXml from "@/components/workflowXML/ViewXML";
 import _ from "lodash";
 import arrayUtils from "@/utils/arrayUtils";
 import dateUtils from "@/utils/dateUtils";
@@ -149,6 +164,7 @@ export default {
   components: {
     Loading,
     ImageView,
+    ViewXml,
     ToggleUpload
   },
   filters: {
@@ -253,7 +269,16 @@ export default {
   },
   created() {
     this.$nextTick(() => {
+      this.isSuperFlag = this.userInfo.identity === 1;
       this.queryWorkflowList();
+    });
+  },
+  mounted() {
+    // 绑定键盘删除操作
+    document.addEventListener("keyup", e => {
+      if (e.ctrlKey && e.keyCode === 46) {
+        this.comfirmDelete();
+      }
     });
   },
   computed: {
@@ -275,6 +300,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["setFlowStep"]),
     // 查询流程列表数据
     queryWorkflowList() {
       this.run();
@@ -395,6 +421,70 @@ export default {
         }
         this.newFlowStatus = false;
       }
+    },
+    // 编辑流程
+    editWorkflow(workflow) {
+      if (workflow.protected === 1) {
+        this.$toasted.warn("该流程已被保护,请解除保护后进行编辑");
+      } else {
+        this.$set(workflow, "edited", true);
+      }
+    },
+    viewXmlHandler(workflow) {
+      this.workflowXml = workflow.xml;
+      this.xmlModalShow = true;
+    },
+    // 点击删除流程按钮
+    deleteWorkflowClick(workflow) {
+      if (workflow.protected === 1) {
+        this.$toasted.warn("该流程已被保护,请解除保护后再进行删除");
+      } else {
+        if (!workflow.id) {
+          this.workflows.list.splice(this.workflows.list.indexOf(workflow), 1);
+          this.newFlowStatus = false;
+          return;
+        }
+        this.relatedShow = false;
+        workflowService
+          .getWorkflowRelated({ flow_id: workflow.id })
+          .then(data => {
+            this.relatedProjects = data.map(i => {
+              this.$set(i, "expanded", false);
+              return i;
+            });
+          });
+        this.deleteModal = true;
+        this.currentDeleteItem = workflow;
+      }
+    },
+    deleteWorkflowHandler() {
+      workflowService
+        .deleteWorkflow({ flow_id: this.currentDeleteItem.id })
+        .then(() => {
+          this.$toasted.success("删除流程成功");
+          this.queryWorkflowList();
+        });
+    },
+    // Ctr+Delete 确定删除
+    comfirmDelete() {
+      // 首次删除提醒
+      if (this.deleteModal) {
+        this.deleteWorkflowHandler();
+        this.deleteModal = false;
+      }
+    },
+    toSetPage(item) {
+      if (item.protected === 1) {
+        this.$toasted.warn("该流程已被保护,请解除保护后进行设置");
+      } else {
+        this.setFlowStep(item.step);
+        this.$router.push({
+          name: "setworkflowNode",
+          params: {
+            flow_id: item.id
+          }
+        });
+      }
     }
   }
 };
@@ -435,6 +525,15 @@ export default {
   .table th,
   .table td {
     vertical-align: middle;
+  }
+  .modal-body {
+    .message {
+      font-size: 16px;
+    }
+    .tip {
+      font-size: 14px;
+      color: #999;
+    }
   }
 }
 </style>

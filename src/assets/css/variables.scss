@@ -83,3 +83,21 @@ $subtable-header-color:#909090;
 }
 
 /* Microsoft Edge */
+
+.modal-header {
+    background: #3a7de0;
+    color: white;
+
+    .close {
+        color: white;
+    }
+}
+
+.btn-green {
+    background-color: #00c175;
+    border: 0px none;
+}
+
+.btn-green:hover {
+    background-color: #04DA86;
+}
