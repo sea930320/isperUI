@@ -14,21 +14,26 @@
             </b-col>
             <b-col lg="9" md="6" sm="12" class="align-self-center mb-3">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary" @click="createProjectPage">新建项目</b-button>
-                    <b-button :size="template_size" variant="outline-primary">导出</b-button>
-                    <b-button :size="template_size" variant="outline-primary">共享</b-button>
-                    <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
+                    <b-button :size="template_size" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
+                    <b-button :size="template_size" variant="outline-primary" @click="checkedIds()">导出</b-button>
+                    <b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal :disabled="this.shareButtonDisabled">共享</b-button>
+                    <!--<b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal>共享</b-button>-->
+                    <b-button :size="template_size" variant="outline-primary" v-b-modal.unshareConfirmModal :disabled="this.unshareButtonDisabled">取消共享</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
         <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
             <template slot="selected" slot-scope="row">
-                <b-form-checkbox v-model="row.detailsShowing" @change="row.toggleDetails">
+                <b-form-checkbox v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
+                <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
                 </b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="is_share" slot-scope="row">
                 <icon v-if="row.item.is_share = 1" name="share"></icon>
+            </template>
+            <template slot="is_protected" slot-scope="row">
+                <icon v-if="row.item.protected = 1" name="lock"></icon>
             </template>
 
             <template slot="name" slot-scope="row">
@@ -48,13 +53,14 @@
             <template slot="mission_type" slot-scope="row">
                 {{row.item.course}}
             </template>
-            <template slot="edit_control" slot-scope="">
+            <template slot="edit_control" slot-scope="row">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-success">
-                        <icon name="edit"></icon> 编辑
+                    <b-button :size="template_size" variant="outline-primary">
+                        <icon name="cog"></icon> 设置
                     </b-button>
-                    <b-button :size="template_size" variant="outline-primary"><icon name="cog"></icon> 设置</b-button>
-                    <b-button :size="template_size" variant="outline-danger"><icon name="trash"></icon> 删除</b-button>
+                    <b-button :size="template_size" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
+                        <icon name="trash"></icon> 删除
+                    </b-button>
                 </b-button-group>
             </template>
 
@@ -73,8 +79,21 @@
             <router-view></router-view>
         </div>
         <!-- 查看大图Modal -->
-        <imageView :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></imageView>
+        <imageView :visible="bigImgModal" :src="animationImgSrc" @on-close=" bigImgModal=false"></imageView>
+        <!--//Confirm Delete Project-->
+        <b-modal id="deleteConfirmModal" title="Delete Project" @ok="deleteProject()">
+            <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p>
+        </b-modal>
+        <!--&lt;!&ndash;Confirm Share Project&ndash;&gt;-->
+        <b-modal id="shareConfirmModal" title="Project Sharing" @ok="shareProject()">
+            <p class="my-4">Do you want to share Project(s)?</p>
+        </b-modal>
+        <!--&lt;!&ndash;Confirm UnShare Project&ndash;&gt;-->
+        <b-modal id="unshareConfirmModal" title="Cancel Project Sharing" @ok="unshareProject()">
+            <p class="my-4">Do you want to not share Project(s)?</p>
+        </b-modal>
     </div>
+
 </template>
 
 <script>
@@ -112,6 +131,11 @@
                         class: "text-center field-sn"
                     },
                     is_share:{
+                        label: "",
+                        sortable: false,
+                        class: "text-center field-sn"
+                    },
+                    is_protected:{
                         label: "",
                         sortable: false,
                         class: "text-center field-sn"
@@ -167,29 +191,15 @@
                     total: 0
                 },
                 // 流程相关项目
-                relatedProjects: [],
                 animationImgSrc: "",
-                copyModalName: "",
-                workflowXml: null,
-                deleteModal: false,
-                publishModal: false,
-                copyModal: false,
                 bigImgModal: false,
-                newFlowStatus: false,
-                xmlModalShow: false,
-                relatedShow: false,
-                isSuperFlag: false,
-                shareModal: false,
-                experimentTypeOptions: [
-                    { value: "1", text: "立法类型实验" },
-                    { value: "2", text: "执法类型实验" },
-                    { value: "3", text: "诉讼与仲裁实验" },
-                    { value: "4", text: "自由类型实验" },
-                    { value: "5", text: "非诉讼与法务管理类型实验" },
-                    { value: "6", text: "法律思维类型实验" },
-                    { value: "7", text: "证据科学类型实验" },
-                    { value: "8", text: "法律实效评价类型实验" }
-                ],
+                currentProjectID:{},
+                shareButtonDisabled: true,
+                unshareButtonDisabled: true,
+                checkedSharedItemsID:[],
+                checkedUnsharedItemsID:[],
+                checkedSharedItems:[],
+                checkedUnsharedItems:[],
             };
         },
         created() {
@@ -238,13 +248,64 @@
                         this.$emit("data-failed");
                     });
             },
+            //Delete Project Confirm
+            deleteProjectConfirm(idValue){
+                this.currentProjectID = idValue;
+            },
+            // Delete Project
+            deleteProject(){
+                alert(this.userInfo);
+                this.run();
+//                ProjectService
+//                    .deleteProject({project_id:parseInt(this.currentProjectID.id)})
+//                    .then(() => {
+//                        this.queryProjectList();
+//                    })
+            },
+            shareProject(){
+                let ids = JSON.stringify(this.checkedUnsharedItemsID);
+                alert(ids);
+                this.run();
+                ProjectService
+                    .shareProject({data: ids})
+                    .then(() => {
+                        this.queryProjectList();
+                    })
+            },
+            unshareProject(){
+                let ids = JSON.stringify(this.checkedSharedItemsID);
+                alert(ids);
+                this.run();
+                ProjectService
+                    .unshareProject({data:ids})
+                    .then(() => {
+                        this.queryProjectList();
+                    })
+            },
+            //check checked or not
+            changeCheckBox(val, rowObj){
+                this.$set(rowObj,'checked',val);
+                this.checkedSharedItems = this.checkedItems().filter(item => item.is_share === 1 );
+                this.checkedUnsharedItems = this.checkedItems().filter(item => item.is_share === 0 );
+                if (this.checkedSharedItems.length > 0){
+                    this.unshareButtonDisabled = false;
+                }
+                if (this.checkedUnsharedItems.length > 0){
+                    this.unshareButtonDisabled = false;
+                }
+                this.checkedSharedItemsID = this.checkedSharedItems.map(item => item.id);
+                this.checkedUnsharedItemsID = this.checkedUnsharedItems.map(item => item.id);
+            },
+            checkedItems() {
+                return this.projects.list.filter(item =>item.checked === true)
+            },
             // 查看渲染动画的大图
             showBigImg(animation) {
                 this.animationImgSrc = animation.url;
                 this.bigImgModal = true;
             },
 
-//            Go To Crate Project Page
+            // Go To Create Project Page
             createProjectPage(){
                 this.$router.push('/manager/project/create_project_wizard');
             },

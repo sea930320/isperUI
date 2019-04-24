@@ -221,6 +221,13 @@ class ProjectService {
             params: data
         })
     }
+    unshareProject(data) {
+        return xhr({
+            method: 'get',
+            url: '/project/unshare',
+            params: data
+        })
+    }
 }
 
 export default new ProjectService()

@@ -7,7 +7,7 @@ import {
     STORAGE_KEY_USER
 } from './store/storageKey'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const personalCenterRoutes = [{
     path: 'personal-info',
