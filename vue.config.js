@@ -8,7 +8,6 @@ module.exports = {
                 changeOrigin: true
             },
             '/media': {
-                //test
                 // target: 'http://39.107.122.234:8000',
                 target: 'http://localhost:8000',
                 changeOrigin: true

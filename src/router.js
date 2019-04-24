@@ -7,9 +7,9 @@ import {
     STORAGE_KEY_USER
 } from './store/storageKey'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-const personalCenterRoutes = [{ 
+const personalCenterRoutes = [{
     path: 'personal-info',
     component: () => import('@/views/personal-center/PersonalInfo.vue')
 }, {
