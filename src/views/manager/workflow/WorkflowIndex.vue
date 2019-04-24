@@ -135,12 +135,11 @@
     <b-modal v-model="deleteModal" title="删除提醒" size="lg" :showPerson="true">
       <b-container fluid>
         <div v-if="relatedProjects.length == 0" class="modal-msg">
-          <p class="message">是否确认删除本流程</p>
-          <p class="tip">(为慎重起见，删除项目请通过快捷键“Ctr+Delete”来实现)</p>
+          <p class="message">该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。</p>
         </div>
       </b-container>
       <div slot="modal-footer" class="w-100">
-        <b-button variant="danger" class="float-center mr-2" @click="deleteModal=false">确定</b-button>
+        <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
         <b-button variant="secondary" class="float-center" @click="deleteModal=false">取消</b-button>
       </div>
     </b-modal>
@@ -277,7 +276,7 @@ export default {
     // 绑定键盘删除操作
     document.addEventListener("keyup", e => {
       if (e.ctrlKey && e.keyCode === 46) {
-        this.comfirmDelete();
+        this.confirmDelete();
       }
     });
   },
@@ -466,7 +465,7 @@ export default {
         });
     },
     // Ctr+Delete 确定删除
-    comfirmDelete() {
+    confirmDelete() {
       // 首次删除提醒
       if (this.deleteModal) {
         this.deleteWorkflowHandler();
