@@ -106,7 +106,7 @@
                 </b-table>
             </b-tab>
             <b-tab title="单位管理">
-                <p>I'm the second tab</p>
+                <CompanyVue />
             </b-tab>
         </b-tabs>
     </div>
@@ -120,6 +120,7 @@ import GroupService from "@/services/groupService";
 import _ from "lodash";
 import BRow from "bootstrap-vue/src/components/layout/row";
 import VueTagsInput from '@johmun/vue-tags-input';
+import CompanyVue from './Company_Index';
 
 export default {
     name: "group_company-index",
@@ -127,6 +128,7 @@ export default {
         BRow,
         Loading,
         VueTagsInput,
+        CompanyVue,
     },
     data() {
         return {
