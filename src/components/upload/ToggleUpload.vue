@@ -5,7 +5,7 @@
       {{success ? '已上传' : '上传'}}
     </a>
     <my-upload
-      :url="apiRootPath + '/account/file/upload'"
+      :url="apiRootPath + '/file/upload'"
       :only-single="true"
       :value="uploadShow"
       field="file"

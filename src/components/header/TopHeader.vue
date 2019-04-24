@@ -56,7 +56,7 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .top-header {
   .logo {
-    background-color: $logo-bg-color;
+    // background-color: $logo-bg-color;
     a {
       font-size: 25px;
     }
@@ -66,6 +66,12 @@ export default {
   }
   .navbar-dark .navbar-nav .nav-link {
     color: rgba(255, 255, 255, 0.7);
+    padding: 0px 16px;
+    height: 80px;
+    line-height: 80px;
+  }
+  .nav-link.active {
+    background: #4e73ff;
   }
 }
 </style>

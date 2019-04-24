@@ -16,13 +16,30 @@
     </div>
 </template>
 <script>
-    import TopHeader from "@/components/header/TopHeader";
-
-    export default {
-        components: {
-            TopHeader
-        },
-        created() {
-        }
+import TopHeader from "@/components/header/TopHeader";
+export default {
+  components: {
+    TopHeader
+  },
+  data() {
+    return {
+      activatedRoute: "workflow"
     };
+  },
+  created() {},
+  watch: {
+    $route: "checkActiveRoute"
+  },
+  methods: {
+    checkActiveRoute(to) {
+      if (to.path.indexOf("workflow") !== -1) {
+        this.activatedRoute = "workflow";
+      } else if (to.path.indexOf("project") !== -1) {
+        this.activatedRoute = "project";
+      } else if (to.path.indexOf("group") !== -1) {
+        this.activatedRoute = "group";
+      }
+    }
+  }
+};
 </script>

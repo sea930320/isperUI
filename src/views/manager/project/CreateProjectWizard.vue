@@ -11,72 +11,72 @@
       <b-container fluid>
         <b-row align-v="center">
           <b-col sm="1" class="mb-5">
-            <label for="input1">Small:</label>
+            <label for="input1">项目名称:</label>
           </b-col>
           <b-col sm="3">
-            <b-form-input id="input1" placeholder="Enter your name"></b-form-input>
+            <b-form-input id="input1" placeholder=""></b-form-input>
           </b-col>
 
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>流程图完整显示:</label>
           </b-col>
           <b-col sm="3">
-            <b-dropdown variant="light" text="test" class="w-100">
-              <b-dropdown-item-button>Action</b-dropdown-item-button>
-              <b-dropdown-item-button>Another action</b-dropdown-item-button>
-              <b-dropdown-item-button>Something else here...</b-dropdown-item-button>
+            <b-dropdown variant="light" text="完整显示" class="w-100">
+              <b-dropdown-item-button>动作1</b-dropdown-item-button>
+              <b-dropdown-item-button>动作2</b-dropdown-item-button>
+              <b-dropdown-item-button>其他</b-dropdown-item-button>
             </b-dropdown>
           </b-col>
 
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>开发模式:</label>
           </b-col>
           <b-col sm="3">
-            <b-dropdown variant="light" text="test" class="w-100">
-              <b-dropdown-item-button>Action</b-dropdown-item-button>
-              <b-dropdown-item-button>Another action</b-dropdown-item-button>
-              <b-dropdown-item-button>Something else here...</b-dropdown-item-button>
+            <b-dropdown variant="light" text="自由" class="w-100">
+              <b-dropdown-item-button>选项1</b-dropdown-item-button>
+              <b-dropdown-item-button>选项2</b-dropdown-item-button>
+              <b-dropdown-item-button>其他</b-dropdown-item-button>
             </b-dropdown>
           </b-col>
         </b-row>
 
         <b-row align-v="center">
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>成果参考释放方式:</label>
           </b-col>
           <b-col sm="3">
-            <b-dropdown variant="light" text="test" class="w-100">
-              <b-dropdown-item-button>Action</b-dropdown-item-button>
-              <b-dropdown-item-button>Another action</b-dropdown-item-button>
-              <b-dropdown-item-button>Something else here...</b-dropdown-item-button>
+            <b-dropdown variant="light" text="同步" class="w-100">
+              <b-dropdown-item-button>选项1</b-dropdown-item-button>
+              <b-dropdown-item-button>选项2</b-dropdown-item-button>
+              <b-dropdown-item-button>其他</b-dropdown-item-button>
             </b-dropdown>
           </b-col>
 
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>事务类型:</label>
           </b-col>
           <b-col sm="3">
-            <b-dropdown variant="light" text="test" class="w-100">
-              <b-dropdown-item-button>Action</b-dropdown-item-button>
-              <b-dropdown-item-button>Another action</b-dropdown-item-button>
-              <b-dropdown-item-button>Something else here...</b-dropdown-item-button>
+            <b-dropdown variant="light" text="请选择" class="w-100">
+              <b-dropdown-item-button>事务1</b-dropdown-item-button>
+              <b-dropdown-item-button>事务2</b-dropdown-item-button>
+              <b-dropdown-item-button>其他</b-dropdown-item-button>
             </b-dropdown>
           </b-col>
 
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>关联课程:</label>
           </b-col>
           <b-col sm="3">
-            <b-dropdown variant="light" text="test" class="w-100">
-              <b-dropdown-item-button>Action</b-dropdown-item-button>
-              <b-dropdown-item-button>Another action</b-dropdown-item-button>
-              <b-dropdown-item-button>Something else here...</b-dropdown-item-button>
+            <b-dropdown variant="light" text="" class="w-100">
+              <b-dropdown-item-button></b-dropdown-item-button>
+              <b-dropdown-item-button></b-dropdown-item-button>
+              <b-dropdown-item-button></b-dropdown-item-button>
             </b-dropdown>
           </b-col>
         </b-row>
         <b-row align-v="center">
           <b-col sm="1" class="mb-5">
-            <label>Small:</label>
+            <label>开发时段:</label>
           </b-col>
           <b-col sm="4" class="mb-5">
             <b-form-input type="date"></b-form-input>
@@ -90,10 +90,10 @@
         </b-row>
         <b-row>
           <b-col sm="12">
-            <b-card header="TextArear1" style="padding:0">
+            <b-card header="项目简介（必填）" style="padding:0">
               <b-form-textarea
                 v-model="text"
-                placeholder="Enter something..."
+                placeholder=""
                 rows="3"
                 max-rows="6"
               ></b-form-textarea>
@@ -103,10 +103,10 @@
         <br>
         <b-row>
           <b-col sm="12">
-            <b-card header="TextArear1" style="padding:0">
+            <b-card header="项目目的（必填）" style="padding:0">
               <b-form-textarea
                 v-model="text"
-                placeholder="Enter something..."
+                placeholder=""
                 rows="3"
                 max-rows="6"
               ></b-form-textarea>
@@ -116,10 +116,10 @@
         <br>
         <b-row>
           <b-col sm="12">
-            <b-card header="TextArear1" style="padding:0">
+            <b-card header="项目要求（必填）" style="padding:0">
               <b-form-textarea
                 v-model="text"
-                placeholder="Enter something..."
+                placeholder=""
                 rows="3"
                 max-rows="6"
               ></b-form-textarea>
@@ -262,10 +262,10 @@
           <b-col sm="6">
             <b-row>
               <b-col sm="12">
-                <b-card header="TextArear1" style="padding:0">
+                <b-card header="要跳转的项目名称" style="padding:0">
                   <b-form-textarea
                     v-model="text"
-                    placeholder="Enter something..."
+                    placeholder="地方性法规二审通用项目"
                     rows="3"
                     max-rows="6"
                   ></b-form-textarea>
@@ -326,105 +326,105 @@ export default {
     return {
       table_1: {
         field_1: {
-          label: "field_1",
+          label: "序号",
           sortable: false,
           class: "text-center field-sn"
         },
         field_2: {
-          label: "field_2",
+          label: "环节名称",
           sortable: false,
           class: "text-center field-sn"
         },
         field_3: {
-          label: "field_3",
+          label: "对应模块",
           sortable: false,
           class: "text-center field-sn"
         },
         field_4: {
-          label: "field_4",
+          label: "允许观摩",
           sortable: false,
           class: "text-center field-name"
         }
       },
       table_2: {
         field_1: {
-          label: "field_1",
+          label: "身份类型",
           sortable: false,
           class: "text-center field-sn"
         },
         field_2: {
-          label: "field_2",
+          label: "身份名称",
           sortable: false,
           class: "text-center field-sn"
         },
         field_3: {
-          label: "field_3",
+          label: "身份形象",
           sortable: false,
           class: "text-center field-sn"
         },
         field_4: {
-          label: "field_4",
+          label: "是否使用",
           sortable: false,
           class: "text-center field-name"
         },
         field_5: {
-          label: "field_5",
+          label: "结束环节",
           sortable: false,
           class: "text-center field-name"
         },
         field_6: {
-          label: "field_6",
+          label: "身份邀请权",
           sortable: false,
           class: "text-center field-name"
         }
       },
       table_3: {
         field_1: {
-          label: "field_1",
+          label: "序号",
           sortable: false,
           class: "text-center field-sn"
         },
         field_2: {
-          label: "field_2",
+          label: "素材名称",
           sortable: false,
           class: "text-center field-sn"
         },
         field_3: {
-          label: "field_3",
+          label: "用途",
           sortable: false,
           class: "text-center field-sn"
         },
         field_4: {
-          label: "field_4",
+          label: "操作",
           sortable: false,
           class: "text-center field-name"
         }
       },
       table_4: {
         field_1: {
-          label: "field_1",
+          label: "序号",
           sortable: false,
           class: "text-center field-sn"
         },
         field_2: {
-          label: "field_2",
+          label: "环节名称",
           sortable: false,
           class: "text-center field-sn"
         }
       },
       table_5: {
         field_1: {
-          label: "field_1",
+          label: "角色类型",
           sortable: false,
           class: "text-center field-sn"
         },
         field_2: {
-          label: "field_2",
+          label: "角色名称",
           sortable: false,
           class: "text-center field-sn"
         },
         field_3: {
-          label: "field_3",
+          label: "是否使用素材",
           sortable: false,
           class: "text-center field-sn"
         }
@@ -535,72 +535,72 @@ export default {
       //                    });
       this.table1.list = [
         {
-          field_2: "field2_1",
-          field_3: "field1_1"
+          field_2: "环节1",
+          field_3: "展示"
         },
         {
-          field_2: "field2_2",
-          field_3: "field1_2"
+          field_2: "环节2",
+          field_3: "展示"
         },
         {
-          field_2: "field2_3",
-          field_3: "field1_3"
+          field_2: "环节3",
+          field_3: "展示"
         }
       ];
       this.table2.list = [
         {
-          field_2: "field2_1",
-          field_3: "field1_1"
+          field_2: "身份A",
+          field_3: "非动画模块无形象-男"
         },
         {
-          field_2: "field2_2",
-          field_3: "field1_2"
+          field_2: "身份B",
+          field_3: "非动画模块无形象-男"
         },
         {
-          field_2: "field2_3",
-          field_3: "field1_3"
+          field_2: "身份C",
+          field_3: "非动画模块无形象-男"
         }
       ];
       this.table3.list = [
         {
-          field_2: "field2_1",
-          field_3: "field1_1"
+          field_2: "正在建设的项目提示.docx",
+          field_3: "模板"
         },
         {
-          field_2: "field2_2",
-          field_3: "field1_2"
+          field_2: "正在建设的项目提示.docx",
+          field_3: "模板"
         },
         {
-          field_2: "field2_3",
-          field_3: "field1_3"
+          field_2: "正在建设的项目提示.docx",
+          field_3: "模板"
         }
       ];
       this.table4.list = [
         {
           field_1: "field2_1",
-          field_2: "field1_1"
+          field_2: "建设中的项目提示"
         },
         {
           field_1: "field2_2",
-          field_2: "field1_2"
+          field_2: "建设中的项目提示"
         },
         {
           field_1: "field2_3",
-          field_2: "field1_3"
+          field_2: "建设中的项目提示"
         }
       ];
       this.table5.list = [
         {
-          field_1: "field2_1",
-          field_2: "field1_1"
+          field_1: "庭审长",
+          field_2: "admin"
         },
         {
-          field_1: "field2_2",
-          field_2: "field1_2"
+          field_1: "辩方律师",
+          field_2: "admin"
         },
         {
-          field_1: "field2_3",
-          field_2: "field1_3"
+          field_1: "被告",
+          field_2: "admin"
         }
       ];
     },
