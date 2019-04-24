@@ -69,6 +69,7 @@ export default {
     padding: 0px 16px;
     height: 80px;
     line-height: 80px;
+    overflow: hidden;
   }
   .nav-link.active {
     background: #4e73ff;
