@@ -58,7 +58,7 @@
                                     <span class="float-left">是否为公开集群 :</span>
                                 </b-form-radio-group>
                                 <br/>
-                                <b-form-group id="input-group-2" class="text-left" label="创建管理员 :" label-for="input-2">
+                                <b-form-group id="input-group-3" class="text-left" label="创建管理员 :" label-for="input-2">
                                     <b-form-input
                                             id="input-22"
                                             v-model="newGroup.managerName"
@@ -67,7 +67,7 @@
                                             autocomplete="username"
                                     ></b-form-input>
                                 </b-form-group>
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-4" label-for="input-2">
                                     <b-form-input
                                             id="input-23"
                                             v-model="newGroup.managerPass"
@@ -127,14 +127,14 @@
                     <b-modal hide-footer id="editGroup" ref="editGroup" title="修改集群">
                         <div>
                             <b-form @submit="updateGroup" class="container w-80 pt-3">
-                                <b-form-group id="input-group-1" label-for="name">
+                                <b-form-group id="input-group-5" label-for="name">
                                     <b-form-input
                                             v-model="editItem.name"
                                             required
                                             placeholder="集群名称"
                                     ></b-form-input>
                                 </b-form-group>
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-6" label-for="input-2">
                                     <b-form-textarea
                                             rows="3"
                                             no-resize
@@ -192,7 +192,7 @@
                                 </template>
                             </b-table>
                             <b-form @submit="newManagerSave" class="container w-25 pt-3" v-if="newManager">
-                                <b-form-group id="input-group-1" label-for="name">
+                                <b-form-group id="input-group-7" label-for="name">
                                     <b-form-input
                                             v-model="new_Manager.name"
                                             required
@@ -200,7 +200,7 @@
                                             placeholder="管理员名称"
                                     ></b-form-input>
                                 </b-form-group>
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-8" label-for="input-2">
                                     <b-form-textarea
                                             rows="3"
                                             no-resize
@@ -209,7 +209,7 @@
                                             placeholder="备注"
                                     ></b-form-textarea>
                                 </b-form-group>
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-9" label-for="input-2">
                                     <b-form-input
                                             v-model="new_Manager.password"
                                             required
@@ -225,7 +225,7 @@
                                 </b-button>
                             </b-form>
                             <b-form @submit="editManagerSave" class="container w-25 pt-3" v-if="editManager">
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-10" label-for="input-2">
                                     <b-form-textarea
                                             id="edit_Manager_description"
                                             rows="3"
@@ -243,7 +243,7 @@
                                 </b-button>
                             </b-form>
                             <b-form @submit="resetManagerSave" class="container w-25 pt-3" v-if="resetManager">
-                                <b-form-group id="input-group-2" label-for="input-2">
+                                <b-form-group id="input-group-11" label-for="input-2">
                                     <b-form-input
                                             v-model="reset_Manager.password"
                                             required
@@ -273,17 +273,13 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
-        <!-- 查看大图Modal -->
-        <image-view :visible="bigImgModal" :src="animationImgSrc" @on-close="bigImgModal=false"></image-view>
     </div>
 </template>
 
 <script>
-    import {expType, level, abilityTarget} from "@/filters/fun";
     import {mapState} from "vuex";
     import Loading from "@/components/loading/Loading";
     import GroupService from "@/services/groupService";
-    import ImageView from "@/components/imageView/ImageView";
     import _ from "lodash";
     import BRow from "bootstrap-vue/src/components/layout/row";
 
@@ -292,12 +288,6 @@
         components: {
             BRow,
             Loading,
-            ImageView,
-        },
-        filters: {
-            expType,
-            level,
-            abilityTarget
         },
         data() {
             return {
@@ -388,7 +378,6 @@
                         class: "text-center field-rend_ani_2"
                     }
                 },
-                // 查询参数
                 queryParam: {
                     page: 1,
                     size: 15
@@ -396,24 +385,10 @@
                 queryDebounceParam: {
                     search: ""
                 },
-                // 流程列表
                 allgroup: {
                     list: [],
                     total: 0
                 },
-                // 流程相关项目
-                relatedProjects: [],
-                animationImgSrc: "",
-                copyModalName: "",
-                workflowXml: null,
-                deleteModal: false,
-                publishModal: false,
-                copyModal: false,
-                bigImgModal: false,
-                xmlModalShow: false,
-                relatedShow: false,
-                isSuperFlag: false,
-                shareModal: false,
                 newGroup: {
                     name: '',
                     comment: '',
@@ -434,7 +409,7 @@
         },
         created() {
             this.$nextTick(() => {
-                this.queryWorkflowList();
+                this.queryGroupList();
             });
         },
         computed: {
@@ -443,14 +418,14 @@
         watch: {
             queryParam: {
                 handler() {
-                    this.queryWorkflowList();
+                    this.queryGroupList();
                 },
                 deep: true
             },
             queryDebounceParam: {
                 deep: true,
                 handler: _.debounce(function () {
-                    this.queryWorkflowList();
+                    this.queryGroupList();
                 }, 500)
             }
         },
@@ -488,8 +463,7 @@
                         this.$emit("data-failed");
                     });
             },
-            // 查询流程列表数据
-            queryWorkflowList() {
+            queryGroupList() {
                 this.run();
                 GroupService
                     .fetchList({...this.queryParam, ...this.queryDebounceParam})
@@ -711,7 +685,7 @@
             text-align: left !important;
         }
         .field-creator {
-            width: 33%;
+            width: 30%;
             text-align: left !important;
         }
         .field-create_time {
@@ -719,7 +693,7 @@
             text-align: left !important;
         }
         .field-rend_ani_1 {
-            width: 18%;
+            width: 21%;
             text-align: left !important;
         }
         .field-rend_ani_2 {

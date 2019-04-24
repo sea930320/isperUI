@@ -62,6 +62,10 @@ const routes = [{
                 path: 'group',
                 name: 'manager-group',
                 component: () => import('@/views/manager/group/GroupIndex.vue')
+            }, {
+                path: 'group_company',
+                name: 'manager-group_company',
+                component: () => import('@/views/manager/group_company/Group_Company_Index.vue')
             }
         ]
     }
