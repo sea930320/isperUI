@@ -50,6 +50,11 @@ const routes = [{
                 path: 'workflow',
                 name: 'manager-workflow',
                 component: () => import('@/views/manager/workflow/WorkflowIndex.vue')
+            },
+            {
+                path: '/workflow/draw/:flow_id',
+                name: 'manager-workflow-drawXML',
+                component: () => import('@/components/workflowXML/drawXML.vue')
             }, {
                 path: 'project',
                 name: 'manager-project',
