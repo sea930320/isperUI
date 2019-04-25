@@ -24,18 +24,17 @@
         </b-row>
         <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
             <template slot="selected" slot-scope="row">
-                <b-form-checkbox v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
+                <b-form-checkbox v-if="row.item.share_able = 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
                 <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
                 </b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="is_share" slot-scope="row">
-                <icon v-if="row.item.is_share = 1" name="share"></icon>
+                <icon v-if="row.item.current_share = 1" name="share"></icon>
             </template>
             <template slot="is_protected" slot-scope="row">
                 <icon v-if="row.item.protected = 1" name="lock"></icon>
             </template>
-
             <template slot="name" slot-scope="row">
                 {{row.item.name}}
             </template>
@@ -48,17 +47,17 @@
                 {{row.item.flow.name}}
             </template>
             <template slot="public_status" slot-scope="row">
-                {{(row.item.created_by==1) ? "不自由" : "自由"}}
+                {{(row.item.public_status==1) ? "不自由" : "自由"}}
             </template>
             <template slot="mission_type" slot-scope="row">
                 {{row.item.course}}
             </template>
             <template slot="edit_control" slot-scope="row">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary">
+                    <b-button :size="template_size" v-if="row.item.edit_able = 1" variant="outline-primary">
                         <icon name="cog"></icon> 设置
                     </b-button>
-                    <b-button :size="template_size" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
+                    <b-button :size="template_size" v-if="row.item.delete_able = 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
                         <icon name="trash"></icon> 删除
                     </b-button>
                 </b-button-group>
