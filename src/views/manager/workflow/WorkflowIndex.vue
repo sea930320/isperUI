@@ -34,7 +34,7 @@
             variant="outline-primary"
             @click="copyWorkflowClick"
           >复制为未发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">共享</b-button>
+          <b-button :size="template_size" variant="outline-primary" @click="shareClick">共享</b-button>
           <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
         </b-button-group>
       </b-col>
@@ -46,6 +46,38 @@
       <template slot="name" slot-scope="row">
         <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
         <span v-else class="text">{{row.item.name}}</span>
+      </template>
+      <template slot="is_public" slot-scope="row">
+        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
+          <b-button
+            v-if="row.item.is_public===0"
+            size="sm"
+            variant="outline-primary"
+            @click="publicProcess(row.item.id)"
+          >公开</b-button>
+          <b-button
+            v-if="row.item.is_public===1"
+            size="sm"
+            variant="outline-danger"
+            @click="unpublicProcess(row.item.id)"
+          >不公开</b-button>
+        </template>
+      </template>
+      <template slot="is_shared" slot-scope="row">
+        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
+          <b-button
+            v-if="row.item.is_share===0"
+            size="sm"
+            variant="outline-primary"
+            @click="shareProcess(row.item.id)"
+          >共享</b-button>
+          <b-button
+            v-if="row.item.is_share===1"
+            size="sm"
+            variant="outline-danger"
+            @click="unshareProcess(row.item.id)"
+          >取消共享</b-button>
+        </template>
       </template>
       <template
         slot="creator"
@@ -139,13 +171,17 @@
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 0"
           @click="lockWorkflowClick(row.item)"
-        >保护</a>
+        >
+          <icon name="lock"></icon>
+        </a>
         <a
           class="mx-1"
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 1"
           @click="unlockWorkflowClick(row.item)"
-        >解除保护</a>
+        >
+          <icon name="lock-open"></icon>
+        </a>
       </template>
     </b-table>
     <b-row class="justify-content-center row-margin-tweak">
@@ -254,6 +290,30 @@
         <p class="message">流程建立成功，是否立即发布？</p>
       </div>
     </b-modal>
+    <!-- 复制流程Modal -->
+    <b-modal
+      title="复制为未发布流程"
+      v-model="copyModal"
+      @cancel="copyModal=false"
+      @ok="copyModalOk"
+      ok-title="确定"
+      cancel-title="取消"
+    >
+      <b-form-input name="name" v-model.trim="copyModalName"></b-form-input>
+    </b-modal>
+    <!-- 确认共享Modal -->
+    <b-modal
+      title="确认共享"
+      v-model="shareModal"
+      ok-title="确认"
+      cancel-title="取消"
+      @cancel="shareModal=false"
+      @ok="shareConfirm"
+    >
+      <div class="modal-msg">
+        <p class="message">共享后不能取消共享，确认共享？</p>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -299,6 +359,16 @@ export default {
           label: "创建者",
           sortable: false,
           class: "text-center field-creator"
+        },
+        is_public: {
+          label: "公开",
+          sortable: false,
+          class: "text-center field-public"
+        },
+        is_shared: {
+          label: "共享",
+          sortable: false,
+          class: "text-center field-share"
         },
         create_time: {
           label: "创建时间",
@@ -683,6 +753,61 @@ export default {
       }
       this.copyModalName = "";
       this.copyModal = true;
+    },
+    // 确定复制流程
+    copyModalOk() {
+      if (this.copyModalName === "") {
+        this.$toasted.error("请输入复制流程名称");
+        return;
+      }
+
+      if (this.copyModalName === this.checkedItems[0].name) {
+        this.$toasted.error("复制的流程不能与原流程重名");
+        return;
+      }
+
+      if (this.copyModalName.length > 20) {
+        this.$toasted.error("流程名称应不超过20字");
+        return;
+      }
+
+      this.copyModal = false;
+      workflowService
+        .copyWorkflow({
+          flow_id: this.checkedItems[0].id,
+          name: this.copyModalName
+        })
+        .then(() => {
+          this.queryWorkflowList();
+          this.$toasted.success("复制流程成功");
+        });
+    },
+    // 共享
+    shareClick() {
+      if (this.checkedItems.length > 0) {
+        this.shareModal = true;
+      } else {
+        this.$toasted.error("请勾选要共享的流程");
+      }
+    },
+    // 确认共享
+    shareConfirm() {
+      let ids = JSON.stringify(this.checkedIds);
+      workflowService.shareWorkflow({ data: ids }).then(() => {
+        this.$toasted.success("共享成功");
+        this.queryWorkflowList(this.queryParam);
+      });
+      this.shareModal = false;
+    },
+    publicProcess(id = null) {
+      if (id) {
+        this.$swal({
+          title: "Good job!",
+          text: "You clicked the button!",
+          icon: "success",
+          button: "Aww yiss!"
+        });
+      }
     }
   }
 };
@@ -694,13 +819,19 @@ export default {
     width: 7%;
   }
   .field-name {
-    width: 10%;
+    width: 8%;
   }
   .field-creator {
-    width: 9%;
+    width: 8%;
+  }
+  .field-public {
+    width: 5%;
+  }
+  .field-share {
+    width: 5%;
   }
   .field-create_time {
-    width: 9%;
+    width: 8%;
   }
   .field-rend_ani_1 {
     width: 10%;
@@ -718,7 +849,7 @@ export default {
     width: 5%;
   }
   .field-action {
-    width: 20%;
+    width: 14%;
   }
   .table th,
   .table td {

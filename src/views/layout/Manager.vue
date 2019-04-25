@@ -2,7 +2,7 @@
   <div class="manager-container main-bg">
     <TopHeader>
       <template v-slot:pageMenu>
-        <b-nav-item :active="activatedRoute=='workflow'" to="/manager/workflow">流程管理</b-nav-item>
+        <b-nav-item to="/manager/workflow">流程管理</b-nav-item>
         <b-nav-item to="/manager/project">项目管理</b-nav-item>
         <b-nav-item to="/manager/group">集群管理</b-nav-item>
         <b-nav-item to="/manager/group_company">集群及单位管理</b-nav-item>
