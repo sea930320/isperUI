@@ -92,6 +92,14 @@ class GroupService {
             params: data
         })
     }
+
+    fetchCompanyList(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/fetchCompanyList',
+            params: data
+        })
+    }
 }
 
 export default new GroupService()

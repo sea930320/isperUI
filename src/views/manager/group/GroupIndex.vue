@@ -432,32 +432,40 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                this.$refs['newGroup'].hide();
-                this.run();
-                GroupService
-                    .create(this.newGroup)
-                    .then((res) => {
-                        if (res.results === 'success')
+                this.$bvModal.msgBoxConfirm('Are you sure?')
+                    .then(value => {
+                        if (value) {
+                            this.$refs['newGroup'].hide();
+                            this.run();
                             GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
-                                    this.allgroup.list = data.results;
-                                    this.allgroup.total = data.paging.count;
-                                    this.$emit("data-ready");
+                                .create(this.newGroup)
+                                .then((res) => {
+                                    if (res.results === 'success')
+                                        GroupService
+                                            .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                            .then(data => {
+                                                data.results.forEach(item => {
+                                                    if (item.checked === undefined) {
+                                                        item.checked = false;
+                                                    }
+                                                    if (item.locked === undefined) {
+                                                        item.locked = false;
+                                                    }
+                                                });
+                                                this.allgroup.list = data.results;
+                                                this.allgroup.total = data.paging.count;
+                                                this.$emit("data-ready");
+                                            })
+                                            .catch(() => {
+                                                this.$emit("data-failed");
+                                            });
+                                    else
+                                        this.$emit("data-failed");
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
                                 });
-                        else
-                            this.$emit("data-failed");
+                        }
                     })
                     .catch(() => {
                         this.$emit("data-failed");
