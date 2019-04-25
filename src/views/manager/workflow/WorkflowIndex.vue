@@ -32,7 +32,11 @@
       </b-col>
     </b-row>
     <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
-      <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
+      <template slot="sn" slot-scope="row">        
+        <b-form-checkbox v-model="row.item.checked" @change="">
+          {{ row.index + 1 }}
+        </b-form-checkbox>
+      </template>
       <template slot="name" slot-scope="row">
         <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
         <span v-else class="text">{{row.item.name}}</span>
@@ -136,6 +140,63 @@
       <b-container fluid>
         <div v-if="relatedProjects.length == 0" class="modal-msg">
           <p class="message">该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。</p>
+        </div>
+        <div v-else class="modal-msg">
+          <p class="message">该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。
+            <a href="javascript:;" class="btn-underline" @click="relatedShow = !relatedShow">查看相关实验项目</a>
+          </p>
+          <div v-show="relatedShow" class="detail fixed-table-height">
+            <table class="table table-gray table-striped table-border">
+              <thead>
+                <tr>
+                  <th>项目名称</th>
+                  <th>实验类型</th>
+                  <th>等级</th>
+                  <th>能力目标</th>
+                  <th>是否已生成任务</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template v-for="project in relatedProjects">
+                  <tr :key="project.type">
+                    <td>{{project.name}}</td>
+                    <td>{{project.type | expType}}</td>
+                    <td>{{project.level | level}}</td>
+                    <td>{{project.ability_tartget | abilityTarget}}</td>
+                    <td>
+                      <a href="javascript:;" class="btn-link" @click="project.expanded = !project.expanded">
+                        {{project.exp_count == 0 ? '无任务' : `${project.exp_count}项任务`}}
+                      </a>
+                  </td>
+                  </tr>
+                  <tr :key="project.type + ' exp'" v-show="project.exp_count > 0 && project.expanded">
+                    <td colspan="5" class="table-expanded-cell">
+                      <table class="table border">
+                        <thead>
+                          <tr>
+                            <th>任务名称</th>
+                            <th>注册课堂</th>
+                            <th>教师名称</th>
+                            <th>实验小组</th>
+                            <th>完成情况</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="exp in project.experiments" :key="exp.name">
+                            <td>{{exp.name}}</td>
+                            <td>{{exp.course_class}}</td>
+                            <td>{{exp.teacher_name}}</td>
+                            <td>{{exp.team_name}}</td>
+                            <td>{{exp.status == 9? '完成' : '未完成'}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
         </div>
       </b-container>
       <div slot="modal-footer" class="w-100">
@@ -281,7 +342,23 @@ export default {
     });
   },
   computed: {
-    ...mapState(["userInfo"])
+    ...mapState(["userInfo"]),
+    allCheck: {
+      get() {
+        return this.workflows.list.every(flow => flow.checked)
+      },
+      set(val) {
+        this.workflows.list.forEach(flow => {
+          flow.checked = val
+        })
+      }
+    },
+    checkedItems() {
+      return this.workflows.list.filter(item => item.checked === true)
+    },
+    checkedIds() {
+      return this.checkedItems.map(item => item.id)
+    }
   },
   watch: {
     // 监控查询参数，如有变化 查询列表数据
@@ -484,7 +561,25 @@ export default {
           }
         });
       }
-    }
+    },
+    // 保护
+    lockWorkflowClick(workflow) {
+      workflowService
+        .lockWorkflow({flow_id: workflow.id})
+        .then(() => {
+          this.$set(workflow, "protected", 1);
+          this.$toasted.success('保护流程成功')
+        })
+    },
+    // 解除保护
+    unlockWorkflowClick(workflow) {
+       workflowService
+        .lockWorkflow({flow_id: workflow.id})
+        .then(() => {
+          this.$set(workflow, "protected", 0);
+          this.$toasted.success('解除保护流程成功')
+        })
+    },
   }
 };
 </script>

@@ -101,3 +101,16 @@ $subtable-header-color:#909090;
 .btn-green:hover {
     background-color: #04DA86;
 }
+
+.table>tbody>tr>td.table-expanded-cell {
+    background-color: #fbfdff;
+    box-shadow: inset 0 2px 0 #f4f4f4;
+}
+
+.table-expanded-cell .table {
+    background-color: #f2f9ff;
+}
+
+.table-expanded-cell .table th {
+    color: #333;
+}
