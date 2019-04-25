@@ -24,7 +24,7 @@
           <b-button :size="template_size" variant="outline-primary">公开</b-button>
           <b-button :size="template_size" variant="outline-primary">不公开</b-button>
           <b-button :size="template_size" variant="outline-primary" @click="newProcess">新建流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">发布流程</b-button>
+          <b-button :size="template_size" variant="outline-primary" @click="publishWorkflowClick">发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary">复制为未发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary">共享</b-button>
           <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
@@ -33,7 +33,7 @@
     </b-row>
     <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
       <template slot="sn" slot-scope="row">        
-        <b-form-checkbox v-model="row.item.checked" @change="">
+        <b-form-checkbox v-model="row.item.checked">
           {{ row.index + 1 }}
         </b-form-checkbox>
       </template>
@@ -358,7 +358,18 @@ export default {
     },
     checkedIds() {
       return this.checkedItems.map(item => item.id)
-    }
+    },
+    // 验证勾选流程的状态 已发布就为false
+    validateCheckedStatus() {
+      let flag = true
+      this.checkedItems.forEach((item) => {
+        if (item.status === 2) {
+          this.$toasted.error('请不要选择已发布的流程')
+          flag = false
+        }
+      })
+      return flag
+    },
   },
   watch: {
     // 监控查询参数，如有变化 查询列表数据
@@ -501,7 +512,7 @@ export default {
     // 编辑流程
     editWorkflow(workflow) {
       if (workflow.protected === 1) {
-        this.$toasted.warn("该流程已被保护,请解除保护后进行编辑");
+        this.$toasted.error("该流程已被保护,请解除保护后进行编辑");
       } else {
         this.$set(workflow, "edited", true);
       }
@@ -513,7 +524,7 @@ export default {
     // 点击删除流程按钮
     deleteWorkflowClick(workflow) {
       if (workflow.protected === 1) {
-        this.$toasted.warn("该流程已被保护,请解除保护后再进行删除");
+        this.$toasted.error("该流程已被保护,请解除保护后再进行删除");
       } else {
         if (!workflow.id) {
           this.workflows.list.splice(this.workflows.list.indexOf(workflow), 1);
@@ -551,7 +562,7 @@ export default {
     },
     toSetPage(item) {
       if (item.protected === 1) {
-        this.$toasted.warn("该流程已被保护,请解除保护后进行设置");
+        this.$toasted.error("该流程已被保护,请解除保护后进行设置");
       } else {
         this.setFlowStep(item.step);
         this.$router.push({
@@ -580,6 +591,21 @@ export default {
           this.$toasted.success('解除保护流程成功')
         })
     },
+    // 点击发布流程按钮
+    publishWorkflowClick() {
+      let checkedItems = this.checkedItems
+      if (checkedItems.length === 0) {
+        this.$toasted.error('请勾选要发布的流程')
+        return
+      }
+      if (this.newFlowStatus) {
+        this.$toasted.error('请先保存新建的流程')
+        return
+      }
+      if (this.validateCheckedStatus()) {
+        this.publishModal = true
+      }
+    }
   }
 };
 </script>
