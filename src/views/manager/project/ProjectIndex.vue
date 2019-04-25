@@ -24,16 +24,19 @@
         </b-row>
         <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
             <template slot="selected" slot-scope="row">
-                <b-form-checkbox v-if="row.item.share_able = 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
+                <b-form-checkbox v-if="row.item.share_able == 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item,1)">
                 <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
+                </b-form-checkbox>
+                <b-form-checkbox v-if="row.item.share_able != 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item,0)">
+                    <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
                 </b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
-            <template slot="is_share" slot-scope="row">
-                <icon v-if="row.item.current_share = 1" name="share"></icon>
+            <template slot="currentShare" slot-scope="row">
+                <icon v-if="row.item.current_share == 1" name="share"></icon>
             </template>
             <template slot="is_protected" slot-scope="row">
-                <icon v-if="row.item.protected = 1" name="lock"></icon>
+                <icon v-if="row.item.protected == 1" name="lock"></icon>
             </template>
             <template slot="name" slot-scope="row">
                 {{row.item.name}}
@@ -54,10 +57,10 @@
             </template>
             <template slot="edit_control" slot-scope="row">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" v-if="row.item.edit_able = 1" variant="outline-primary">
+                    <b-button :size="template_size" v-if="row.item.edit_able == 1" variant="outline-primary">
                         <icon name="cog"></icon> 设置
                     </b-button>
-                    <b-button :size="template_size" v-if="row.item.delete_able = 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
+                    <b-button :size="template_size" v-if="row.item.delete_able == 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
                         <icon name="trash"></icon> 删除
                     </b-button>
                 </b-button-group>
@@ -129,13 +132,13 @@
                         sortable: false,
                         class: "text-center field-sn"
                     },
-                    is_share:{
-                        label: "",
+                    currentShare:{
+                        label: "共享",
                         sortable: false,
                         class: "text-center field-sn"
                     },
                     is_protected:{
-                        label: "",
+                        label: "保护",
                         sortable: false,
                         class: "text-center field-sn"
                     },
@@ -253,47 +256,57 @@
             },
             // Delete Project
             deleteProject(){
-                alert(this.userInfo);
                 this.run();
-//                ProjectService
-//                    .deleteProject({project_id:parseInt(this.currentProjectID.id)})
-//                    .then(() => {
-//                        this.queryProjectList();
-//                    })
+                ProjectService
+                    .deleteProject({project_id:parseInt(this.currentProjectID.id)})
+                    .then(() => {
+                        this.queryProjectList();
+                    })
             },
             shareProject(){
                 let ids = JSON.stringify(this.checkedUnsharedItemsID);
-                alert(ids);
                 this.run();
                 ProjectService
                     .shareProject({data: ids})
                     .then(() => {
                         this.queryProjectList();
+                        this.unshareButtonDisabled = true;
+                        this.shareButtonDisabled = true;
                     })
             },
             unshareProject(){
                 let ids = JSON.stringify(this.checkedSharedItemsID);
-                alert(ids);
                 this.run();
                 ProjectService
                     .unshareProject({data:ids})
                     .then(() => {
                         this.queryProjectList();
+                        this.unshareButtonDisabled = true;
+                        this.shareButtonDisabled = true;
+
                     })
             },
             //check checked or not
-            changeCheckBox(val, rowObj){
-                this.$set(rowObj,'checked',val);
-                this.checkedSharedItems = this.checkedItems().filter(item => item.is_share === 1 );
-                this.checkedUnsharedItems = this.checkedItems().filter(item => item.is_share === 0 );
-                if (this.checkedSharedItems.length > 0){
-                    this.unshareButtonDisabled = false;
+            changeCheckBox(val, rowObj, sharable){
+                if (sharable ==1){
+                    this.$set(rowObj,'checked',val);
+                    this.checkedSharedItems = this.checkedItems().filter(item => item.current_share === 1 );
+                    this.checkedUnsharedItems = this.checkedItems().filter(item => item.current_share === 0 );
+                    if (this.checkedSharedItems.length > 0){
+                        this.unshareButtonDisabled = false;
+                    }
+                    else if (this.checkedSharedItems.length === 0){
+                        this.unshareButtonDisabled = true;
+                    }
+                    if (this.checkedUnsharedItems.length > 0){
+                        this.shareButtonDisabled = false;
+                    }
+                    else if (this.checkedUnsharedItems.length === 0){
+                        this.shareButtonDisabled = true;
+                    }
+                    this.checkedSharedItemsID = this.checkedSharedItems.map(item => item.id);
+                    this.checkedUnsharedItemsID = this.checkedUnsharedItems.map(item => item.id);
                 }
-                if (this.checkedUnsharedItems.length > 0){
-                    this.unshareButtonDisabled = false;
-                }
-                this.checkedSharedItemsID = this.checkedSharedItems.map(item => item.id);
-                this.checkedUnsharedItemsID = this.checkedUnsharedItems.map(item => item.id);
             },
             checkedItems() {
                 return this.projects.list.filter(item =>item.checked === true)
@@ -306,7 +319,7 @@
 
             // Go To Create Project Page
             createProjectPage(){
-                this.$router.push('/manager/project/create_project_wizard');
+                this.$router.push('/manager/project/create_project_wizard1');
             },
         }
     };
