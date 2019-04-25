@@ -29,7 +29,11 @@
             variant="outline-primary"
             @click="publishWorkflowClick"
           >发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">复制为未发布流程</b-button>
+          <b-button
+            :size="template_size"
+            variant="outline-primary"
+            @click="copyWorkflowClick"
+          >复制为未发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary">共享</b-button>
           <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
         </b-button-group>
@@ -657,6 +661,28 @@ export default {
           this.queryWorkflowList();
           this.$toasted.success("发布流程成功");
         });
+    },
+    // 点击复制流程
+    copyWorkflowClick() {
+      let checkedItems = this.checkedItems;
+      if (checkedItems.length === 0) {
+        this.$toasted.error("请勾选要复制的流程");
+        return;
+      }
+      if (checkedItems.length > 1) {
+        this.$toasted.error("一次只能选择一个流程复制");
+        return;
+      }
+      if (this.newFlowStatus) {
+        this.$toasted.error("请先保存新建的流程");
+        return;
+      }
+      if (checkedItems[0].status === 1) {
+        this.$toasted.error("未发布的流程不能复制，请选择已发布的流程");
+        return;
+      }
+      this.copyModalName = "";
+      this.copyModal = true;
     }
   }
 };

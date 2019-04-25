@@ -213,7 +213,6 @@
 <script type="text/ecmascript-6">
 import BpmnModeler from "bpmn-js/lib/Modeler";
 // import bpmnJsColor from 'bpmn-js-in-color'
-import { mapGetters, mapActions } from "vuex";
 import workflowService from "@/services/workflowService";
 const defaultXML = `<?xml version="1.0" encoding="UTF-8"?>
           <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
@@ -239,36 +238,23 @@ export default {
       this.keyboardShow = false;
     },
     initBpmnViewer(xml) {
-      // let customTranslate = ['value', require('assets/bpmn/customTranslate/customTranslate')]
-      // this.bpmnModeler = new BpmnModeler({
-      //   container: '#js-canvas',
-      //   additionalModules: [
-      //     customTranslate,
-      //     bpmnJsColor
-      //   ],
-      //   keyboard: { bindTo: document }
-      // })
       this.bpmnModeler = new BpmnModeler({
         container: "#js-canvas",
         keyboard: { bindTo: document }
       });
       this.bpmnModeler.importXML(xml, function(err) {
         if (err) {
-          return console.error("could not import BPMN 2.0 diagram", err);
+          this.$toasted.error("could not import BPMN 2.0 diagram");
         }
       });
 
       var canvas = this.bpmnModeler.get("canvas");
       canvas.zoom("fit-viewport");
-      // let eventBus = this.bpmnModeler.get('eventBus')
-      // eventBus.on('element.dblclick', function(e) {
-      //   console.log('element.click', 'on', e.element.id)
-      // })
     },
     updateBpmnViewer(xml) {
       this.bpmnModeler.importXML(xml, function(err) {
         if (err) {
-          return console.error("could not import BPMN 2.0 diagram", err);
+          this.$toasted.error("could not import BPMN 2.0 diagram");
         }
       });
     },
@@ -285,7 +271,7 @@ export default {
               flow_id: _this.flowId,
               xml: xml
             })
-            .then(data => {
+            .then(() => {
               _this.$toasted.success("保存流程图成功");
             });
         }
