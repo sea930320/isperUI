@@ -432,44 +432,49 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                this.$bvModal.msgBoxConfirm('Are you sure?')
-                    .then(value => {
-                        if (value) {
-                            this.$refs['newGroup'].hide();
-                            this.run();
-                            GroupService
-                                .create(this.newGroup)
-                                .then((res) => {
-                                    if (res.results === 'success')
-                                        GroupService
-                                            .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                            .then(data => {
-                                                data.results.forEach(item => {
-                                                    if (item.checked === undefined) {
-                                                        item.checked = false;
-                                                    }
-                                                    if (item.locked === undefined) {
-                                                        item.locked = false;
-                                                    }
-                                                });
-                                                this.allgroup.list = data.results;
-                                                this.allgroup.total = data.paging.count;
-                                                this.$emit("data-ready");
-                                            })
-                                            .catch(() => {
-                                                this.$emit("data-failed");
-                                            });
-                                    else
+                if (this.newGroup.default === 1 && !confirm("已经有默认集群了，是否更换默认集群")) {
+                    return
+                }
+                else {
+                    this.$refs['newGroup'].hide();
+                    this.run();
+                    GroupService
+                        .create(this.newGroup)
+                        .then((res) => {
+                            if (res.results === 'success')
+                                GroupService
+                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                    .then(data => {
+                                        data.results.forEach(item => {
+                                            if (item.checked === undefined) {
+                                                item.checked = false;
+                                            }
+                                            if (item.locked === undefined) {
+                                                item.locked = false;
+                                            }
+                                        });
+                                        this.allgroup.list = data.results;
+                                        this.allgroup.total = data.paging.count;
+                                        this.$emit("data-ready");
+                                    })
+                                    .catch(() => {
                                         this.$emit("data-failed");
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        }
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
+                                    });
+                            else if (res.results === 'nameError') {
+                                alert("该集群名已存在。");
+                                this.$emit("data-failed");
+                            }
+                            else if (res.results === 'managerNameError') {
+                                alert("该账号已存在。");
+                                this.$emit("data-failed");
+                            }
+                            else
+                                this.$emit("data-failed");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             },
             queryGroupList() {
                 this.run();
