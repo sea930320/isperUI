@@ -1,12 +1,8 @@
 <template>
-    <div class="group-index">
+    <div class="company-index">
         <loading v-if="isRunning"></loading>
         <b-row>
             <b-col lg="3" md="6" sm="12" class="mb-3 mt-4">
-                <b-row style="fontSize: 18px">
-                    <icon name="home" style="width: 22px; height: 25px;" class="ml-3 mb-3 mr-3"></icon>
-                    集群管理
-                </b-row>
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
                         <span class="input-group-text">
@@ -284,7 +280,7 @@
     import BRow from "bootstrap-vue/src/components/layout/row";
 
     export default {
-        name: "group-index",
+        name: "company-index",
         components: {
             BRow,
             Loading,
@@ -323,59 +319,59 @@
                     check: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-check"
+                        class: "text-center field-ccheck"
                     },
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-center field-sn"
+                        class: "text-center field-csn"
                     },
                     name: {
                         label: "集群名称",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-center field-cname"
                     },
                     comment: {
                         label: "集群描述",
                         sortable: false,
-                        class: "text-center field-creator"
+                        class: "text-center field-ccreator"
                     },
                     publish: {
                         label: "是否为公开集群",
                         sortable: false,
-                        class: "text-center field-create_time"
+                        class: "text-center field-ccreate_time"
                     },
                     groupManagers: {
                         label: "集群管理员",
                         sortable: false,
-                        class: "text-center field-rend_ani_1"
+                        class: "text-center field-crend_ani_1"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-rend_ani_2"
+                        class: "text-center field-crend_ani_2"
                     }
                 },
                 managerColumns: {
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-sn"
+                        class: "text-center field-csn"
                     },
                     name: {
                         label: "管理员名称",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-center field-cname"
                     },
                     comment: {
                         label: "备注",
                         sortable: false,
-                        class: "text-center field-creator"
+                        class: "text-center field-ccreator"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-rend_ani_2"
+                        class: "text-center field-crend_ani_2"
                     }
                 },
                 queryParam: {
@@ -409,7 +405,7 @@
         },
         created() {
             this.$nextTick(() => {
-                this.queryGroupList();
+                this.queryCompanyList();
             });
         },
         computed: {
@@ -418,14 +414,14 @@
         watch: {
             queryParam: {
                 handler() {
-                    this.queryGroupList();
+                    this.queryCompanyList();
                 },
                 deep: true
             },
             queryDebounceParam: {
                 deep: true,
                 handler: _.debounce(function () {
-                    this.queryGroupList();
+                    this.queryCompanyList();
                 }, 500)
             }
         },
@@ -463,10 +459,10 @@
                         this.$emit("data-failed");
                     });
             },
-            queryGroupList() {
+            queryCompanyList() {
                 this.run();
                 GroupService
-                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                    .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
                     .then(data => {
                         data.results.forEach(item => {
                             if (item.checked === undefined) {
@@ -671,32 +667,32 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    .group-index {
-        .field-check {
+    .company-index {
+        .field-ccheck {
             width: 2%;
             text-align: left !important;
         }
-        .field-sn {
+        .field-csn {
             width: 7%;
             text-align: left !important;
         }
-        .field-name {
+        .field-cname {
             width: 15%;
             text-align: left !important;
         }
-        .field-creator {
+        .field-ccreator {
             width: 30%;
             text-align: left !important;
         }
-        .field-create_time {
+        .field-ccreate_time {
             width: 12%;
             text-align: left !important;
         }
-        .field-rend_ani_1 {
+        .field-crend_ani_1 {
             width: 21%;
             text-align: left !important;
         }
-        .field-rend_ani_2 {
+        .field-crend_ani_2 {
             width: 15%;
             text-align: left !important;
         }
