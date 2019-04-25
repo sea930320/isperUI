@@ -20,9 +20,9 @@
         </b-form-radio-group>
       </b-col>
       <b-col lg="5" md="6" sm="12" class="align-self-center mb-3">
-        <b-button-group class="float-right">
-          <b-button :size="template_size" variant="outline-primary">公开</b-button>
-          <b-button :size="template_size" variant="outline-primary">不公开</b-button>
+        <b-button-group class="float-right" v-if="!isSuperFlag">
+          <b-button :size="template_size" variant="outline-primary" @click="publicProcess">公开</b-button>
+          <b-button :size="template_size" variant="outline-primary" @click="unpublicProcess">不公开</b-button>
           <b-button :size="template_size" variant="outline-primary" @click="newProcess">新建流程</b-button>
           <b-button
             :size="template_size"
@@ -35,11 +35,14 @@
             @click="copyWorkflowClick"
           >复制为未发布流程</b-button>
           <b-button :size="template_size" variant="outline-primary" @click="shareClick">共享</b-button>
-          <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
+          <b-button :size="template_size" variant="outline-primary" @click="unshareClick">取消共享</b-button>
         </b-button-group>
       </b-col>
     </b-row>
     <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
+      <template slot="HEAD_sn" slot-scope="head">
+        <b-form-checkbox v-model="allChecked">{{head.label}}</b-form-checkbox>
+      </template>
       <template slot="sn" slot-scope="row">
         <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
       </template>
@@ -47,42 +50,12 @@
         <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
         <span v-else class="text">{{row.item.name}}</span>
       </template>
-      <template slot="is_public" slot-scope="row">
-        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
-          <b-button
-            v-if="row.item.is_public===0"
-            size="sm"
-            variant="outline-primary"
-            @click="publicProcess(row.item.id)"
-          >公开</b-button>
-          <b-button
-            v-if="row.item.is_public===1"
-            size="sm"
-            variant="outline-danger"
-            @click="unpublicProcess(row.item.id)"
-          >不公开</b-button>
-        </template>
+      <template slot="creator" slot-scope="row">
+        <span v-if="row.item.is_share==1" class="badge badge-success">
+          <icon scale="0.6" name="share"></icon>
+        </span>
+        {{row.item.created_by ? row.item.created_by.name : 'n/a'}}
       </template>
-      <template slot="is_shared" slot-scope="row">
-        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
-          <b-button
-            v-if="row.item.is_share===0"
-            size="sm"
-            variant="outline-primary"
-            @click="shareProcess(row.item.id)"
-          >共享</b-button>
-          <b-button
-            v-if="row.item.is_share===1"
-            size="sm"
-            variant="outline-danger"
-            @click="unshareProcess(row.item.id)"
-          >取消共享</b-button>
-        </template>
-      </template>
-      <template
-        slot="creator"
-        slot-scope="row"
-      >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
       <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
       <template slot="rend_ani_1" slot-scope="row">
         <a
@@ -125,31 +98,37 @@
         <span v-else class="text">{{row.item.task_label}}</span>
       </template>
       <template slot="status" slot-scope="row">
-        <span v-if="row.item.status == 1">未发布</span>
-        <span v-else>已发布</span>
+        <span class="badge badge-danger" v-if="row.item.status==1">未发布</span>
+        <span class="badge badge-info" v-if="row.item.status==2 && row.item.is_public==0">已发布</span>
+        <span class="badge badge-success" v-if="row.item.status==2 && row.item.is_public==1">已公开</span>
       </template>
       <template slot="action" slot-scope="row">
         <a
           class="btn-link mx-1"
           href="javascript:;"
-          v-if="row.item.edited"
+          v-if="row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag"
           @click="saveWorkflow(row.item)"
         >
           <icon name="save"></icon>
         </a>
-        <a class="btn-link mx-1" href="javascript:;" v-else @click="editWorkflow(row.item)">
+        <a
+          class="btn-link mx-1"
+          href="javascript:;"
+          v-else-if="row.item.created_by.id==userInfo.id && !isSuperFlag"
+          @click="editWorkflow(row.item)"
+        >
           <icon name="edit"></icon>
         </a>
         <a
           class="btn-link mx-1"
           href="javascript:;"
-          v-if="row.item.status == 2"
+          v-if="row.item.status != 1"
           @click="viewXmlHandler(row.item)"
         >
           <icon name="eye"></icon>
         </a>
         <router-link
-          v-if="!!row.item.id && row.item.status == 1"
+          v-if="!!row.item.id && row.item.status == 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
           :to="{ name: 'manager-workflow-drawXML', params: { flow_id: row.item.id }}"
           class="mx-1"
         >
@@ -158,12 +137,17 @@
         <a
           class="btn-link mx-1"
           href="javascript:;"
-          v-if="row.item.status == 2"
+          v-if="row.item.status != 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
           @click="toSetPage(row.item)"
         >
           <icon name="cog"></icon>
         </a>
-        <a class="mx-1" href="javascript:;" @click="deleteWorkflowClick(row.item)">
+        <a
+          class="mx-1"
+          href="javascript:;"
+          @click="deleteWorkflowClick(row.item)"
+          v-if="row.item.created_by.id==userInfo.id || isSuperFlag"
+        >
           <icon name="trash"></icon>
         </a>
         <a
@@ -211,22 +195,22 @@
               href="javascript:;"
               class="btn-underline"
               @click="relatedShow = !relatedShow"
-            >查看相关实验项目</a>
+            >查看相关事务项目</a>
           </p>
           <div v-show="relatedShow" class="detail fixed-table-height">
             <table class="table table-gray table-striped table-border">
               <thead>
                 <tr>
                   <th>项目名称</th>
-                  <th>实验类型</th>
+                  <th>事务类型</th>
                   <th>等级</th>
                   <th>能力目标</th>
-                  <th>是否已生成任务</th>
+                  <th>是否已生成业务</th>
                 </tr>
               </thead>
               <tbody>
                 <template v-for="project in relatedProjects">
-                  <tr :key="project.type">
+                  <tr :key="project.id">
                     <td>{{project.name}}</td>
                     <td>{{project.type | expType}}</td>
                     <td>{{project.level | level}}</td>
@@ -236,18 +220,15 @@
                         href="javascript:;"
                         class="btn-link"
                         @click="project.expanded = !project.expanded"
-                      >{{project.exp_count == 0 ? '无任务' : `${project.exp_count}项任务`}}</a>
+                      >{{project.exp_count == 0 ? '无业务' : `${project.exp_count}项业务`}}</a>
                     </td>
                   </tr>
-                  <tr
-                    :key="project.type + ' exp'"
-                    v-show="project.exp_count > 0 && project.expanded"
-                  >
+                  <tr :key="project.id + ' exp'" v-show="project.exp_count > 0 && project.expanded">
                     <td colspan="5" class="table-expanded-cell">
                       <table class="table border">
                         <thead>
                           <tr>
-                            <th>任务名称</th>
+                            <th>业务名称</th>
                             <th>注册课堂</th>
                             <th>教师名称</th>
                             <th>实验小组</th>
@@ -255,7 +236,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="exp in project.experiments" :key="exp.name">
+                          <tr v-for="exp in project.experiments" :key="exp.id">
                             <td>{{exp.name}}</td>
                             <td>{{exp.course_class}}</td>
                             <td>{{exp.teacher_name}}</td>
@@ -288,7 +269,24 @@
     >
       <div class="modal-msg">
         <p class="message">流程建立成功，是否立即发布？</p>
+        <p class="message">您只能发布以下流程:</p>
       </div>
+      <b-container fluid>
+        <table class="table table-border">
+          <thead>
+            <tr class="table-active">
+              <th>流程名</th>
+              <th>事务类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="publishableItem in checkedPublishableItems" :key="publishableItem.id">
+              <td>{{publishableItem.name}}</td>
+              <td>{{ publishableItem.type_label | expType}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
     </b-modal>
     <!-- 复制流程Modal -->
     <b-modal
@@ -311,8 +309,112 @@
       @ok="shareConfirm"
     >
       <div class="modal-msg">
-        <p class="message">共享后不能取消共享，确认共享？</p>
+        <p class="message">您要确定共享流程吗？您只能共享以下流程:</p>
       </div>
+      <b-container fluid>
+        <table class="table table-border">
+          <thead>
+            <tr class="table-active">
+              <th>流程名</th>
+              <th>事务类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="accessableItem in checkedShareableItems" :key="accessableItem.id">
+              <td>{{accessableItem.name}}</td>
+              <td>{{ accessableItem.type_label | expType}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
+    </b-modal>
+
+    <!-- Unshare Modal -->
+    <b-modal
+      title="取消共享"
+      v-model="unshareModal"
+      ok-title="确定"
+      cancel-title="取消"
+      @cancel="unshareModal=false"
+      @ok="unshareConfirm"
+    >
+      <div class="modal-msg">
+        <p class="message">您确定要取消共享流程吗？只能取消以下过流程:</p>
+      </div>
+      <b-container fluid>
+        <table class="table table-border">
+          <thead>
+            <tr class="table-active">
+              <th>流程名</th>
+              <th>事务类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="accessableItem in checkedUnShareableItems" :key="accessableItem.id">
+              <td>{{accessableItem.name}}</td>
+              <td>{{ accessableItem.type_label | expType}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
+    </b-modal>
+    <!-- Public Modal -->
+    <b-modal
+      title="公开"
+      v-model="publicModal"
+      ok-title="确定"
+      cancel-title="取消"
+      @cancel="publicModal=false"
+      @ok="publicOk"
+    >
+      <div class="modal-msg">
+        <p class="message">您要确定公开流程吗？您只能公开以下流程:</p>
+      </div>
+      <b-container fluid>
+        <table class="table table-border">
+          <thead>
+            <tr class="table-active">
+              <th>流程名</th>
+              <th>事务类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="accessableItem in checkedPublicableItems" :key="accessableItem.id">
+              <td>{{accessableItem.name}}</td>
+              <td>{{ accessableItem.type_label | expType}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
+    </b-modal>
+    <!-- Unpublic Modal -->
+    <b-modal
+      title="不公开"
+      v-model="unpublicModal"
+      ok-title="确定"
+      cancel-title="取消"
+      @cancel="unpublicModal=false"
+      @ok="unpublicOk"
+    >
+      <div class="modal-msg">
+        <p class="message">您要确定不公开流程吗？只能将以下流程设置为私有:</p>
+      </div>
+      <b-container fluid>
+        <table class="table table-border">
+          <thead>
+            <tr class="table-active">
+              <th>流程名</th>
+              <th>事务类型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="accessableItem in checkedUnPublicableItems" :key="accessableItem.id">
+              <td>{{accessableItem.name}}</td>
+              <td>{{ accessableItem.type_label | expType}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-container>
     </b-modal>
   </div>
 </template>
@@ -359,16 +461,6 @@ export default {
           label: "创建者",
           sortable: false,
           class: "text-center field-creator"
-        },
-        is_public: {
-          label: "公开",
-          sortable: false,
-          class: "text-center field-public"
-        },
-        is_shared: {
-          label: "共享",
-          sortable: false,
-          class: "text-center field-share"
         },
         create_time: {
           label: "创建时间",
@@ -420,6 +512,7 @@ export default {
         list: [],
         total: 0
       },
+      allChecked: false,
       // 流程相关项目
       relatedProjects: [],
       animationImgSrc: "",
@@ -434,6 +527,9 @@ export default {
       relatedShow: false,
       isSuperFlag: false,
       shareModal: false,
+      unshareModal: false,
+      publicModal: false,
+      unpublicModal: false,
       experimentTypeOptions: [
         { value: "1", text: "立法类型实验" },
         { value: "2", text: "执法类型实验" },
@@ -476,8 +572,57 @@ export default {
     checkedItems() {
       return this.workflows.list.filter(item => item.checked === true);
     },
-    checkedIds() {
-      return this.checkedItems.map(item => item.id);
+    checkedPublishableItems() {
+      return this.checkedItems.filter(
+        item => item.created_by.id == this.userInfo.id && item.status === 1
+      );
+    },
+    checkedPublishableIds() {
+      return this.checkedPublishableItems.map(item => item.id);
+    },
+    checkedPublicableItems() {
+      return this.checkedItems.filter(
+        item =>
+          item.created_by.id == this.userInfo.id &&
+          item.status !== 1 &&
+          item.is_public === 0
+      );
+    },
+    checkedPublicableIds() {
+      return this.checkedPublicableItems.map(item => item.id);
+    },
+    checkedUnPublicableItems() {
+      return this.checkedItems.filter(
+        item =>
+          item.created_by.id == this.userInfo.id &&
+          item.status !== 1 &&
+          item.is_public === 1
+      );
+    },
+    checkedUnPublicableIds() {
+      return this.checkedUnPublicableItems.map(item => item.id);
+    },
+    checkedShareableItems() {
+      return this.checkedItems.filter(
+        item =>
+          item.created_by.id == this.userInfo.id &&
+          item.status !== 1 &&
+          item.is_share === 0
+      );
+    },
+    checkedShareableIds() {
+      return this.checkedShareableItems.map(item => item.id);
+    },
+    checkedUnShareableItems() {
+      return this.checkedItems.filter(
+        item =>
+          item.created_by.id == this.userInfo.id &&
+          item.status !== 1 &&
+          item.is_share === 1
+      );
+    },
+    checkedUnShareableIds() {
+      return this.checkedUnShareableItems.map(item => item.id);
     }
   },
   watch: {
@@ -493,12 +638,28 @@ export default {
       handler: _.debounce(function() {
         this.queryWorkflowList();
       }, 500)
+    },
+    allChecked: {
+      handler(val) {
+        if (val) {
+          this.workflows.list.map(item => {
+            item.checked = true;
+            return item;
+          });
+        } else {
+          this.workflows.list.map(item => {
+            item.checked = false;
+            return item;
+          });
+        }
+      }
     }
   },
   methods: {
     ...mapActions(["setFlowStep"]),
     // 查询流程列表数据
     queryWorkflowList() {
+      this.allChecked = false;
       this.run();
       workflowService
         .fetchList({ ...this.queryParam, ...this.queryDebounceParam })
@@ -567,7 +728,7 @@ export default {
     addNewProcess() {
       this.workflows.list.unshift({
         name: "",
-        created_by: { name: this.userInfo.name },
+        created_by: { name: this.userInfo.name, id: this.userInfo.id },
         create_time: dateUtils.todayString(),
         animation1: "",
         animation2: "",
@@ -696,37 +857,27 @@ export default {
         this.$toasted.success("解除保护流程成功");
       });
     },
-    // 验证勾选流程的状态 已发布就为false
-    validateCheckedStatus() {
-      let flag = true;
-      this.checkedItems.forEach(item => {
-        if (item.status === 2) {
-          this.$toasted.error("请不要选择已发布的流程");
-          flag = false;
-        }
-      });
-      return flag;
-    },
     // 点击发布流程按钮
     publishWorkflowClick() {
-      let checkedItems = this.checkedItems;
-      if (checkedItems.length === 0) {
-        this.$toasted.error("请勾选要发布的流程");
-        return;
-      }
       if (this.newFlowStatus) {
         this.$toasted.error("请先保存新建的流程");
         return;
       }
-      if (this.validateCheckedStatus()) {
+      if (this.checkedItems.length > 0) {
         this.publishModal = true;
+      } else {
+        this.$toasted.error("请勾选要发布的流程");
       }
     },
     // 点击发布流程 立即发布
     publishOk() {
       this.publishModal = false;
+      if (this.checkedPublishableItems.length == 0) {
+        this.$toasted.error("没有您可以公开的流程！");
+        return;
+      }
       workflowService
-        .publishWorkflow({ ids: JSON.stringify(this.checkedIds) })
+        .publishWorkflow({ ids: JSON.stringify(this.checkedPublishableIds) })
         .then(() => {
           this.queryWorkflowList();
           this.$toasted.success("发布流程成功");
@@ -792,22 +943,79 @@ export default {
     },
     // 确认共享
     shareConfirm() {
-      let ids = JSON.stringify(this.checkedIds);
-      workflowService.shareWorkflow({ data: ids }).then(() => {
-        this.$toasted.success("共享成功");
-        this.queryWorkflowList(this.queryParam);
-      });
       this.shareModal = false;
-    },
-    publicProcess(id = null) {
-      if (id) {
-        this.$swal({
-          title: "Good job!",
-          text: "You clicked the button!",
-          icon: "success",
-          button: "Aww yiss!"
-        });
+      if (this.checkedShareableItems.length == 0) {
+        this.$toasted.error("没有您可以公开的流程！");
+        return;
       }
+      workflowService
+        .shareWorkflow({ data: JSON.stringify(this.checkedShareableIds) })
+        .then(() => {
+          this.$toasted.success("共享成功");
+          this.queryWorkflowList(this.queryParam);
+        });
+    },
+    // 共享
+    unshareClick() {
+      if (this.checkedItems.length > 0) {
+        this.unshareModal = true;
+      } else {
+        this.$toasted.error("请勾选要共享的流程");
+      }
+    },
+    // 确认共享
+    unshareConfirm() {
+      this.unshareModal = false;
+      if (this.checkedUnShareableItems.length == 0) {
+        this.$toasted.error("没有您可以公开的流程！");
+        return;
+      }
+      workflowService
+        .unshareWorkflow({ data: JSON.stringify(this.checkedUnShareableIds) })
+        .then(() => {
+          this.$toasted.success("共享成功");
+          this.queryWorkflowList(this.queryParam);
+        });
+    },
+    publicProcess() {
+      if (this.checkedItems.length > 0) {
+        this.publicModal = true;
+      } else {
+        this.$toasted.error("请勾选要公开的流程");
+      }
+    },
+    publicOk() {
+      this.publicModal = false;
+      if (this.checkedPublicableItems.length == 0) {
+        this.$toasted.error("没有您可以公开的流程！");
+        return;
+      }
+      workflowService
+        .publicWorkflow({ data: JSON.stringify(this.checkedPublicableIds) })
+        .then(() => {
+          this.queryWorkflowList();
+          this.$toasted.success("公开流程成功");
+        });
+    },
+    unpublicProcess() {
+      if (this.checkedItems.length > 0) {
+        this.unpublicModal = true;
+      } else {
+        this.$toasted.error("请勾选要不公开的流程");
+      }
+    },
+    unpublicOk() {
+      this.unpublicModal = false;
+      if (this.checkedUnPublicableItems.length == 0) {
+        this.$toasted.error("没有您可以不公开的流程！");
+        return;
+      }
+      workflowService
+        .unpublicWorkflow({ data: JSON.stringify(this.checkedUnPublicableIds) })
+        .then(() => {
+          this.queryWorkflowList();
+          this.$toasted.success("不公开流程成功");
+        });
     }
   }
 };
@@ -816,22 +1024,18 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .workflow-index {
   .field-sn {
-    width: 7%;
+    text-align: left !important;
+    padding-left: 20px;
+    width: 6%;
   }
   .field-name {
-    width: 8%;
+    width: 10%;
   }
   .field-creator {
-    width: 8%;
-  }
-  .field-public {
-    width: 5%;
-  }
-  .field-share {
-    width: 5%;
+    width: 10%;
   }
   .field-create_time {
-    width: 8%;
+    width: 9%;
   }
   .field-rend_ani_1 {
     width: 10%;
@@ -849,7 +1053,7 @@ export default {
     width: 5%;
   }
   .field-action {
-    width: 14%;
+    width: 20%;
   }
   .table th,
   .table td {
