@@ -238,7 +238,7 @@ export default {
         queryGroupList() {
             this.run();
             GroupService
-                .getOwnGroup({id: this.userInfo.id})
+                .getOwnGroup({id: this.userInfo.id, ...this.queryParam, ...this.queryDebounceParam})
                 .then(data => {
                     data.results.forEach(item => {
                         if (item.checked === undefined) {

@@ -12,6 +12,7 @@ import DataProcessMixin from "./mixins/data-process";
 import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import VueFormWizard from 'vue-form-wizard'
+import VueSweetalert2 from 'vue-sweetalert2';
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 
@@ -43,6 +44,7 @@ Vue.use(VeeValidate, {
 Vue.mixin(globalMixin);
 Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
+Vue.use(VueSweetalert2);
 
 
 new Vue({

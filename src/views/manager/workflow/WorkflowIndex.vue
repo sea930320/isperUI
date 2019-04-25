@@ -24,22 +24,60 @@
           <b-button :size="template_size" variant="outline-primary">公开</b-button>
           <b-button :size="template_size" variant="outline-primary">不公开</b-button>
           <b-button :size="template_size" variant="outline-primary" @click="newProcess">新建流程</b-button>
-          <b-button :size="template_size" variant="outline-primary" @click="publishWorkflowClick">发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">复制为未发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">共享</b-button>
+          <b-button
+            :size="template_size"
+            variant="outline-primary"
+            @click="publishWorkflowClick"
+          >发布流程</b-button>
+          <b-button
+            :size="template_size"
+            variant="outline-primary"
+            @click="copyWorkflowClick"
+          >复制为未发布流程</b-button>
+          <b-button :size="template_size" variant="outline-primary" @click="shareClick">共享</b-button>
           <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
         </b-button-group>
       </b-col>
     </b-row>
     <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
-      <template slot="sn" slot-scope="row">        
-        <b-form-checkbox v-model="row.item.checked">
-          {{ row.index + 1 }}
-        </b-form-checkbox>
+      <template slot="sn" slot-scope="row">
+        <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
       </template>
       <template slot="name" slot-scope="row">
         <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
         <span v-else class="text">{{row.item.name}}</span>
+      </template>
+      <template slot="is_public" slot-scope="row">
+        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
+          <b-button
+            v-if="row.item.is_public===0"
+            size="sm"
+            variant="outline-primary"
+            @click="publicProcess(row.item.id)"
+          >公开</b-button>
+          <b-button
+            v-if="row.item.is_public===1"
+            size="sm"
+            variant="outline-danger"
+            @click="unpublicProcess(row.item.id)"
+          >不公开</b-button>
+        </template>
+      </template>
+      <template slot="is_shared" slot-scope="row">
+        <template v-if="row.item.created_by.id === userInfo.id && row.item.status !== 1">
+          <b-button
+            v-if="row.item.is_share===0"
+            size="sm"
+            variant="outline-primary"
+            @click="shareProcess(row.item.id)"
+          >共享</b-button>
+          <b-button
+            v-if="row.item.is_share===1"
+            size="sm"
+            variant="outline-danger"
+            @click="unshareProcess(row.item.id)"
+          >取消共享</b-button>
+        </template>
       </template>
       <template
         slot="creator"
@@ -53,7 +91,9 @@
           v-if="!row.item.edited"
           title="点击查看大图"
           @click="showBigImg(row.item.animation1)"
-        >查看</a>
+        >
+          <icon name="eye"></icon>
+        </a>
         <div v-else>
           <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
         </div>
@@ -65,7 +105,9 @@
           v-if="!row.item.edited"
           title="点击查看大图"
           @click="showBigImg(row.item.animation2)"
-        >查看</a>
+        >
+          <icon name="eye"></icon>
+        </a>
         <div v-else>
           <toggle-upload :item="row.item" :keyId="2" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
         </div>
@@ -88,39 +130,58 @@
       </template>
       <template slot="action" slot-scope="row">
         <a
-          class="btn-link"
+          class="btn-link mx-1"
           href="javascript:;"
           v-if="row.item.edited"
           @click="saveWorkflow(row.item)"
-        >保存</a>
-        <a class="btn-link" href="javascript:;" v-else @click="editWorkflow(row.item)">编辑</a>
+        >
+          <icon name="save"></icon>
+        </a>
+        <a class="btn-link mx-1" href="javascript:;" v-else @click="editWorkflow(row.item)">
+          <icon name="edit"></icon>
+        </a>
         <a
-          class="btn-link"
+          class="btn-link mx-1"
           href="javascript:;"
           v-if="row.item.status == 2"
           @click="viewXmlHandler(row.item)"
-        >查看</a>
+        >
+          <icon name="eye"></icon>
+        </a>
         <router-link
           v-if="!!row.item.id && row.item.status == 1"
-          :to="{ name: 'drawXML', params: { flow_id: row.item.id }}"
-        >画图</router-link>
+          :to="{ name: 'manager-workflow-drawXML', params: { flow_id: row.item.id }}"
+          class="mx-1"
+        >
+          <icon name="project-diagram"></icon>
+        </router-link>
         <a
-          class="btn-link"
+          class="btn-link mx-1"
           href="javascript:;"
           v-if="row.item.status == 2"
           @click="toSetPage(row.item)"
-        >设置</a>
-        <a href="javascript:;" @click="deleteWorkflowClick(row.item)">删除</a>
+        >
+          <icon name="cog"></icon>
+        </a>
+        <a class="mx-1" href="javascript:;" @click="deleteWorkflowClick(row.item)">
+          <icon name="trash"></icon>
+        </a>
         <a
+          class="mx-1"
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 0"
           @click="lockWorkflowClick(row.item)"
-        >保护</a>
+        >
+          <icon name="lock"></icon>
+        </a>
         <a
+          class="mx-1"
           href="javascript:;"
           v-if="isSuperFlag && row.item.protected == 1"
           @click="unlockWorkflowClick(row.item)"
-        >解除保护</a>
+        >
+          <icon name="lock-open"></icon>
+        </a>
       </template>
     </b-table>
     <b-row class="justify-content-center row-margin-tweak">
@@ -139,11 +200,18 @@
     <b-modal v-model="deleteModal" title="删除提醒" size="lg" :showPerson="true">
       <b-container fluid>
         <div v-if="relatedProjects.length == 0" class="modal-msg">
-          <p class="message">该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。</p>
+          <p
+            class="message"
+          >该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。</p>
         </div>
         <div v-else class="modal-msg">
-          <p class="message">该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。
-            <a href="javascript:;" class="btn-underline" @click="relatedShow = !relatedShow">查看相关实验项目</a>
+          <p class="message">
+            该流程已被应用到项目中，删除流程后，若相关的项目没有被生成业务，则该项目将被一起删除；若相关的项目已经生成业务，相关的业务可继续执行，该项目将不可生新的业务。
+            <a
+              href="javascript:;"
+              class="btn-underline"
+              @click="relatedShow = !relatedShow"
+            >查看相关实验项目</a>
           </p>
           <div v-show="relatedShow" class="detail fixed-table-height">
             <table class="table table-gray table-striped table-border">
@@ -164,12 +232,17 @@
                     <td>{{project.level | level}}</td>
                     <td>{{project.ability_tartget | abilityTarget}}</td>
                     <td>
-                      <a href="javascript:;" class="btn-link" @click="project.expanded = !project.expanded">
-                        {{project.exp_count == 0 ? '无任务' : `${project.exp_count}项任务`}}
-                      </a>
-                  </td>
+                      <a
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="project.expanded = !project.expanded"
+                      >{{project.exp_count == 0 ? '无任务' : `${project.exp_count}项任务`}}</a>
+                    </td>
                   </tr>
-                  <tr :key="project.type + ' exp'" v-show="project.exp_count > 0 && project.expanded">
+                  <tr
+                    :key="project.type + ' exp'"
+                    v-show="project.exp_count > 0 && project.expanded"
+                  >
                     <td colspan="5" class="table-expanded-cell">
                       <table class="table border">
                         <thead>
@@ -202,6 +275,43 @@
       <div slot="modal-footer" class="w-100">
         <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
         <b-button variant="secondary" class="float-center" @click="deleteModal=false">取消</b-button>
+      </div>
+    </b-modal>
+    <!-- 发布流程Modal -->
+    <b-modal
+      title="发布流程"
+      v-model="publishModal"
+      ok-title="立即发布"
+      cancel-title="不发布"
+      @cancel="publishModal=false"
+      @ok="publishOk"
+    >
+      <div class="modal-msg">
+        <p class="message">流程建立成功，是否立即发布？</p>
+      </div>
+    </b-modal>
+    <!-- 复制流程Modal -->
+    <b-modal
+      title="复制为未发布流程"
+      v-model="copyModal"
+      @cancel="copyModal=false"
+      @ok="copyModalOk"
+      ok-title="确定"
+      cancel-title="取消"
+    >
+      <b-form-input name="name" v-model.trim="copyModalName"></b-form-input>
+    </b-modal>
+    <!-- 确认共享Modal -->
+    <b-modal
+      title="确认共享"
+      v-model="shareModal"
+      ok-title="确认"
+      cancel-title="取消"
+      @cancel="shareModal=false"
+      @ok="shareConfirm"
+    >
+      <div class="modal-msg">
+        <p class="message">共享后不能取消共享，确认共享？</p>
       </div>
     </b-modal>
   </div>
@@ -249,6 +359,16 @@ export default {
           label: "创建者",
           sortable: false,
           class: "text-center field-creator"
+        },
+        is_public: {
+          label: "公开",
+          sortable: false,
+          class: "text-center field-public"
+        },
+        is_shared: {
+          label: "共享",
+          sortable: false,
+          class: "text-center field-share"
         },
         create_time: {
           label: "创建时间",
@@ -345,31 +465,20 @@ export default {
     ...mapState(["userInfo"]),
     allCheck: {
       get() {
-        return this.workflows.list.every(flow => flow.checked)
+        return this.workflows.list.every(flow => flow.checked);
       },
       set(val) {
         this.workflows.list.forEach(flow => {
-          flow.checked = val
-        })
+          flow.checked = val;
+        });
       }
     },
     checkedItems() {
-      return this.workflows.list.filter(item => item.checked === true)
+      return this.workflows.list.filter(item => item.checked === true);
     },
     checkedIds() {
-      return this.checkedItems.map(item => item.id)
-    },
-    // 验证勾选流程的状态 已发布就为false
-    validateCheckedStatus() {
-      let flag = true
-      this.checkedItems.forEach((item) => {
-        if (item.status === 2) {
-          this.$toasted.error('请不要选择已发布的流程')
-          flag = false
-        }
-      })
-      return flag
-    },
+      return this.checkedItems.map(item => item.id);
+    }
   },
   watch: {
     // 监控查询参数，如有变化 查询列表数据
@@ -575,35 +684,129 @@ export default {
     },
     // 保护
     lockWorkflowClick(workflow) {
-      workflowService
-        .lockWorkflow({flow_id: workflow.id})
-        .then(() => {
-          this.$set(workflow, "protected", 1);
-          this.$toasted.success('保护流程成功')
-        })
+      workflowService.lockWorkflow({ flow_id: workflow.id }).then(() => {
+        this.$set(workflow, "protected", 1);
+        this.$toasted.success("保护流程成功");
+      });
     },
     // 解除保护
     unlockWorkflowClick(workflow) {
-       workflowService
-        .lockWorkflow({flow_id: workflow.id})
-        .then(() => {
-          this.$set(workflow, "protected", 0);
-          this.$toasted.success('解除保护流程成功')
-        })
+      workflowService.lockWorkflow({ flow_id: workflow.id }).then(() => {
+        this.$set(workflow, "protected", 0);
+        this.$toasted.success("解除保护流程成功");
+      });
+    },
+    // 验证勾选流程的状态 已发布就为false
+    validateCheckedStatus() {
+      let flag = true;
+      this.checkedItems.forEach(item => {
+        if (item.status === 2) {
+          this.$toasted.error("请不要选择已发布的流程");
+          flag = false;
+        }
+      });
+      return flag;
     },
     // 点击发布流程按钮
     publishWorkflowClick() {
-      let checkedItems = this.checkedItems
+      let checkedItems = this.checkedItems;
       if (checkedItems.length === 0) {
-        this.$toasted.error('请勾选要发布的流程')
-        return
+        this.$toasted.error("请勾选要发布的流程");
+        return;
       }
       if (this.newFlowStatus) {
-        this.$toasted.error('请先保存新建的流程')
-        return
+        this.$toasted.error("请先保存新建的流程");
+        return;
       }
       if (this.validateCheckedStatus()) {
-        this.publishModal = true
+        this.publishModal = true;
+      }
+    },
+    // 点击发布流程 立即发布
+    publishOk() {
+      this.publishModal = false;
+      workflowService
+        .publishWorkflow({ ids: JSON.stringify(this.checkedIds) })
+        .then(() => {
+          this.queryWorkflowList();
+          this.$toasted.success("发布流程成功");
+        });
+    },
+    // 点击复制流程
+    copyWorkflowClick() {
+      let checkedItems = this.checkedItems;
+      if (checkedItems.length === 0) {
+        this.$toasted.error("请勾选要复制的流程");
+        return;
+      }
+      if (checkedItems.length > 1) {
+        this.$toasted.error("一次只能选择一个流程复制");
+        return;
+      }
+      if (this.newFlowStatus) {
+        this.$toasted.error("请先保存新建的流程");
+        return;
+      }
+      if (checkedItems[0].status === 1) {
+        this.$toasted.error("未发布的流程不能复制，请选择已发布的流程");
+        return;
+      }
+      this.copyModalName = "";
+      this.copyModal = true;
+    },
+    // 确定复制流程
+    copyModalOk() {
+      if (this.copyModalName === "") {
+        this.$toasted.error("请输入复制流程名称");
+        return;
+      }
+
+      if (this.copyModalName === this.checkedItems[0].name) {
+        this.$toasted.error("复制的流程不能与原流程重名");
+        return;
+      }
+
+      if (this.copyModalName.length > 20) {
+        this.$toasted.error("流程名称应不超过20字");
+        return;
+      }
+
+      this.copyModal = false;
+      workflowService
+        .copyWorkflow({
+          flow_id: this.checkedItems[0].id,
+          name: this.copyModalName
+        })
+        .then(() => {
+          this.queryWorkflowList();
+          this.$toasted.success("复制流程成功");
+        });
+    },
+    // 共享
+    shareClick() {
+      if (this.checkedItems.length > 0) {
+        this.shareModal = true;
+      } else {
+        this.$toasted.error("请勾选要共享的流程");
+      }
+    },
+    // 确认共享
+    shareConfirm() {
+      let ids = JSON.stringify(this.checkedIds);
+      workflowService.shareWorkflow({ data: ids }).then(() => {
+        this.$toasted.success("共享成功");
+        this.queryWorkflowList(this.queryParam);
+      });
+      this.shareModal = false;
+    },
+    publicProcess(id = null) {
+      if (id) {
+        this.$swal({
+          title: "Good job!",
+          text: "You clicked the button!",
+          icon: "success",
+          button: "Aww yiss!"
+        });
       }
     }
   }
@@ -616,13 +819,19 @@ export default {
     width: 7%;
   }
   .field-name {
-    width: 10%;
+    width: 8%;
   }
   .field-creator {
-    width: 9%;
+    width: 8%;
+  }
+  .field-public {
+    width: 5%;
+  }
+  .field-share {
+    width: 5%;
   }
   .field-create_time {
-    width: 9%;
+    width: 8%;
   }
   .field-rend_ani_1 {
     width: 10%;
@@ -640,7 +849,7 @@ export default {
     width: 5%;
   }
   .field-action {
-    width: 20%;
+    width: 14%;
   }
   .table th,
   .table td {
