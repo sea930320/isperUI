@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="font-size: 1.13rem; padding: 5%; height: 100%;">
     <div class="browser-warning-wrapper" v-if="warning">
       <div class="browser-warning-header">
         <i></i>
@@ -78,5 +78,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-image: url("assets/imgIsper/bgmain.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <div class="top-header header-bg">
+  <div class="top-header header-bg position-fixed" style="width: 90%; z-index: 1000; font-family: 'Microsoft JhengHei'; font-weight: bold;">
     <b-navbar toggleable="lg" type="dark" class="container py-0">
       <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" to="/">
         <div class="d-flex justify-content-center p-0">
           <div class="px-3">
             <img src="@/assets/imgIsper/3.png">
           </div>
-          <div class="align-self-center">ISPER - 2019</div>
+          <h3 class="align-self-center mainTitle">ISPER - 2019</h3>
         </div>
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

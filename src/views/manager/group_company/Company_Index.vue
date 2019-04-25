@@ -1,8 +1,8 @@
 <template>
     <div class="company-index">
         <loading v-if="isRunning"></loading>
-        <b-row>
-            <b-col lg="3" md="6" sm="12" class="mb-3 mt-4">
+        <b-row class="cardDiv">
+            <b-col lg="3" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
                         <span class="input-group-text">
@@ -12,9 +12,9 @@
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder=""/>
                 </b-input-group>
             </b-col>
-            <b-col lg="9" md="6" sm="12" class="align-self-center mb-3 mt-5">
+            <b-col lg="9" md="6" sm="12" class="align-self-center">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary" v-b-modal.newGroup @click="newGroup = {
+                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" v-b-modal.newGroup @click="newGroup = {
                         name: '',
                         comment: '',
                         default: 0,
@@ -77,189 +77,189 @@
                             </b-form>
                         </div>
                     </b-modal>
-                    <b-button :size="template_size" variant="outline-primary" @click="this.deleteGroup">删除集群</b-button>
+                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="this.deleteGroup">删除集群</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
-        <b-table :items="allgroup.list" small striped hover :fields="columns" head-variant style="fontSize: 18px">
-            <template slot="check" slot-scope="row">
-                <b-form-checkbox
-                        :id="row.item.id.toString()"
-                        v-model="selected"
-                        name="checkbox"
-                        :value="row.item.id"
-                        unchecked-value=""
-                >
-                </b-form-checkbox>
-            </template>
-            <template slot="id" slot-scope="row">{{ row.item.id }}</template>
-            <template slot="name" slot-scope="row">
-                <span class="text">{{row.item.name}}</span>
-                <span v-if="row.item.default" style="
+        <div class="cardDiv">
+            <b-table :items="allgroup.list" small hover :fields="columns" head-variant style="fontSize: 18px">
+                <template slot="check" slot-scope="row">
+                    <b-form-checkbox
+                            :id="row.item.id.toString()"
+                            v-model="selected"
+                            name="checkbox"
+                            :value="row.item.id"
+                            unchecked-value=""
+                    >
+                    </b-form-checkbox>
+                </template>
+                <template slot="id" slot-scope="row">{{ row.item.id }}</template>
+                <template slot="name" slot-scope="row">
+                    <span class="text">{{row.item.name}}</span>
+                    <span v-if="row.item.default" style="
                     font-size: 18px;
                     background-color: grey;
                     color: white;
                     padding: 3px 5px;
                     margin-left: 8px;
                     border-radius: 5px;">默认</span>
-            </template>
-            <template slot="comment" slot-scope="row">
-                {{row.item.comment ? row.item.comment : ''}}
-            </template>
-            <template slot="publish" slot-scope="row">
-                {{(row.item.publish)?'是':'否'}}
-            </template>
-            <template slot="groupManagers" slot-scope="row">
-                <div>
-                    <span v-for="manager in row.item.groupManagers" :key="manager.id">{{ manager.name + ', ' }}</span>
-                </div>
-            </template>
-            <template slot="action" slot-scope="row">
-                <b-button-group>
-                    <b-button :key="row.item.id" :size="template_size" variant="outline-primary" @click="editOpen(row)">
-                        <icon name="edit" style="width: 20px"></icon>
-                        编辑
-                    </b-button>
-                    <b-modal hide-footer id="editGroup" ref="editGroup" title="修改集群">
-                        <div>
-                            <b-form @submit="updateGroup" class="container w-80 pt-3">
-                                <b-form-group id="input-group-5" label-for="name">
-                                    <b-form-input
-                                            v-model="editItem.name"
-                                            required
-                                            placeholder="集群名称"
-                                    ></b-form-input>
-                                </b-form-group>
-                                <b-form-group id="input-group-6" label-for="input-2">
-                                    <b-form-textarea
-                                            rows="3"
-                                            no-resize
-                                            v-model="editItem.comment"
-                                            required
-                                            placeholder="集群描述"
-                                    ></b-form-textarea>
-                                </b-form-group>
-                                <b-form-radio-group v-model="editItem.default" :options="options1"
-                                                    name="default">
-                                    <span class="float-left mr-4">是否为默认集群 :</span>
-                                </b-form-radio-group>
-                                <br/>
-                                <b-form-radio-group v-model="editItem.publish" :options="options2"
-                                                    name="publish">
-                                    <span class="float-left mr-4">是否为公开集群 :</span>
-                                </b-form-radio-group>
-                                <br/>
-                                <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
-                            </b-form>
-                        </div>
-                    </b-modal>
-                    <b-button :key="'add' + row.item.id" :size="template_size" variant="outline-primary"
-                              @click="addManagerOpen(row)">
-                        <icon name="user-plus" style="width: 20px"></icon>
-                        配置管理员
-                    </b-button>
-                    <b-modal size="xl" hide-footer id="addManager" ref="addManager" title="配置管理员">
-                        <div>
-                            <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10"
-                                      @click="()=>{newManager = true; editManager = false; resetManager = false; new_Manager = {name:'',description:'',password:null}}">
-                                新增管理员
-                            </b-button>
-                            <b-table :items="Managers.list" small striped hover :fields="managerColumns"
-                                     class="col-10 offset-1" head-variant style="fontSize: 18px">
-                                <template slot="id" slot-scope="row">{{ row.item.id }}</template>
-                                <template slot="name" slot-scope="row">
-                                    <span class="text">{{row.item.name}}</span>
-                                </template>
-                                <template slot="comment" slot-scope="row">
-                                    {{row.item.description ? row.item.description : ''}}
-                                </template>
-                                <template slot="action" slot-scope="row">
-                                    <b-button-group>
-                                        <b-button :key="'edit' + row.id" :size="template_size" variant="outline-primary"
-                                                  @click="()=>{editManager = true; newManager = false; resetManager = false; edit_Manager = {id:row.item.id,description:row.item.description}}">
-                                            修改信息
-                                        </b-button>
-                                        <b-button :key="'reset' + row.id" :size="template_size"
-                                                  variant="outline-primary"
-                                                  @click="()=>{resetManager = true; newManager = false; editManager = false; reset_Manager = {id:row.item.id,password:''}}">
-                                            重置密码
-                                        </b-button>
-                                    </b-button-group>
-                                </template>
-                            </b-table>
-                            <b-form @submit="newManagerSave" class="container w-25 pt-3" v-if="newManager">
-                                <b-form-group id="input-group-7" label-for="name">
-                                    <b-form-input
-                                            v-model="new_Manager.name"
-                                            required
-                                            autocomplete="username"
-                                            placeholder="管理员名称"
-                                    ></b-form-input>
-                                </b-form-group>
-                                <b-form-group id="input-group-8" label-for="input-2">
-                                    <b-form-textarea
-                                            rows="3"
-                                            no-resize
-                                            v-model="new_Manager.description"
-                                            required
-                                            placeholder="备注"
-                                    ></b-form-textarea>
-                                </b-form-group>
-                                <b-form-group id="input-group-9" label-for="input-2">
-                                    <b-form-input
-                                            v-model="new_Manager.password"
-                                            required
-                                            autocomplete="new-password"
-                                            type="password"
-                                            placeholder="密码"
-                                    ></b-form-input>
-                                </b-form-group>
-                                <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                </template>
+                <template slot="comment" slot-scope="row">
+                    {{row.item.comment ? row.item.comment : ''}}
+                </template>
+                <template slot="publish" slot-scope="row">
+                    {{(row.item.publish)?'是':'否'}}
+                </template>
+                <template slot="groupManagers" slot-scope="row">
+                    <div>
+                        <span v-for="manager in row.item.groupManagers" :key="manager.id">{{ manager.name + ', ' }}</span>
+                    </div>
+                </template>
+                <template slot="action" slot-scope="row">
+                    <b-button-group>
+                        <b-button :key="row.item.id" class="styledBtn" :size="template_size" variant="outline-primary" @click="editOpen(row)">
+                            编辑
+                        </b-button>
+                        <b-modal hide-footer id="editGroup" ref="editGroup" title="修改集群">
+                            <div>
+                                <b-form @submit="updateGroup" class="container w-80 pt-3">
+                                    <b-form-group id="input-group-5" label-for="name">
+                                        <b-form-input
+                                                v-model="editItem.name"
+                                                required
+                                                placeholder="集群名称"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group id="input-group-6" label-for="input-2">
+                                        <b-form-textarea
+                                                rows="3"
+                                                no-resize
+                                                v-model="editItem.comment"
+                                                required
+                                                placeholder="集群描述"
+                                        ></b-form-textarea>
+                                    </b-form-group>
+                                    <b-form-radio-group v-model="editItem.default" :options="options1"
+                                                        name="default">
+                                        <span class="float-left mr-4">是否为默认集群 :</span>
+                                    </b-form-radio-group>
+                                    <br/>
+                                    <b-form-radio-group v-model="editItem.publish" :options="options2"
+                                                        name="publish">
+                                        <span class="float-left mr-4">是否为公开集群 :</span>
+                                    </b-form-radio-group>
+                                    <br/>
+                                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
+                                </b-form>
+                            </div>
+                        </b-modal>
+                        <b-button class="styledBtn" :key="'add' + row.item.id" :size="template_size" variant="outline-primary"
+                                  @click="addManagerOpen(row)">
+                            配置管理员
+                        </b-button>
+                        <b-modal size="xl" hide-footer id="addManager" ref="addManager" title="配置管理员">
+                            <div>
+                                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10"
+                                          @click="()=>{newManager = true; editManager = false; resetManager = false; new_Manager = {name:'',description:'',password:null}}">
+                                    新增管理员
                                 </b-button>
-                                <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                          @click="()=>{newManager = false; new_Manager = {name:'',description:'',password:null}}">取 消
-                                </b-button>
-                            </b-form>
-                            <b-form @submit="editManagerSave" class="container w-25 pt-3" v-if="editManager">
-                                <b-form-group id="input-group-10" label-for="input-2">
-                                    <b-form-textarea
-                                            id="edit_Manager_description"
-                                            rows="3"
-                                            no-resize
-                                            v-model="edit_Manager.description"
-                                            required
-                                            placeholder="备注"
-                                    ></b-form-textarea>
-                                </b-form-group>
-                                <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                </b-button>
-                                <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                          @click="()=>{editManager = false; edit_Manager = {id: null,description:''}}">取
-                                    消
-                                </b-button>
-                            </b-form>
-                            <b-form @submit="resetManagerSave" class="container w-25 pt-3" v-if="resetManager">
-                                <b-form-group id="input-group-11" label-for="input-2">
-                                    <b-form-input
-                                            v-model="reset_Manager.password"
-                                            required
-                                            autocomplete="new-password"
-                                            type="password"
-                                            placeholder="密码"
-                                    ></b-form-input>
-                                </b-form-group>
-                                <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                </b-button>
-                                <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                          @click="()=>{resetManager = false; reset_Manager = {id: null,password:''}}">取
-                                    消
-                                </b-button>
-                            </b-form>
-                        </div>
-                    </b-modal>
-                </b-button-group>
-            </template>
-        </b-table>
+                                <b-table :items="Managers.list" small hover :fields="managerColumns"
+                                         class="col-10 offset-1" head-variant style="fontSize: 18px">
+                                    <template slot="id" slot-scope="row">{{ row.item.id }}</template>
+                                    <template slot="name" slot-scope="row">
+                                        <span class="text">{{row.item.name}}</span>
+                                    </template>
+                                    <template slot="comment" slot-scope="row">
+                                        {{row.item.description ? row.item.description : ''}}
+                                    </template>
+                                    <template slot="action" slot-scope="row">
+                                        <b-button-group>
+                                            <b-button :key="'edit' + row.id" :size="template_size" variant="outline-primary"
+                                                      @click="()=>{editManager = true; newManager = false; resetManager = false; edit_Manager = {id:row.item.id,description:row.item.description}}">
+                                                修改信息
+                                            </b-button>
+                                            <b-button :key="'reset' + row.id" :size="template_size"
+                                                      variant="outline-primary"
+                                                      @click="()=>{resetManager = true; newManager = false; editManager = false; reset_Manager = {id:row.item.id,password:''}}">
+                                                重置密码
+                                            </b-button>
+                                        </b-button-group>
+                                    </template>
+                                </b-table>
+                                <b-form @submit="newManagerSave" class="container w-25 pt-3" v-if="newManager">
+                                    <b-form-group id="input-group-7" label-for="name">
+                                        <b-form-input
+                                                v-model="new_Manager.name"
+                                                required
+                                                autocomplete="username"
+                                                placeholder="管理员名称"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group id="input-group-8" label-for="input-2">
+                                        <b-form-textarea
+                                                rows="3"
+                                                no-resize
+                                                v-model="new_Manager.description"
+                                                required
+                                                placeholder="备注"
+                                        ></b-form-textarea>
+                                    </b-form-group>
+                                    <b-form-group id="input-group-9" label-for="input-2">
+                                        <b-form-input
+                                                v-model="new_Manager.password"
+                                                required
+                                                autocomplete="new-password"
+                                                type="password"
+                                                placeholder="密码"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                    </b-button>
+                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                              @click="()=>{newManager = false; new_Manager = {name:'',description:'',password:null}}">取 消
+                                    </b-button>
+                                </b-form>
+                                <b-form @submit="editManagerSave" class="container w-25 pt-3" v-if="editManager">
+                                    <b-form-group id="input-group-10" label-for="input-2">
+                                        <b-form-textarea
+                                                id="edit_Manager_description"
+                                                rows="3"
+                                                no-resize
+                                                v-model="edit_Manager.description"
+                                                required
+                                                placeholder="备注"
+                                        ></b-form-textarea>
+                                    </b-form-group>
+                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                    </b-button>
+                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                              @click="()=>{editManager = false; edit_Manager = {id: null,description:''}}">取
+                                        消
+                                    </b-button>
+                                </b-form>
+                                <b-form @submit="resetManagerSave" class="container w-25 pt-3" v-if="resetManager">
+                                    <b-form-group id="input-group-11" label-for="input-2">
+                                        <b-form-input
+                                                v-model="reset_Manager.password"
+                                                required
+                                                autocomplete="new-password"
+                                                type="password"
+                                                placeholder="密码"
+                                        ></b-form-input>
+                                    </b-form-group>
+                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                    </b-button>
+                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                              @click="()=>{resetManager = false; reset_Manager = {id: null,password:''}}">取
+                                        消
+                                    </b-button>
+                                </b-form>
+                            </div>
+                        </b-modal>
+                    </b-button-group>
+                </template>
+            </b-table>
+        </div>
         <b-row class="justify-content-end row-margin-tweak mx-0 mt-4">
             <b-pagination
                     :size="template_size"
@@ -464,14 +464,6 @@
                 GroupService
                     .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
                     .then(data => {
-                        data.results.forEach(item => {
-                            if (item.checked === undefined) {
-                                item.checked = false;
-                            }
-                            if (item.locked === undefined) {
-                                item.locked = false;
-                            }
-                        });
                         this.allgroup.list = data.results;
                         this.allgroup.total = data.paging.count;
                         this.$emit("data-ready");
@@ -670,6 +662,7 @@
     .company-index {
         .field-ccheck {
             width: 2%;
+            padding-top: 11px;
             text-align: left !important;
         }
         .field-csn {

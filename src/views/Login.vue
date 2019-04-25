@@ -1,7 +1,6 @@
 <template>
   <div class="login-container">
-    <TopHeader></TopHeader>
-    <b-container class="my-5">
+    <b-container>
       <b-card no-body class="overflow-hidden">
         <b-row no-gutters>
           <b-col lg="6" sm="12" style="overflow: hidden">
@@ -118,13 +117,11 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import TopHeader from "@/components/header/TopHeader";
 import accountService from "../services/accountService";
 import { STORAGE_KEY_USER } from "../store/storageKey";
 
 export default {
   components: {
-    TopHeader
   },
   data() {
     return {

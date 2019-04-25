@@ -1,10 +1,16 @@
 <template>
   <div class="register-container">
-    <TopHeader></TopHeader>
-    <b-container class="my-5">
+    <b-container>
       <b-card no-body class="overflow-hidden">
         <b-row no-gutters>
           <b-col class="register-bg">
+            <div class="iconBar">
+              <div class="logo">
+                <img src="@/assets/imgIsper/2.png" class="rounded-0">
+              </div>
+              <h4>ISPER—2019</h4>
+              <div class="mb-3">智慧法治与智慧课堂系统</div>
+            </div>
             <div class="img-mask">
               <div class="mask-title">劳动分工是提高劳动生产力的 主要原因</div>
               <div class="mask-body d-flex justify-content-between mt-3">
@@ -17,12 +23,7 @@
           </b-col>
           <b-col>
             <b-form @submit.prevent="register">
-              <b-card-body class="text-center">
-                <div class="logo">
-                  <img src="@/assets/imgIsper/2.png" class="rounded-0">
-                </div>
-                <h4>ISPER—2019</h4>
-                <div class="mb-3">智慧法治与智慧课堂系统</div>
+              <b-card-body class="text-center p-5">
                 <b-form-group label-cols="4" label-cols-lg="2" label="姓 名 *" label-for="userName">
                   <b-form-input
                     type="text"
@@ -138,7 +139,7 @@
                     v-if="(errors.has('phoneNumber') || errors.has('verificationCode')) && !errorCleared"
                   >Please verifiy Phone Number</span>
                 </b-form-group>
-                <b-button type="submit" variant="primary">注册</b-button>
+                <b-button type="submit" variant="primary" style="width: 83%; margin-left: 17%;">注册</b-button>
               </b-card-body>
             </b-form>
           </b-col>
@@ -165,12 +166,11 @@
 
 <script>
 import accountService from "@/services/accountService";
-import TopHeader from "@/components/header/TopHeader";
 import ImageUpload from "vue-image-crop-upload";
 
 export default {
   name: "register",
-  components: { TopHeader, ImageUpload },
+  components: { ImageUpload },
   data() {
     return {
       apiRootPath: process.env.VUE_APP_API_ENDPOINT,
@@ -319,12 +319,19 @@ export default {
     .opacity-bg {
       background: rgba(255, 255, 255, 0.8);
     }
+    .iconBar {
+      margin-top: 20%;
+      background-color: #ffffffc9;
+      padding: 10px;
+      font-weight: bold;
+    }
+
     .img-mask {
       position: absolute;
       background: #27376ce6;
-      top: 35%;
+      top: 60%;
       width: 80%;
-      left: 10%;
+      left: 5%;
       border-radius: 4px;
       padding: 10px 30px;
       color: white;

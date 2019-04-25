@@ -1,8 +1,8 @@
 <template>
   <div class="workflow-index">
     <loading v-if="isRunning"></loading>
-    <b-row>
-      <b-col lg="3" md="6" sm="12" class="mb-3">
+    <b-row class="cardDiv">
+      <b-col lg="3" md="6" sm="12" >
         <b-input-group :size="template_size">
           <b-input-group-prepend>
             <span class="input-group-text">
@@ -12,118 +12,120 @@
           <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
         </b-input-group>
       </b-col>
-      <b-col lg="4" md="6" sm="12" class="align-self-center mb-3">
+      <b-col lg="4" md="6" sm="12" class="align-self-center">
         <b-form-radio-group v-model="queryParam.status">
           <b-form-radio value>全部</b-form-radio>
           <b-form-radio value="2">已发布流程</b-form-radio>
           <b-form-radio value="1">未发布流程</b-form-radio>
         </b-form-radio-group>
       </b-col>
-      <b-col lg="5" md="6" sm="12" class="align-self-center mb-3">
+      <b-col lg="5" md="6" sm="12" class="align-self-center">
         <b-button-group class="float-right">
-          <b-button :size="template_size" variant="outline-primary">公开</b-button>
-          <b-button :size="template_size" variant="outline-primary">不公开</b-button>
-          <b-button :size="template_size" variant="outline-primary" @click="newProcess">新建流程</b-button>
-          <b-button :size="template_size" variant="outline-primary" @click="publishWorkflowClick">发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">复制为未发布流程</b-button>
-          <b-button :size="template_size" variant="outline-primary">共享</b-button>
-          <b-button :size="template_size" variant="outline-primary">取消共享</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary">公开</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary">不公开</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary" @click="newProcess">新建流程</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary" @click="publishWorkflowClick">发布流程</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary">复制为未发布流程</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary">共享</b-button>
+          <b-button :size="template_size" class="styledBtn" variant="outline-primary">取消共享</b-button>
         </b-button-group>
       </b-col>
     </b-row>
-    <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
-      <template slot="sn" slot-scope="row">        
-        <b-form-checkbox v-model="row.item.checked">
-          {{ row.index + 1 }}
-        </b-form-checkbox>
-      </template>
-      <template slot="name" slot-scope="row">
-        <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
-        <span v-else class="text">{{row.item.name}}</span>
-      </template>
-      <template
-        slot="creator"
-        slot-scope="row"
-      >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
-      <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
-      <template slot="rend_ani_1" slot-scope="row">
-        <a
-          href="javascript:;"
-          class="btn-link"
-          v-if="!row.item.edited"
-          title="点击查看大图"
-          @click="showBigImg(row.item.animation1)"
-        >查看</a>
-        <div v-else>
-          <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
-        </div>
-      </template>
-      <template slot="rend_ani_2" slot-scope="row">
-        <a
-          href="javascript:;"
-          class="btn-link"
-          v-if="!row.item.edited"
-          title="点击查看大图"
-          @click="showBigImg(row.item.animation2)"
-        >查看</a>
-        <div v-else>
-          <toggle-upload :item="row.item" :keyId="2" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
-        </div>
-      </template>
-      <template slot="experiment_type_label" slot-scope="row">
-        <b-form-select
-          v-if="row.item.edited"
-          v-model="row.item.type_label"
-          :options="experimentTypeOptions"
-        ></b-form-select>
-        <span v-else class="text">{{ row.item.type_label | expType}}</span>
-      </template>
-      <template slot="experiment_task_label" slot-scope="row">
-        <b-form-input v-if="row.item.edited" type="text" v-model="row.item.task_label"/>
-        <span v-else class="text">{{row.item.task_label}}</span>
-      </template>
-      <template slot="status" slot-scope="row">
-        <span v-if="row.item.status == 1">未发布</span>
-        <span v-else>已发布</span>
-      </template>
-      <template slot="action" slot-scope="row">
-        <a
-          class="btn-link"
-          href="javascript:;"
-          v-if="row.item.edited"
-          @click="saveWorkflow(row.item)"
-        >保存</a>
-        <a class="btn-link" href="javascript:;" v-else @click="editWorkflow(row.item)">编辑</a>
-        <a
-          class="btn-link"
-          href="javascript:;"
-          v-if="row.item.status == 2"
-          @click="viewXmlHandler(row.item)"
-        >查看</a>
-        <router-link
-          v-if="!!row.item.id && row.item.status == 1"
-          :to="{ name: 'drawXML', params: { flow_id: row.item.id }}"
-        >画图</router-link>
-        <a
-          class="btn-link"
-          href="javascript:;"
-          v-if="row.item.status == 2"
-          @click="toSetPage(row.item)"
-        >设置</a>
-        <a href="javascript:;" @click="deleteWorkflowClick(row.item)">删除</a>
-        <a
-          href="javascript:;"
-          v-if="isSuperFlag && row.item.protected == 0"
-          @click="lockWorkflowClick(row.item)"
-        >保护</a>
-        <a
-          href="javascript:;"
-          v-if="isSuperFlag && row.item.protected == 1"
-          @click="unlockWorkflowClick(row.item)"
-        >解除保护</a>
-      </template>
-    </b-table>
-    <b-row class="justify-content-center row-margin-tweak">
+    <div class="cardDiv">
+      <b-table :items="workflows.list" small hover :fields="columns" head-variant>
+        <template slot="sn" slot-scope="row">
+          <b-form-checkbox v-model="row.item.checked">
+            {{ row.index + 1 }}
+          </b-form-checkbox>
+        </template>
+        <template slot="name" slot-scope="row">
+          <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
+          <span v-else class="text">{{row.item.name}}</span>
+        </template>
+        <template
+                slot="creator"
+                slot-scope="row"
+        >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
+        <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
+        <template slot="rend_ani_1" slot-scope="row">
+          <a
+                  href="javascript:;"
+                  class="btn-link"
+                  v-if="!row.item.edited"
+                  title="点击查看大图"
+                  @click="showBigImg(row.item.animation1)"
+          >查看</a>
+          <div v-else>
+            <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
+          </div>
+        </template>
+        <template slot="rend_ani_2" slot-scope="row">
+          <a
+                  href="javascript:;"
+                  class="btn-link"
+                  v-if="!row.item.edited"
+                  title="点击查看大图"
+                  @click="showBigImg(row.item.animation2)"
+          >查看</a>
+          <div v-else>
+            <toggle-upload :item="row.item" :keyId="2" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
+          </div>
+        </template>
+        <template slot="experiment_type_label" slot-scope="row">
+          <b-form-select
+                  v-if="row.item.edited"
+                  v-model="row.item.type_label"
+                  :options="experimentTypeOptions"
+          ></b-form-select>
+          <span v-else class="text">{{ row.item.type_label | expType}}</span>
+        </template>
+        <template slot="experiment_task_label" slot-scope="row">
+          <b-form-input v-if="row.item.edited" type="text" v-model="row.item.task_label"/>
+          <span v-else class="text">{{row.item.task_label}}</span>
+        </template>
+        <template slot="status" slot-scope="row">
+          <span v-if="row.item.status == 1">未发布</span>
+          <span v-else>已发布</span>
+        </template>
+        <template slot="action" slot-scope="row">
+          <a
+                  class="btn-link"
+                  href="javascript:;"
+                  v-if="row.item.edited"
+                  @click="saveWorkflow(row.item)"
+          >保存</a>
+          <a class="btn-link" href="javascript:;" v-else @click="editWorkflow(row.item)">编辑</a>
+          <a
+                  class="btn-link"
+                  href="javascript:;"
+                  v-if="row.item.status == 2"
+                  @click="viewXmlHandler(row.item)"
+          >查看</a>
+          <router-link
+                  v-if="!!row.item.id && row.item.status == 1"
+                  :to="{ name: 'drawXML', params: { flow_id: row.item.id }}"
+          >画图</router-link>
+          <a
+                  class="btn-link"
+                  href="javascript:;"
+                  v-if="row.item.status == 2"
+                  @click="toSetPage(row.item)"
+          >设置</a>
+          <a href="javascript:;" @click="deleteWorkflowClick(row.item)">删除</a>
+          <a
+                  href="javascript:;"
+                  v-if="isSuperFlag && row.item.protected == 0"
+                  @click="lockWorkflowClick(row.item)"
+          >保护</a>
+          <a
+                  href="javascript:;"
+                  v-if="isSuperFlag && row.item.protected == 1"
+                  @click="unlockWorkflowClick(row.item)"
+          >解除保护</a>
+        </template>
+      </b-table>
+    </div>
+    <b-row class="justify-content-center row-margin-tweak cardDiv">
       <b-pagination
         :size="template_size"
         :total-rows="workflows.total"
@@ -612,6 +614,7 @@ export default {
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .workflow-index {
+  padding-bottom: 10px;
   .field-sn {
     width: 7%;
   }

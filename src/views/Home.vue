@@ -1,11 +1,11 @@
 <template>
-  <div class="home-container">
-    <TopHeader>
-      <template></template>
-    </TopHeader>
-    <b-container class="my-5">
-      <b-card class="home-bg">
-        <b-row>
+  <div class="home-container h-100">
+<!--    <TopHeader>-->
+<!--      <template></template>-->
+<!--    </TopHeader>-->
+    <b-container class=" h-100">
+      <b-card class="home-bg h-100">
+        <b-row class=" h-100">
           <b-col cols="6" class="d-flex justify-content-center flex-column">
             <b-card no-body class="opacity-bg">
               <div class="d-flex justify-content-center p-3">
@@ -23,7 +23,7 @@
               </div>
             </b-card>
           </b-col>
-          <b-col cols="6" class="d-flex flex-column">
+          <b-col cols="6" class="flex-column">
             <b-card
               no-body
               v-for="notification in notificationList"
@@ -77,11 +77,10 @@
 </template>
 
 <script>
-import TopHeader from "@/components/header/TopHeader";
 
 export default {
   name: "home",
-  components: { TopHeader },
+  components: { },
   data() {
     return {
       notificationList: [
@@ -221,6 +220,9 @@ export default {
   }
   .login-btn {
     align-self: center;
+  }
+  .card-body {
+    height: 100%;
   }
 }
 </style>

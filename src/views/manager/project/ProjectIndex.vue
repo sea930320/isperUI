@@ -1,8 +1,8 @@
 <template>
     <div class="projects-index">
         <loading v-if="isRunning"></loading>
-        <b-row>
-            <b-col lg="3" md="6" sm="12" class="mb-3">
+        <b-row class="cardDiv">
+            <b-col lg="3" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
             <span class="input-group-text">
@@ -12,59 +12,61 @@
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
                 </b-input-group>
             </b-col>
-            <b-col lg="9" md="6" sm="12" class="align-self-center mb-3">
+            <b-col lg="9" md="6" sm="12" class="align-self-center">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
-                    <b-button :size="template_size" variant="outline-primary" @click="checkedIds()">导出</b-button>
-                    <b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal :disabled="this.shareButtonDisabled">共享</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary" @click="checkedIds()">导出</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary"  v-b-modal.shareConfirmModal :disabled="this.shareButtonDisabled">共享</b-button>
                     <!--<b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal>共享</b-button>-->
-                    <b-button :size="template_size" variant="outline-primary" v-b-modal.unshareConfirmModal :disabled="this.unshareButtonDisabled">取消共享</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary" v-b-modal.unshareConfirmModal :disabled="this.unshareButtonDisabled">取消共享</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
-        <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
-            <template slot="selected" slot-scope="row">
-                <b-form-checkbox v-if="row.item.share_able = 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
-                <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
-                </b-form-checkbox>
-            </template>
-            <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
-            <template slot="is_share" slot-scope="row">
-                <icon v-if="row.item.current_share = 1" name="share"></icon>
-            </template>
-            <template slot="is_protected" slot-scope="row">
-                <icon v-if="row.item.protected = 1" name="lock"></icon>
-            </template>
-            <template slot="name" slot-scope="row">
-                {{row.item.name}}
-            </template>
-            <template
-                    slot="creator"
-                    slot-scope="row"
-            >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
-            <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
-            <template slot="dependence" slot-scope="row">
-                {{row.item.flow.name}}
-            </template>
-            <template slot="public_status" slot-scope="row">
-                {{(row.item.public_status==1) ? "不自由" : "自由"}}
-            </template>
-            <template slot="mission_type" slot-scope="row">
-                {{row.item.course}}
-            </template>
-            <template slot="edit_control" slot-scope="row">
-                <b-button-group class="float-right">
-                    <b-button :size="template_size" v-if="row.item.edit_able = 1" variant="outline-primary">
-                        <icon name="cog"></icon> 设置
-                    </b-button>
-                    <b-button :size="template_size" v-if="row.item.delete_able = 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
-                        <icon name="trash"></icon> 删除
-                    </b-button>
-                </b-button-group>
-            </template>
+        <div class="cardDiv">
+            <b-table :items="projects.list" small hover :fields="columns" head-variant>
+                <template slot="selected" slot-scope="row">
+                    <b-form-checkbox v-if="row.item.share_able = 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item)">
+                        <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
+                    </b-form-checkbox>
+                </template>
+                <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
+                <template slot="is_share" slot-scope="row">
+                    <icon v-if="row.item.current_share = 1" name="share"></icon>
+                </template>
+                <template slot="is_protected" slot-scope="row">
+                    <icon v-if="row.item.protected = 1" name="lock"></icon>
+                </template>
+                <template slot="name" slot-scope="row">
+                    {{row.item.name}}
+                </template>
+                <template
+                        slot="creator"
+                        slot-scope="row"
+                >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
+                <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
+                <template slot="dependence" slot-scope="row">
+                    {{row.item.flow.name}}
+                </template>
+                <template slot="public_status" slot-scope="row">
+                    {{(row.item.public_status==1) ? "不自由" : "自由"}}
+                </template>
+                <template slot="mission_type" slot-scope="row">
+                    {{row.item.course}}
+                </template>
+                <template slot="edit_control" slot-scope="row">
+                    <b-button-group class="float-right">
+                        <b-button class="styledBtn" :size="template_size" v-if="row.item.edit_able = 1" variant="outline-primary">
+                            <icon name="cog"></icon> 设置
+                        </b-button>
+                        <b-button class="styledBtn" :size="template_size" v-if="row.item.delete_able = 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
+                            <icon name="trash"></icon> 删除
+                        </b-button>
+                    </b-button-group>
+                </template>
 
-        </b-table>
-        <b-row class="justify-content-center row-margin-tweak">
+            </b-table>
+        </div>
+        <b-row class="justify-content-center row-margin-tweak cardDiv">
             <b-pagination
                     :size="template_size"
                     :total-rows="projects.total"
@@ -74,11 +76,6 @@
 
             />
         </b-row>
-        <div class="container pt-3" style="min-height: calc(100vh - 62px)">
-            <router-view></router-view>
-        </div>
-        <!-- 查看大图Modal -->
-        <imageView :visible="bigImgModal" :src="animationImgSrc" @on-close=" bigImgModal=false"></imageView>
         <!--//Confirm Delete Project-->
         <b-modal id="deleteConfirmModal" title="Delete Project" @ok="deleteProject()">
             <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p>
@@ -100,7 +97,6 @@
     import { mapState } from "vuex";
     import Loading from "@/components/loading/Loading";
     import ProjectService from "@/services/projectService";
-    import imageView from "@/components/imageView/ImageView";
     import _ from "lodash";
     // import arrayUtils from "@/utils/arrayUtils";
     // import dateUtils from "@/utils/dateUtils";
@@ -108,8 +104,7 @@
     export default {
         name: "project-index",
         components: {
-            Loading,
-            imageView
+            Loading
         },
         filters: {
             expType,
@@ -315,10 +310,10 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss">
     .projects-index {
         .field-sn {
-            width: 7%;
+            width: 3%;
         }
         .field-name {
-            width: 10%;
+            width: 25%;
         }
         .field-creator {
             width: 9%;
@@ -327,7 +322,7 @@
             width: 9%;
         }
         .field-rend_ani_1 {
-            width: 10%;
+            width: 14%;
         }
         .field-rend_ani_2 {
             width: 10%;

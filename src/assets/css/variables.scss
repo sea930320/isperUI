@@ -1,5 +1,5 @@
 $header-bg-color : #253568;
-$main-bg-color : #ebe9ea;
+$main-bg-color : #c7dbff;
 $logo-bg-color: #1e66dc;
 $placeholder-color: #ccc;
 $text-color-1: #2a396f;
@@ -76,6 +76,11 @@ $subtable-header-color:#909090;
     overflow-y: auto;
 }
 
+.page-container {
+    height: 100%;
+    overflow: auto;
+}
+
 .subtable_div {
     height: 600px;
     border: 1px solid darkgrey;
@@ -113,4 +118,92 @@ $subtable-header-color:#909090;
 
 .table-expanded-cell .table th {
     color: #333;
+}
+
+.tabIcon {
+    width: 25px;
+    height: 80px;
+    margin-top: -4px;
+    margin-right: 10px;
+}
+
+.mainTitle {
+    font-family: sans-serif;
+    line-height: 49px;
+    margin: 0;
+}
+
+.cardDiv {
+    padding: 15px;
+    background-color: white;
+    margin: 18px 0;
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
+}
+
+thead {
+    background-color: royalblue;
+    color: white;
+    font-family: 'Microsoft JhengHei';
+    font-size: 18px;
+    tr {
+        height: 45px;
+    }
+}
+
+.table-hover tbody tr:hover {
+    color: #345fe0;
+    background-color: rgba(73, 133, 255, 0.37);
+}
+
+.styledBtn {
+    margin-left: 10px !important;
+    background-color: royalblue;
+    color: white;
+    border-style: none;
+    border-radius: 5px !important;
+    font-family: 'Microsoft JhengHei';
+    font-weight: bold;
+}
+
+.fontedBtn {
+    font-size: 18px;
+}
+
+tbody {
+    color: grey;
+    font-size: 15px;
+    font-family: 'SimHei';
+    line-height: 38px;
+}
+
+.subtitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #374f9b;
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.modal-content {
+    border-style: none !important;
+}
+
+.pagination {
+    margin: 0;
+}
+
+li.page-item {
+    margin-left: 10px;
+    width: 30px;
+}
+
+.table {
+    margin-bottom: 0 !important;
+}
+
+.custom-control {
+    line-height: 23px;
 }
