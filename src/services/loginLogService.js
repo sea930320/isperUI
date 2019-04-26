@@ -28,19 +28,6 @@ class loginLogService {
             params: options
         })
     }
-
-    /**
-     * fetch Logs
-     * @param  {Object}
-     * @return {Object}
-     */
-    exportLogs(options) {
-        return xhr({
-            method: 'get',
-            url: '/account/export/loginlogs',
-            params: options
-        })
-    }
 }
 
 export default new loginLogService()
