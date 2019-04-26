@@ -192,7 +192,7 @@
                                         </b-button-group>
                                     </template>
                                 </b-table>
-                                <b-modal hide-footer centered  v-model="newManager" title="修改集群">
+                                <b-modal hide-footer centered  v-model="newManager" title="新增管理员">
                                     <div>
                                         <b-form @submit="newManagerSave" class="container pt-3">
                                             <b-form-group id="input-group-7" label-for="name">
@@ -229,7 +229,7 @@
                                         </b-form>
                                     </div>
                                 </b-modal>
-                                <b-modal hide-footer centered  v-model="editManager" title="修改集群">
+                                <b-modal hide-footer centered  v-model="editManager" title="修改信息">
                                     <div>
                                         <b-form @submit="editManagerSave" class="container pt-3" >
                                             <b-form-group id="input-group-10" label-for="input-2">
@@ -251,7 +251,7 @@
                                         </b-form>
                                     </div>
                                 </b-modal>
-                                <b-modal hide-footer centered  v-model="resetManager" title="修改集群">
+                                <b-modal hide-footer centered  v-model="resetManager" title="重置密码">
                                     <div>
                                         <b-form @submit="resetManagerSave" class="container pt-3">
                                             <b-form-group id="input-group-11" label-for="input-2">

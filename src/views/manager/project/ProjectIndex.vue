@@ -94,11 +94,6 @@
 
             />
         </b-row>
-        <div class="container pt-3" style="min-height: calc(100vh - 62px)">
-            <router-view></router-view>
-        </div>
-        <!-- 查看大图Modal -->
-        <imageView :visible="bigImgModal" :src="animationImgSrc" @on-close=" bigImgModal=false"></imageView>
         <!--//Confirm Delete Project-->
         <b-modal id="deleteConfirmModal" title="Delete Project" @ok="deleteProject()">
             <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p>
@@ -120,7 +115,6 @@
     import { mapState } from "vuex";
     import Loading from "@/components/loading/Loading";
     import ProjectService from "@/services/projectService";
-    import imageView from "@/components/imageView/ImageView";
     import _ from "lodash";
     // import arrayUtils from "@/utils/arrayUtils";
     // import dateUtils from "@/utils/dateUtils";
@@ -128,7 +122,6 @@
         name: "project-index",
         components: {
             Loading,
-            imageView
         },
         filters: {
             expType,

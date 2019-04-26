@@ -93,10 +93,60 @@ class GroupService {
         })
     }
 
+    // Company actions
+
     fetchCompanyList(data) {
         return xhr({
             method: 'post',
-            url: '/group/fetchCompanyList',
+            url: '/company/fetchCompanyList',
+            params: data
+        })
+    }
+
+    createCompany(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/createCompany',
+            params: data
+        })
+    }
+
+    deleteCompany(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/deleteCompany',
+            params: data
+        })
+    }
+
+    updateCompany(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/updateCompany',
+            params: data
+        })
+    }
+
+    addCManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/addCManager',
+            params: data
+        })
+    }
+
+    updateCManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/updateCManager',
+            params: data
+        })
+    }
+
+    pCResetManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/pCResetManager',
             params: data
         })
     }

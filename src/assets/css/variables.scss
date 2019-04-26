@@ -208,3 +208,30 @@ li.page-item {
 .custom-control {
     line-height: 23px;
 }
+
+*:focus {
+    outline: none;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #2535685c;
+}
+
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+    border-color: #8b9ec8 #8b9ec8 #c7dbff;
+}
+
+.nav-tabs .nav-link {
+    font-family: 'Microsoft jhenghei';
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    font-weight: bold;
+    font-size: 16px;
+    color: grey;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4169e1;
+    background-color: #c7dbff;
+    border-color: #8b9ec8 #8b9ec8 #c7dbff;
+}
