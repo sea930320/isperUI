@@ -1,33 +1,42 @@
 * {
 	box-sizing: border-box
 }
-h1,h2,h3,h4 {
+
+h1,
+h2,
+h3,
+h4 {
 	font-weight: normal
 }
+
 /*
 url('../font/app.svg?42391129#bpmnio') format('svg')
 url('../font/bpmn.svg?42391129#bpmnio') format('svg')
 */
 @font-face {
-	font-family:'app';
-	src:url('../font/app.eot?42391129');
-	src:url('../font/app.eot?42391129#iefix') format('embedded-opentype'),
-	url('../font/app.woff?42391129') format('woff'),
-	url('../font/app.ttf?42391129') format('truetype');
-	font-weight:normal;
-	font-style:normal
+	font-family: 'app';
+	src: url('../font/app.eot?42391129');
+	src: url('../font/app.eot?42391129#iefix') format('embedded-opentype'),
+		url('../font/app.woff?42391129') format('woff'),
+		url('../font/app.ttf?42391129') format('truetype');
+	font-weight: normal;
+	font-style: normal
 }
 
 @font-face {
-	font-family:'bpmn';
-	src:url('../font/bpmn.eot?42391129');
-	src:url('../font/bpmn.eot?42391129#iefix') format('embedded-opentype'),
-	url('../font/bpmn.woff?42391129') format('woff'),
-	url('../font/bpmn.ttf?42391129') format('truetype');
-	font-weight:normal;
-	font-style:normal
+	font-family: 'bpmn';
+	src: url('../font/bpmn.eot?42391129');
+	src: url('../font/bpmn.eot?42391129#iefix') format('embedded-opentype'),
+		url('../font/bpmn.woff?42391129') format('woff'),
+		url('../font/bpmn.ttf?42391129') format('truetype');
+	font-weight: normal;
+	font-style: normal
 }
-[class^="app-icon-"]:before,[class*=" app-icon-"]:before,[class^="bpmn-icon-"]:before,[class*=" bpmn-icon-"]:before {
+
+[class^="app-icon-"]:before,
+[class*=" app-icon-"]:before,
+[class^="bpmn-icon-"]:before,
+[class*=" bpmn-icon-"]:before {
 	font-style: normal;
 	font-weight: normal;
 	speak: none;
@@ -38,9 +47,15 @@ url('../font/bpmn.svg?42391129#bpmnio') format('svg')
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1em
-}[class^="app-icon-"]:before,[class*=" app-icon-"]:before {
+}
+
+[class^="app-icon-"]:before,
+[class*=" app-icon-"]:before {
 	font-family: "app"
-}[class^="bpmn-icon-"]:before,[class*=" bpmn-icon-"]:before {
+}
+
+[class^="bpmn-icon-"]:before,
+[class*=" bpmn-icon-"]:before {
 	font-family: "bpmn"
 }
 
@@ -616,11 +631,13 @@ url('../font/bpmn.svg?42391129#bpmnio') format('svg')
 	}
 }
 
-.project-logo,.project-logo a {
+.project-logo,
+.project-logo a {
 	color: #52B415 !important
 }
 
-.content,.content>div {
+.content,
+.content>div {
 	width: 100%;
 	height: 100%;
 	overflow: hidden
@@ -656,7 +673,9 @@ url('../font/bpmn.svg?42391129#bpmnio') format('svg')
 	background: #fefafa
 }
 
-body:not(.error) .screen.error,body:not(.intro) .screen.intro,body:not(.loading) .screen.loading {
+body:not(.error) .screen.error,
+body:not(.intro) .screen.intro,
+body:not(.loading) .screen.loading {
 	display: none
 }
 
@@ -668,7 +687,8 @@ body:not(.error) .screen.error,body:not(.intro) .screen.intro,body:not(.loading)
 	display: block
 }
 
-body.shown .canvas,body.loaded .canvas {
+body.shown .canvas,
+body.loaded .canvas {
 	display: block
 }
 
@@ -676,17 +696,21 @@ body.loaded .canvas svg {
 	visibility: hidden
 }
 
-body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
+body:not(.shown) .io-export,
+body:not(.shown) .io-zoom-controls {
 	/*display: none*/
 }
 
-.samples,.message {
+.samples,
+.message {
 	max-width: 700px;
 	margin: auto
 }
 
 @media (max-width:720px) {
-	.samples,.message {
+
+	.samples,
+	.message {
 		margin: 20px
 	}
 
@@ -709,7 +733,7 @@ body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
 .samples .sample {
 	display: inline-block;
 	max-width: 100%;
-  padding: 10px;
+	padding: 10px;
 	vertical-align: top;
 	position: relative
 }
@@ -737,14 +761,17 @@ body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
 	display: block
 }
 
-.bjs-powered-by,.cjs-powered-by,.io-control {
+.bjs-powered-by,
+.cjs-powered-by,
+.io-control {
 	background: #FFF;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 	border-radius: 2px;
 	padding: 5px
 }
 
-.cjs-powered-by,.bjs-powered-by {
+.cjs-powered-by,
+.bjs-powered-by {
 	padding-bottom: 2px
 }
 
@@ -774,7 +801,9 @@ body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
 	margin: 0
 }
 
-.io-control-list a,.io-control-list a:visited,.io-control-list button {
+.io-control-list a,
+.io-control-list a:visited,
+.io-control-list button {
 	padding: 0;
 	outline: none;
 	cursor: pointer;
@@ -785,16 +814,21 @@ body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
 	border: none
 }
 
-.io-control-list a:hover,.io-control-list a:visited:hover,.io-control-list button:hover {
+.io-control-list a:hover,
+.io-control-list a:visited:hover,
+.io-control-list button:hover {
 	color: #333333
 }
 
-.io-control-list a.inactive,.io-control-list a:visited.inactive,.io-control-list button.inactive {
+.io-control-list a.inactive,
+.io-control-list a:visited.inactive,
+.io-control-list button.inactive {
 	color: #E0E0E0;
 	cursor: default
 }
 
-.io-control-list.io-horizontal,.io-control-list.io-horizontal li {
+.io-control-list.io-horizontal,
+.io-control-list.io-horizontal li {
 	display: inline-block
 }
 
@@ -812,7 +846,8 @@ body:not(.shown) .io-export,body:not(.shown) .io-zoom-controls {
 	border-top: solid 1px #EEE
 }
 
-.io-help,.io-legal {
+.io-help,
+.io-legal {
 	position: fixed;
 	transition: ease-in .1s
 }
@@ -838,7 +873,9 @@ body.shown .io-help {
 	line-height: 30px
 }
 
-.io-help button:hover,.io-help a:hover,.io-legal a:hover {
+.io-help button:hover,
+.io-help a:hover,
+.io-legal a:hover {
 	background: #F0F0F0;
 	border-radius: 2px
 }
@@ -848,7 +885,9 @@ body.shown .io-help {
 	left: 20px
 }
 
-.io-help,.io-legal,.io-import-export {
+.io-help,
+.io-legal,
+.io-import-export {
 	bottom: 25px
 }
 
@@ -867,7 +906,8 @@ body.shown .io-help {
 	width: auto;
 	position: fixed;
 	right: 15px;
-	top: 20px;
+	top: 80px;
+	margin-top: 20px;
 }
 
 .io-editing-tools .io-control {
@@ -964,7 +1004,7 @@ body.shown .io-help {
 	top: 100px;
 	background: white;
 	padding: 10px 30px 20px 30px;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 	border-radius: 2px;
 	height: auto;
 	z-index: 1001
@@ -983,12 +1023,14 @@ body.shown .io-help {
 	width: 450px;
 	margin-left: -225px
 }
+
 .keybindings-dialog .content .icon-close {
 	position: absolute;
 	top: 15px;
 	right: 15px;
 	cursor: pointer;
 }
+
 .keybindings-dialog .binding {
 	padding: 5px 10px;
 	font-family: monospace

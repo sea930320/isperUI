@@ -431,6 +431,44 @@ class WorkflowService {
       params: data
     })
   }
+  /**
+   * Un共享
+   * @param  {String}
+   * @return {Object}
+   */
+  unshareWorkflow(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/unshare',
+      params: data
+    })
+  }
+
+  /**
+   * Public
+   * @param  {String}
+   * @return {Object}
+   */
+  publicWorkflow(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/public',
+      params: data
+    })
+  }
+
+  /**
+   * Public
+   * @param  {String}
+   * @return {Object}
+   */
+  unpublicWorkflow(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/unpublic',
+      params: data
+    })
+  }
 }
 
 export default new WorkflowService()

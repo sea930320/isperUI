@@ -115,7 +115,9 @@
       jswidget="keybindings-dialog"
     >
       <div class="content bindings-mac">
-        <span class="iconfont icon-close" @click="handleCloseKeyboard"></span>
+        <b-button variant="link" @click="handleCloseKeyboard" class="iconfont icon-close">
+          <icon name="times"></icon>
+        </b-button>
         <h1>快捷键</h1>
         <table>
           <tbody>
@@ -160,7 +162,9 @@
       </div>
 
       <div class="content bindings-default">
-        <span class="iconfont icon-close" @click="handleCloseKeyboard"></span>
+        <b-button variant="link" @click="handleCloseKeyboard" class="iconfont icon-close">
+          <icon name="times"></icon>
+        </b-button>
         <h1>快捷键</h1>
         <table>
           <tbody>
@@ -209,8 +213,7 @@
 <script type="text/ecmascript-6">
 import BpmnModeler from "bpmn-js/lib/Modeler";
 // import bpmnJsColor from 'bpmn-js-in-color'
-import { mapGetters, mapActions } from "vuex";
-import workflowService from "src/services/workflowService";
+import workflowService from "@/services/workflowService";
 const defaultXML = `<?xml version="1.0" encoding="UTF-8"?>
           <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
           <bpmn:process id="Process_1" isExecutable="false" />
@@ -235,36 +238,23 @@ export default {
       this.keyboardShow = false;
     },
     initBpmnViewer(xml) {
-      // let customTranslate = ['value', require('assets/bpmn/customTranslate/customTranslate')]
-      // this.bpmnModeler = new BpmnModeler({
-      //   container: '#js-canvas',
-      //   additionalModules: [
-      //     customTranslate,
-      //     bpmnJsColor
-      //   ],
-      //   keyboard: { bindTo: document }
-      // })
       this.bpmnModeler = new BpmnModeler({
         container: "#js-canvas",
         keyboard: { bindTo: document }
       });
       this.bpmnModeler.importXML(xml, function(err) {
         if (err) {
-          return console.error("could not import BPMN 2.0 diagram", err);
+          this.$toasted.error("could not import BPMN 2.0 diagram");
         }
       });
 
       var canvas = this.bpmnModeler.get("canvas");
       canvas.zoom("fit-viewport");
-      // let eventBus = this.bpmnModeler.get('eventBus')
-      // eventBus.on('element.dblclick', function(e) {
-      //   console.log('element.click', 'on', e.element.id)
-      // })
     },
     updateBpmnViewer(xml) {
       this.bpmnModeler.importXML(xml, function(err) {
         if (err) {
-          return console.error("could not import BPMN 2.0 diagram", err);
+          this.$toasted.error("could not import BPMN 2.0 diagram");
         }
       });
     },
@@ -274,15 +264,15 @@ export default {
 
       _this.bpmnModeler.saveXML({ format: true }, function(err, xml) {
         if (err) {
-          _this.$toast.error("对不起保存失败");
+          _this.$toasted.error("对不起保存失败");
         } else {
           workflowService
             .drawWorkflow({
               flow_id: _this.flowId,
               xml: xml
             })
-            .then(data => {
-              _this.$toast.success("保存流程图成功");
+            .then(() => {
+              _this.$toasted.success("保存流程图成功");
             });
         }
       });
@@ -308,12 +298,13 @@ export default {
   }
 };
 </script>
-<style>
+
+<style type="text/css" lang="scss" rel="stylesheet/scss">
 @import "./bpmn/css/diagram-js.css";
 @import "./bpmn/css/bpmn-embedded.css";
 @import "./bpmn/css/app.css";
 .canavs-container {
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 80px);
 }
 </style>

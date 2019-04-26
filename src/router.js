@@ -50,7 +50,68 @@ const routes = [{
                 path: 'workflow',
                 name: 'manager-workflow',
                 component: () => import('@/views/manager/workflow/WorkflowIndex.vue')
-            }, {
+            },
+            {
+                path: '/workflow/draw/:flow_id',
+                name: 'manager-workflow-drawXML',
+                component: () => import('@/components/workflowXML/drawXML.vue')
+            },
+            // {
+            //     path: 'workflow/set/:flow_id',
+            //     name: 'setworkflow',
+            //     component: resolve => require(['pages/manager/workflow/settings-base.vue'], resolve),
+            //     meta: {
+            //         step: true
+            //     },
+            //     children: [{
+            //             path: '',
+            //             component: resolve => require(['pages/manager/workflow/node-settings.vue'], resolve)
+            //         },
+            //         {
+            //             path: '0',
+            //             name: 'setworkflowNode',
+            //             component: resolve => require(['pages/manager/workflow/node-settings.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 0)
+            //         },
+            //         {
+            //             path: '1',
+            //             name: 'setworkflowDoc',
+            //             component: resolve => require(['pages/manager/workflow/doc-settings.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 1)
+            //         },
+            //         {
+            //             path: '2',
+            //             name: 'setworkflowRoleAppend',
+            //             component: resolve => require(['pages/manager/workflow/role-append.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 2)
+            //         },
+            //         {
+            //             path: '3',
+            //             name: 'setworkflowRoleAssign',
+            //             component: resolve => require(['pages/manager/workflow/role-assign.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 3)
+            //         },
+            //         {
+            //             path: '4',
+            //             name: 'setworkflowAction',
+            //             component: resolve => require(['pages/manager/workflow/action-settings.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 4)
+            //         },
+            //         {
+            //             path: '5',
+            //             name: 'setworkflowAnime',
+            //             component: resolve => require(['pages/manager/workflow/anime-settings.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 5)
+            //         },
+            //         {
+            //             path: '6',
+            //             name: 'setworkflowRole',
+            //             component: resolve => require(['pages/manager/workflow/role-settings.vue'], resolve),
+            //             beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 6)
+            //         }
+            //     ]
+            // },
+            {
                 path: 'project',
                 name: 'manager-project',
                 component: () => import('@/views/manager/project/ProjectIndex.vue')

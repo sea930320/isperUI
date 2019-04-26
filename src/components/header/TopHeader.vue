@@ -17,7 +17,7 @@
         <b-navbar-nav class="ml-auto" v-if="userInfo && userInfo.role">
           <b-nav-item-dropdown right>
             <template slot="button-content" class="text-white">
-              <icon name="users"></icon>&nbsp;&nbsp; 个人中心
+              <icon name="users"></icon>&nbsp;&nbsp; {{userInfo.role_name}}
             </template>
             <b-dropdown-item :to="prefixRoute + 'personal-info'">个人信息</b-dropdown-item>
             <b-dropdown-item :to="prefixRoute + 'password-reset'">重置密码</b-dropdown-item>

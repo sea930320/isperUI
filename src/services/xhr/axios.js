@@ -9,6 +9,7 @@ import VueCookie from 'vue-cookie'
 import Vue from 'vue'
 import router from '../../router'
 import axios from 'axios'
+import store from '../../store/index'
 import qs from 'qs'
 const ERR_OK = 0
 const NOT_LOGIN = 10003
@@ -49,6 +50,7 @@ const xhr = ({
           } else if (data.c === NOT_LOGIN) {
             Vue.toasted.error(data.m)
             VueCookie.delete(STORAGE_KEY_USER)
+            store.dispatch('logout')
           } else {
             Vue.toasted.error(data.m)
           }
