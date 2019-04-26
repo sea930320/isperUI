@@ -210,7 +210,7 @@
     </div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script>
 import BpmnModeler from "bpmn-js/lib/Modeler";
 // import bpmnJsColor from 'bpmn-js-in-color'
 import workflowService from "@/services/workflowService";

@@ -898,15 +898,15 @@ body.shown .io-help {
 .io-zoom-controls {
 	width: auto;
 	position: fixed;
-	right: 15px;
-	bottom: 90px
+	right: 150px;
+	bottom: 150px
 }
 
 .io-editing-tools {
 	width: auto;
 	position: fixed;
-	right: 15px;
-	top: 80px;
+	right: 150px;
+	top: 180px;
 	margin-top: 20px;
 }
 
