@@ -596,16 +596,6 @@ export default {
   },
   computed: {
     ...mapState(["userInfo"]),
-    allCheck: {
-      get() {
-        return this.workflows.list.every(flow => flow.checked);
-      },
-      set(val) {
-        this.workflows.list.forEach(flow => {
-          flow.checked = val;
-        });
-      }
-    },
     checkedItems() {
       return this.workflows.list.filter(item => item.checked === true);
     },

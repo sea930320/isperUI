@@ -13,6 +13,7 @@ import lodash from 'lodash'
 import VueLodash from 'vue-lodash'
 import VueFormWizard from 'vue-form-wizard'
 import VueSweetalert2 from 'vue-sweetalert2';
+import VueMoment from 'vue-moment'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
 
@@ -45,6 +46,7 @@ Vue.mixin(globalMixin);
 Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
 Vue.use(VueSweetalert2);
+Vue.use(VueMoment)
 
 
 new Vue({

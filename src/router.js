@@ -20,6 +20,12 @@ const personalCenterRoutes = [{
     component: () => import('@/views/personal-center/AssistantSet.vue')
 }]
 
+const systemSetRoutes = [{
+    path: 'system-set',
+    name: 'system-set',
+    component: () => import('@/views/system-set/SystemSet.vue')
+}]
+
 const routes = [{
         path: '/',
         name: 'home',
@@ -43,6 +49,7 @@ const routes = [{
         component: () => import('@/views/layout/Manager.vue'),
         children: [
             ...personalCenterRoutes,
+            ...systemSetRoutes,
             {
                 path: '',
                 redirect: 'workflow'
