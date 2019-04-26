@@ -18,7 +18,7 @@
           <icon name="user-cog" class="tabIcon"></icon>用户管理
         </b-nav-item>
         <b-nav-item to="#">
-          <icon name="edit" class="tabIcon"></icon>课程管理
+          <icon name="cogs" class="tabIcon"></icon>系统设置
         </b-nav-item>
       </template>
     </TopHeader>
