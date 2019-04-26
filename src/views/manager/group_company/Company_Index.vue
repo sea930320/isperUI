@@ -105,138 +105,11 @@
                             <icon name="edit" style="width: 20px"></icon>
                             编辑
                         </b-button>
-                        <b-modal hide-footer centered id="editCompany" ref="editCompany" title="修改单位">
-                            <div>
-                                <b-form @submit="updateCompany" class="container w-80 pt-3">
-                                    <b-form-group id="input-group-5" label-for="name">
-                                        <b-form-input
-                                                v-model="editItem.name"
-                                                required
-                                                placeholder="单位名称"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group id="input-group-6" label-for="input-2">
-                                        <b-form-select v-model="editItem.type" :options="allgroup.cTypes"></b-form-select>
-                                    </b-form-group>
-                                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
-                                </b-form>
-                            </div>
-                        </b-modal>
                         <b-button class="styledBtn" :key="'add' + row.item.id" :size="template_size" variant="outline-primary"
                                   @click="addCManagerOpen(row)">
                             <icon name="user-plus" style="width: 20px"></icon>
                             配置管理员
                         </b-button>
-                        <b-modal size="xl" centered hide-footer id="addCManager" ref="addCManager" title="配置管理员">
-                            <div class="pb-5">
-                                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 82% !important;"
-                                          @click="()=>{newCManager = true; editCManager = false; resetCManager = false; new_CManager = {name:'',description:'',password:null}}">
-                                    新增管理员
-                                </b-button>
-                                <b-table :items="cManagers.list" small hover :fields="cManagerColumns"
-                                         class="col-10 offset-1 mb-3" head-variant style="fontSize: 18px">
-                                    <template slot="id" slot-scope="row">{{ row.item.id }}</template>
-                                    <template slot="name" slot-scope="row">
-                                        <span class="text">{{row.item.name}}</span>
-                                    </template>
-                                    <template slot="comment" slot-scope="row">
-                                        {{row.item.description ? row.item.description : ''}}
-                                    </template>
-                                    <template slot="action" slot-scope="row">
-                                        <b-button-group>
-                                            <b-button class="styledBtn" :key="'edit' + row.id" :size="template_size" variant="outline-primary"
-                                                      @click="()=>{editCManager = true; newCManager = false; resetCManager = false; edit_CManager = {id:row.item.id,description:row.item.description}}">
-                                                修改信息
-                                            </b-button>
-                                            <b-button class="styledBtn" :key="'reset' + row.id" :size="template_size"
-                                                      variant="outline-primary"
-                                                      @click="()=>{resetCManager = true; newCManager = false; editCManager = false; reset_CManager = {id:row.item.id,password:''}}">
-                                                重置密码
-                                            </b-button>
-                                        </b-button-group>
-                                    </template>
-                                </b-table>
-                                <b-modal hide-footer centered  v-model="newCManager" title="新增管理员">
-                                    <div>
-                                        <b-form @submit="newCManagerSave" class="container pt-3">
-                                            <b-form-group id="input-group-7" label-for="name">
-                                                <b-form-input
-                                                        v-model="new_CManager.name"
-                                                        required
-                                                        autocomplete="username"
-                                                        placeholder="管理员名称"
-                                                ></b-form-input>
-                                            </b-form-group>
-                                            <b-form-group id="input-group-8" label-for="input-2">
-                                                <b-form-textarea
-                                                        rows="3"
-                                                        no-resize
-                                                        v-model="new_CManager.description"
-                                                        required
-                                                        placeholder="备注"
-                                                ></b-form-textarea>
-                                            </b-form-group>
-                                            <b-form-group id="input-group-9" label-for="input-2">
-                                                <b-form-input
-                                                        v-model="new_CManager.password"
-                                                        required
-                                                        autocomplete="new-password"
-                                                        type="password"
-                                                        placeholder="密码"
-                                                ></b-form-input>
-                                            </b-form-group>
-                                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                            </b-button>
-                                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                                      @click="()=>{newCManager = false; new_CManager = {name:'',description:'',password:null}}">取 消
-                                            </b-button>
-                                        </b-form>
-                                    </div>
-                                </b-modal>
-                                <b-modal hide-footer centered  v-model="editCManager" title="修改信息">
-                                    <div>
-                                        <b-form @submit="editCManagerSave" class="container pt-3" >
-                                            <b-form-group id="input-group-10" label-for="input-2">
-                                                <b-form-textarea
-                                                        :id="'edit_CManager_description' + row.item.id"
-                                                        rows="3"
-                                                        no-resize
-                                                        v-model="edit_CManager.description"
-                                                        required
-                                                        placeholder="备注"
-                                                ></b-form-textarea>
-                                            </b-form-group>
-                                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                            </b-button>
-                                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                                      @click="()=>{editCManager = false; edit_CManager = {id: null,description:''}}">取
-                                                消
-                                            </b-button>
-                                        </b-form>
-                                    </div>
-                                </b-modal>
-                                <b-modal hide-footer centered  v-model="resetCManager" title="重置密码">
-                                    <div>
-                                        <b-form @submit="resetCManagerSave" class="container pt-3">
-                                            <b-form-group id="input-group-11" label-for="input-2">
-                                                <b-form-input
-                                                        v-model="reset_CManager.password"
-                                                        required
-                                                        autocomplete="new-password"
-                                                        type="password"
-                                                        placeholder="密码"
-                                                ></b-form-input>
-                                            </b-form-group>
-                                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                            </b-button>
-                                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                                      @click="()=>{resetCManager = false; reset_CManager = {id: null,password:''}}">取 消
-                                            </b-button>
-                                        </b-form>
-                                    </div>
-                                </b-modal>
-                            </div>
-                        </b-modal>
                     </b-button-group>
                 </template>
             </b-table>
@@ -250,6 +123,133 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
+        <b-modal size="xl" centered hide-footer id="addCManager" ref="addCManager" title="配置管理员">
+            <div class="pb-5">
+                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 82% !important;"
+                          @click="()=>{newCManager = true; editCManager = false; resetCManager = false; new_CManager = {name:'',description:'',password:null}}">
+                    新增管理员
+                </b-button>
+                <b-table :items="cManagers.list" small hover :fields="cManagerColumns"
+                         class="col-10 offset-1 mb-3" head-variant style="fontSize: 18px">
+                    <template slot="id" slot-scope="row">{{ row.item.id }}</template>
+                    <template slot="name" slot-scope="row">
+                        <span class="text">{{row.item.name}}</span>
+                    </template>
+                    <template slot="comment" slot-scope="row">
+                        {{row.item.description ? row.item.description : ''}}
+                    </template>
+                    <template slot="action" slot-scope="row">
+                        <b-button-group>
+                            <b-button class="styledBtn" :key="'edit' + row.id" :size="template_size" variant="outline-primary"
+                                      @click="()=>{editCManager = true; newCManager = false; resetCManager = false; edit_CManager = {id:row.item.id,description:row.item.description}}">
+                                修改信息
+                            </b-button>
+                            <b-button class="styledBtn" :key="'reset' + row.id" :size="template_size"
+                                      variant="outline-primary"
+                                      @click="()=>{resetCManager = true; newCManager = false; editCManager = false; reset_CManager = {id:row.item.id,password:''}}">
+                                重置密码
+                            </b-button>
+                        </b-button-group>
+                    </template>
+                </b-table>
+                <b-modal hide-footer centered  v-model="newCManager" title="新增管理员">
+                    <div>
+                        <b-form @submit="newCManagerSave" class="container pt-3">
+                            <b-form-group id="input-group-7" label-for="name">
+                                <b-form-input
+                                        v-model="new_CManager.name"
+                                        required
+                                        autocomplete="username"
+                                        placeholder="管理员名称"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-form-group id="input-group-8" label-for="input-2">
+                                <b-form-textarea
+                                        rows="3"
+                                        no-resize
+                                        v-model="new_CManager.description"
+                                        required
+                                        placeholder="备注"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group id="input-group-9" label-for="input-2">
+                                <b-form-input
+                                        v-model="new_CManager.password"
+                                        required
+                                        autocomplete="new-password"
+                                        type="password"
+                                        placeholder="密码"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{newCManager = false; new_CManager = {name:'',description:'',password:null}}">取 消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+                <b-modal hide-footer centered  v-model="editCManager" title="修改信息">
+                    <div>
+                        <b-form @submit="editCManagerSave" class="container pt-3" >
+                            <b-form-group id="input-group-10" label-for="input-2">
+                                <b-form-textarea
+                                        id="edit_CManager_description"
+                                        rows="3"
+                                        no-resize
+                                        v-model="edit_CManager.description"
+                                        required
+                                        placeholder="备注"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{editCManager = false; edit_CManager = {id: null,description:''}}">取
+                                消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+                <b-modal hide-footer centered  v-model="resetCManager" title="重置密码">
+                    <div>
+                        <b-form @submit="resetCManagerSave" class="container pt-3">
+                            <b-form-group id="input-group-11" label-for="input-2">
+                                <b-form-input
+                                        v-model="reset_CManager.password"
+                                        required
+                                        autocomplete="new-password"
+                                        type="password"
+                                        placeholder="密码"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{resetCManager = false; reset_CManager = {id: null,password:''}}">取 消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+            </div>
+        </b-modal>
+        <b-modal hide-footer centered id="editCompany" ref="editCompany" title="修改单位">
+            <div>
+                <b-form @submit="updateCompany" class="container w-80 pt-3">
+                    <b-form-group id="input-group-5" label-for="name">
+                        <b-form-input
+                                v-model="editItem.name"
+                                required
+                                placeholder="单位名称"
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group id="input-group-6" label-for="input-2">
+                        <b-form-select v-model="editItem.type" :options="allgroup.cTypes"></b-form-select>
+                    </b-form-group>
+                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
+                </b-form>
+            </div>
+        </b-modal>
     </div>
 </template>
 
