@@ -23,7 +23,7 @@
             </b-col>
         </b-row>
         <div class="cardDiv">
-            <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
+            <b-table :items="projects.list" small hover :fields="columns" head-variant>
             <template slot="selected" slot-scope="row">
                 <b-form-checkbox v-if="row.item.share_able == 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item,1)">
                     <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
