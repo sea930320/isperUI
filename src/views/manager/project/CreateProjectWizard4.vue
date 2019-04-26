@@ -11,7 +11,8 @@
       <b-container fluid>
         <b-row align-v="center">
           <b-col sm="3">
-            <b-table :items="workflows.list" small striped hover :fields="columns" head-variant>
+            <b-table :items="workflows.list" small striped hover :fields="columns" head-variant selectable
+                     :select-mode="single">
               <template slot="sn" slot-scope="row">
                 {{ row.item.id}}
               </template>

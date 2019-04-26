@@ -4,204 +4,240 @@
     <h3> Main Option (Step 1) </h3>
     <br><br>
     <loading v-if="isRunning"></loading>
-    <b-container fluid>
-        <b-row align-v="left">
-          <b-col sm="3">
-            <div class="subtable_div">
-              <b-table :items="workflows.list" small striped hover :fields="columns" head-variant class="subtable">
-              <template slot="id" slot-scope="row">
-                {{ row.item.id}}
-              </template>
-              <template slot="name" slot-scope="row">
-                {{row.item.name}}
-              </template>
-              <template slot="convertedData" slot-scope="row">
-                {{row.item.convertedData}}
-                <!--{{row.item.type_label}}-->
-              </template>
-            </b-table>
-            </div>
-          </b-col>
-          <b-col sm="9">
-            <b-container fluid>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="项目名称:"
-                          label-for="input-horizontal"
-                  >
-                    <b-form-input id="input-horizontal"></b-form-input>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="流程图完整显示:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="完整显示" class="w-100">
-                      <b-dropdown-item-button>动作1</b-dropdown-item-button>
-                      <b-dropdown-item-button>动作2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
+    <b-form @submit="onSubmit">
+      <b-container fluid>
+          <b-row align-v="left">
+            <b-col sm="3">
+              <b-form-group
+                      id="fieldset-horizontal"
+                      label-cols-sm="4"
+                      label-cols-lg="3"
+                      label="流程名称:"
+                      label-for="input-horizontal"
+              >
+                <b-form-input disabled id="input-horizontal" required v-model="this.project_data.flow_name"></b-form-input>
+              </b-form-group>
+              <b-navbar toggleable="lg" variant="info">
+                <b-navbar-brand href="#">&nbsp;&nbsp;&nbsp;流程</b-navbar-brand>
+                <b-collapse id="nav-collapse" is-nav>
+                  <!-- Right aligned nav items -->
+                  <b-navbar-nav class="ml-auto">
+                    <b-nav-form>
+                      <b-input-group :size="template_size">
+                        <b-input-group-prepend>
+                          <span class="input-group-text">
+                            <icon name="search"></icon>
+                          </span>
+                        </b-input-group-prepend>
+                        <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
+                      </b-input-group>
+                      <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
+                    </b-nav-form>
+                  </b-navbar-nav>
+                </b-collapse>
+              </b-navbar>
+              <!--<div class="subtable_div">-->
+                <b-table selectable :select-mode="selectMode" :items="workflows.list" small hover :fields="columns" head-variant class="subtable" selectedVariant="primary" @row-selected="rowSelected">
+                  <template slot="id" slot-scope="row">
+                    {{ row.item.id}}
+                  </template>
+                  <template slot="name" slot-scope="row">
+                    {{row.item.name}}
+                  </template>
+                  <template slot="convertedData" slot-scope="row">
+                    {{row.item.convertedData}}
+                    <!--{{row.item.type_label}}-->
+                  </template>
+                  <template slot="rend_ani_1" slot-scope="row">
+                    <a
+                      class="btn-link mx-1"
+                      href="javascript:;"
+                      v-if="row.item.status != 1"
+                      @click="viewXmlHandler(row.item)"
+                    >
+                      <icon name="eye"></icon>
 
-              </b-row>
+                    </a>
 
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="开发模式:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="完整显示" class="w-100">
-                      <b-dropdown-item-button>选项1</b-dropdown-item-button>
-                      <b-dropdown-item-button>选项2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="成果参考释放方式:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="同步" class="w-100">
-                      <b-dropdown-item-button>选项1</b-dropdown-item-button>
-                      <b-dropdown-item-button>选项2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
+                  </template>
+              </b-table>
+              <b-row class="justify-content-center row-margin-tweak">
+                <b-pagination
+                        :size="template_size"
+                        :total-rows="workflows.total"
+                        :per-page="queryParam.size"
+                        limit="5"
+                        v-model="queryParam.page"
+                ></b-pagination>
               </b-row>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="事务类型:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="请选择" class="w-100">
-                      <b-dropdown-item-button>事务1</b-dropdown-item-button>
-                      <b-dropdown-item-button>事务2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="关联课程:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="" class="w-100">
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="开发时段:"
-                          label-for="input-horizontal"
-                  >
-                    <b-row align-v="center">
-                      <div class="form-date-control">
-                        <b-form-input type="date"></b-form-input>
-                      </div>
-                      &nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;&nbsp;
-                      <div class="form-date-control">
-                        <b-form-input type="date"></b-form-input>
-                      </div>
-                    </b-row>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目简介（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-              <br>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目目的（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-              <br>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目要求（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-            </b-container>
-          </b-col>
-        </b-row>
-      </b-container>
-    <br>
-    <b-container fluid>
+              <!--</div>-->
+            </b-col>
+            <b-col sm="9">
+              <b-container fluid>
+                <b-row align-v="center">
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="项目名称:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-input id="input-horizontal" required v-model="this.project_data.name"></b-form-input>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="流程图完整显示:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-select v-model="project_data.entire_graph" :options="options_entire_graph"></b-form-select>
+                    </b-form-group>
+                  </b-col>
+
+                </b-row>
+
+                <b-row align-v="center">
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="开放模式:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-select v-model="project_data.is_open" :options="options_is_open"></b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="成果参考释放方式:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-select v-model="project_data.reference" :options="options_reference"></b-form-select>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row align-v="center">
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="事务类型:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-select v-model="project_data.course" :options="options_course"></b-form-select>
+                    </b-form-group>
+                  </b-col>
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="关联课程:"
+                            label-for="input-horizontal"
+                    >
+                      <b-form-select  :options="options_all_role"></b-form-select>
+                      <!--<b-form-select v-model="project_data.all_role" :options="options_all_role"></b-form-select>-->
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row align-v="center">
+                  <b-col sm="6">
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="开发时段:"
+                            label-for="input-horizontal"
+                    >
+                      <b-row align-v="center">
+                        <div class="form-date-control">
+                          <b-form-input type="date" v-model="this.project_data.start_time"></b-form-input>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;&nbsp;
+                        <div class="form-date-control">
+                          <b-form-input type="date" v-model="this.project_data.end_time"></b-form-input>
+                        </div>
+                      </b-row>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col sm="12">
+                    <b-card header="项目简介（必填）" style="padding:0">
+                      <b-form-textarea
+                              v-model="this.project_data.intro"
+                              placeholder=""
+                              rows="3"
+                              max-rows="6"
+                              required
+                      ></b-form-textarea>
+                    </b-card>
+                  </b-col>
+                </b-row>
+                <br>
+                <b-row>
+                  <b-col sm="12">
+                    <b-card header="项目目的（必填）" style="padding:0">
+                      <b-form-textarea
+                              v-model="this.project_data.purpose"
+                              placeholder=""
+                              rows="3"
+                              max-rows="6"
+                              required
+                      ></b-form-textarea>
+                    </b-card>
+                  </b-col>
+                </b-row>
+                <br>
+                <b-row>
+                  <b-col sm="12">
+                    <b-card header="项目要求（必填）" style="padding:0">
+                      <b-form-textarea
+                              v-model="this.project_data.requirement"
+                              placeholder=""
+                              rows="3"
+                              max-rows="6"
+                              required
+                      ></b-form-textarea>
+                    </b-card>
+                  </b-col>
+                </b-row>
+              </b-container>
+            </b-col>
+          </b-row>
+        </b-container>
+      <br>
+      <b-container fluid>
       <b-row>
-        <b-col sm="4">
-          <b-button-group class="float-right">
-            <b-button size="lg"  style="width:300px" variant="success"> 上一步 </b-button>
+        <b-col sm="4" align-v="center" >
+          <!--<b-button-group class="float-left" >-->
+            <!--<b-button size="lg"  style="width:300px" variant="success"> 上一步 </b-button>-->
+          <!--</b-button-group>-->
+        </b-col>
+        <b-col sm="4" align-v="center">
+          <b-button-group class="float-center">
+            <b-button size="lg"  type="submit" style="width:300px" variant="success"> 保存 </b-button>
           </b-button-group>
         </b-col>
-        <b-col sm="4">
+        <b-col sm="4" align-v="center">
           <b-button-group class="float-right">
-            <b-button size="lg"  style="width:300px" variant="success"> 保存 </b-button>
-          </b-button-group>
-        </b-col>
-        <b-col sm="4">
-          <b-button-group class="float-right">
-            <b-button size="lg"  style="width:300px" variant="success" @click="test()"> 下一步 </b-button>
+            <b-button size="lg"  type="submit"  style="width:300px" variant="success"> 下一步 </b-button>
           </b-button-group>
         </b-col>
       </b-row>
     </b-container>
+    </b-form>
     <br><br>
+    <view-xml :visible="xmlModalShow" :xml="workflowXml" @on-close="xmlModalShow = false"></view-xml>
   </div>
 
 </template>
@@ -210,19 +246,17 @@
 import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState, mapActions } from "vuex";
  import Loading from "@/components/loading/Loading";
-// import imageView from "@/components/imageView/ImageView";
-import _ from "lodash";
 import workflowService from "@/services/workflowService";
-// import arrayUtils from "@/utils/arrayUtils";
 import BContainer from "bootstrap-vue/src/components/layout/container";
+import ViewXml from "@/components/workflowXML/ViewXML";
+import _ from "lodash";
 
 export default {
   name: "create-project-wizard",
   components: {
     BContainer,
     Loading,
-    // Loading,
-    // imageView
+    ViewXml,
   },
   filters: {
     expType,
@@ -246,9 +280,57 @@ export default {
                 label: "实验类型",
                 sortable: false,
                 class: "text-center field-creator"
-            }
+            },
+            rend_ani_1: {
+                label: "检查",
+                sortable: false,
+                class: "text-center field-rend_ani_1"
+            },
         },
+        project_data:{
+            flow_id:'',
+            flow_name:'',
+            name:'',
+            intro:'',
+            purpose:'',
+            requirement:'',
+            start_time:'',
+            end_time:'',
+//            ???
+            all_role:'',
+            course:1,
+            reference:1,
+            public_status:1,
+            level:'',
+            entire_graph:1,
+            can_redo:'',
+            is_open:1,
+            ability_target:'',
 
+
+        },
+        options_entire_graph: [
+            { value: 1, text: '完整显示' },
+            { value: 2, text: '逐步显示' },
+        ],
+        options_is_open: [
+            { value: 1, text: '自由' },
+            { value: 2, text: '限时' },
+            { value: 2, text: '指定用户' },
+        ],
+        options_reference: [
+            { value: 1, text: '同步' },
+            { value: 2, text: '后步' },
+            { value: 2, text: '最后' },
+        ],
+        options_course: [
+            { value: 1, text: '清洗怪' },
+        ],
+        options_all_role: [
+            { value: 1, text: 'test1' },
+            { value: 2, text: 'test2' },
+            { value: 2, text: 'test3' },
+        ],
       // 查询参数
       queryParam: {
         status: "",
@@ -296,6 +378,8 @@ export default {
       xmlModalShow: false,
       relatedShow: false,
       shareModal: false,
+        selectedWorkflow:0,
+        selectMode: 'single',
       experimentTypeOptions: [
         { value: "1", text: "立法类型实验" },
         { value: "2", text: "执法类型实验" },
@@ -311,7 +395,6 @@ export default {
   created() {
       this.$nextTick(() => {
           this.queryWorkflowList();
-
       });
   },
   computed: {
@@ -377,8 +460,28 @@ export default {
     createProjectPage() {
       this.$router.push("/manager/project/create_project_wizard2");
     },
-      test(){
-          alert(this.workflows.list[0].name);
+    showBigImg(animation) {
+        this.animationImgSrc = animation.url;
+        this.bigImgModal = true;
+    },
+    viewXmlHandler(workflow) {
+        this.workflowXml = workflow.xml;
+        this.xmlModalShow = true;
+    },
+      rowSelected(items){
+          if (items.length>0){
+              this.selectedWorkflow = items[0].id;
+              this.project_data.flow_id = items[0].id;
+              this.project_data.flow_name = items[0].name;
+          } else {
+              this.selectedWorkflow = 0;
+              this.project_data.flow_id = 0
+              this.project_data.flow_name = '';
+          }
+      },
+      onSubmit(){
+          alert('test');
+          return true;
       }
   }
 };
@@ -389,5 +492,8 @@ export default {
 }
 .card-header {
   text-align: left;
+}
+.opened {
+  background-color: yellow;
 }
 </style>

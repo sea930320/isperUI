@@ -5,9 +5,9 @@
             <b-col lg="3" md="6" sm="12" class="mb-3">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
-            <span class="input-group-text">
-              <icon name="search"></icon>
-            </span>
+                        <span class="input-group-text">
+                          <icon name="search"></icon>
+                        </span>
                     </b-input-group-prepend>
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
                 </b-input-group>
@@ -33,10 +33,19 @@
             </template>
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="currentShare" slot-scope="row">
-                <icon v-if="row.item.current_share == 1" name="share"></icon>
+                <a class="btn-link mx-1" href="javascript:" v-if="row.item.current_share == 1">
+                    <icon name="share"></icon>
+                </a>
+                <!--<icon v-if="row.item.current_share == 1" name="share"></icon>-->
             </template>
             <template slot="is_protected" slot-scope="row">
-                <icon v-if="row.item.protected == 1" name="lock"></icon>
+                <a class="btn-link mx-1" href="javascript:" v-if="row.item.protected == 1">
+                    <icon name="lock"></icon>
+                </a>
+                <a class="btn-link mx-1" href="javascript:" v-else>
+                    <icon name="unlock"></icon>
+                </a>
+                <!--<icon v-if="row.item.protected == 1" name="lock"></icon>-->
             </template>
             <template slot="name" slot-scope="row">
                 {{row.item.name}}
@@ -49,21 +58,27 @@
             <template slot="dependence" slot-scope="row">
                 {{row.item.flow.name}}
             </template>
-            <template slot="public_status" slot-scope="row">
-                {{(row.item.public_status==1) ? "不自由" : "自由"}}
+            <template slot="is_open" slot-scope="row">
+                {{(row.item.is_open==1) ? ((row.item.is_open==2)? "指定用户":"限时") : "自由"}}
             </template>
             <template slot="mission_type" slot-scope="row">
                 {{row.item.course}}
             </template>
             <template slot="edit_control" slot-scope="row">
-                <b-button-group class="float-right">
-                    <b-button :size="template_size" v-if="row.item.edit_able == 1" variant="outline-primary">
-                        <icon name="cog"></icon> 设置
-                    </b-button>
-                    <b-button :size="template_size" v-if="row.item.delete_able == 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
-                        <icon name="trash"></icon> 删除
-                    </b-button>
-                </b-button-group>
+                <!--<b-button-group class="float-right">-->
+                    <a class="btn-link mx-1" href="javascript:" v-if="row.item.edit_able == 1">
+                        <icon name="edit"></icon>
+                    </a>
+                    <a class="btn-link mx-1" href="javascript:" v-if="row.item.delete_able == 1" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
+                        <icon name="trash"></icon>
+                    </a>
+                    <!--<b-button :size="template_size" v-if="row.item.edit_able == 1" variant="outline-primary">-->
+                        <!--<icon name="cog"></icon> 设置-->
+                    <!--</b-button>-->
+                    <!--<b-button :size="template_size" v-if="row.item.delete_able == 1" variant="outline-danger" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">-->
+                        <!--<icon name="trash"></icon> 删除-->
+                    <!--</b-button>-->
+                <!--</b-button-group>-->
             </template>
 
         </b-table>
@@ -162,7 +177,7 @@
                         sortable: false,
                         class: "text-center field-rend_ani_1"
                     },
-                    public_status: {
+                    is_open: {
                         label: "开放模式",
                         sortable: false,
                         class: "text-center field-experiment_type_label"
@@ -331,13 +346,19 @@
             width: 7%;
         }
         .field-name {
-            width: 10%;
+            width: 8%;
         }
         .field-creator {
-            width: 9%;
+            width: 8%;
+        }
+        .field-public {
+            width: 5%;
+        }
+        .field-share {
+            width: 5%;
         }
         .field-create_time {
-            width: 9%;
+            width: 8%;
         }
         .field-rend_ani_1 {
             width: 10%;
@@ -355,7 +376,20 @@
             width: 5%;
         }
         .field-action {
-            width: 20%;
+            width: 14%;
+        }
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+        .modal-body {
+            .message {
+                font-size: 16px;
+            }
+            .tip {
+                font-size: 14px;
+                color: #999;
+            }
         }
     }
 </style>

@@ -143,7 +143,7 @@
         <a
           class="btn-link mx-1"
           href="javascript:;"
-          v-if="row.item.status == 2"
+          v-if="row.item.status = 1"
           @click="viewXmlHandler(row.item)"
         >
           <icon name="eye"></icon>
