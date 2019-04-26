@@ -20,6 +20,12 @@ const personalCenterRoutes = [{
     component: () => import('@/views/personal-center/AssistantSet.vue')
 }]
 
+const systemSetRoutes = [{
+    path: 'system-set',
+    name: 'system-set',
+    component: () => import('@/views/system-set/SystemSet.vue')
+}]
+
 const routes = [{
         path: '/',
         name: 'home',
@@ -43,6 +49,7 @@ const routes = [{
         component: () => import('@/views/layout/Manager.vue'),
         children: [
             ...personalCenterRoutes,
+            ...systemSetRoutes,
             {
                 path: '',
                 redirect: 'workflow'
@@ -117,22 +124,22 @@ const routes = [{
                 component: () => import('@/views/manager/project/ProjectIndex.vue')
             }, {
                 path: 'project/create_project_wizard1',
-                    name: 'create-project-wizard',
-                    component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
+                name: 'create-project-wizard',
+                component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
             },
-                {
-                    path: 'project/create_project_wizard2',
-                        name: 'create-project-wizard',
-                    component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
-                },{
+            {
+                path: 'project/create_project_wizard2',
+                name: 'create-project-wizard',
+                component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
+            }, {
                 path: 'project/create_project_wizard3',
-                    name: 'create-project-wizard',
-                    component: () => import('@/views/manager/project/CreateProjectWizard3.vue')
-            },{
+                name: 'create-project-wizard',
+                component: () => import('@/views/manager/project/CreateProjectWizard3.vue')
+            }, {
                 path: 'project/create_project_wizard4',
-                    name: 'create-project-wizard',
-                    component: () => import('@/views/manager/project/CreateProjectWizard4.vue')
-            },{
+                name: 'create-project-wizard',
+                component: () => import('@/views/manager/project/CreateProjectWizard4.vue')
+            }, {
                 path: 'group',
                 name: 'manager-group',
                 component: () => import('@/views/manager/group/GroupIndex.vue')

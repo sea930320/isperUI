@@ -11,14 +11,17 @@
         <b-nav-item to="/manager/group">
           <icon name="users-cog" class="tabIcon"></icon>集群管理
         </b-nav-item>
-        <b-nav-item to="/manager/group_company">
+        <b-nav-item v-if="userInfo.role!==1" to="/manager/group_company">
           <icon name="users" class="tabIcon"></icon>集群及单位管理
+        </b-nav-item>
+        <b-nav-item to="#" v-else>
+          <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
         <b-nav-item to="#">
           <icon name="user-cog" class="tabIcon"></icon>用户管理
         </b-nav-item>
-        <b-nav-item to="#">
-          <icon name="edit" class="tabIcon"></icon>课程管理
+        <b-nav-item to="/manager/system-set">
+          <icon name="cogs" class="tabIcon"></icon>系统设置
         </b-nav-item>
       </template>
     </TopHeader>
@@ -28,9 +31,10 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import prefixRoute from "@/mixins/prefix-route";
 import TopHeader from "@/components/header/TopHeader";
 export default {
+  mixins: [prefixRoute],
   components: {
     TopHeader
   },
@@ -38,9 +42,6 @@ export default {
     return {
       activatedRoute: "workflow"
     };
-  },
-  computed: {
-    ...mapState(["userInfo"])
   },
   created() {},
   watch: {

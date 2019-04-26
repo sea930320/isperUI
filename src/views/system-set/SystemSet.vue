@@ -1,0 +1,66 @@
+<template>
+  <div class="system-set">
+    <b-tabs>
+      <b-tab title="角色管理">Role Management</b-tab>
+      <b-tab title="安全维护" class="pt-2">
+        <b-tabs class="security-log">
+          <b-tab title="操作日志">Work Log</b-tab>
+          <b-tab title="登录记录">
+            <login-log/>
+          </b-tab>
+          <b-tab title="记录统计">Record Statistic</b-tab>
+        </b-tabs>
+      </b-tab>
+      <b-tab title="字典管理">Dictionary Management</b-tab>
+      <b-tab title="公告管理">Advertisement Management</b-tab>
+    </b-tabs>
+  </div>
+</template>
+
+<script>
+import LoginLog from "./LoginLog";
+
+export default {
+  name: "system-set",
+  components: {
+    LoginLog
+  },
+  created() {},
+  methods: {}
+};
+</script>
+
+<style type="text/css" lang="scss" rel="stylesheet/scss">
+.system-set {
+  .tabs {
+    ul.nav-tabs {
+      justify-content: center;
+      .nav-link.active,
+      .nav-item.show .nav-link {
+        color: #007bff !important;
+        background-color: transparent;
+      }
+      .nav-item .nav-link {
+        color: #253568;
+      }
+    }
+  }
+  .tabs.security-log {
+    ul.nav-tabs {
+      border-bottom: 0px !important;
+      .nav-link.active,
+      .nav-item.show .nav-link {
+        color: #007bff;
+        background-color: transparent;
+      }
+      .nav-item {
+        border-bottom: 1px solid #dee2e6;
+      }
+      .nav-link.active,
+      .nav-item.show .nav-link {
+        border: 0px solid;
+      }
+    }
+  }
+}
+</style>

@@ -100,6 +100,14 @@ class GroupService {
             params: data
         })
     }
+
+    fetchAllGroupDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/group/all-list',
+            params: data
+        })
+    }
 }
 
 export default new GroupService()
