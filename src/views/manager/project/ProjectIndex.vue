@@ -1,8 +1,8 @@
 <template>
     <div class="projects-index">
         <loading v-if="isRunning"></loading>
-        <b-row>
-            <b-col lg="3" md="6" sm="12" class="mb-3">
+        <b-row class="cardDiv">
+            <b-col lg="3" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
                         <span class="input-group-text">
@@ -12,17 +12,18 @@
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
                 </b-input-group>
             </b-col>
-            <b-col lg="9" md="6" sm="12" class="align-self-center mb-3">
+            <b-col lg="9" md="6" sm="12" class="align-self-center">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
-                    <b-button :size="template_size" variant="outline-primary" @click="checkedIds()">导出</b-button>
-                    <b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal :disabled="this.shareButtonDisabled">共享</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary" @click="checkedIds()">导出</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary"  v-b-modal.shareConfirmModal :disabled="this.shareButtonDisabled">共享</b-button>
                     <!--<b-button :size="template_size" variant="outline-primary"  v-b-modal.shareConfirmModal>共享</b-button>-->
-                    <b-button :size="template_size" variant="outline-primary" v-b-modal.unshareConfirmModal :disabled="this.unshareButtonDisabled">取消共享</b-button>
+                    <b-button :size="template_size" class="styledBtn" variant="outline-primary" v-b-modal.unshareConfirmModal :disabled="this.unshareButtonDisabled">取消共享</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
-        <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
+        <div class="cardDiv">
+            <b-table :items="projects.list" small striped hover :fields="columns" head-variant>
             <template slot="selected" slot-scope="row">
                 <b-form-checkbox v-if="row.item.share_able == 1" v-model="row.item.checked" @change="changeCheckBox($event, row.item,1)">
                     <!--<b-form-checkbox v-model="row.item.checked" @change="checkedIds()">-->
@@ -82,7 +83,8 @@
             </template>
 
         </b-table>
-        <b-row class="justify-content-center row-margin-tweak">
+        </div>
+        <b-row class="justify-content-center row-margin-tweak cardDiv">
             <b-pagination
                     :size="template_size"
                     :total-rows="projects.total"
@@ -340,25 +342,19 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss">
     .projects-index {
         .field-sn {
-            width: 7%;
+            width: 3%;
         }
         .field-name {
-            width: 8%;
+            width: 25%;
         }
         .field-creator {
-            width: 8%;
-        }
-        .field-public {
-            width: 5%;
-        }
-        .field-share {
-            width: 5%;
+            width: 9%;
         }
         .field-create_time {
-            width: 8%;
+            width: 9%;
         }
         .field-rend_ani_1 {
-            width: 10%;
+            width: 20%;
         }
         .field-rend_ani_2 {
             width: 10%;
@@ -373,7 +369,7 @@
             width: 5%;
         }
         .field-action {
-            width: 14%;
+            width: 20%;
         }
         .table th,
         .table td {
