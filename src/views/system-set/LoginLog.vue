@@ -182,6 +182,11 @@ export default {
       },
       deep: true
     },
+    "queryParam.group_id": {
+      handler() {
+        this.queryParam.company_id = null;
+      }
+    },
     queryDebounceParam: {
       deep: true,
       handler: _.debounce(function() {
@@ -206,7 +211,6 @@ export default {
   },
   computed: {
     companies() {
-      this.queryParam.company_id = null;
       let items = [
         {
           id: null,
@@ -229,7 +233,7 @@ export default {
     },
     checkedIds() {
       return this.checkedItems.map(item => item.id);
-    },
+    }
   },
   methods: {
     getGroupList() {
@@ -295,8 +299,8 @@ export default {
       } else {
         param["start_date"] = "";
         param["end_date"] = "";
-      }      
-      
+      }
+
       // window.open('/account/export/loginlogs')
       // loginLogService
       //   .exportLogs(param)
