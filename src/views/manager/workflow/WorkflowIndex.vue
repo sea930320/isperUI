@@ -46,16 +46,19 @@
       <template slot="sn" slot-scope="row">
         <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
       </template>
+      <template slot="share" slot-scope="row">
+        <span v-if="row.item.is_share==1" class="badge badge-success">
+          <icon scale="0.6" name="share"></icon>
+        </span>
+      </template>
       <template slot="name" slot-scope="row">
         <input v-if="row.item.edited" type="text" class="inp-edit" v-model.trim="row.item.name">
         <span v-else class="text">{{row.item.name}}</span>
       </template>
-      <template slot="creator" slot-scope="row">
-        <span v-if="row.item.is_share==1" class="badge badge-success">
-          <icon scale="0.6" name="share"></icon>
-        </span>
-        {{row.item.created_by ? row.item.created_by.name : 'n/a'}}
-      </template>
+      <template
+        slot="creator"
+        slot-scope="row"
+      >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
       <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
       <template slot="rend_ani_1" slot-scope="row">
         <a
@@ -451,6 +454,11 @@ export default {
           label: "序号",
           sortable: false,
           class: "text-center field-sn"
+        },
+        share: {
+          label: "",
+          sortable: false,
+          class: "text-center field-share"
         },
         name: {
           label: "流程名",
@@ -1029,16 +1037,19 @@ export default {
     width: 6%;
   }
   .field-name {
-    width: 10%;
+    width: 9%;
+  }
+  .field-share {
+    width: 3%;
   }
   .field-creator {
-    width: 10%;
+    width: 9%;
   }
   .field-create_time {
     width: 9%;
   }
   .field-rend_ani_1 {
-    width: 10%;
+    width: 9%;
   }
   .field-rend_ani_2 {
     width: 10%;
