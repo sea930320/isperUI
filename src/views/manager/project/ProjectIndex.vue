@@ -60,14 +60,14 @@
                 {{row.item.flow.name}}
             </template>
             <template slot="is_open" slot-scope="row">
-                {{(row.item.is_open==1) ? ((row.item.is_open==2)? "指定用户":"限时") : "自由"}}
+                {{(row.item.is_open==1) ?  "自由":((row.item.is_open==2)? "限时":"指定用户")}}
             </template>
             <template slot="mission_type" slot-scope="row">
                 {{row.item.course}}
             </template>
             <template slot="edit_control" slot-scope="row">
                 <!--<b-button-group class="float-right">-->
-                <a class="btn-link mx-1" href="javascript:" v-if="row.item.edit_able == 1">
+                <a class="btn-link mx-1" href="javascript:" v-if="row.item.edit_able == 1"  v-b-modal.editConfirmModal @click="editProjectConfirm(row.item)">
                     <icon name="edit"></icon>
                 </a>
                 <a class="btn-link mx-1" href="javascript:" v-if="row.item.delete_able == 1" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
@@ -105,6 +105,9 @@
         <!--&lt;!&ndash;Confirm UnShare Project&ndash;&gt;-->
         <b-modal id="unshareConfirmModal" title="Cancel Project Sharing" @ok="unshareProject()">
             <p class="my-4">Do you want to not share Project(s)?</p>
+        </b-modal>
+        <b-modal id="editConfirmModal" title="Cancel Project Sharing" @ok="editProject()">
+            <p class="my-4">Do you want to edit "{{this.currentProjectID.name}}" Project?</p>
         </b-modal>
     </div>
 
@@ -191,7 +194,8 @@
                 queryParam: {
                     status: "",
                     page: 1,
-                    size: 5
+                    size: 5,
+                    search:""
                 },
                 queryDebounceParam: {
                     search: ""
@@ -263,6 +267,9 @@
             deleteProjectConfirm(idValue){
                 this.currentProjectID = idValue;
             },
+            editProjectConfirm(idValue){
+                this.currentProjectID = idValue;
+            },
             // Delete Project
             deleteProject(){
                 this.run();
@@ -326,8 +333,12 @@
             },
             // Go To Create Project Page
             createProjectPage(){
-                this.$router.push('/manager/project/create_project_wizard1');
+//                this.$router.push('/manager/project/create_project_wizard1' );
+                this.$router.push({name: 'create-project-wizard1', params:{currentProject:{},is_edit:0}});
             },
+            editProject(){
+                this.$router.push({name: 'create-project-wizard1', params:{currentProject:this.currentProjectID,is_edit:1}});
+            }
         }
     };
 </script>
