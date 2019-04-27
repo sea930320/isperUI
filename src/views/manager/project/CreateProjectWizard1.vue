@@ -1,7 +1,7 @@
 <template>
   <div>
     <br><br>
-    <h3> Main Option (Step 1)</h3>
+    <h3> 基本属性</h3>
     <br><br>
     <loading v-if="isRunning"></loading>
     <b-form @submit="onSubmit">

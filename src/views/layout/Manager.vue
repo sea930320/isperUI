@@ -14,7 +14,7 @@
         <b-nav-item v-if="userInfo.role===2" to="/manager/group_company">
           <icon name="users" class="tabIcon"></icon>集群及单位管理
         </b-nav-item>
-        <b-nav-item v-if="userInfo.role!==1" to="#">
+        <b-nav-item v-if="userInfo.role===1" to="#">
           <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
         <b-nav-item to="#">
@@ -22,6 +22,9 @@
         </b-nav-item>
         <b-nav-item to="/manager/system-set">
           <icon name="cogs" class="tabIcon"></icon>系统设置
+        </b-nav-item>
+        <b-nav-item v-if="userInfo.role===2" to="#">
+          <icon name="user-cog" class="tabIcon"></icon>业务管理
         </b-nav-item>
       </template>
     </TopHeader>
