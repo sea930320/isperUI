@@ -117,20 +117,20 @@ const routes = [{
                 component: () => import('@/views/manager/project/ProjectIndex.vue')
             }, {
                 path: 'project/create_project_wizard1',
-                    name: 'create-project-wizard',
+                    name: 'create-project-wizard1',
                     component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
             },
                 {
                     path: 'project/create_project_wizard2',
-                        name: 'create-project-wizard',
+                        name: 'create-project-wizard2',
                     component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
                 },{
                 path: 'project/create_project_wizard3',
-                    name: 'create-project-wizard',
+                    name: 'create-project-wizard3',
                     component: () => import('@/views/manager/project/CreateProjectWizard3.vue')
             },{
                 path: 'project/create_project_wizard4',
-                    name: 'create-project-wizard',
+                    name: 'create-project-wizard4',
                     component: () => import('@/views/manager/project/CreateProjectWizard4.vue')
             },{
                 path: 'group',
