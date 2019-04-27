@@ -1,33 +1,55 @@
 <template>
-    <div class="system-set">
-        <b-tabs>
-            <b-tab title="角色管理">Role Management</b-tab>
-            <b-tab title="安全维护" class="pt-2">
-                <b-tabs class="security-log">
-                    <b-tab title="操作日志">Work Log</b-tab>
-                    <b-tab title="登录记录">
-                        <login-log/>
-                    </b-tab>
-                    <b-tab title="记录统计">Record Statistic</b-tab>
-                </b-tabs>
-            </b-tab>
-            <b-tab title="字典管理">
-                <Dictionary />
-            </b-tab>
-            <b-tab title="公告管理">Advertisement Management</b-tab>
+  <div class="system-set">
+    <b-tabs v-if="userInfo.identity==1">
+      <b-tab title="角色管理">Role Management</b-tab>
+      <b-tab title="安全维护" class="pt-2">
+        <b-tabs class="security-log">
+          <b-tab title="操作日志">Work Log</b-tab>
+          <b-tab title="登录记录">
+            <login-log/>
+          </b-tab>
+          <b-tab title="记录统计">Record Statistic</b-tab>
         </b-tabs>
-    </div>
+      </b-tab>
+      <b-tab title="字典管理">
+          <Dictionary />
+      </b-tab>
+      <b-tab title="公告管理">Advertisement Management</b-tab>
+    </b-tabs>
+      <b-tabs v-if="userInfo.identity==2">
+          <b-tab title="操作日志">Work Log</b-tab>
+          <b-tab title="登录记录">
+              <login-log/>
+          </b-tab>
+          <b-tab title="记录统计">Record Statistic</b-tab>
+      </b-tabs>
+      <b-tabs v-if="userInfo.identity==3">
+          <b-tab title="日志管理" class="pt-2">
+              <b-tabs class="security-log">
+                  <b-tab title="操作日志">Work Log</b-tab>
+                  <b-tab title="登录记录">
+                      <login-log/>
+                  </b-tab>
+                  <b-tab title="记录统计">Record Statistic</b-tab>
+              </b-tabs>
+          </b-tab>
+      </b-tabs>
+  </div>
 </template>
 
 <script>
     import LoginLog from "./LoginLog";
     import Dictionary from "./Dictionary";
+    import { mapState } from "vuex";
 
     export default {
         name: "system-set",
         components: {
             LoginLog,
             Dictionary
+        },
+        computed: {
+            ...mapState(["userInfo"])
         },
         created() {
         },

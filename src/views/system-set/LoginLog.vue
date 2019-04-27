@@ -15,6 +15,7 @@
       <b-col lg="6" md="6" sm="12" class="align-self-center d-flex justify-content-between">
         <date-picker class="mx-2" v-model="queryParam.range" range format="YYYY-MM-DD"></date-picker>
         <b-form-select
+          v-if="userInfo.identity==1"
           :size="template_size"
           class="mx-1"
           v-model="queryParam.group_id"
@@ -24,6 +25,7 @@
           style="flex:1"
         ></b-form-select>
         <b-form-select
+          v-if="userInfo.identity==1"
           :size="template_size"
           class="mx-1"
           v-model="queryParam.company_id"
@@ -36,6 +38,7 @@
       <b-col lg="3" md="6" sm="12" class="align-self-center">
         <b-button-group class="float-right">
           <b-button
+            v-if="userInfo.identity==1"
             :size="template_size"
             class="styledBtn"
             variant="outline-primary"
@@ -54,10 +57,15 @@
     <div class="cardDiv">
       <b-table :items="loginLogList" small hover :fields="columns" head-variant>
         <template slot="HEAD_sn" slot-scope="head">
-          <b-form-checkbox v-model="allChecked">{{head.label}}</b-form-checkbox>
+          <b-form-checkbox v-if="userInfo.identity==1" v-model="allChecked">{{head.label}}</b-form-checkbox>
+          <span v-else>{{head.label}}</span>
         </template>
         <template slot="sn" slot-scope="row">
-          <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
+          <b-form-checkbox
+            v-if="userInfo.identity==1"
+            v-model="row.item.checked"
+          >{{ row.index + 1 }}</b-form-checkbox>
+          <span v-else>{{ row.index + 1 }}</span>
         </template>
         <template slot="user_id" slot-scope="row">{{row.item.user_id}}</template>
         <template slot="user_name" slot-scope="row">{{row.item.user_name}}</template>
@@ -99,6 +107,8 @@ import _ from "lodash";
 import DatePicker from "vue2-datepicker";
 import loginLogService from "@/services/loginLogService";
 import groupService from "@/services/groupService";
+import utils from "@/utils/util";
+import { mapState } from "vuex";
 
 export default {
   name: "login-log",
@@ -109,7 +119,9 @@ export default {
   created() {
     this.$nextTick(() => {
       this.getLoginLogs();
-      this.getGroupList();
+      if (this.userInfo.identity == 1) {
+        this.getGroupList();
+      }
     });
   },
   data() {
@@ -210,6 +222,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(["userInfo"]),
     companies() {
       let items = [
         {
@@ -300,14 +313,9 @@ export default {
         param["start_date"] = "";
         param["end_date"] = "";
       }
-
-      // window.open('/account/export/loginlogs')
-      // loginLogService
-      //   .exportLogs(param)
-      //   .then(data => {
-      //   })
-      //   .catch(() => {
-      //   });
+      param = utils.jsonToQueryString(param);
+      let url = "/api/account/export/loginlogs" + param;
+      window.open(url);
     },
     deleteLogs() {
       if (this.checkedItems.length > 0) {
