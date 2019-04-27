@@ -5,16 +5,16 @@
         <b-nav-item to="/manager/workflow">
           <icon name="sitemap" class="tabIcon"></icon>流程管理
         </b-nav-item>
-        <b-nav-item to="/manager/project">
+        <b-nav-item v-if="userInfo.role!==1" to="/manager/project">
           <icon name="tags" class="tabIcon"></icon>项目管理
         </b-nav-item>
-        <b-nav-item to="/manager/group">
+        <b-nav-item v-if="userInfo.role===1" to="/manager/group">
           <icon name="users-cog" class="tabIcon"></icon>集群管理
         </b-nav-item>
-        <b-nav-item v-if="userInfo.role!==1" to="/manager/group_company">
+        <b-nav-item v-if="userInfo.role===2" to="/manager/group_company">
           <icon name="users" class="tabIcon"></icon>集群及单位管理
         </b-nav-item>
-        <b-nav-item to="#" v-else>
+        <b-nav-item v-if="userInfo.role!==1" to="#">
           <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
         <b-nav-item to="#">
