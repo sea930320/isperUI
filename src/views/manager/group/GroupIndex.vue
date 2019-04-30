@@ -355,7 +355,7 @@
                         class: "text-center field-creator"
                     },
                     publish: {
-                        label: "是否为公开集群",
+                        label: "是否公开",
                         sortable: false,
                         class: "text-center field-create_time"
                     },

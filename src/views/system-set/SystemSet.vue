@@ -1,6 +1,6 @@
 <template>
   <div class="system-set">
-    <b-tabs v-if="userInfo.identity==1">
+    <b-tabs v-if="userInfo.identity===1">
       <b-tab title="角色管理">Role Management</b-tab>
       <b-tab title="安全维护" class="pt-2">
         <b-tabs class="security-log">
@@ -16,14 +16,14 @@
       </b-tab>
       <b-tab title="公告管理">Advertisement Management</b-tab>
     </b-tabs>
-      <b-tabs v-if="userInfo.identity==2">
+      <b-tabs v-if="userInfo.identity===2">
           <b-tab title="操作日志">Work Log</b-tab>
           <b-tab title="登录记录">
               <login-log/>
           </b-tab>
           <b-tab title="记录统计">Record Statistic</b-tab>
       </b-tabs>
-      <b-tabs v-if="userInfo.identity==3">
+      <b-tabs v-if="userInfo.identity===3">
           <b-tab title="日志管理" class="pt-2">
               <b-tabs class="security-log">
                   <b-tab title="操作日志">Work Log</b-tab>
@@ -94,6 +94,10 @@
                     border: 0px solid;
                 }
             }
+        }
+
+        .nav-item {
+            width: 10%;
         }
     }
 </style>
