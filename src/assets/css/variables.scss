@@ -214,11 +214,12 @@ li.page-item {
 }
 
 .nav-tabs {
-    border-bottom: 1px solid #2535685c;
+    border-bottom: 1px solid #adb1bf5c;
 }
 
 .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
-    border-color: #8b9ec8 #8b9ec8 #c7dbff;
+    border-color: #25356830;
+    border-width: 0 0 2px;
 }
 
 .nav-tabs .nav-link {
@@ -233,5 +234,6 @@ li.page-item {
 .nav-tabs .nav-link.active {
     color: #4169e1;
     background-color: #c7dbff;
-    border-color: #8b9ec8 #8b9ec8 #c7dbff;
+    border-color: #253568;
+    border-width: 0 0 2px;
 }

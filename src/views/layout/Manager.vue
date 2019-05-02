@@ -8,16 +8,22 @@
         <b-nav-item to="/manager/project">
           <icon name="tags" class="tabIcon"></icon>项目管理
         </b-nav-item>
-        <b-nav-item to="/manager/group">
+        <b-nav-item v-if="userInfo.role===1" to="/manager/group">
           <icon name="users-cog" class="tabIcon"></icon>集群管理
         </b-nav-item>
-        <b-nav-item v-if="userInfo.role!==1" to="/manager/group_company">
+        <b-nav-item v-if="userInfo.role===2" to="/manager/group_company">
           <icon name="users" class="tabIcon"></icon>集群及单位管理
         </b-nav-item>
         <b-nav-item to="#" v-else>
           <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
-        <b-nav-item to="#">
+        <b-nav-item to="/manager/user/super" v-if="userInfo.role===1" >
+          <icon name="user-cog" class="tabIcon"></icon>用户管理
+        </b-nav-item>
+        <b-nav-item to="/manager/user/group" v-if="userInfo.role===2" >
+          <icon name="user-cog" class="tabIcon"></icon>用户管理
+        </b-nav-item>
+        <b-nav-item to="/manager/user/company" v-if="userInfo.role===3" >
           <icon name="user-cog" class="tabIcon"></icon>用户管理
         </b-nav-item>
         <b-nav-item to="/manager/system-set">
