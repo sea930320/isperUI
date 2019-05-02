@@ -5,18 +5,34 @@ import xhr from './xhr/'
  */
 class DictionaryService {
 
-    fetchList(options) {
+    getDicData(data) {
         return xhr({
-            method: 'get',
-            url: '/group/list',
-            params: options
+            method: 'post',
+            url: '/dic/getDicData',
+            params: data
         })
     }
 
-    create(data) {
+    newItemSave(data) {
         return xhr({
             method: 'post',
-            url: '/group/create',
+            url: '/dic/newItemSave',
+            params: data
+        })
+    }
+
+    editItemSave(data) {
+        return xhr({
+            method: 'post',
+            url: '/dic/editItemSave',
+            params: data
+        })
+    }
+
+    deleteItemSave(data) {
+        return xhr({
+            method: 'post',
+            url: '/dic/deleteItemSave',
             params: data
         })
     }
