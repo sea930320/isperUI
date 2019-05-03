@@ -82,7 +82,7 @@ export default {
         let eventBus = self.viewer.get("eventBus");
         eventBus.on("element.dblclick", function(e) {
           if (e.element.id !== self.options.currentTask) {
-            self.$toasted.warn("选择环节错误，请重新选择");
+            self.$toasted.error("选择环节错误，请重新选择");
           } else {
             self.close();
           }
@@ -135,7 +135,8 @@ export default {
   }
 };
 </script>
-<style>
+
+<style type="text/css" lang="scss" rel="stylesheet/scss">
 .xml-modal-wrapper {
   position: fixed;
   left: 0;

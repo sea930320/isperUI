@@ -1,7 +1,7 @@
 <template>
   <div>
-    <br><br>
-    <h3> Main Option (Step 1) </h3>
+    <br>
+    <h3> 基本信息</h3>
     <br><br>
     <loading v-if="isRunning"></loading>
     <b-form @submit="onSubmit">
@@ -15,7 +15,8 @@
                       label="流程名称:"
                       label-for="input-horizontal"
               >
-                <b-form-input disabled id="input-horizontal" required v-model="this.project_data.flow_name"></b-form-input>
+                <!--<b-form-input disabled id="input-horizontal" required v-model="this.selectedFlowName"></b-form-input>-->
+                <b-form-input id="input-horizontal" required v-model="flow_name"></b-form-input>
               </b-form-group>
               <b-navbar toggleable="lg" variant="info">
                 <b-navbar-brand href="#">&nbsp;&nbsp;&nbsp;流程</b-navbar-brand>
@@ -37,7 +38,8 @@
                 </b-collapse>
               </b-navbar>
               <!--<div class="subtable_div">-->
-                <b-table selectable :select-mode="selectMode" :items="workflows.list" small hover :fields="columns" head-variant class="subtable" selectedVariant="primary" @row-selected="rowSelected">
+              <div class="cardDiv">
+                <b-table selectable :select-mode="selectMode" :items="workflows.list" small hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected">
                   <template slot="id" slot-scope="row">
                     {{ row.item.id}}
                   </template>
@@ -56,11 +58,10 @@
                       @click="viewXmlHandler(row.item)"
                     >
                       <icon name="eye"></icon>
-
                     </a>
-
                   </template>
               </b-table>
+              </div>
               <b-row class="justify-content-center row-margin-tweak">
                 <b-pagination
                         :size="template_size"
@@ -83,7 +84,7 @@
                             label="项目名称:"
                             label-for="input-horizontal"
                     >
-                      <b-form-input id="input-horizontal" required v-model="this.project_data.name"></b-form-input>
+                      <b-form-input id="input-horizontal" required v-model="project_data.name"></b-form-input>
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
@@ -133,7 +134,7 @@
                             label="事务类型:"
                             label-for="input-horizontal"
                     >
-                      <b-form-select v-model="project_data.course" :options="options_course"></b-form-select>
+                      <b-form-select v-model="project_data.classification" :options="options_classification"></b-form-select>
                     </b-form-group>
                   </b-col>
                   <b-col sm="6">
@@ -144,13 +145,14 @@
                             label="关联课程:"
                             label-for="input-horizontal"
                     >
-                      <b-form-select  :options="options_all_role"></b-form-select>
+                      <b-form-select  v-model="project_data.course" :options="options_course"></b-form-select>
                       <!--<b-form-select v-model="project_data.all_role" :options="options_all_role"></b-form-select>-->
                     </b-form-group>
                   </b-col>
                 </b-row>
                 <b-row align-v="center">
-                  <b-col sm="6">
+                  <b-col sm="1"></b-col>
+                  <b-col sm="9">
                     <b-form-group
                             id="fieldset-horizontal"
                             label-cols-sm="4"
@@ -159,13 +161,18 @@
                             label-for="input-horizontal"
                     >
                       <b-row align-v="center">
+                        <b-col sm="5">
                         <div class="form-date-control">
-                          <b-form-input type="date" v-model="this.project_data.start_time"></b-form-input>
+                          <b-form-input type="date" v-model="project_data.start_time"></b-form-input>
                         </div>
+                        </b-col>
                         &nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;&nbsp;
-                        <div class="form-date-control">
-                          <b-form-input type="date" v-model="this.project_data.end_time"></b-form-input>
-                        </div>
+                        <b-col sm="5">
+                          <div class="form-date-control">
+                            <b-form-input type="date" v-model="project_data.end_time"></b-form-input>
+                          </div>
+                        </b-col>
+
                       </b-row>
                     </b-form-group>
                   </b-col>
@@ -174,7 +181,7 @@
                   <b-col sm="12">
                     <b-card header="项目简介（必填）" style="padding:0">
                       <b-form-textarea
-                              v-model="this.project_data.intro"
+                              v-model="project_data.intro"
                               placeholder=""
                               rows="3"
                               max-rows="6"
@@ -188,7 +195,7 @@
                   <b-col sm="12">
                     <b-card header="项目目的（必填）" style="padding:0">
                       <b-form-textarea
-                              v-model="this.project_data.purpose"
+                              v-model="project_data.purpose"
                               placeholder=""
                               rows="3"
                               max-rows="6"
@@ -202,7 +209,7 @@
                   <b-col sm="12">
                     <b-card header="项目要求（必填）" style="padding:0">
                       <b-form-textarea
-                              v-model="this.project_data.requirement"
+                              v-model="project_data.requirement"
                               placeholder=""
                               rows="3"
                               max-rows="6"
@@ -225,12 +232,14 @@
         </b-col>
         <b-col sm="4" align-v="center">
           <b-button-group class="float-center">
-            <b-button size="lg"  type="submit" style="width:300px" variant="success"> 保存 </b-button>
+            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
+            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
           </b-button-group>
         </b-col>
         <b-col sm="4" align-v="center">
-          <b-button-group class="float-right">
-            <b-button size="lg"  type="submit"  style="width:300px" variant="success"> 下一步 </b-button>
+          <b-button-group class="float-center">
+            <b-button size="lg"  type="submit"  style="width:100%" variant="success" @click="nextPage()"> 下一步 </b-button>
+            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
           </b-button-group>
         </b-col>
       </b-row>
@@ -250,6 +259,8 @@ import workflowService from "@/services/workflowService";
 import BContainer from "bootstrap-vue/src/components/layout/container";
 import ViewXml from "@/components/workflowXML/ViewXML";
 import _ from "lodash";
+import ProjectService from "@/services/projectService";
+import CourseService from "@/services/courseService";
 
 export default {
   name: "create-project-wizard",
@@ -287,28 +298,32 @@ export default {
                 class: "text-center field-rend_ani_1"
             },
         },
-        project_data:{
-            flow_id:'',
-            flow_name:'',
-            name:'',
-            intro:'',
-            purpose:'',
-            requirement:'',
-            start_time:'',
-            end_time:'',
-//            ???
-            all_role:'',
-            course:1,
-            reference:1,
-            public_status:1,
-            level:'',
-            entire_graph:1,
-            can_redo:'',
-            is_open:1,
-            ability_target:'',
-
-
-        },
+//        project_data:{
+//            flow_id:'',
+//            flow_name:'',
+//            name:'',
+//            intro:'',
+//            purpose:'',
+//            requirement:'',
+//            start_time:'',
+//            end_time:'',
+////            ???
+//            all_role:'',
+//            course:1,
+//            reference:1,
+//            public_status:1,
+//            level:'',
+//            entire_graph:1,
+//            can_redo:'',
+//            is_open:1,
+//            ability_target:'',
+//
+//
+//        },
+        project_data:{},
+        project_id:-1,
+        is_edit:0,
+        flow_name:'',
         options_entire_graph: [
             { value: 1, text: '完整显示' },
             { value: 2, text: '逐步显示' },
@@ -323,19 +338,18 @@ export default {
             { value: 2, text: '后步' },
             { value: 2, text: '最后' },
         ],
-        options_course: [
-            { value: 1, text: '清洗怪' },
-        ],
-        options_all_role: [
+        options_course: [],
+        options_classification: [
             { value: 1, text: 'test1' },
             { value: 2, text: 'test2' },
             { value: 2, text: 'test3' },
         ],
+        savedBit:false,
       // 查询参数
       queryParam: {
-        status: "",
+        status: '2',
         page: 1,
-        size: 10
+        size: 8,
       },
       workflows: {
           list: [],
@@ -367,6 +381,7 @@ export default {
       },
       // 流程相关项目
       relatedProjects: [],
+        selectedFlowName:'',
       animationImgSrc: "",
       copyModalName: "",
       workflowXml: null,
@@ -380,6 +395,12 @@ export default {
       shareModal: false,
         selectedWorkflow:0,
         selectMode: 'single',
+        saveBtnClicked:0,
+        nextBtnClicked:0,
+        courses: {
+            list: [],
+            total: 0
+        },
       experimentTypeOptions: [
         { value: "1", text: "立法类型实验" },
         { value: "2", text: "执法类型实验" },
@@ -394,7 +415,40 @@ export default {
   },
   created() {
       this.$nextTick(() => {
+          this.queryCourseList();
+
+          if (this.$route.params.is_edit == 1){
+              this.is_edit = this.$route.params.is_edit;
+              this.project_data = this.$route.params.currentProject;
+              this.flow_name=this.project_data.flow_name;
+              this.project_id = this.$route.params.project_id;
+
+
+          } else if (this.$route.params.is_edit == 0){
+              this.is_edit = this.$route.params.is_edit;
+              this.project_data = {
+                  id:0,
+                  flow_id:0,
+                  name:'',
+                  all_role:0,
+                  course:'',
+                  reference:1,
+                  classficiation:0,
+                  public_status:1,
+                  level:0,
+                  entire_graph:1,
+                  can_redo:0,
+                  is_open:1,
+                  ability_target:0,
+                  intro:'',
+                  purpose:'',
+                  requirement:'',
+                  start_time:'',
+                  end_time:'',
+              };
+          }
           this.queryWorkflowList();
+
       });
   },
   computed: {
@@ -405,6 +459,9 @@ export default {
     queryParam: {
       handler() {
         this.queryWorkflowList();
+        this.queryProjectCreate();
+        this.queryProjectUpdate();
+        this.queryCourseList();
       },
       deep: true
     },
@@ -432,34 +489,77 @@ export default {
                       }
                   });
                   this.workflows.list = data.results;
-                  for (var i = 0 ; i < this.workflows.list.length; i++){
-                      for (var j = 0; j<this.experimentTypeOptions.length; j++){
+                  if (this.is_edit == 1){
+                      for (let i = 0 ; i < this.workflows.list.length; i++){
+                          if (parseInt(this.workflows.list[i].id) == parseInt(this.project_data.flow_id)){
+                              this.project_data.flow_name = this.workflows.list[i].name;
+                              this.flow_name = this.workflows.list[i].name;
+//                                this.selectedFlowName = this.workflows.list[i].name;
+                              break
+                          }
+                      }
+                  }
+                  for (let i = 0 ; i < this.workflows.list.length; i++){
+                      for (let j = 0; j<this.experimentTypeOptions.length; j++){
                           if (this.workflows.list[i].type_label == parseInt(this.experimentTypeOptions[j].value)){
                               this.workflows.list[i].convertedData = this.experimentTypeOptions[j].text;
                               break
                           }
                       }
-//
                   }
                   this.workflows.total = data.paging.count;
-                  if (this.newProcessAdded) {
-                      this.addNewProcess();
-                  }
                   this.$emit("data-ready");
               })
               .catch(() => {
                   this.$emit("data-failed");
+                  this.$router.push('/manager/project' );
               });
       },
-    // 查询流程列表数据
-    onComplete: function() {
-      alert("Yay. Done!");
-    },
 
+      // get All Course
+      queryCourseList(){
+          this.run();
+          CourseService
+              .getCourseList()
+              .then(data => {
+                  this.options_course = data.results;
+              })
+              .catch(() => {
+                  this.$emit("data-failed");
+                  this.$router.push('/manager/project' );
+              })
+      },
     // Go To Crate Project Page
-    createProjectPage() {
-      this.$router.push("/manager/project/create_project_wizard2");
-    },
+      queryProjectCreate() {
+          this.run();
+          ProjectService
+              .createProject(this.project_data)
+              .then((data) => {
+                  this.$toasted.success('保存成功');
+                  this.$emit("data-ready");
+                  this.project_id = data.id;
+//                  this.$router.push('/manager/project' );
+
+              })
+              .catch(() => {
+                  this.$emit("data-failed");
+                  this.$router.push('/manager/project' );
+              })
+      },
+      queryProjectUpdate() {
+          this.run();
+          ProjectService
+              .updateProject(this.project_data)
+              .then(() => {
+                  this.$toasted.success('保存成功');
+                  this.$emit("data-ready");
+//                  this.$router.push('/manager/project' );
+              })
+              .catch(() => {
+                  this.$emit("data-failed");
+                  this.$router.push('/manager/project' );
+              })
+      },
     showBigImg(animation) {
         this.animationImgSrc = animation.url;
         this.bigImgModal = true;
@@ -473,16 +573,50 @@ export default {
               this.selectedWorkflow = items[0].id;
               this.project_data.flow_id = items[0].id;
               this.project_data.flow_name = items[0].name;
+              this.flow_name=items[0].name;
+
           } else {
               this.selectedWorkflow = 0;
-              this.project_data.flow_id = 0
+              this.project_data.flow_id = 0;
               this.project_data.flow_name = '';
+              this.flow_name="";
           }
       },
-      onSubmit(){
-          alert('test');
-          return true;
-      }
+
+      onSubmit(e){
+          e.preventDefault();
+//          if (this.nextBtnClicked == 1){
+//              this.$router.push({name: 'create-project-wizard2', params:{currentProject:this.project_data,is_edit:this.is_edit}});
+//          }
+//          if (this.saveBtnClicked == 1){
+//              if (this.is_edit == 1){
+//                  this.queryProjectUpdate();
+//              }
+//              if (this.is_edit == 0){
+//                  this.queryProjectCreate();
+//              }
+//          }
+      },
+      nextPage(){
+          this.nextBtnClicked = 1;
+          this.saveBtnClicked = 0;
+          if ((this.is_edit ==1)|| ((this.is_edit == 0) && (this.savedBit))){
+              this.$router.push({name: 'create-project-wizard2', params:{project_id:this.project_id,currentProject:this.project_data,is_edit:this.is_edit}});
+          } else {
+              this.$toasted.error('请保存你的项目');
+          }
+      },
+      savePage(){
+          this.nextBtnClicked = 0;
+          this.saveBtnClicked = 1;
+          if (this.is_edit == 1){
+              this.queryProjectUpdate();
+              this.savedBit = true;
+          }
+          if (this.is_edit == 0){
+              this.queryProjectCreate();
+          }
+      },
   }
 };
 </script>
@@ -496,4 +630,93 @@ export default {
 .opened {
   background-color: yellow;
 }
+.table-container {
+  height: calc(100vh - 450px);
+}
+.table-container table {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 100%;
+}
+.table-container table thead {
+  flex: 0 0 auto;
+  width: 100%;
+}
+.table-container table tbody {
+  flex: 1 1 auto;
+  display: block;
+  width: 100%;
+  overflow-y: auto;
+}
+.table-container table tbody tr {
+  width: 100%;
+}
+.table-container table thead, .table-container table tbody tr {
+  display: table;
+  table-layout: fixed;
+}
+.table-container table {
+  border-collapse: collapse;
+}
+.table-container table td, .table-container table th {
+  padding: 0.4em;
+}
+.table-container table th {
+  border: 1px solid black;
+  font-size: 0.7vw;
+}
+.table-container table td {
+  border: 1px solid #e7e1e1;
+  font-size: 0.85em;
+  /* necessary to set for proper "showing row x of y" calculations if infinate scoll */
+  white-space: nowrap;
+  text-align: center;
+  padding: 10px 5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.table-container table thead {
+  border: 2px solid #0F0FA3;
+}
+.table-container th {
+  background-color: #0F0FA3;
+  color: #b5aba4;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none !important;
+  -ms-user-select: none;
+  user-select: none;
+}
+.table-container table tbody td {
+  padding: 8px;
+  cursor: pointer;
+}
+.table-container table tbody tr:hover {
+  background-color: rgba(168, 168, 239, .5);
+}
+.table-container table thead td {
+  padding: 10px 5px;
+}
+.table-container tr:nth-child(even) {
+  background-color: rgba(168, 168, 239, 1);
+}
+
+/* START Adjustments for width and scrollbar hidden */
+.table-container th.table-action, .table-container td.table-action {
+  width: 5.8vw;
+}
+.table-container table thead {
+  width: calc(100% - 1px);
+}
+.table-container table tbody::-webkit-scrollbar {
+  width: 1px;
+}
+.table-container table tbody::-webkit-scrollbar {
+  width: 1px;
+}
+.table-container table tbody::-webkit-scrollbar-thumb {
+  width: 1px;
+}
+/* END Adjustments for width and scrollbar */
 </style>
