@@ -129,6 +129,10 @@ const routes = [{
             path: 'group_company',
             name: 'manager-group_company',
             component: () => import('@/views/manager/group_company/Group_Company_Index.vue')
+        }, {
+            path: 'user',
+            name: 'super-user-manage',
+            component: () => import('@/views/manager/user/UMIndex.vue')
         }
     ]
 }
