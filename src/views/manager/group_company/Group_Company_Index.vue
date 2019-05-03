@@ -37,9 +37,9 @@
                                     <icon name="user-plus" style="width: 20px"></icon>
                                     配置指导者
                                 </b-button>
-                                <b-modal hide-footer size="xl" id="editInstructors" ref="editInstructors" title="配置指导者">
+                                <b-modal hide-footer centered size="xl" id="editInstructors" ref="editInstructors" title="配置指导者">
                                     <div class="pb-5">
-                                        <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10"
+                                        <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 82% !important;"
                                                   @click="()=>{newInstructor = true; editInstructor = false; new_Instructor = {name:'', password:null}}">
                                             新增指导者
                                         </b-button>
@@ -53,53 +53,61 @@
                                                 <b-badge pill variant="primary" class="mr-2" v-for="(instructor, index) in row.item.instructorItems" :key="`instructor-${index}`">{{ instructor.text }}</b-badge>
                                             </template>
                                             <template slot="action" slot-scope="row">
-                                                <b-button :key="'edit' + row.id" :size="template_size" variant="outline-primary"
+                                                <b-button class="styledBtn" :key="'edit' + row.id" :size="template_size" variant="outline-primary"
                                                           @click="()=>{editInstructor = true; newInstructor = false; edit_Instructor = {id:row.item.id, tags:[]}; allgroup.selectedInstructor = row.item.id; tags = row.item.instructorItems.map(item=>{return {text: item.text}});}">
-                                                    <icon name="edit" style="width: 20px"></icon>
+                                                    <icon name="edit" style="width: 20px; margin: 0 0 4px 2px;"></icon>
                                                 </b-button>
                                             </template>
                                         </b-table>
-                                        <b-form @submit="newInstructorSave" class="container w-25 pt-3" v-if="newInstructor">
-                                            <b-form-group id="input-group-7" label-for="name">
-                                                <b-form-input
-                                                        v-model="new_Instructor.name"
-                                                        required
-                                                        autocomplete="username"
-                                                        placeholder="管理员名称"
-                                                ></b-form-input>
-                                            </b-form-group>
-                                            <b-form-group id="input-group-9" label-for="input-2">
-                                                <b-form-input
-                                                        v-model="new_Instructor.password"
-                                                        required
-                                                        autocomplete="new-password"
-                                                        type="password"
-                                                        placeholder="密码"
-                                                ></b-form-input>
-                                            </b-form-group>
-                                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                            </b-button>
-                                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                                      @click="()=>{newInstructor = false; new_Instructor = {name:'', password:null}}">取 消
-                                            </b-button>
-                                        </b-form>
-                                        <b-form @submit="editInstructorSave" class="container w-80 pt-3" v-if="editInstructor">
-                                            <b-form-group id="input-group-10" label-for="input-2">
-                                                <vue-tags-input
-                                                        v-model="tag"
-                                                        :tags="tags"
-                                                        :autocomplete-items="filteredItems"
-                                                        :add-only-from-autocomplete="true"
-                                                        @tags-changed="newTags => tags = newTags"
-                                                />
-                                            </b-form-group>
-                                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                            </b-button>
-                                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                                      @click="()=>{editInstructor = false; edit_Instructor = {id: null,tags:[]}}">取
-                                                消
-                                            </b-button>
-                                        </b-form>
+                                        <b-modal hide-footer centered  v-model="newInstructor" title="新增指导者">
+                                            <div>
+                                                <b-form @submit="newInstructorSave" class="container pt-3">
+                                                    <b-form-group id="input-group-7" label-for="name">
+                                                        <b-form-input
+                                                                v-model="new_Instructor.name"
+                                                                required
+                                                                autocomplete="username"
+                                                                placeholder="管理员名称"
+                                                        ></b-form-input>
+                                                    </b-form-group>
+                                                    <b-form-group id="input-group-9" label-for="input-2">
+                                                        <b-form-input
+                                                                v-model="new_Instructor.password"
+                                                                required
+                                                                autocomplete="new-password"
+                                                                type="password"
+                                                                placeholder="密码"
+                                                        ></b-form-input>
+                                                    </b-form-group>
+                                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                                    </b-button>
+                                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                                              @click="()=>{newInstructor = false; new_Instructor = {name:'', password:null}}">取 消
+                                                    </b-button>
+                                                </b-form>
+                                            </div>
+                                        </b-modal>
+                                        <b-modal hide-footer centered  v-model="editInstructor" title="修改事务类型">
+                                            <div>
+                                                <b-form @submit="editInstructorSave" class="container pt-3" >
+                                                    <b-form-group id="input-group-10" label-for="input-2">
+                                                        <vue-tags-input
+                                                                v-model="tag"
+                                                                :tags="tags"
+                                                                :autocomplete-items="filteredItems"
+                                                                :add-only-from-autocomplete="true"
+                                                                @tags-changed="newTags => tags = newTags"
+                                                        />
+                                                    </b-form-group>
+                                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                                    </b-button>
+                                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                                              @click="()=>{editInstructor = false; edit_Instructor = {id: null,tags:[]}}">取
+                                                        消
+                                                    </b-button>
+                                                </b-form>
+                                            </div>
+                                        </b-modal>
                                     </div>
                                 </b-modal>
                             </b-button-group>

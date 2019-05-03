@@ -87,11 +87,11 @@
                   <!--<col width="20%"/>-->
                 <!--</colgroup>-->
                 <tbody>
-                <template v-for="(type) in projectRolesAssign.project_role_type">
-                  <tr class="tr-type">
+                <template v-for="(type, index) in projectRolesAssign.project_role_type" v-key="index">
+                  <tr class="tr-type" :key="index">
                     <td colspan="7" text-left>{{type}}</td>
                   </tr>
-                  <tr v-for="role in assignDataForType(type)">
+                  <tr v-for="(role, indexRole) in assignDataForType(type)" :key="indexRole">
                     <td width="15%"></td>
                     <td width="20%">{{role.role_name}} </td>
                     <td width="20%">{{role.image_name}}-{{role.gender ? (role.gender == 1 ? '男' : '女' ) : ''}} <a v-if="role.image_id" href="javascript:;" v-b-modal.roleModal class="btn-link" @click="roleImageReselect(role)">重新选择</a> </td>
@@ -140,12 +140,12 @@
               <b-col sm="4" class="left">
                 <input type="text" class="search-input" v-model="searchKey">
                 <ul class="list">
-                  <li v-for="(roleItem, index) in searchData" class="cursor" :class="{'active': activeTypeIndex==index }" @click="selectRoleImgType(roleItem, index)">{{roleItem.name}}</li>
+                  <li v-for="(roleItem, index) in searchData" :key="index" class="cursor" :class="{'active': activeTypeIndex==index }" @click="selectRoleImgType(roleItem, index)">{{roleItem.name}}</li>
                 </ul>
               </b-col>
               <b-col sm="8" class="right">
                 <ul class="module-figure-content">
-                  <li v-for="(roleImageItem, index) in roleImageForType" @click="selectRoleName(roleImageItem, index)">
+                  <li v-for="(roleImageItem, index) in roleImageForType" :key="index" @click="selectRoleName(roleImageItem, index)">
                     <a href="javascript:;">
                       <span class="module-avater" :class="{'role-img-active': activeRoleIndex==index}"><img :src="roleImageItem.avatar" alt="" width="100%"></span>
                       <span class="module-text">{{roleImageItem.name}}-{{roleImageItem.gender == 1? '男' : '女'}}</span>

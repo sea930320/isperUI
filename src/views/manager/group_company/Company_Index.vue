@@ -14,50 +14,43 @@
             </b-col>
             <b-col lg="9" md="6" sm="12" class="align-self-center">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" v-b-modal.newGroup @click="newGroup = {
+                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" v-b-modal.newCompany @click="newCompany = {
                         name: '',
+                        type: '',
                         comment: '',
-                        default: 0,
-                        publish: 1,
-                        managerName: '',
-                        managerPass: ''
-                    }">添加集群
+                        cManagerName: '',
+                        cManagerPass: ''
+                    }">添加单位
                     </b-button>
-                    <b-modal hide-footer id="newGroup" ref="newGroup" title="添加集群">
+                    <b-modal hide-footer centered id="newCompany" ref="newCompany" title="添加单位">
                         <div>
                             <b-form @submit="onSubmit" class="container w-80 pt-3">
                                 <b-form-group id="input-group-1" label-for="name">
                                     <b-form-input
-                                            id="newGroup_name"
-                                            v-model="newGroup.name"
+                                            id="newCompany_name"
+                                            v-model="newCompany.name"
                                             required
-                                            placeholder="集群名称"
+                                            placeholder="单位名称"
                                     ></b-form-input>
+                                </b-form-group>
+                                <b-form-group id="input-group-12" label-for="input-2">
+                                    <b-form-select v-model="newCompany.type" :options="allgroup.cTypes"></b-form-select>
                                 </b-form-group>
                                 <b-form-group id="input-group-2" label-for="input-2">
                                     <b-form-textarea
-                                            id="newGroup_comment"
+                                            id="newCompany_comment"
                                             rows="3"
                                             no-resize
-                                            v-model="newGroup.comment"
+                                            v-model="newCompany.comment"
                                             required
-                                            placeholder="集群描述"
+                                            placeholder="单位描述"
                                     ></b-form-textarea>
                                 </b-form-group>
-                                <b-form-radio-group v-model="newGroup.default" :options="options1"
-                                                    name="default">
-                                    <span class="float-left">是否为默认集群 :</span>
-                                </b-form-radio-group>
-                                <br/>
-                                <b-form-radio-group v-model="newGroup.publish" :options="options2"
-                                                    name="publish">
-                                    <span class="float-left">是否为公开集群 :</span>
-                                </b-form-radio-group>
                                 <br/>
                                 <b-form-group id="input-group-3" class="text-left" label="创建管理员 :" label-for="input-2">
                                     <b-form-input
                                             id="input-22"
-                                            v-model="newGroup.managerName"
+                                            v-model="newCompany.cManagerName"
                                             required
                                             placeholder="管理员账号"
                                             autocomplete="username"
@@ -66,7 +59,7 @@
                                 <b-form-group id="input-group-4" label-for="input-2">
                                     <b-form-input
                                             id="input-23"
-                                            v-model="newGroup.managerPass"
+                                            v-model="newCompany.cManagerPass"
                                             required
                                             placeholder="管理员密码"
                                             type="password"
@@ -77,7 +70,7 @@
                             </b-form>
                         </div>
                     </b-modal>
-                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="this.deleteGroup">删除集群</b-button>
+                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="this.deleteCompany">删除单位</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
@@ -96,171 +89,32 @@
                 <template slot="id" slot-scope="row">{{ row.item.id }}</template>
                 <template slot="name" slot-scope="row">
                     <span class="text">{{row.item.name}}</span>
-                    <span v-if="row.item.default" style="
-                    font-size: 18px;
-                    background-color: grey;
-                    color: white;
-                    padding: 3px 5px;
-                    margin-left: 8px;
-                    border-radius: 5px;">默认</span>
                 </template>
-                <template slot="comment" slot-scope="row">
-                    {{row.item.comment ? row.item.comment : ''}}
+                <template slot="type" slot-scope="row">
+                    {{row.item.type ? row.item.type : ''}}
                 </template>
-                <template slot="publish" slot-scope="row">
-                    {{(row.item.publish)?'是':'否'}}
+                <template slot="creator" slot-scope="row">
+                    {{row.item.creator}}
                 </template>
-                <template slot="groupManagers" slot-scope="row">
-                    <div>
-                        <span v-for="manager in row.item.groupManagers" :key="manager.id">{{ manager.name + ', ' }}</span>
-                    </div>
+                <template slot="create_time" slot-scope="row">
+                       {{ row.item.create_time }}
                 </template>
                 <template slot="action" slot-scope="row">
                     <b-button-group>
                         <b-button :key="row.item.id" class="styledBtn" :size="template_size" variant="outline-primary" @click="editOpen(row)">
+                            <icon name="edit" style="width: 20px"></icon>
                             编辑
                         </b-button>
-                        <b-modal hide-footer id="editGroup" ref="editGroup" title="修改集群">
-                            <div>
-                                <b-form @submit="updateGroup" class="container w-80 pt-3">
-                                    <b-form-group id="input-group-5" label-for="name">
-                                        <b-form-input
-                                                v-model="editItem.name"
-                                                required
-                                                placeholder="集群名称"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group id="input-group-6" label-for="input-2">
-                                        <b-form-textarea
-                                                rows="3"
-                                                no-resize
-                                                v-model="editItem.comment"
-                                                required
-                                                placeholder="集群描述"
-                                        ></b-form-textarea>
-                                    </b-form-group>
-                                    <b-form-radio-group v-model="editItem.default" :options="options1"
-                                                        name="default">
-                                        <span class="float-left mr-4">是否为默认集群 :</span>
-                                    </b-form-radio-group>
-                                    <br/>
-                                    <b-form-radio-group v-model="editItem.publish" :options="options2"
-                                                        name="publish">
-                                        <span class="float-left mr-4">是否为公开集群 :</span>
-                                    </b-form-radio-group>
-                                    <br/>
-                                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
-                                </b-form>
-                            </div>
-                        </b-modal>
                         <b-button class="styledBtn" :key="'add' + row.item.id" :size="template_size" variant="outline-primary"
-                                  @click="addManagerOpen(row)">
+                                  @click="addCManagerOpen(row)">
+                            <icon name="user-plus" style="width: 20px"></icon>
                             配置管理员
                         </b-button>
-                        <b-modal size="xl" hide-footer id="addManager" ref="addManager" title="配置管理员">
-                            <div>
-                                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10"
-                                          @click="()=>{newManager = true; editManager = false; resetManager = false; new_Manager = {name:'',description:'',password:null}}">
-                                    新增管理员
-                                </b-button>
-                                <b-table :items="Managers.list" small hover :fields="managerColumns"
-                                         class="col-10 offset-1" head-variant style="fontSize: 18px">
-                                    <template slot="id" slot-scope="row">{{ row.item.id }}</template>
-                                    <template slot="name" slot-scope="row">
-                                        <span class="text">{{row.item.name}}</span>
-                                    </template>
-                                    <template slot="comment" slot-scope="row">
-                                        {{row.item.description ? row.item.description : ''}}
-                                    </template>
-                                    <template slot="action" slot-scope="row">
-                                        <b-button-group>
-                                            <b-button :key="'edit' + row.id" :size="template_size" variant="outline-primary"
-                                                      @click="()=>{editManager = true; newManager = false; resetManager = false; edit_Manager = {id:row.item.id,description:row.item.description}}">
-                                                修改信息
-                                            </b-button>
-                                            <b-button :key="'reset' + row.id" :size="template_size"
-                                                      variant="outline-primary"
-                                                      @click="()=>{resetManager = true; newManager = false; editManager = false; reset_Manager = {id:row.item.id,password:''}}">
-                                                重置密码
-                                            </b-button>
-                                        </b-button-group>
-                                    </template>
-                                </b-table>
-                                <b-form @submit="newManagerSave" class="container w-25 pt-3" v-if="newManager">
-                                    <b-form-group id="input-group-7" label-for="name">
-                                        <b-form-input
-                                                v-model="new_Manager.name"
-                                                required
-                                                autocomplete="username"
-                                                placeholder="管理员名称"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group id="input-group-8" label-for="input-2">
-                                        <b-form-textarea
-                                                rows="3"
-                                                no-resize
-                                                v-model="new_Manager.description"
-                                                required
-                                                placeholder="备注"
-                                        ></b-form-textarea>
-                                    </b-form-group>
-                                    <b-form-group id="input-group-9" label-for="input-2">
-                                        <b-form-input
-                                                v-model="new_Manager.password"
-                                                required
-                                                autocomplete="new-password"
-                                                type="password"
-                                                placeholder="密码"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                    </b-button>
-                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                              @click="()=>{newManager = false; new_Manager = {name:'',description:'',password:null}}">取 消
-                                    </b-button>
-                                </b-form>
-                                <b-form @submit="editManagerSave" class="container w-25 pt-3" v-if="editManager">
-                                    <b-form-group id="input-group-10" label-for="input-2">
-                                        <b-form-textarea
-                                                id="edit_Manager_description"
-                                                rows="3"
-                                                no-resize
-                                                v-model="edit_Manager.description"
-                                                required
-                                                placeholder="备注"
-                                        ></b-form-textarea>
-                                    </b-form-group>
-                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                    </b-button>
-                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                              @click="()=>{editManager = false; edit_Manager = {id: null,description:''}}">取
-                                        消
-                                    </b-button>
-                                </b-form>
-                                <b-form @submit="resetManagerSave" class="container w-25 pt-3" v-if="resetManager">
-                                    <b-form-group id="input-group-11" label-for="input-2">
-                                        <b-form-input
-                                                v-model="reset_Manager.password"
-                                                required
-                                                autocomplete="new-password"
-                                                type="password"
-                                                placeholder="密码"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
-                                    </b-button>
-                                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                                              @click="()=>{resetManager = false; reset_Manager = {id: null,password:''}}">取
-                                        消
-                                    </b-button>
-                                </b-form>
-                            </div>
-                        </b-modal>
                     </b-button-group>
                 </template>
             </b-table>
         </div>
-        <b-row class="justify-content-end row-margin-tweak mx-0 mt-4">
+        <b-row class="justify-content-end row-margin-tweak cardDiv">
             <b-pagination
                     :size="template_size"
                     :total-rows="allgroup.total"
@@ -269,6 +123,133 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
+        <b-modal size="xl" centered hide-footer id="addCManager" ref="addCManager" title="配置管理员">
+            <div class="pb-5">
+                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 82% !important;"
+                          @click="()=>{newCManager = true; editCManager = false; resetCManager = false; new_CManager = {name:'',description:'',password:null}}">
+                    新增管理员
+                </b-button>
+                <b-table :items="cManagers.list" small hover :fields="cManagerColumns"
+                         class="col-10 offset-1 mb-3" head-variant style="fontSize: 18px">
+                    <template slot="id" slot-scope="row">{{ row.item.id }}</template>
+                    <template slot="name" slot-scope="row">
+                        <span class="text">{{row.item.name}}</span>
+                    </template>
+                    <template slot="comment" slot-scope="row">
+                        {{row.item.description ? row.item.description : ''}}
+                    </template>
+                    <template slot="action" slot-scope="row">
+                        <b-button-group>
+                            <b-button class="styledBtn" :key="'edit' + row.id" :size="template_size" variant="outline-primary"
+                                      @click="()=>{editCManager = true; newCManager = false; resetCManager = false; edit_CManager = {id:row.item.id,description:row.item.description}}">
+                                修改信息
+                            </b-button>
+                            <b-button class="styledBtn" :key="'reset' + row.id" :size="template_size"
+                                      variant="outline-primary"
+                                      @click="()=>{resetCManager = true; newCManager = false; editCManager = false; reset_CManager = {id:row.item.id,password:''}}">
+                                重置密码
+                            </b-button>
+                        </b-button-group>
+                    </template>
+                </b-table>
+                <b-modal hide-footer centered  v-model="newCManager" title="新增管理员">
+                    <div>
+                        <b-form @submit="newCManagerSave" class="container pt-3">
+                            <b-form-group id="input-group-7" label-for="name">
+                                <b-form-input
+                                        v-model="new_CManager.name"
+                                        required
+                                        autocomplete="username"
+                                        placeholder="管理员名称"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-form-group id="input-group-8" label-for="input-2">
+                                <b-form-textarea
+                                        rows="3"
+                                        no-resize
+                                        v-model="new_CManager.description"
+                                        required
+                                        placeholder="备注"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group id="input-group-9" label-for="input-2">
+                                <b-form-input
+                                        v-model="new_CManager.password"
+                                        required
+                                        autocomplete="new-password"
+                                        type="password"
+                                        placeholder="密码"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{newCManager = false; new_CManager = {name:'',description:'',password:null}}">取 消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+                <b-modal hide-footer centered  v-model="editCManager" title="修改信息">
+                    <div>
+                        <b-form @submit="editCManagerSave" class="container pt-3" >
+                            <b-form-group id="input-group-10" label-for="input-2">
+                                <b-form-textarea
+                                        id="edit_CManager_description"
+                                        rows="3"
+                                        no-resize
+                                        v-model="edit_CManager.description"
+                                        required
+                                        placeholder="备注"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{editCManager = false; edit_CManager = {id: null,description:''}}">取
+                                消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+                <b-modal hide-footer centered  v-model="resetCManager" title="重置密码">
+                    <div>
+                        <b-form @submit="resetCManagerSave" class="container pt-3">
+                            <b-form-group id="input-group-11" label-for="input-2">
+                                <b-form-input
+                                        v-model="reset_CManager.password"
+                                        required
+                                        autocomplete="new-password"
+                                        type="password"
+                                        placeholder="密码"
+                                ></b-form-input>
+                            </b-form-group>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            </b-button>
+                            <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                                      @click="()=>{resetCManager = false; reset_CManager = {id: null,password:''}}">取 消
+                            </b-button>
+                        </b-form>
+                    </div>
+                </b-modal>
+            </div>
+        </b-modal>
+        <b-modal hide-footer centered id="editCompany" ref="editCompany" title="修改单位">
+            <div>
+                <b-form @submit="updateCompany" class="container w-80 pt-3">
+                    <b-form-group id="input-group-5" label-for="name">
+                        <b-form-input
+                                v-model="editItem.name"
+                                required
+                                placeholder="单位名称"
+                        ></b-form-input>
+                    </b-form-group>
+                    <b-form-group id="input-group-6" label-for="input-2">
+                        <b-form-select v-model="editItem.type" :options="allgroup.cTypes"></b-form-select>
+                    </b-form-group>
+                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
+                </b-form>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -291,27 +272,25 @@
                 editItem: {
                     id: null,
                     name: '',
-                    comment: '',
-                    default: 0,
-                    publish: 1
+                    type: '',
                 },
-                Managers: {
+                cManagers: {
                     list: [],
-                    groupID: null
+                    companyID: null
                 },
-                newManager: false,
-                new_Manager: {
+                newCManager: false,
+                new_CManager: {
                     name: '',
                     description: '',
                     password: null,
                 },
-                editManager: false,
-                edit_Manager: {
+                editCManager: false,
+                edit_CManager: {
                     id: null,
                     description: ''
                 },
-                resetManager: false,
-                reset_Manager: {
+                resetCManager: false,
+                reset_CManager: {
                     id: null,
                     password: ''
                 },
@@ -327,22 +306,22 @@
                         class: "text-center field-csn"
                     },
                     name: {
-                        label: "集群名称",
+                        label: "单位名称",
                         sortable: false,
                         class: "text-center field-cname"
                     },
-                    comment: {
-                        label: "集群描述",
+                    type: {
+                        label: "单位类别",
                         sortable: false,
                         class: "text-center field-ccreator"
                     },
-                    publish: {
-                        label: "是否为公开集群",
+                    creator: {
+                        label: "创建人",
                         sortable: false,
                         class: "text-center field-ccreate_time"
                     },
-                    groupManagers: {
-                        label: "集群管理员",
+                    create_time: {
+                        label: "创建时间",
                         sortable: false,
                         class: "text-center field-crend_ani_1"
                     },
@@ -352,7 +331,7 @@
                         class: "text-center field-crend_ani_2"
                     }
                 },
-                managerColumns: {
+                cManagerColumns: {
                     id: {
                         label: "序号",
                         sortable: false,
@@ -361,12 +340,12 @@
                     name: {
                         label: "管理员名称",
                         sortable: false,
-                        class: "text-center field-cname"
+                        class: "text-center field-crend_ani_3"
                     },
                     comment: {
                         label: "备注",
                         sortable: false,
-                        class: "text-center field-ccreator"
+                        class: "text-center field-crend_ani_4"
                     },
                     action: {
                         label: "操作",
@@ -376,31 +355,23 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 15
+                    size: 5
                 },
                 queryDebounceParam: {
                     search: ""
                 },
                 allgroup: {
                     list: [],
+                    cTypes: [],
                     total: 0
                 },
-                newGroup: {
+                newCompany: {
                     name: '',
+                    type: '',
                     comment: '',
-                    default: 0,
-                    publish: 1,
-                    managerName: '',
-                    managerPass: ''
+                    cManagerName: '',
+                    cManagerPass: ''
                 },
-                options1: [
-                    {text: '是', value: 1},
-                    {text: '否', value: 0}
-                ],
-                options2: [
-                    {text: '是', value: 1},
-                    {text: '否', value: 0}
-                ]
             };
         },
         created() {
@@ -426,39 +397,6 @@
             }
         },
         methods: {
-            onSubmit(evt) {
-                evt.preventDefault();
-                this.$refs['newGroup'].hide();
-                this.run();
-                GroupService
-                    .create(this.newGroup)
-                    .then((res) => {
-                        if (res.results === 'success')
-                            GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
-                                    this.allgroup.list = data.results;
-                                    this.allgroup.total = data.paging.count;
-                                    this.$emit("data-ready");
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        else
-                            this.$emit("data-failed");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-            },
             queryCompanyList() {
                 this.run();
                 GroupService
@@ -466,78 +404,163 @@
                     .then(data => {
                         this.allgroup.list = data.results;
                         this.allgroup.total = data.paging.count;
+                        this.allgroup.cTypes = data.cTypes;
                         this.$emit("data-ready");
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                     });
             },
-            deleteGroup() {
+            onSubmit(evt) {
+                evt.preventDefault();
                 this.run();
                 GroupService
-                    .deleteGroups({ids: JSON.stringify(this.selected)})
-                    .then(res => {
+                    .createCompany(this.newCompany)
+                    .then((res) => {
                         if (res.results === 'success')
                             GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
                                     this.allgroup.list = data.results;
                                     this.allgroup.total = data.paging.count;
+                                    this.allgroup.cTypes = data.cTypes;
                                     this.$emit("data-ready");
+                                    this.$refs['newCompany'].hide();
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
                                 });
+                        else if (res.results === 'nameError') {
+                            alert("该单位名已存在。");
+                            this.$emit("data-failed");
+                        }
+                        else if (res.results === 'managerNameError') {
+                            alert("该账号已存在。");
+                            this.$emit("data-failed");
+                        }
                         else
                             this.$emit("data-failed");
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                     });
+            },
+            deleteCompany() {
+                if (confirm("您确定要删除该单位吗？")) {
+                    this.run();
+                    GroupService
+                        .deleteCompany({ids: JSON.stringify(this.selected)})
+                        .then(res => {
+                            if (res.results === 'success')
+                                GroupService
+                                    .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
+                                    .then(data => {
+                                        this.allgroup.list = data.results;
+                                        this.allgroup.total = data.paging.count;
+                                        this.allgroup.cTypes = data.cTypes;
+                                        this.$emit("data-ready");
+                                    })
+                                    .catch(() => {
+                                        this.$emit("data-failed");
+                                    });
+                            else
+                                this.$emit("data-failed");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             },
             editOpen(row) {
                 this.editItem.id = row.item.id;
                 this.editItem.name = row.item.name;
-                this.editItem.comment = row.item.comment;
-                this.editItem.default = row.item.default;
-                this.editItem.publish = row.item.publish;
-                this.$refs['editGroup'].show();
+                this.editItem.type = row.item.type;
+                this.$refs['editCompany'].show();
             },
-            addManagerOpen(row) {
-                this.Managers.list = row.item.groupManagers;
-                this.Managers.groupID = row.item.id;
-                this.$refs['addManager'].show();
+            addCManagerOpen(row) {
+                this.cManagers.list = row.item.companyManagers;
+                this.cManagers.companyID = row.item.id;
+                this.$refs['addCManager'].show();
             },
-            updateGroup(evt) {
+            updateCompany(evt) {
                 evt.preventDefault();
-                this.$refs['editGroup'].hide();
                 this.run();
                 GroupService
-                    .update(this.editItem)
+                    .updateCompany(this.editItem)
                     .then((res) => {
                         if (res.results === 'success')
                             GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
                                     this.allgroup.list = data.results;
                                     this.allgroup.total = data.paging.count;
+                                    this.allgroup.cTypes = data.cTypes;
                                     this.$emit("data-ready");
+                                    this.$refs['editCompany'].hide();
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else if (res.results === 'nameError') {
+                            alert("该单位名已存在。");
+                            this.$emit("data-failed");
+                        }
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            newCManagerSave(evt) {
+                evt.preventDefault();
+                this.run();
+                GroupService
+                    .addCManager({companyID: this.cManagers.companyID, data: this.new_CManager})
+                    .then((res) => {
+                        if (res.results === 'success')
+                            GroupService
+                                .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
+                                .then(data => {
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    this.allgroup.cTypes = data.cTypes;
+                                    let selectedData = data.results.filter(obj => { return obj.id === this.cManagers.companyID});
+                                    this.cManagers.list = selectedData[0].companyManagers;
+                                    this.$emit("data-ready");
+                                    this.newCManager = false;
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else if (res.results === 'managerNameError') {
+                            alert("该账号已存在。");
+                            this.$emit("data-failed");
+                        }
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            editCManagerSave(evt) {
+                evt.preventDefault();
+                this.run();
+                GroupService
+                    .updateCManager(this.edit_CManager)
+                    .then((res) => {
+                        if (res.results === 'success')
+                            GroupService
+                                .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
+                                .then(data => {
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    this.allgroup.cTypes = data.cTypes;
+                                    let selectedData = data.results.filter(obj => { return obj.id === this.cManagers.companyID});
+                                    this.cManagers.list = selectedData[0].companyManagers;
+                                    this.$emit("data-ready");
+                                    this.editCManager = false;
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
@@ -549,100 +572,23 @@
                         this.$emit("data-failed");
                     });
             },
-            newManagerSave(evt) {
+            resetCManagerSave(evt) {
                 evt.preventDefault();
-                this.newManager = false;
                 this.run();
                 GroupService
-                    .addManager({groupID: this.Managers.groupID, data: this.new_Manager})
+                    .pCResetManager(this.reset_CManager)
                     .then((res) => {
                         if (res.results === 'success')
                             GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .fetchCompanyList({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
                                     this.allgroup.list = data.results;
                                     this.allgroup.total = data.paging.count;
-                                    let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
-                                    this.Managers.list = selectedData[0].groupManagers;
+                                    this.allgroup.cTypes = data.cTypes;
+                                    let selectedData = data.results.filter(obj => { return obj.id === this.cManagers.companyID});
+                                    this.cManagers.list = selectedData[0].companyManagers;
                                     this.$emit("data-ready");
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        else
-                            this.$emit("data-failed");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-            },
-            editManagerSave(evt) {
-                evt.preventDefault();
-                this.editManager = false;
-                this.run();
-                GroupService
-                    .updateManager(this.edit_Manager)
-                    .then((res) => {
-                        if (res.results === 'success')
-                            GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
-                                    this.allgroup.list = data.results;
-                                    this.allgroup.total = data.paging.count;
-                                    let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
-                                    this.Managers.list = selectedData[0].groupManagers;
-                                    this.$emit("data-ready");
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        else
-                            this.$emit("data-failed");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-            },
-            resetManagerSave(evt) {
-                evt.preventDefault();
-                this.resetManager = false;
-                this.run();
-                GroupService
-                    .pResetManager(this.reset_Manager)
-                    .then((res) => {
-                        if (res.results === 'success')
-                            GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
-                                    });
-                                    this.allgroup.list = data.results;
-                                    this.allgroup.total = data.paging.count;
-                                    let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
-                                    this.Managers.list = selectedData[0].groupManagers;
-                                    this.$emit("data-ready");
+                                    this.resetCManager = false;
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
@@ -661,7 +607,7 @@
 <style type="text/css" lang="scss" rel="stylesheet/scss">
     .company-index {
         .field-ccheck {
-            width: 2%;
+            width: 5%;
             padding-top: 11px;
             text-align: left !important;
         }
@@ -670,23 +616,31 @@
             text-align: left !important;
         }
         .field-cname {
-            width: 15%;
+            width: 20%;
             text-align: left !important;
         }
         .field-ccreator {
-            width: 30%;
+            width: 7%;
             text-align: left !important;
         }
         .field-ccreate_time {
-            width: 12%;
+            width: 7%;
             text-align: left !important;
         }
         .field-crend_ani_1 {
-            width: 21%;
+            width: 12%;
             text-align: left !important;
         }
         .field-crend_ani_2 {
             width: 15%;
+            text-align: left !important;
+        }
+        .field-crend_ani_3 {
+            width: 7%;
+            text-align: left !important;
+        }
+        .field-crend_ani_4 {
+            width: 20%;
             text-align: left !important;
         }
     }

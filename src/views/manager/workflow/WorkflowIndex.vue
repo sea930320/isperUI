@@ -596,16 +596,6 @@ export default {
   },
   computed: {
     ...mapState(["userInfo"]),
-    allCheck: {
-      get() {
-        return this.workflows.list.every(flow => flow.checked);
-      },
-      set(val) {
-        this.workflows.list.forEach(flow => {
-          flow.checked = val;
-        });
-      }
-    },
     checkedItems() {
       return this.workflows.list.filter(item => item.checked === true);
     },
@@ -873,7 +863,7 @@ export default {
       } else {
         this.setFlowStep(item.step);
         this.$router.push({
-          name: "setworkflowNode",
+          name: "setworkflow-node",
           params: {
             flow_id: item.id
           }
@@ -958,7 +948,7 @@ export default {
         this.$toasted.error("流程名称应不超过20字");
         return;
       }
-
+      this.run();
       this.copyModal = false;
       workflowService
         .copyWorkflow({
@@ -968,6 +958,7 @@ export default {
         .then(() => {
           this.queryWorkflowList();
           this.$toasted.success("复制流程成功");
+          this.$emit("data-ready");
         });
     },
     // 共享
