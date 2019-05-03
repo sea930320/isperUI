@@ -523,6 +523,7 @@ export default {
           this.run();
           ProjectService
               .createProject(this.project_data)
+              // eslint-disable-next-line
               .then(data => {
                   this.$router.push('/manager/project' );
 //                  alert(data);
