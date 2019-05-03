@@ -57,13 +57,17 @@
               ></b-form-select>
             </template>
             <template slot="action" slot-scope="row">
-              <a href="javascript:void(0);" @click="previewFile(row.item.file)">
-                <icon name="presentation"/>
+              <a
+                class="btn-link mx-1"
+                href="javascript:void(0);"
+                @click="previewFile(row.item.file)"
+              >
+                <icon name="tv"/>
               </a>
-              <a :href="row.item.file" target="_blank">
+              <a class="btn-link mx-1" :href="row.item.file" target="_blank">
                 <icon name="download"/>
               </a>
-              <a href="javascript:;" @click="deleteDocClick(row.item)">
+              <a class="btn-link mx-1" href="javascript:;" @click="deleteDocClick(row.item)">
                 <icon name="trash"/>
               </a>
             </template>
@@ -86,7 +90,7 @@
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="name" slot-scope="row">{{row.item.name}}</template>
             <template slot="doc_use" slot-scope="row">
-              <b-form-checkbox v-model="row.item.doc_use" @on-change="onSelect(row.item)"></b-form-checkbox>
+              <b-form-checkbox v-model="row.item.doc_use" @change="onSelect($event, row.item)"></b-form-checkbox>
             </template>
           </b-table>
         </div>
@@ -123,10 +127,15 @@
         ok-title="确定"
         cancel-title="取消"
         @cancel="deleteModal=false"
-        @ok="comfirmDelete"
+        @ok="confirmDelete"
       >
         <div class="modal-msg">
           <p class="message">是否确认要删除本素材?</p>
+        </div>
+
+        <div slot="modal-footer" class="w-100">
+          <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
+          <b-button variant="secondary" class="float-center" @click="deleteModal=false">取消</b-button>
         </div>
       </b-modal>
     </b-row>
@@ -306,7 +315,7 @@ export default {
       this.curDoc._rowVariant = "primary";
     },
     // 是否使用本素材checkbox操作
-    onSelect(node) {
+    onSelect(flag, node) {
       if (this.flowDocs.length === 0) {
         node.doc_use = false;
         this.$toasted.error("当前无文档，请先上传");
@@ -343,7 +352,7 @@ export default {
       this.currentDeleteItem = docsItem;
     },
     // 确认删除素材
-    comfirmDelete() {
+    confirmDelete() {
       this.deleteModal = false;
       this.run();
       workflowService
