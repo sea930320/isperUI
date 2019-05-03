@@ -122,32 +122,31 @@ const routes = [{
                 path: 'project',
                 name: 'manager-project',
                 component: () => import('@/views/manager/project/ProjectIndex.vue')
-            }, {
+            },{
                 path: 'project/create_project_wizard1',
-                    name: 'create-project-wizard1',
-                    component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
-            },
-                {
-                    path: 'project/create_project_wizard2',
-                        name: 'create-project-wizard2',
-                    component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
-                },{
+                name: 'create-project-wizard1',
+                component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
+            },{
+                path: 'project/create_project_wizard2',
+                name: 'create-project-wizard2',
+                component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
+            },{
                 path: 'project/create_project_wizard3',
-                    name: 'create-project-wizard3',
-                    component: () => import('@/views/manager/project/CreateProjectWizard3.vue')
+                name: 'create-project-wizard3',
+                component: () => import('@/views/manager/project/CreateProjectWizard3.vue')
             },{
                 path: 'project/create_project_wizard4',
-                    name: 'create-project-wizard4',
-                    component: () => import('@/views/manager/project/CreateProjectWizard4.vue')
+                name: 'create-project-wizard4',
+                component: () => import('@/views/manager/project/CreateProjectWizard4.vue')
             },{
                 path: 'group',
                 name: 'manager-group',
                 component: () => import('@/views/manager/group/GroupIndex.vue')
-            }, {
+            },{
                 path: 'group_company',
                 name: 'manager-group_company',
                 component: () => import('@/views/manager/group_company/Group_Company_Index.vue')
-            }, {
+            },{
                 path: 'user',
                 name: 'super-user-manage',
                 component: () => import('@/views/manager/user/UMIndex.vue')
