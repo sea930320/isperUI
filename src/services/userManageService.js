@@ -5,6 +5,8 @@ import xhr from './xhr/'
  */
 class UserManageService {
 
+    //super
+
     getNormalUsers(data) {
         return xhr({
             method: 'post',
@@ -36,6 +38,26 @@ class UserManageService {
             params: data
         })
     }
+
+    //group
+
+    getGroupUsers(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/getGroupUsers',
+            params: data
+        })
+    }
+
+    getGroupNonCompanyUsers(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/getGroupNonCompanyUsers',
+            params: data
+        })
+    }
+
+    //common
 
     resetPass(data) {
         return xhr({
