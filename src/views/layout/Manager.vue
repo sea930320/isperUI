@@ -5,7 +5,7 @@
         <b-nav-item to="/manager/workflow">
           <icon name="sitemap" class="tabIcon"></icon>流程管理
         </b-nav-item>
-        <b-nav-item v-if="userInfo.role!==1" to="/manager/project">
+        <b-nav-item to="/manager/project">
           <icon name="tags" class="tabIcon"></icon>项目管理
         </b-nav-item>
         <b-nav-item v-if="userInfo.role===1" to="/manager/group">

@@ -68,6 +68,7 @@ export default {
       this.uploadUrl = params.uploadUrl ? params.uploadUrl : "/api/file/upload";
       this.cancelHide = params.cancelHide ? params.cancelHide : true;
       this.okText = params.okText ? params.okText : "确定";
+      this.uploadFiles = [];
       this.modalShow = true;
     });
   },

@@ -109,6 +109,20 @@
           >本流程操作指南导入模板下载</a>
         </template>
       </upload-modal>
+
+      <!-- 删除流程Modal -->
+      <b-modal
+        v-model="deleteModal"
+        title="删除提醒"
+        ok-title="确定"
+        cancel-title="取消"
+        @cancel="deleteModal=false"
+        @ok="comfirmDelete"
+      >
+        <div class="modal-msg">
+          <p class="message">是否确认要删除本素材?</p>
+        </div>
+      </b-modal>
     </b-row>
   </div>
 </template>
@@ -321,6 +335,26 @@ export default {
     deleteDocClick(docsItem) {
       this.deleteModal = true;
       this.currentDeleteItem = docsItem;
+    },
+    // 确认删除素材
+    comfirmDelete() {
+      this.deleteModal = false;
+      workflowService
+        .deleteWorkflowDoc({ doc_id: this.currentDeleteItem.id })
+        .then(data => {
+          this.flowDocs.splice(
+            this.flowDocs.indexOf(this.currentDeleteItem),
+            1
+          );
+          this.setFlowStep(data.step);
+          if (this.flowDocs.length > 0) {
+            this.docOnSelect(this.flowDocs[0], 0);
+          } else {
+            this.docNodeRelated.forEach(node => {
+              node.doc_use = false;
+            });
+          }
+        });
     },
     LastPage() {
       this.$router.push({ name: "setworkflow-node" });
