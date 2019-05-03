@@ -67,7 +67,7 @@
                     <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
             </b-navbar>
             <b-table  responsive selectable :select-mode="selectMode" hover :items="projects.list" small :fields="columns2" head-variant class="subtable text-left table-container"  selectedVariant="primary" @row-selected="selectProjectHandle">
-              <template slot="id" slot-scope="row">
+              <template slot="id" slot-scope="">
                 <span class="icon-select">✔</span>
               </template>
               <template slot="name" slot-scope="row">
@@ -115,8 +115,8 @@
     import { expType, level, abilityTarget } from "@/filters/fun";
     import { mapState, mapActions } from "vuex";
     import Loading from "@/components/loading/Loading";
-    import BContainer from "bootstrap-vue/src/components/layout/container";
-    import ViewXml from "@/components/workflowXML/ViewXML";
+//    import BContainer from "bootstrap-vue/src/components/layout/container";
+//    import ViewXml from "@/components/workflowXML/ViewXML";
     import _ from "lodash";
     import imageView from "@/components/imageView/ImageView";
 
@@ -293,15 +293,15 @@
                 this.activeProjectIndex = -1;
                 this.currentNode = item;
                 this.currentJump = item.project_jump ? [item.project_jump] : [];
-                if (item.project_jump){
-//                    alert('query');
-                    queryProjectList();
-                } else {
-                    this.projects ={
-                        list: [],
-                        total: 0
-                    }
-                }
+//                if (item.project_jump){
+////                    alert('query');
+//                    queryProjectList();
+//                } else {
+//                    this.projects ={
+//                        list: [],
+//                        total: 0
+//                    }
+//                }
             },
             showBigProcessImg(img) {
                 if (!img) {
