@@ -154,6 +154,7 @@
                   <b-col sm="1"></b-col>
                   <b-col sm="9">
                     <b-form-group
+                            v-if="project_data.is_open == 2"
                             id="fieldset-horizontal"
                             label-cols-sm="4"
                             label-cols-lg="3"
