@@ -89,6 +89,28 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
+        <b-modal hide-footer centered  id="newDefault" ref="newDefault" title="重置密码">
+            <div>
+                <b-form @submit="(evt)=>{evt.preventDefault();this.$refs['newDefault'].hide();}" class="container pt-3">
+                    <b-form-group id="input-group-15" label-for="input-2">
+                        <b-form-select
+                                :size="template_size"
+                                class="mx-1"
+                                v-model="editItem.newDefault"
+                                :options="groups"
+                                value-field="id"
+                                text-field="name"
+                                style="flex:1"
+                        ></b-form-select>
+                    </b-form-group>
+                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                    </b-button>
+                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                              @click="()=>{this.$refs['newDefault'].hide(); editItem.newDefault = null}">取 消
+                    </b-button>
+                </b-form>
+            </div>
+        </b-modal>
         <b-modal hide-footer centered  id="newGroup" ref="newGroup" title="添加集群">
             <div>
                 <b-form @submit="onSubmit" class="container w-80 pt-3">
@@ -306,12 +328,15 @@
         data() {
             return {
                 selected: [],
+                groups: [],
+                is_edit_default: false,
                 editItem: {
                     id: null,
                     name: '',
                     comment: '',
                     default: 0,
-                    publish: 1
+                    publish: 1,
+                    newDefault: null
                 },
                 Managers: {
                     list: [],
@@ -423,6 +448,7 @@
         },
         created() {
             this.$nextTick(() => {
+                this.getGroupList();
                 this.queryGroupList();
             });
         },
@@ -444,6 +470,18 @@
             }
         },
         methods: {
+            getGroupList() {
+                GroupService
+                    .fetchAllGroupDetail()
+                    .then(data => {
+                        this.groups = data.results;
+                        this.groups.unshift({
+                            id: null,
+                            name: "集群筛选"
+                        });
+                    })
+                    .catch(() => {});
+            },
             onSubmit(evt) {
                 evt.preventDefault();
                 if (this.newGroup.default === 1 && !confirm("已经有默认集群了，是否更换默认集群")) {
@@ -550,6 +588,11 @@
                 this.editItem.comment = row.item.comment;
                 this.editItem.default = row.item.default;
                 this.editItem.publish = row.item.publish;
+                this.editItem.newDefault = null;
+                if (row.item.default === 1)
+                    this.is_edit_default = true;
+                else
+                    this.is_edit_default = false;
                 this.$refs['editGroup'].show();
             },
             addManagerOpen(row) {
@@ -559,6 +602,11 @@
             },
             updateGroup(evt) {
                 evt.preventDefault();
+                if (this.is_edit_default && this.editItem.default === 0)
+                    if (this.editItem.newDefault === null) {
+                        this.$refs['newDefault'].show();
+                        return;
+                    }
                 this.run();
                 GroupService
                     .update(this.editItem)

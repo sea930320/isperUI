@@ -2,7 +2,6 @@
     <div class="group-user-index1_2">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
-            <b-col lg="2" md="6" sm="12" style="line-height: 32px;">非单位用户注册审核</b-col>
             <b-col lg="3" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
@@ -13,7 +12,14 @@
                     <b-form-input v-model.lazy="queryDebounceParam.search" placeholder=""/>
                 </b-input-group>
             </b-col>
-            <b-col md="7" class="align-self-center">
+            <b-col lg="4" md="6" sm="12" class="align-self-center">
+                <b-form-radio-group v-model="queryParam.status">
+                    <b-form-radio value>全部</b-form-radio>
+                    <b-form-radio value="2">已发布流程</b-form-radio>
+                    <b-form-radio value="1">未发布流程</b-form-radio>
+                </b-form-radio-group>
+            </b-col>
+            <b-col md="5" class="align-self-center">
                 <b-button-group class="float-right">
                     <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="setReview(1,null)">批量审核通过</b-button>
                     <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="setReview(2,null)">批量审核不通过</b-button>
