@@ -57,6 +57,14 @@ class UserManageService {
         })
     }
 
+    set_Review(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/set_Review',
+            params: data
+        })
+    }
+
     //common
 
     resetPass(data) {

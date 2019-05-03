@@ -37,9 +37,11 @@
                 <template slot="phone" slot-scope="row">{{row.item.phone ? row.item.phone : ''}}</template>
                 <template slot="action" slot-scope="row">
                     <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(1,row.item.id)">
+                        <icon name="check"></icon>
                         审核通过
                     </b-button>
                     <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(2,row.item.id)">
+                        <icon name="times"></icon>
                         审核不通过
                     </b-button>
                 </template>

@@ -99,8 +99,7 @@ const routes = [{
                 beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 3)
             }
             ]
-        },
-        {
+        }, {
             path: 'project',
             name: 'manager-project',
             component: () => import('@/views/manager/project/ProjectIndex.vue')
@@ -108,8 +107,7 @@ const routes = [{
             path: 'project/create_project_wizard1',
             name: 'create-project-wizard1',
             component: () => import('@/views/manager/project/CreateProjectWizard1.vue')
-        },
-        {
+        }, {
             path: 'project/create_project_wizard2',
             name: 'create-project-wizard2',
             component: () => import('@/views/manager/project/CreateProjectWizard2.vue')
@@ -186,4 +184,4 @@ const flowSetEnter = (to, from, next, page) => {
     }
 }
 
-export default router 
+export default router
