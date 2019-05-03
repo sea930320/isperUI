@@ -17,13 +17,7 @@
         <b-nav-item to="#" v-else>
           <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
-        <b-nav-item to="/manager/user/super" v-if="userInfo.role===1" >
-          <icon name="user-cog" class="tabIcon"></icon>用户管理
-        </b-nav-item>
-        <b-nav-item to="/manager/user/group" v-if="userInfo.role===2" >
-          <icon name="user-cog" class="tabIcon"></icon>用户管理
-        </b-nav-item>
-        <b-nav-item to="/manager/user/company" v-if="userInfo.role===3" >
+        <b-nav-item to="/manager/user">
           <icon name="user-cog" class="tabIcon"></icon>用户管理
         </b-nav-item>
         <b-nav-item to="/manager/system-set">
