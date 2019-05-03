@@ -70,34 +70,35 @@ const routes = [{
             meta: {
                 step: true
             },
-            children: [{
-                path: '',
-                redirect: '0',
-            },
-            {
-                path: '0',
-                name: 'setworkflow-node',
-                component: () => import('@/views/manager/workflow/NodeSettings.vue'),
-                beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 0)
-            },
-            {
-                path: '1',
-                name: 'setworkflow-doc',
-                component: () => import('@/views/manager/workflow/DocSettings.vue'),
-                beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 1)
-            },
-            {
-                path: '2',
-                name: 'setworkflow-role',
-                component: () => import('@/views/manager/workflow/RoleSettings.vue'),
-                beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 2)
-            },
-            {
-                path: '3',
-                name: 'setworkflow-module',
-                component: () => import('@/views/manager/workflow/ModuleSettings.vue'),
-                beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 3)
-            }
+            children: [
+                {
+                    path: '',
+                    redirect: '0',
+                },
+                {
+                    path: '0',
+                    name: 'setworkflow-node',
+                    component: () => import('@/views/manager/workflow/NodeSettings.vue'),
+                    beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 0)
+                },
+                {
+                    path: '1',
+                    name: 'setworkflow-doc',
+                    component: () => import('@/views/manager/workflow/DocSettings.vue'),
+                    beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 1)
+                },
+                {
+                    path: '2',
+                    name: 'setworkflow-role',
+                    component: () => import('@/views/manager/workflow/RoleSettings.vue'),
+                    beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 2)
+                },
+                {
+                    path: '3',
+                    name: 'setworkflow-module',
+                    component: () => import('@/views/manager/workflow/ModuleSettings.vue'),
+                    beforeEnter: (to, from, next) => flowSetEnter(to, from, next, 3)
+                }
             ]
         }, {
             path: 'project',
