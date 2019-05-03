@@ -7,6 +7,7 @@
     <b-form @submit="onSubmit">
       <b-container fluid>
           <b-row align-v="left">
+
             <b-col sm="3">
               <b-form-group
                       id="fieldset-horizontal"
@@ -18,6 +19,7 @@
                 <!--<b-form-input disabled id="input-horizontal" required v-model="this.selectedFlowName"></b-form-input>-->
                 <b-form-input id="input-horizontal" required v-model="flow_name"></b-form-input>
               </b-form-group>
+                <div class="cardDiv">
               <b-navbar toggleable="lg" variant="info">
                 <b-navbar-brand href="#">&nbsp;&nbsp;&nbsp;流程</b-navbar-brand>
                 <b-collapse id="nav-collapse" is-nav>
@@ -38,7 +40,7 @@
                 </b-collapse>
               </b-navbar>
               <!--<div class="subtable_div">-->
-              <div class="cardDiv">
+
                 <b-table selectable :select-mode="selectMode" :items="workflows.list" small hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected">
                   <template slot="id" slot-scope="row">
                     {{ row.item.id}}
@@ -71,6 +73,7 @@
                         v-model="queryParam.page"
                 ></b-pagination>
               </b-row>
+
               <!--</div>-->
             </b-col>
             <b-col sm="9">
@@ -154,6 +157,7 @@
                   <b-col sm="1"></b-col>
                   <b-col sm="9">
                     <b-form-group
+                            v-if="project_data.is_open==2"
                             id="fieldset-horizontal"
                             label-cols-sm="4"
                             label-cols-lg="3"
