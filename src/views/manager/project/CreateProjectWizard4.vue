@@ -1,636 +1,475 @@
 <template>
-  <form-wizard
-    @on-complete="onComplete"
-    shape="tab"
-    back-button-text="上一步"
-    next-button-text="下一步"
-    finish-button-text="保存"
-    color="#9b59b6"
-  >
-    <tab-content title="基本属性">
-      <b-container fluid>
-        <b-row align-v="center">
+  <div>
+    <br>
+    <h3> 跳转设置 </h3>
+    <br><br>
+    <loading v-if="isRunning"></loading>
+    <b-alert variant="success" show class="text-left">
+      <b-container>
+        <b-row>
+          <b-col sm="5">
+            项目名称 :
+            {{projectData.name}}
+          </b-col>
+          <b-col sm="4">
+            相关流程 :
+            {{projectData.flow_name}}
+          </b-col>
           <b-col sm="3">
-            <b-table :items="workflows.list" small striped hover :fields="columns" head-variant selectable
-                     :select-mode="single">
-              <template slot="sn" slot-scope="row">
-                {{ row.item.id}}
+            类型 :
+            {{projectData.type | expType}}
+          </b-col>
+        </b-row>
+      </b-container>
+    </b-alert>
+    <b-form @submit="onSubmit">
+    <b-container fluid>
+      <b-row align-v="left">
+        <b-col sm="4">
+          <div class="cardDiv">
+            <b-table  responsive selectable :select-mode="selectMode" :items="nodes" small hover :fields="columns" head-variant class="subtable table-container" selectedVariant="primary" @row-selected="selectNode">
+            <template slot="id" slot-scope="row">
+              {{ row.index + 1}}
+            </template>
+            <template slot="name" slot-scope="row">
+              {{ row.item.name}}
+            </template>
+            <template slot="matching_name" slot-scope="row">
+              <a href="javascript:;" @click="showBigProcessImg(row.item.process.image)">{{row.item.process.name}}</a>
+            </template>
+          </b-table>
+          </div>
+        </b-col>
+        <b-col sm="4">
+          <div class="cardDiv text-left">
+            <b-table  responsive :items="currentJump" small :fields="columns1" head-variant class="subtable text-left table-container" selectedVariant="primary">
+              <template slot="name" slot-scope="row">
+                {{ row.item.name}}
+                <span style="float:right;" @click="deleteJumpHandle">
+                  <icon name="window-close" title="删除" style="cursor: pointer;"></icon>
+                </span>
+              </template>
+            </b-table>
+          </div>
+        </b-col>
+
+        <b-col sm="4">
+
+          <div class="cardDiv text-left">
+            <b-navbar toggleable="lg" variant="info">
+                <!-- Right aligned nav items -->
+                    <b-input-group>
+                          <span class="input-group-text">
+                            <icon name="search"></icon>
+                          </span>
+                      <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
+                    </b-input-group>
+                    <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
+            </b-navbar>
+            <b-table  responsive selectable :select-mode="selectMode" hover :items="projects.list" small :fields="columns2" head-variant class="subtable text-left table-container"  selectedVariant="primary" @row-selected="selectProjectHandle">
+              <template slot="id" slot-scope="row">
+                <span class="icon-select">✔</span>
               </template>
               <template slot="name" slot-scope="row">
-                {{row.item.name}}
+                {{ row.item.name }}
               </template>
-              <template slot="creator" slot-scope="row">
-                {{this.experimentTypeOptions[row.item.type_label-1].text}}
-              </template>
-            </b-table>
-          </b-col>
-          <b-col sm="9">
-            <b-container fluid>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="项目名称:"
-                          label-for="input-horizontal"
-                  >
-                    <b-form-input id="input-horizontal"></b-form-input>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="流程图完整显示:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="完整显示" class="w-100">
-                      <b-dropdown-item-button>动作1</b-dropdown-item-button>
-                      <b-dropdown-item-button>动作2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-
-              </b-row>
-
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="开发模式:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="完整显示" class="w-100">
-                      <b-dropdown-item-button>选项1</b-dropdown-item-button>
-                      <b-dropdown-item-button>选项2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="成果参考释放方式:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="同步" class="w-100">
-                      <b-dropdown-item-button>选项1</b-dropdown-item-button>
-                      <b-dropdown-item-button>选项2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="事务类型:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="请选择" class="w-100">
-                      <b-dropdown-item-button>事务1</b-dropdown-item-button>
-                      <b-dropdown-item-button>事务2</b-dropdown-item-button>
-                      <b-dropdown-item-button>其他</b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="关联课程:"
-                          label-for="input-horizontal"
-                  >
-                    <b-dropdown variant="light" text="" class="w-100">
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                      <b-dropdown-item-button></b-dropdown-item-button>
-                    </b-dropdown>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row align-v="center">
-                <b-col sm="6">
-                  <b-form-group
-                          id="fieldset-horizontal"
-                          label-cols-sm="4"
-                          label-cols-lg="3"
-                          label="开发时段:"
-                          label-for="input-horizontal"
-                  >
-                    <b-row align-v="center">
-                      <div class="form-date-control">
-                        <b-form-input type="date"></b-form-input>
-                      </div>
-                      &nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;&nbsp;
-                      <div class="form-date-control">
-                        <b-form-input type="date"></b-form-input>
-                      </div>
-                    </b-row>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目简介（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-              <br>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目目的（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-              <br>
-              <b-row>
-                <b-col sm="12">
-                  <b-card header="项目要求（必填）" style="padding:0">
-                    <b-form-textarea
-                            v-model="text"
-                            placeholder=""
-                            rows="3"
-                            max-rows="6"
-                    ></b-form-textarea>
-                  </b-card>
-                </b-col>
-              </b-row>
-            </b-container>
-          </b-col>
-        </b-row>
-      </b-container>
-    </tab-content>
-    <tab-content title="环节及身份配置">
-      <b-alert variant="success" show>Success Alert</b-alert>
-      <b-container>
-        <b-row>
-          <b-col sm="4" class="subtable_div">
-            <b-table
-              :items="table1.list"
-              small
-              striped
-              hover
-              :fields="table_1"
-              head-variant
-              class="subtable"
-            >
-              <template slot="field_1" slot-scope="row">{{ row.index + 1 }}</template>
-              <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-              <template slot="field_3" slot-scope="row">{{row.item.field_3}}</template>
-
-              <template slot="field_4" slot-scope>
-                <b-form-checkbox></b-form-checkbox>
+              <template slot="class" slot-scope="row">
+                {{ row.item.type | expType }}
               </template>
             </b-table>
-          </b-col>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col sm="4" align-v="center" >
+          <b-button-group class="float-center" >
+            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="previousPage()"> 上一步 </b-button>
+          </b-button-group>
+        </b-col>
+        <b-col sm="4" align-v="center">
+          <b-button-group class="float-center">
+            <b-button size="lg"   style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
+            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
+          </b-button-group>
+        </b-col>
+        <b-col sm="4" align-v="center">
+          <b-button-group class="float-center">
+            <b-button size="lg"  type="submit"  style="width:100%" variant="success" v-b-modal.finishEdit  @click="nextPage()"> 下一步 </b-button>
+            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
+          </b-button-group>
+        </b-col>
+      </b-row>
+      <br><br>
+    </b-container>
+    </b-form>
+    <b-modal id="finishEdit" title="Finish Edit Project" @ok="finishEdit()">
+      <p class="my-4">Do you want to finish editing this project?</p>
+    </b-modal>
+    <imageView :visible="bigprocessModal" :src="processImgSrc" @on-close="bigprocessModal=false"></imageView>
 
-          <b-col sm="8" class="subtable_div">
-            <b-table
-              :items="table2.list"
-              small
-              striped
-              hover
-              :fields="table_2"
-              head-variant
-              class="subtable"
-            >
-              <template slot="field_1" slot-scope="row">{{ row.index + 1 }}</template>
-              <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-              <template slot="field_3" slot-scope="row">{{row.item.field_3}}</template>
-
-              <template slot="field_4" slot-scope>
-                <b-form-checkbox></b-form-checkbox>
-              </template>
-              <template slot="field_5" slot-scope>
-                <b-form-checkbox></b-form-checkbox>
-              </template>
-              <template slot="field_6" slot-scope>
-                <b-form-checkbox></b-form-checkbox>
-              </template>
-            </b-table>
-          </b-col>
-        </b-row>
-      </b-container>
-    </tab-content>
-    <tab-content title="素材设置">
-      <b-alert variant="success" show>Success Alert</b-alert>
-      <b-container>
-        <b-row>
-          <b-col sm="6" class="subtable_div">
-            <b-table
-              :items="table3.list"
-              small
-              striped
-              hover
-              :fields="table_3"
-              head-variant
-              class="subtable"
-            >
-              <template slot="field_1" slot-scope="row">{{ row.index + 1 }}</template>
-              <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-              <template slot="field_3" slot-scope="row">{{row.item.field_3}}</template>
-              <template slot="field_3" slot-scope="row">{{row.item.field_3}}</template>
-            </b-table>
-          </b-col>
-          <b-col sm="3" class="subtable_div">
-            <b-table
-              :items="table4.list"
-              small
-              striped
-              hover
-              :fields="table_4"
-              head-variant
-              class="subtable"
-            >
-              <template slot="field_1" slot-scope="row">{{ row.index + 1 }}</template>
-              <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-            </b-table>
-          </b-col>
-
-          <b-col sm="3" class="subtable_div">
-            <b-table
-              :items="table5.list"
-              small
-              striped
-              hover
-              :fields="table_5"
-              head-variant
-              class="subtable"
-            >
-              <template slot="field_1" slot-scope="row">{{ row.item.field_1}}</template>
-              <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-              <template slot="field_3" slot-scope>
-                <b-form-checkbox></b-form-checkbox>
-              </template>
-            </b-table>
-          </b-col>
-        </b-row>
-      </b-container>
-    </tab-content>
-    <tab-content title="跳转/嵌套设置">
-      <b-container>
-        <b-row>
-          <b-col sm="6">
-            <b-row>
-              <b-col sm="12">
-                <b-table
-                  :items="table5.list"
-                  small
-                  striped
-                  hover
-                  :fields="table_5"
-                  head-variant
-                  class="subtable"
-                >
-                  <template slot="field_1" slot-scope="row">{{ row.item.field_1}}</template>
-                  <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-                  <template slot="field_3" slot-scope>
-                    <b-form-checkbox></b-form-checkbox>
-                  </template>
-                </b-table>
-              </b-col>
-            </b-row>
-          </b-col>
-          <b-col sm="6">
-            <b-row>
-              <b-col sm="12">
-                <b-card header="要跳转的项目名称" style="padding:0">
-                  <b-form-textarea
-                    v-model="text"
-                    placeholder="地方性法规二审通用项目"
-                    rows="3"
-                    max-rows="6"
-                  ></b-form-textarea>
-                </b-card>
-              </b-col>
-            </b-row>
-            <br>
-            <b-row>
-              <b-col sm="12">
-                <b-table
-                  :items="table5.list"
-                  small
-                  striped
-                  hover
-                  :fields="table_5"
-                  head-variant
-                  class="subtable"
-                >
-                  <template slot="field_1" slot-scope="row">{{ row.item.field_1}}</template>
-                  <template slot="field_2" slot-scope="row">{{row.item.field_2}}</template>
-                  <template slot="field_3" slot-scope>
-                    <b-form-checkbox></b-form-checkbox>
-                  </template>
-                </b-table>
-              </b-col>
-            </b-row>
-          </b-col>
-        </b-row>
-      </b-container>
-    </tab-content>
-  </form-wizard>
+  </div>
 </template>
 
 <script>
-import { expType, level, abilityTarget } from "@/filters/fun";
-import { mapState, mapActions } from "vuex";
-// import Loading from "@/components/loading/Loading";
-// import ProjectService from "@/services/projectService";
-// import imageView from "@/components/imageView/ImageView";
-import _ from "lodash";
-import workflowService from "@/services/workflowService";
-// import arrayUtils from "@/utils/arrayUtils";
-// import dateUtils from "@/utils/dateUtils";
-import BContainer from "bootstrap-vue/src/components/layout/container";
+    import ProjectService from "@/services/projectService";
+    import { expType, level, abilityTarget } from "@/filters/fun";
+    import { mapState, mapActions } from "vuex";
+    import Loading from "@/components/loading/Loading";
+    import BContainer from "bootstrap-vue/src/components/layout/container";
+    import ViewXml from "@/components/workflowXML/ViewXML";
+    import _ from "lodash";
+    import imageView from "@/components/imageView/ImageView";
 
-export default {
-  name: "create-project-wizard",
-  components: {
-    BContainer
-    // Loading,
-    // imageView
-  },
-  filters: {
-    expType,
-    level,
-    abilityTarget
-  },
-  data() {
-    return {
-        columns: {
-            sn: {
-                label: "序号",
-                sortable: false,
-                class: "text-center field-sn"
+    export default {
+        name: "create-project-wizard",
+        components: {
+            Loading,
+            imageView,
+        },
+        filters: {
+            expType,
+            level,
+            abilityTarget
+        },
+        data() {
+            return {
+                columns: {
+                    id: {
+                        label: "序号",
+                        sortable: false,
+                        class: "text-center field-sn"
+                    },
+                    name: {
+                        label: "环节名称",
+                        sortable: false,
+                        class: "text-center field-name"
+                    },
+                    matching_name: {
+                        label: "对应模块",
+                        sortable: false,
+                        class: "text-center field-creator"
+                    },
+                },
+                columns1: {
+                    name: {
+                        label: "要跳转的项目名称",
+                        sortable: false,
+                        class: "text-left"
+                    },
+                },
+                columns2: {
+                    id: {
+                        label: "选择",
+                        sortable: false,
+                        class: "text-center field-sn"
+                    },
+                    name: {
+                        label: "要跳转的项目名称",
+                        sortable: false,
+                        class: "text-center field-name"
+                    },
+                    class: {
+                        label: "类型",
+                        sortable: false,
+                        class: "text-center field-name"
+                    },
+                },
+//                params
+                project_id:-1,
+                projectData: {},
+                roleImageModalShow: false,
+                successTipModal: false,
+                // 跳转设置是否保存
+                isSaved: false,
+                // 当前选中的流程index值
+                activeNodeIndex: 0,
+                activeProjectIndex: -1,
+                currentNode: null,
+                bigprocessModal: false,
+                curSelectedProcess: {},
+                processImgSrc: '',
+                searchKey: '',
+                nodes: [],
+                // 当前环节对应的跳转项目
+                currentJump: [],
+                // 选中的项目
+                selectProject: null,
+                projects: {
+                    list: [],
+                    total: 0
+                },
+                // 查询项目的参数
+//                params
+                // 查询参数
+                queryParam: {
+                    page: 1,
+                    size: 8,
+                },
+                workflows: {
+                    list: [],
+                    total: 0
+                },
+                queryDebounceParam: {
+                    search: ""
+                },
+                // 流程相关项目
+                relatedProjects: [],
+                selectedFlowName:'',
+                animationImgSrc: "",
+                copyModalName: "",
+                workflowXml: null,
+                newFlowStatus: false,
+                relatedShow: false,
+                shareModal: false,
+                selectedWorkflow:0,
+                selectMode: 'single',
+                saveBtnClicked:0,
+                previousBtnClicked:0,
+                nextBtnClicked:0,
+                courses: {
+                    list: [],
+                    total: 0
+                }
+            };
+        },
+        created() {
+            this.$nextTick(() => {
+                this.project_id = this.$route.params.project_id;
+//                this.project_id = 2035;
+                this.project_id = 2051;
+                this.queryDetail();
+                this.queryProjectList();
+            });
+        },
+        computed: {
+            ...mapState(["userInfo"])
+        },
+        watch: {
+            // 监控查询参数，如有变化 查询列表数据
+            queryParam: {
+                handler() {
+//                    this.queryWorkflowList();
+//                    this.queryProjectCreate();
+//                    this.queryProjectUpdate();
+//                    this.queryCourseList();
+//                    this.getProjectRolesDetail();
+                    this.queryDetail();
+                    this.queryProjectList();
+                },
+                deep: true
             },
-            name: {
-                label: "流程名称",
-                sortable: false,
-                class: "text-center field-name"
-            },
-            creator: {
-                label: "实验类型",
-                sortable: false,
-                class: "text-center field-creator"
+            queryDebounceParam: {
+                deep: true,
+                handler: _.debounce(function() {
+                    this.queryProjectList();
+                }, 500)
             }
         },
-      table_1: {
-        field_1: {
-          label: "序号",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_2: {
-          label: "环节名称",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_3: {
-          label: "对应模块",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_4: {
-          label: "允许观摩",
-          sortable: false,
-          class: "text-center field-name"
-        }
-      },
-      table_2: {
-        field_1: {
-          label: "身份类型",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_2: {
-          label: "身份名称",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_3: {
-          label: "身份形象",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_4: {
-          label: "是否使用",
-          sortable: false,
-          class: "text-center field-name"
-        },
-        field_5: {
-          label: "结束环节",
-          sortable: false,
-          class: "text-center field-name"
-        },
-        field_6: {
-          label: "身份邀请权",
-          sortable: false,
-          class: "text-center field-name"
-        }
-      },
-      table_3: {
-        field_1: {
-          label: "序号",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_2: {
-          label: "素材名称",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_3: {
-          label: "用途",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_4: {
-          label: "操作",
-          sortable: false,
-          class: "text-center field-name"
-        }
-      },
-      table_4: {
-        field_1: {
-          label: "序号",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_2: {
-          label: "环节名称",
-          sortable: false,
-          class: "text-center field-sn"
-        }
-      },
-      table_5: {
-        field_1: {
-          label: "角色类型",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_2: {
-          label: "角色名称",
-          sortable: false,
-          class: "text-center field-sn"
-        },
-        field_3: {
-          label: "是否使用素材",
-          sortable: false,
-          class: "text-center field-sn"
-        }
-      },
-      // 查询参数
-      queryParam: {
-        status: "",
-        page: 1,
-        size: 10
-      },
-      workflows: {
-          list: [],
-          total: 0
-      },
-      queryDebounceParam: {
-        search: ""
-      },
-      // 流程列表
-      table1: {
-        list: [],
-        total: 0
-      },
-      table2: {
-        list: [],
-        total: 0
-      },
-      table3: {
-        list: [],
-        total: 0
-      },
-      table4: {
-        list: [],
-        total: 0
-      },
-      table5: {
-        list: [],
-        total: 0
-      },
-      // 流程相关项目
-      relatedProjects: [],
-      animationImgSrc: "",
-      copyModalName: "",
-      workflowXml: null,
-      deleteModal: false,
-      publishModal: false,
-      copyModal: false,
-      bigImgModal: false,
-      newFlowStatus: false,
-      xmlModalShow: false,
-      relatedShow: false,
-      isSuperFlag: false,
-      shareModal: false,
-      experimentTypeOptions: [
-        { value: "1", text: "立法类型实验" },
-        { value: "2", text: "执法类型实验" },
-        { value: "3", text: "诉讼与仲裁实验" },
-        { value: "4", text: "自由类型实验" },
-        { value: "5", text: "非诉讼与法务管理类型实验" },
-        { value: "6", text: "法律思维类型实验" },
-        { value: "7", text: "证据科学类型实验" },
-        { value: "8", text: "法律实效评价类型实验" }
-      ]
-    };
-  },
-  created() {
-      this.$nextTick(() => {
-          this.isSuperFlag = this.userInfo.identity === 1;
-          this.queryWorkflowList();
-      });
-  },
-  computed: {
-    ...mapState(["userInfo"])
-  },
-  watch: {
-    // 监控查询参数，如有变化 查询列表数据
-    queryParam: {
-      handler() {
-        this.queryWorkflowList();
-      },
-      deep: true
-    },
-    queryDebounceParam: {
-      deep: true,
-      handler: _.debounce(function() {
-        this.queryWorkflowList();
-      }, 500)
-    }
-  },
-  methods: {
-      ...mapActions(["setFlowStep"]),
-      // 查询流程列表数据
-      queryWorkflowList() {
-          this.run();
-          workflowService
-              .fetchList({ ...this.queryParam, ...this.queryDebounceParam })
-              .then(data => {
-                  data.results.forEach(item => {
-                      if (item.checked === undefined) {
-                          item.checked = false;
-                      }
-                      if (item.locked === undefined) {
-                          item.locked = false;
-                      }
-                  });
-                  this.workflows.list = data.results;
-                  this.workflows.total = data.paging.count;
-                  if (this.newProcessAdded) {
-                      this.addNewProcess();
-                  }
-                  this.$emit("data-ready");
-              })
-              .catch(() => {
-                  this.$emit("data-failed");
-              });
-      },
-    // 查询流程列表数据
-    onComplete: function() {
-      alert("Yay. Done!");
-    },
+        methods: {
+            ...mapActions(["setFlowStep"]),
+            // 查询流程列表数据
+            queryDetail() {
+                ProjectService
+                    .getJumpDetail({
+                        project_id: this.project_id
+                    })
+                    .then(data => {
+                        this.projectData = data.project;
+                        this.nodes = data.project_nodes;
+                        // 跳转设置是否完整且保存
+                        this.isSaved = this.nodes.filter(node => node.process.type === 6).some(node => node.project_jump)
+                        if (data.project_nodes.length > 0) {
+                            this.currentJump = data.project_nodes[0].project_jump
+                        }
+                    })
+            },
+            selectNode(items) {
+                var selectedNodeIndex = this.nodes.indexOf(items[0]);
+                var item = items[0];
+                // if (item.process.type !== 6) {
+                //   return
+                // }
+                this.activeNodeIndex = selectedNodeIndex;
+                this.activeProjectIndex = -1;
+                this.currentNode = item;
+                this.currentJump = item.project_jump ? [item.project_jump] : [];
+                if (item.project_jump){
+//                    alert('query');
+                    queryProjectList();
+                } else {
+                    this.projects ={
+                        list: [],
+                        total: 0
+                    }
+                }
+            },
+            showBigProcessImg(img) {
+                if (!img) {
+                    this.$toasted.error('当前程序模块没有图片,无法展示');
+                    return
+                }
+                this.bigprocessModal = true;
+                this.processImgSrc = img;
+            },
+            deleteJumpHandle() {
+                this.isSaved = false;
+                this.currentJump = null;
+                this.nodes[this.activeNodeIndex].project_jump = null
+                this.activeProjectIndex = -1
+            },
+            queryProjectList() {
+                this.run();
+                ProjectService.getProjectList({...this.queryParam, ...this.queryDebounceParam}).then(data => {
+                    this.projects.list = data.results.map(i => {
+                        this.$set(i, 'checked', false);
+                        this.$emit("data-ready");
+                        return i
+                    });
+                    this.projects.total = data.paging.count
+                })
+            },
+            selectProjectHandle(items) {
+                let selectedProject = items[0];
+                let currentNode = this.nodes[this.activeNodeIndex];
 
-    // Go To Crate Project Page
-//    createProjectPage() {
-//      this.$router.push("/manager/project/create_project_wizard");
-//    }
-  }
-};
+                if (!!currentNode && currentNode.process.type !== 6) {
+                    return
+                }
+                if (this.projectData.id && selectedProject.id === this.projectData.id) {
+                    this.$toasted.error('跳转项目不能选择自己本身');
+                    return
+                }
+                let selectedProjectIndex = this.projects.list.indexOf(items[0]);
+                this.activeProjectIndex = selectedProjectIndex;
+                this.selectProject = selectedProject;
+                this.currentJump = [{
+                    id: selectedProject.id,
+                    name: selectedProject.name
+                }];
+                this.nodes[this.activeNodeIndex].project_jump = this.currentJump
+            },
+            onSubmit(e){
+                e.preventDefault();
+            },
+            finishEdit(){
+                this.$router.push({name: 'manager-project'});
+            },
+            nextPage(){
+                this.nextBtnClicked = 1;
+                this.saveBtnClicked = 0;
+                this.previousBtnClicked = 0;
+            },
+            savePage(){
+                this.nextBtnClicked = 0;
+                this.saveBtnClicked = 1;
+                this.previousBtnClicked = 0;
+                if (!this.nodes.filter(node => node.process.type === 6).some(node => node.project_jump)) {
+                    this.$toasted.error('某些跳转环节没有配置');
+                    return
+                }
+                var jumpData = {};
+                jumpData.project_jumps = this.nodes.filter(node => node.process.type === 6)
+                    .map(node => {
+                        return {
+                            node_id: node.id,
+                            jump_project_id: node.project_jump.id
+                        }
+                    });
+                ProjectService
+                    .postJumpSetup({
+                        project_id: this.$route.params.project_id,
+                        data: JSON.stringify(jumpData)
+                    })
+                    .then(() => {
+                        this.isSaved = true;
+                        this.$toasted.success('跳转设置成功');
+                    })
+            },
+            previousPage(){
+                this.nextBtnClicked = 0;
+                this.saveBtnClicked = 0;
+                this.previousBtnClicked = 1;
+                this.$router.push({name: 'create-project-wizard3'});
+            },
+        }
+    };
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
-.card-body {
-  padding: 0;
-}
-.card-header {
-  text-align: left;
-}
+  .card-body {
+    padding: 0;
+  }
+  .card-header {
+    text-align: left;
+  }
+  .opened {
+    background-color: yellow;
+  }
+  .table-fixed{
+    tbody{
+      height:200px;
+      overflow-y:auto;
+      width: 100%;
+    }
+  }
+  .inactive { color: red; }
+  icon { cursor: pointer; }
+
+  .table-container {
+    height: calc(100vh - 450px);
+
+  }
+  .table-container table {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+    overflow-y:auto;
+  }
+  .table-container table thead {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .table-container table tbody {
+    flex: 1 1 auto;
+    display: block;
+    width: 100%;
+    overflow-y: scroll;
+  }
+  .table-container table tbody tr {
+    width: 100%;
+  }
+  .table-container table thead, .table-container table tbody tr {
+    display: table;
+    table-layout: fixed;
+  }
+  .table-container table {
+    border-collapse: collapse;
+  }
+  .table-container table td, .table-container table th {
+    padding: 0.4em;
+  }
+  .table-container table tbody td {
+    padding: 8px;
+    cursor: pointer;
+  }
+  .table-container table thead td {
+    padding: 10px 5px;
+  }
+
+  /* START Adjustments for width and scrollbar hidden */
+  .table-container th.table-action, .table-container td.table-action {
+    width: 5.8vw;
+  }
+  .table-container table thead {
+    width: calc(100% - 1px);
+  }
+  .table-container table tbody::-webkit-scrollbar {
+    width: 1px;
+  }
+  .table-container table tbody::-webkit-scrollbar {
+    width: 1px;
+  }
+  .table-container table tbody::-webkit-scrollbar-thumb {
+    width: 1px;
+  }
 </style>
