@@ -57,9 +57,15 @@
               ></b-form-select>
             </template>
             <template slot="action" slot-scope="row">
-              <a href="javascript:void(0);" @click="previewFile(row.item.file)">预览</a>
-              <a :href="row.item.file" target="_blank">下载</a>
-              <a href="javascript:;" @click="deleteDocClick(row.item)">删除</a>
+              <a href="javascript:void(0);" @click="previewFile(row.item.file)">
+                <icon name="presentation"/>
+              </a>
+              <a :href="row.item.file" target="_blank">
+                <icon name="download"/>
+              </a>
+              <a href="javascript:;" @click="deleteDocClick(row.item)">
+                <icon name="trash"/>
+              </a>
             </template>
           </b-table>
         </div>
@@ -339,6 +345,7 @@ export default {
     // 确认删除素材
     comfirmDelete() {
       this.deleteModal = false;
+      this.run();
       workflowService
         .deleteWorkflowDoc({ doc_id: this.currentDeleteItem.id })
         .then(data => {
@@ -354,6 +361,10 @@ export default {
               node.doc_use = false;
             });
           }
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
         });
     },
     LastPage() {
