@@ -4,7 +4,7 @@
     <h3> 基本信息</h3>
     <br><br>
     <loading v-if="isRunning"></loading>
-    <b-form @submit="onSubmit">
+    <b-form v-if="userInfo.role == 2 || userInfo.role === 3" @submit="onSubmit">
       <b-container fluid>
           <b-row align-v="left">
 
@@ -41,7 +41,7 @@
               </b-navbar>
               <!--<div class="subtable_div">-->
 
-                <b-table selectable :select-mode="selectMode" :items="workflows.list" small hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected">
+                <b-table selectable :select-mode="selectMode" :items="workflows.list" hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected">
                   <template slot="id" slot-scope="row">
                     {{ row.item.id}}
                   </template>
@@ -228,26 +228,54 @@
         </b-container>
       <br>
       <b-container fluid>
+        <b-row>
+          <b-col sm="4" align-v="center" >
+            <!--<b-button-group class="float-left" >-->
+              <!--<b-button size="lg"  style="width:300px" variant="success"> 上一步 </b-button>-->
+            <!--</b-button-group>-->
+          </b-col>
+          <b-col sm="4" align-v="center">
+            <b-button-group class="float-center">
+              <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
+              <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
+            </b-button-group>
+          </b-col>
+          <b-col sm="4" align-v="center">
+            <b-button-group class="float-center">
+              <b-button size="lg"  type="submit"  style="width:100%" variant="success" @click="nextPage()"> 下一步 </b-button>
+              <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
+            </b-button-group>
+          </b-col>
+        </b-row>
+    </b-container>
+    </b-form>
+    <b-form v-if="userInfo.role ==1">
+      <div class="cardDiv">
+        <b-container fluid>
+          <b-row>
+            <b-col sm="12">
+
+              <b-table :items="showProjectDataArray" small bordered responsive fixed hover :fields="columns1" head-variant class="table-container">
+                <template slot="name" slot-scope="row">
+                  {{row.item.title}}
+                </template>
+                <template slot="content" slot-scope="row">
+                  {{row.item.content}}
+                </template>
+              </b-table>
+            </b-col>
+          </b-row>
+        </b-container>
+      </div>
+      <br><br>
       <b-row>
-        <b-col sm="4" align-v="center" >
-          <!--<b-button-group class="float-left" >-->
-            <!--<b-button size="lg"  style="width:300px" variant="success"> 上一步 </b-button>-->
-          <!--</b-button-group>-->
-        </b-col>
-        <b-col sm="4" align-v="center">
+        <b-col sm="12" align-v="center">
           <b-button-group class="float-center">
-            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
-            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
-          </b-button-group>
-        </b-col>
-        <b-col sm="4" align-v="center">
-          <b-button-group class="float-center">
-            <b-button size="lg"  type="submit"  style="width:100%" variant="success" @click="nextPage()"> 下一步 </b-button>
-            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
+            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="firstPage()"> 项目页 </b-button>
           </b-button-group>
         </b-col>
       </b-row>
-    </b-container>
+      <br><br>
     </b-form>
     <br><br>
     <view-xml :visible="xmlModalShow" :xml="workflowXml" @on-close="xmlModalShow = false"></view-xml>
@@ -302,6 +330,20 @@ export default {
                 class: "text-center field-rend_ani_1"
             },
         },
+        showProjectDataArray:[],
+        columns1:{
+            name: {
+                label: "项目",
+                sortable: false,
+                class: "field-30"
+            },
+            content: {
+                label: "内容",
+                sortable: false,
+                class: "field-70"
+            },
+        },
+        showProjectData:{},
 //        project_data:{
 //            flow_id:'',
 //            flow_name:'',
@@ -420,38 +462,45 @@ export default {
   created() {
       this.$nextTick(() => {
           this.queryCourseList();
+          this.project_id = this.$route.params.project_id;
 
-          if (this.$route.params.is_edit == 1){
-              this.is_edit = this.$route.params.is_edit;
-              this.project_data = this.$route.params.currentProject;
-              this.flow_name=this.project_data.flow_name;
-              this.project_id = this.$route.params.project_id;
+          if (this.userInfo.role == 1){
+              this.queryProjectDetail();
+          } else{
+              if (this.$route.params.is_edit == 1){
+                  this.is_edit = this.$route.params.is_edit;
+                  this.project_data = this.$route.params.currentProject;
+                  this.flow_name=this.project_data.flow_name;
+                  this.project_id = this.$route.params.project_id;
 
 
-          } else if (this.$route.params.is_edit == 0){
-              this.is_edit = this.$route.params.is_edit;
-              this.project_data = {
-                  id:0,
-                  flow_id:0,
-                  name:'',
-                  all_role:0,
-                  course:'',
-                  reference:1,
-                  classficiation:0,
-                  public_status:1,
-                  level:0,
-                  entire_graph:1,
-                  can_redo:0,
-                  is_open:1,
-                  ability_target:0,
-                  intro:'',
-                  purpose:'',
-                  requirement:'',
-                  start_time:'',
-                  end_time:'',
-              };
+              } else if (this.$route.params.is_edit == 0){
+                  this.is_edit = this.$route.params.is_edit;
+                  this.project_data = {
+                      id:0,
+                      flow_id:0,
+                      name:'',
+                      all_role:0,
+                      course:'',
+                      reference:1,
+                      classficiation:0,
+                      public_status:1,
+                      level:0,
+                      entire_graph:1,
+                      can_redo:0,
+                      is_open:1,
+                      ability_target:0,
+                      intro:'',
+                      purpose:'',
+                      requirement:'',
+                      start_time:'',
+                      end_time:'',
+                  };
+              }
+              this.queryWorkflowList();
           }
-          this.queryWorkflowList();
+
+
 
       });
   },
@@ -601,6 +650,41 @@ export default {
 //              }
 //          }
       },
+      queryProjectDetail(){
+          this.$emit("data-ready");
+          ProjectService
+              .getProjectDetail({project_id: this.$route.params.project_id})
+              .then((data) => {
+                  this.showProjectData = data;
+//                  options_classification: [
+//                      { value: 1, text: 'test1' },
+//                      { value: 2, text: 'test2' },
+//                      { value: 2, text: 'test3' },
+//                  ],,
+
+                  this.showProjectDataArray = [
+                      {'title':'项目名称','content':data.name},
+                      {'title':'流程','content':data.flow_name},
+                      {'title':'流程图完整显示','content':data.entire_graph === 1 ? '完整显示' : '逐步显示'},
+                      {'title':'开放模式','content':this.options_is_open.filter(item => item.value == data.is_open)[0].text},
+                      {'title':'成果参考释放方式','content':this.options_reference.filter(item => item.value == data.reference)[0].text},
+                      {'title':'事务类型','content':this.options_classification.filter(item => item.value == data.classification)[0]},
+                      {'title':'关联课程','content':''},
+                      {'title':'开发时段（开始时间）','content':data.start_time},
+                      {'title':'开发时段（结束时间）','content':data.end_time},
+                      {'title':'项目简介','content':data.intro},
+                      {'title':'项目目的','content':data.purpose},
+                      {'title':'项目要求','content':data.requirement}
+                  ]
+              })
+              .catch(() => {
+                  this.$emit("data-failed");
+                  this.$router.push('/manager/project');
+              })
+      },
+      firstPage(){
+          this.$router.push('/manager/project');
+      },
       nextPage(){
           this.nextBtnClicked = 1;
           this.saveBtnClicked = 0;
@@ -625,6 +709,12 @@ export default {
 };
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
+  .field-30{
+    width:30% !important
+  }
+  .field-70{
+    width:70% !important
+  }
 .card-body {
   padding: 0;
 }
