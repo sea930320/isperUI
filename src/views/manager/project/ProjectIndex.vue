@@ -13,7 +13,7 @@
                 </b-input-group>
             </b-col>
             <b-col lg="9" md="6" sm="12" class="align-self-center">
-                <b-button-group class="float-right">
+                <b-button-group class="float-right" v-if="userInfo.role == 2 || userInfo.role == 3 " >
                     <b-button :size="template_size" class="styledBtn" variant="outline-primary"  @click="createProjectPage()">新建项目</b-button>
                     <b-button :size="template_size" class="styledBtn" variant="outline-primary" @click="projectExport()">导出</b-button>
                     <b-button :size="template_size" class="styledBtn" variant="outline-primary"  v-b-modal.shareConfirmModal @click="sharableFilter">共享</b-button>
@@ -29,12 +29,12 @@
             <template slot="sn" slot-scope="row">
                 <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
             </template>
-            <template slot="currentShare" slot-scope="row">
+            <template slot="currentShare" slot-scope="row" v-if="userInfo.role == 2 || userInfo.role == 3 ">
                 <span v-if="row.item.current_share==1" class="badge badge-success">
                     <icon scale="0.6" name="share"></icon>
                 </span>
             </template>
-            <template slot="is_protected" slot-scope="row">
+            <template slot="is_protected" slot-scope="row" v-if="userInfo.role == 2 || userInfo.role == 3 ">
                 <span v-if="row.item.protected == 1" class="badge badge-success">
                     <icon scale="0.6" name="lock"></icon>
                 </span>
@@ -60,11 +60,20 @@
                 {{row.item.course}}
             </template>
             <template slot="edit_control" slot-scope="row">
-                <a class="btn-link mx-1" href="javascript:" v-if="row.item.edit_able == 1"  v-b-modal.editConfirmModal @click="editProjectConfirm(row.item)">
+                <a class="btn-link mx-1" href="javascript:" v-if="(row.item.edit_able == 1) && (userInfo.role == 2 || userInfo.role == 3)"  v-b-modal.editConfirmModal @click="editProjectConfirm(row.item)">
                     <icon name="edit"></icon>
+                </a>
+                <a class="btn-link mx-1" href="javascript:" @click="showProject(row.item)">
+                    <icon name="eye"></icon>
                 </a>
                 <a class="btn-link mx-1" href="javascript:" v-if="row.item.delete_able == 1" v-b-modal.deleteConfirmModal @click="deleteProjectConfirm(row.item)">
                     <icon name="trash"></icon>
+                </a>
+                <a class="btn-link mx-1" href="javascript:" v-if="userInfo.role == 1 && (row.item.protected ==1)" @click="protectedProject(row.item)">
+                    <icon name="lock"></icon>
+                </a>
+                <a class="btn-link mx-1" href="javascript:" v-if="userInfo.role == 1 && (row.item.protected ==0)" @click="protectedProject(row.item)">
+                    <icon name="lock-open"></icon>
                 </a>
             </template>
 
@@ -297,6 +306,9 @@
             editProjectConfirm(idValue){
                 this.currentProjectID = idValue;
             },
+            showProject(idVal){
+                this.$router.push({name: 'create-project-wizard1', params:{project_id:idVal.id}});
+            },
             // Delete Project
             deleteProject(){
                 this.run();
@@ -345,6 +357,20 @@
             showBigImg(animation) {
                 this.animationImgSrc = animation.url;
                 this.bigImgModal = true;
+            },
+            protectedProject(idVal){
+                ProjectService
+                    .lockProject({project_id:parseInt(idVal.id)})
+                    .then(() => {
+                        this.$set(idVal, "protected", idVal.protected === 1 ? 0 : 1);
+                        if (idVal.protected === 1){
+                            this.$toasted.success("保护项目成功");
+                        }
+                        if (idVal.protected === 0){
+                            this.$toasted.success("解除保护项目成功");
+                        }
+
+                    })
             },
             // Go To Create Project Page
             createProjectPage(){
