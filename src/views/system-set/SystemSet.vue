@@ -14,11 +14,13 @@
       <b-tab title="字典管理">
           <Dictionary />
       </b-tab>
-      <b-tab title="公告管理">Advertisement Management</b-tab>
+      <b-tab title="公告管理">
+          <Advertising />
+      </b-tab>
     </b-tabs>
       <b-tabs v-if="userInfo.identity===2">
           <b-tab title="操作日志">Work Log</b-tab>
-          <b-tab title="登录记录">
+          <b-tab title="登录记 录">
               <login-log/>
           </b-tab>
           <b-tab title="记录统计">Record Statistic</b-tab>
@@ -40,13 +42,15 @@
 <script>
     import LoginLog from "./LoginLog";
     import Dictionary from "./Dictionary";
+    import Advertising from "./Advertising";
     import { mapState } from "vuex";
 
     export default {
         name: "system-set",
         components: {
             LoginLog,
-            Dictionary
+            Dictionary,
+            Advertising,
         },
         computed: {
             ...mapState(["userInfo"])
