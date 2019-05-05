@@ -15,7 +15,7 @@
             </b-tab>
         </b-tabs>
         <b-tabs v-if="userInfo.identity===2">
-            <b-tab title="用户管理" v-if="userInfo.defaultGroup===true">
+            <b-tab title="用户管理">
                 <b-tabs class="mt-2">
                     <b-tab title="用户管理">
                         <GroupUser1_1/>
@@ -25,10 +25,8 @@
                     </b-tab>
                 </b-tabs>
             </b-tab>
-            <b-tab title="用户管理" v-if="userInfo.defaultGroup===false">
-                <GroupUser1_1/>
-            </b-tab>
             <b-tab title="变更集群审核">
+                <GroupUser2/>
             </b-tab>
         </b-tabs>
     </div>
@@ -42,6 +40,7 @@
     import SuperUser4 from './SuperUser4';
     import GroupUser1_1 from './GroupUser1_1';
     import GroupUser1_2 from './GroupUser1_2';
+    import GroupUser2 from './GroupUser2';
 
     export default {
         name: "user-manage-index",
@@ -51,7 +50,8 @@
             SuperUser3,
             SuperUser4,
             GroupUser1_1,
-            GroupUser1_2
+            GroupUser1_2,
+            GroupUser2
         },
         computed: {
             ...mapState(["userInfo"])

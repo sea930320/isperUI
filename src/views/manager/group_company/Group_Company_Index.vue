@@ -96,6 +96,7 @@
                                                                 :tags="tags"
                                                                 :autocomplete-items="filteredItems"
                                                                 :add-only-from-autocomplete="true"
+                                                                :autocomplete-min-length="0"
                                                                 @tags-changed="newTags => tags = newTags"
                                                         />
                                                     </b-form-group>

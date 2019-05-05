@@ -57,10 +57,26 @@ class UserManageService {
         })
     }
 
+    getGroupChangeList(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/getGroupChangeList',
+            params: data
+        })
+    }
+
     set_Review(data) {
         return xhr({
             method: 'post',
             url: '/userManager/set_Review',
+            params: data
+        })
+    }
+
+    set_gChange(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/set_gChange',
             params: data
         })
     }

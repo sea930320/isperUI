@@ -317,7 +317,8 @@
         }
         .cardDiv1 {
             padding: 15px;
-            background-color: white;
+            background-color: #007bff;
+            color: white;
             margin: 8px 0;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
         }
@@ -344,6 +345,15 @@
             -moz-transition-property: -moz-transform;
             -o-transition-property: -o-transform;
             transition-property: transform;
+        }
+        .btn-outline-primary {
+            color: white;
+            border-color: white;
+        }
+        .btn-outline-primary:hover {
+            color: #c7dbffd9 !important;
+            background-color: #007bff;
+            border-color: #c7dbffba !important;
         }
     }
 </style>
