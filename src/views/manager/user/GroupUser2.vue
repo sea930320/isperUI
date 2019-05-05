@@ -1,5 +1,5 @@
 <template>
-    <div class="group-user-index1_2">
+    <div class="group-user-index2">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
             <b-col lg="3" md="6" sm="12">
@@ -14,15 +14,15 @@
             </b-col>
             <b-col lg="4" md="6" sm="12" class="align-self-center">
                 <b-form-radio-group v-model="queryParam.status">
-                    <b-form-radio value>全部</b-form-radio>
-                    <b-form-radio value="2">已发布流程</b-form-radio>
-                    <b-form-radio value="1">未发布流程</b-form-radio>
+                    <b-form-radio value="0">全部</b-form-radio>
+                    <b-form-radio value="1">申请加入</b-form-radio>
+                    <b-form-radio value="2">申请退出</b-form-radio>
                 </b-form-radio-group>
             </b-col>
             <b-col md="5" class="align-self-center">
                 <b-button-group class="float-right">
-                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="setReview(1,null)">批量审核通过</b-button>
-                    <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="setReview(2,null)">批量审核不通过</b-button>
+                    <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="setAgree(1,null)">批量审核通过</b-button>
+                    <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="setAgree(0,null)">批量审核不通过</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
@@ -38,15 +38,18 @@
                     >
                     </b-form-checkbox>
                 </template>
-                <template slot="username" slot-scope="row"><span class="text">{{row.item.username}}</span></template>
                 <template slot="name" slot-scope="row"><span class="text">{{row.item.name}}</span></template>
+                <template slot="sCompany" slot-scope="row"><span class="text">{{row.item.sCompany ? row.item.sCompany : ''}}</span></template>
+                <template slot="sGroup" slot-scope="row"><span class="text">{{row.item.sGroup ? row.item.sGroup : ''}}</span></template>
                 <template slot="phone" slot-scope="row">{{row.item.phone ? row.item.phone : ''}}</template>
+                <template slot="reason" slot-scope="row">{{row.item.reason ? row.item.reason : ''}}</template>
+                <template slot="state" slot-scope="row">{{row.item.state ? row.item.state : ''}}</template>
                 <template slot="action" slot-scope="row">
-                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(1,row.item.id)">
+                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setAgree(1,row.item.id)">
                         <icon name="check"></icon>
                         审核通过
                     </b-button>
-                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(2,row.item.id)">
+                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setAgree(0,row.item.id)">
                         <icon name="times"></icon>
                         审核不通过
                     </b-button>
@@ -73,7 +76,7 @@
     import BRow from "bootstrap-vue/src/components/layout/row";
 
     export default {
-        name: "group-user-index1_2",
+        name: "group-user-index2",
         components: {
             BRow,
             Loading,
@@ -87,20 +90,35 @@
                         sortable: false,
                         class: "text-center field-check"
                     },
-                    username: {
-                        label: "用户名",
-                        sortable: false,
-                        class: "text-center field-username"
-                    },
                     name: {
                         label: "姓名",
                         sortable: false,
                         class: "text-center field-name"
                     },
+                    sCompany: {
+                        label: "原单位",
+                        sortable: false,
+                        class: "text-center field-sCompany"
+                    },
+                    sGroup: {
+                        label: "原集群",
+                        sortable: false,
+                        class: "text-center field-sGroup"
+                    },
                     phone: {
-                        label: "手机号码",
+                        label: "手机号",
                         sortable: false,
                         class: "text-center field-phone"
+                    },
+                    reason: {
+                        label: "加入/退出理由",
+                        sortable: false,
+                        class: "text-center field-reason"
+                    },
+                    state: {
+                        label: "申请加入/退出",
+                        sortable: false,
+                        class: "text-center field-state"
                     },
                     action: {
                         label: "操作",
@@ -111,7 +129,7 @@
                 queryParam: {
                     page: 1,
                     size: 5,
-                    group_id: null
+                    status: 0
                 },
                 queryDebounceParam: {
                     search: ""
@@ -124,7 +142,7 @@
         },
         created() {
             this.$nextTick(() => {
-                this.queryDataList();
+                this.queryGroupChanges();
             });
         },
         computed: {
@@ -133,22 +151,22 @@
         watch: {
             queryParam: {
                 handler() {
-                    this.queryDataList();
+                    this.queryGroupChanges();
                 },
                 deep: true
             },
             queryDebounceParam: {
                 deep: true,
                 handler: _.debounce(function () {
-                    this.queryDataList();
+                    this.queryGroupChanges();
                 }, 500)
             }
         },
         methods: {
-            queryDataList() {
+            queryGroupChanges() {
                 this.run();
                 UserManageService
-                    .getGroupNonCompanyUsers({...this.queryParam, ...this.queryDebounceParam})
+                    .getGroupChangeList({...this.queryParam, ...this.queryDebounceParam})
                     .then(data => {
                         this.allData.list = data.results;
                         this.allData.total = data.paging.count;
@@ -158,14 +176,14 @@
                         this.$emit("data-failed");
                     });
             },
-            setReview(value, id) {
+            setAgree(value, id) {
                 this.run();
                 UserManageService
-                    .set_Review({set: value, ids: id===null ? JSON.stringify(this.selected) : JSON.stringify([id])})
+                    .set_gChange({set: value, ids: id===null ? JSON.stringify(this.selected) : JSON.stringify([id])})
                     .then((res) => {
                         if (res.results === 'success')
                             UserManageService
-                                .getGroupNonCompanyUsers({...this.queryParam, ...this.queryDebounceParam})
+                                .getGroupChangeList({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
                                     this.allData.list = data.results;
                                     this.allData.total = data.paging.count;
@@ -186,26 +204,38 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    .group-user-index1_2 {
+    .group-user-index2 {
         .field-check {
-            width: 15%;
+            width: 3%;
             padding-top: 11px;
             text-align: right !important;
         }
-        .field-username {
+        .field-name {
             width: 10%;
             text-align: left !important;
         }
-        .field-name {
+        .field-sCompany {
             width: 15%;
             text-align: left !important;
         }
+        .field-sGroup {
+            width: 12%;
+            text-align: left !important;
+        }
         .field-phone {
-            width: 30%;
+            width: 10%;
+            text-align: left !important;
+        }
+        .field-reason {
+            width: 25%;
+            text-align: left !important;
+        }
+        .field-state {
+            width: 10%;
             text-align: left !important;
         }
         .field-action {
-            width: 25%;
+            width: 15%;
             text-align: left !important;
         }
     }
