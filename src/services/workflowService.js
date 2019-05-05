@@ -469,6 +469,71 @@ class WorkflowService {
       params: data
     })
   }
+
+  /**
+   * Public
+   * @param  {String}
+   * @return {Object}
+   */
+  getCandidateJobType(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/job_type/candidate',
+      params: data
+    })
+  }
+
+  /**
+   * Role Allocation List
+   * @param  {String}
+   * @return {Object}
+   */
+  roleAllocationList(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/role/allocation/list',
+      params: data
+    })
+  }
+
+  /**
+   * Role Allocation Create
+   * @param  {String}
+   * @return {Object}
+   */
+  roleAllocationCreate(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/role/allocation/create',
+      params: data
+    })
+  }
+
+  /**
+   * Role Allocation Remove
+   * @param  {String}
+   * @return {Object}
+   */
+  roleAllocationRemove(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/role/allocation/remove',
+      params: data
+    })
+  }
+
+  /**
+   * Role Allocation Remove
+   * @param  {String}
+   * @return {Object}
+   */
+  roleAllocationBulkUpdate(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/role/allocation/bulk_update',
+      params: data
+    })
+  }
 }
 
 export default new WorkflowService()

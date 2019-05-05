@@ -85,7 +85,11 @@
             head-variant
           >
             <template slot="HEAD_doc_use" slot-scope="head">
-              <b-form-checkbox v-model="docAllCheck">{{head.label}}</b-form-checkbox>
+              <b-form-checkbox
+                v-model="docAllCheck"
+                :indeterminate="docIndeterminatedCheck"
+                @change="toggleAllDoc"
+              >{{head.label}}</b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="name" slot-scope="row">{{row.item.name}}</template>
@@ -214,9 +218,11 @@ export default {
       uploadParams: {
         flow_id: this.$route.params.flow_id
       },
+      docNodeRelated: [],
       nodeChecked: [],
-      flowNodesAssign: [],
-      docAllCheck: false
+      docAllCheck: false,
+      docIndeterminatedCheck: false,
+      flowNodesAssign: []
     };
   },
   filters: { processType },
@@ -233,39 +239,33 @@ export default {
     curDoc() {
       if (this.flowDocs.length === 0) return null;
       return this.flowDocs[this.docActiveIndex];
-    },
-    docNodeRelated() {
-      return this.flowNodes.map(node => {
-        return {
-          id: node.id,
-          name: node.name,
-          doc_use:
-            this.flowDocs.length === 0
-              ? false
-              : this.curDoc.node_ids.indexOf(node.id) !== -1
-        };
-      });
     }
   },
   watch: {
-    docAllCheck: {
-      handler(val) {
-        if (this.flowDocs.length === 0) {
-          this.$toasted.error("当前无文档，请先上传");
-          return;
+    docNodeRelated: {
+      handler(newDocNodeRelated) {
+        let isAllSelected =
+          this.flowDocs.length > 0 &&
+          newDocNodeRelated.every(node => {
+            return node.doc_use;
+          });
+        let isAllNotSelected =
+          this.flowDocs.length > 0 &&
+          newDocNodeRelated.every(node => {
+            return !node.doc_use;
+          });
+        if (isAllSelected) {
+          this.docIndeterminatedCheck = false;
+          this.docAllCheck = true;
+        } else if (isAllNotSelected) {
+          this.docIndeterminatedCheck = false;
+          this.docAllCheck = false;
+        } else {
+          this.docIndeterminatedCheck = true;
+          this.docAllCheck = false;
         }
-        this.docNodeRelated.forEach(node => {
-          node.doc_use = val;
-          let index = this.curDoc.node_ids.indexOf(node.id);
-          if (node.doc_use) {
-            if (index === -1)
-              this.flowDocs[this.docActiveIndex].node_ids.push(node.id);
-          } else {
-            if (index !== -1)
-              this.flowDocs[this.docActiveIndex].node_ids.splice(index, 1);
-          }
-        });
-      }
+      },
+      deep: true
     }
   },
   created() {
@@ -276,7 +276,6 @@ export default {
   methods: {
     ...mapActions(["setFlowStep"]),
     init() {
-      this.docAllCheck = false;
       this.run();
       let param = {
         flow_id: this.flowId
@@ -287,6 +286,7 @@ export default {
           this.workflow = data;
           this.flowNodes = data.nodes;
           this.setFlowStep(data.step);
+          this.docNodeRelated = this.currentRelatedData();
           // 获取素材
           workflowService
             .getWorkflowDocList(param)
@@ -305,9 +305,23 @@ export default {
           this.$emit("data-failed");
         });
     },
+    // 当前的素材环节关联数据
+    currentRelatedData() {
+      return this.flowNodes.map(node => {
+        return {
+          id: node.id,
+          name: node.name,
+          doc_use:
+            this.flowDocs.length === 0
+              ? false
+              : this.curDoc.node_ids.indexOf(node.id) !== -1
+        };
+      });
+    },
     // 选择某个文档
     docOnSelect(item, index) {
       this.docActiveIndex = index;
+      this.docNodeRelated = this.currentRelatedData();
       this.flowDocs.map(doc => {
         doc._rowVariant = "";
         return doc;
@@ -322,13 +336,29 @@ export default {
         return;
       }
       let index = this.curDoc.node_ids.indexOf(node.id);
-      if (!node.doc_use) {
-        if (index === -1)
-          this.flowDocs[this.docActiveIndex].node_ids.push(node.id);
+      if (flag) {
+        if (index === -1) this.curDoc.node_ids.push(node.id);
       } else {
-        if (index !== -1)
-          this.flowDocs[this.docActiveIndex].node_ids.splice(index, 1);
+        if (index !== -1) this.curDoc.node_ids.splice(index, 1);
       }
+    },
+    toggleAllDoc(val) {
+      this.docIndeterminatedCheck = false;
+      if (this.flowDocs.length === 0) {
+        this.$toasted.error("当前无文档，请先上传");
+        return;
+      }
+      this.docNodeRelated.forEach(node => {
+        node.doc_use = val;
+        let index = this.curDoc.node_ids.indexOf(node.id);
+        if (node.doc_use) {
+          if (index === -1)
+            this.flowDocs[this.docActiveIndex].node_ids.push(node.id);
+        } else {
+          if (index !== -1)
+            this.flowDocs[this.docActiveIndex].node_ids.splice(index, 1);
+        }
+      });
     },
     // 切换用途
     changeUseHandle(doc) {
@@ -438,7 +468,7 @@ export default {
     },
     nextPage() {
       this.$router.push({
-        name: "setworkflowRoleAppend",
+        name: "setworkflow-role",
         params: {
           flow_id: this.flowId
         }
@@ -481,6 +511,7 @@ export default {
       this.flowDocs.push(...data);
       if (data.length > 0) {
         this.docActiveIndex = this.flowDocs.indexOf(data[0]);
+        this.docNodeRelated = this.currentRelatedData();
       }
     },
     // 批量上传成功回调
