@@ -15,6 +15,8 @@ import VueFormWizard from 'vue-form-wizard'
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueMoment from 'vue-moment'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 
 import {
@@ -35,6 +37,7 @@ Vue.config.productionTip = false;
 Vue.use(VueResource);
 Vue.use(VueCookie);
 Vue.use(BootstrapVue);
+Vue.use(ElementUI);
 Vue.use(VueLodash, lodash);
 Vue.use(Toasted, {
   duration: 1500

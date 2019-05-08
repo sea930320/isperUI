@@ -1,8 +1,8 @@
 <template>
-    <div class="group-user-index1_2">
+    <div class="company-user-index1_2">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
-            <b-col lg="2" md="6" sm="12" style="line-height: 32px;">非单位用户注册审核</b-col>
+            <b-col lg="2" md="6" sm="12" style="line-height: 32px;">用户注册审核</b-col>
             <b-col lg="3" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
@@ -68,7 +68,7 @@
     import BRow from "bootstrap-vue/src/components/layout/row";
 
     export default {
-        name: "group-user-index1_2",
+        name: "company-user-index1_2",
         components: {
             BRow,
             Loading,
@@ -148,7 +148,7 @@
             queryDataList() {
                 this.run();
                 UserManageService
-                    .getGroupNonCompanyUsers({...this.queryParam, ...this.queryDebounceParam})
+                    .getCompanyNonReviewUsers({...this.queryParam, ...this.queryDebounceParam})
                     .then(data => {
                         this.allData.list = data.results;
                         this.allData.total = data.paging.count;
@@ -165,7 +165,7 @@
                     .then((res) => {
                         if (res.results === 'success')
                             UserManageService
-                                .getGroupNonCompanyUsers({...this.queryParam, ...this.queryDebounceParam})
+                                .getCompanyNonReviewUsers({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
                                     this.allData.list = data.results;
                                     this.allData.total = data.paging.count;
@@ -186,7 +186,7 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    .group-user-index1_2 {
+    .company-user-index1_2 {
         .field-check {
             width: 15%;
             padding-top: 11px;

@@ -29,6 +29,21 @@
                 <GroupUser2/>
             </b-tab>
         </b-tabs>
+        <b-tabs v-if="userInfo.identity===3">
+            <b-tab title="用户管理">
+                <b-tabs class="mt-2">
+                    <b-tab title="用户管理">
+                        <CompanyUser1_1/>
+                    </b-tab>
+                    <b-tab title="用户注册审核">
+                        <CompanyUser1_2/>
+                    </b-tab>
+                </b-tabs>
+            </b-tab>
+            <b-tab title="变更单位审核">
+                <CompanyUser2/>
+            </b-tab>
+        </b-tabs>
     </div>
 </template>
 
@@ -41,6 +56,9 @@
     import GroupUser1_1 from './GroupUser1_1';
     import GroupUser1_2 from './GroupUser1_2';
     import GroupUser2 from './GroupUser2';
+    import CompanyUser1_1 from './CompanyUser1_1';
+    import CompanyUser1_2 from './CompanyUser1_2';
+    import CompanyUser2 from './CompanyUser2';
 
     export default {
         name: "user-manage-index",
@@ -51,7 +69,10 @@
             SuperUser4,
             GroupUser1_1,
             GroupUser1_2,
-            GroupUser2
+            GroupUser2,
+            CompanyUser1_1,
+            CompanyUser1_2,
+            CompanyUser2
         },
         computed: {
             ...mapState(["userInfo"])

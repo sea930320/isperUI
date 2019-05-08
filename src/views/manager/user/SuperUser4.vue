@@ -245,7 +245,6 @@
         }
         .field-gender {
             width: 5%;
-            text-align: left !important;
         }
         .field-class_name {
             width: 20%;

@@ -18,7 +18,8 @@
                 <template slot="id" slot-scope="row">{{ row.item.id }}</template>
                 <template slot="name" slot-scope="row"><span class="text">{{row.item.name}}</span></template>
                 <template slot="company" slot-scope="row">{{row.item.company ? row.item.company : ''}}</template>
-                <template slot="companyType" slot-scope="row">{{row.item.companyType ? row.item.companyType : ''}}</template>
+                <template slot="part" slot-scope="row">{{row.item.part ? row.item.part : ''}}</template>
+                <template slot="gender" slot-scope="row"><span class="text">{{row.item.gender}}</span></template>
                 <template slot="action" slot-scope="row">
                     <b-button class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary" @click="resetOpen(row)">
                         重置密码
@@ -100,10 +101,15 @@
                         sortable: false,
                         class: "text-center field-company"
                     },
-                    companyType: {
+                    part: {
                         label: "部门",
                         sortable: false,
-                        class: "text-center field-companyType"
+                        class: "text-center field-part"
+                    },
+                    gender: {
+                        label: "性别",
+                        sortable: false,
+                        class: "text-center field-gender"
                     },
                     action: {
                         label: "操作",
@@ -113,7 +119,7 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 5,
+                    size: 4,
                     group_id: null
                 },
                 queryDebounceParam: {
@@ -209,9 +215,12 @@
             width: 25%;
             text-align: left !important;
         }
-        .field-companyType {
+        .field-part {
             width: 10%;
             text-align: left !important;
+        }
+        .field-gender {
+            width: 10%;
         }
         .field-action {
             width: 10%;

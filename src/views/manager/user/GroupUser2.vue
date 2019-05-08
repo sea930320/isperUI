@@ -39,6 +39,7 @@
                     </b-form-checkbox>
                 </template>
                 <template slot="name" slot-scope="row"><span class="text">{{row.item.name}}</span></template>
+                <template slot="gender" slot-scope="row"><span class="text">{{row.item.gender}}</span></template>
                 <template slot="sCompany" slot-scope="row"><span class="text">{{row.item.sCompany ? row.item.sCompany : ''}}</span></template>
                 <template slot="sGroup" slot-scope="row"><span class="text">{{row.item.sGroup ? row.item.sGroup : ''}}</span></template>
                 <template slot="phone" slot-scope="row">{{row.item.phone ? row.item.phone : ''}}</template>
@@ -94,6 +95,11 @@
                         label: "姓名",
                         sortable: false,
                         class: "text-center field-name"
+                    },
+                    gender: {
+                        label: "性别",
+                        sortable: false,
+                        class: "text-center field-gender"
                     },
                     sCompany: {
                         label: "原单位",
@@ -214,12 +220,15 @@
             width: 10%;
             text-align: left !important;
         }
+        .field-gender {
+            width: 5%;
+        }
         .field-sCompany {
-            width: 15%;
+            width: 12%;
             text-align: left !important;
         }
         .field-sGroup {
-            width: 12%;
+            width: 10%;
             text-align: left !important;
         }
         .field-phone {
