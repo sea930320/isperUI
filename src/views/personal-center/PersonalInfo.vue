@@ -1,70 +1,53 @@
 <template>
   <div class="personal-info">
-    <b-card no-body>
-      <b-form @submit.prevent="updateInfo">
-        <b-card-header>
-          <PersonalCenterTab activeTab="0"/>
-        </b-card-header>
-        <b-card-body class="text-center">
-          <b-form-group label-cols="4" label-cols-lg="2" label="姓名 *" label-for="userName">
-            <b-form-input type="text" v-model="userInfo.name" name="userName" required/>
-          </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="用户名 *" label-for="userId">
-            <b-form-input type="text" v-model="userInfo.username" name="userId" required/>
-          </b-form-group>
-          <b-form-group
-            label-cols="4"
-            label-cols-lg="2"
-            label="手机 *"
-            label-for="phoneNumber"
-          >
-            <b-input-group prepend="+86">
-              <b-form-input
-                type="text"
-                v-model="userInfo.phone"
-                name="phoneNumber"
-                :disabled="session_expire_time > 0 || sendLabel !='获取'"
-                required
-              />
-            </b-input-group>
-            <b-input-group class="mt-2">
-              <b-form-input
-                type="number"
-                v-model="verificationCode"
-                placeholder="手机验证码"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button
-                  variant="primary"
-                  @click="sendVerificationCode"
-                  :disabled="session_expire_time > 0 || sendLabel !='获取'"
-                >{{(session_expire_time &lt;= 0) ? sendLabel: session_expire_time + ' s'}}</b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="QQ" label-for="qqID">
-            <b-form-input type="text" v-model="userInfo.qq" name="qqID"/>
-          </b-form-group>
-          <b-form-group label-cols="4" label-cols-lg="2" label="头像" label-for="avatar">
-            <div @click="toggleShow" style="cursor:pointer; width: 100px">
-              <b-img-lazy
-                thumbnail
-                rounded="circle"
-                v-if="userInfo.avatar"
-                :src="rootPath + userInfo.avatar"
-                alt="Avatar"
-                class="avatar-img"
-              />
-              <div v-else class="avatar-img"/>
-            </div>
-          </b-form-group>
-        </b-card-body>
-        <b-card-footer class="text-muted">
-          <b-button class="mr-2" type="submit" variant="primary" :disabled="!validate">修改</b-button>
-          <b-button type="button">取消</b-button>
-        </b-card-footer>
-      </b-form>
-    </b-card>
+    <PersonalCenterTab activeTab="0"/>
+    <b-form @submit.prevent="updateInfo" class="cardDiv">
+      <b-form-group label-cols="4" label-cols-lg="2" label="姓名 *" label-for="userName">
+        <b-form-input type="text" v-model="userInfo.name" name="userName" required/>
+      </b-form-group>
+      <b-form-group label-cols="4" label-cols-lg="2" label="用户名 *" label-for="userId">
+        <b-form-input type="text" v-model="userInfo.username" name="userId" required/>
+      </b-form-group>
+      <b-form-group label-cols="4" label-cols-lg="2" label="手机 *" label-for="phoneNumber">
+        <b-input-group prepend="+86">
+          <b-form-input
+            type="text"
+            v-model="userInfo.phone"
+            name="phoneNumber"
+            :disabled="session_expire_time > 0 || sendLabel !='获取'"
+            required
+          />
+        </b-input-group>
+        <b-input-group class="mt-2">
+          <b-form-input type="number" v-model="verificationCode" placeholder="手机验证码"></b-form-input>
+          <b-input-group-append>
+            <b-button
+              variant="primary"
+              @click="sendVerificationCode"
+              :disabled="session_expire_time > 0 || sendLabel !='获取'"
+            >{{(session_expire_time &lt;= 0) ? sendLabel: session_expire_time + ' s'}}</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
+      <b-form-group label-cols="4" label-cols-lg="2" label="QQ" label-for="qqID">
+        <b-form-input type="text" v-model="userInfo.qq" name="qqID"/>
+      </b-form-group>
+      <b-form-group label-cols="4" label-cols-lg="2" label="头像" label-for="avatar">
+        <div @click="toggleShow" style="cursor:pointer; width: 100px">
+          <b-img-lazy
+            thumbnail
+            rounded="circle"
+            v-if="userInfo.avatar"
+            :src="rootPath + userInfo.avatar"
+            alt="Avatar"
+            class="avatar-img"
+          />
+          <div v-else class="avatar-img"/>
+        </div>
+      </b-form-group>
+      <b-button class="mr-2" type="submit" variant="primary" :disabled="!validate">修改</b-button>
+      <b-button type="button">取消</b-button>
+    </b-form>
 
     <ImageUpload
       field="img"
@@ -138,7 +121,7 @@ export default {
       user.verification_code = this.verificationCode;
       accountService.updateAccount(user).then(() => {
         this.session_expire_time = 0;
-        this.verificationCode = ''
+        this.verificationCode = "";
         if (this.timer) {
           clearInterval(this.timer);
         }

@@ -20,7 +20,7 @@
     </b-tabs>
       <b-tabs v-if="userInfo.identity===2">
           <b-tab title="操作日志">Work Log</b-tab>
-          <b-tab title="登录记 录">
+          <b-tab title="登录记录">
               <login-log/>
           </b-tab>
           <b-tab title="记录统计">Record Statistic</b-tab>
