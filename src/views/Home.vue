@@ -78,10 +78,15 @@
 </template>
 
 <script>
-
+    import AdvertisingService from "@/services/advertisingService";
 export default {
   name: "home",
   components: { },
+    created() {
+        this.$nextTick(() => {
+            this.queryAdvertisingList();
+        });
+    },
   data() {
     return {
       notificationList: [
@@ -178,7 +183,22 @@ export default {
         }
       ]
     };
-  }
+  },
+    method: {
+        queryAdvertisingList(){
+            this.run();
+            AdvertisingService
+                .getAdvertisingList({ ...this.queryParam, ...this.queryDebounceParam })
+                .then(data => {
+                    this.advertising.list = data.results;
+                    this.advertising.total = data.paging.count;
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
+        },
+    }
 };
 </script>
 

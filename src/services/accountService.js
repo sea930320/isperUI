@@ -136,6 +136,30 @@ class AccountService {
       params: options
     })
   }
+
+  /**
+   * Get Assistants
+   * @return {Promise}
+   */
+  getAssistants(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/assistants',
+      params: options
+    })
+  }
+  
+  /**
+   * Get Permissions
+   * @return {Promise}
+   */
+  getPermissions(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/permissions',
+      params: options
+    })
+  }
 }
 
 // 实例化后导出，全局单例

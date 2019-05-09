@@ -53,6 +53,7 @@ const xhr = ({
             store.dispatch('logout')
           } else {
             Vue.toasted.error(data.m)
+            reject(data.m)
           }
         })
         .catch(err => errHandler(reject, err))
@@ -68,6 +69,7 @@ const xhr = ({
             resolve(data.d)
           } else {
             Vue.toasted.error(data.m)
+            reject(data.m)
           }
         })
         .catch(err => errHandler(reject, err))
