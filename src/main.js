@@ -17,7 +17,7 @@ import VueMoment from 'vue-moment'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-
+import Multiselect from 'vue-multiselect'
 
 import {
   STORAGE_KEY_USER
@@ -31,6 +31,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //Font awesome
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
+Vue.component('multiselect', Multiselect)
 Vue.component('icon', Icon);
 
 Vue.config.productionTip = false;
