@@ -135,7 +135,6 @@ export default {
                 let action = assistant.actions[index];
                 assistant.actions_check[action.id] = true;
             }
-            console.log(assistant);
             return assistant;
         }
     },

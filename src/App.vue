@@ -1,5 +1,6 @@
 <template>
-  <div id="app" style="font-size: 1.13rem; padding: 5%; height: 100%;">
+<!--  <div id="app" style="font-size: 1.13rem; padding: 5%; height: 100%;"> blue -->
+  <div id="app" style="font-size: 1.13rem; height: 100%;">
     <div class="browser-warning-wrapper" v-if="warning">
       <div class="browser-warning-header">
         <i></i>

@@ -26,6 +26,11 @@
           <b-tab title="记录统计">Record Statistic</b-tab>
       </b-tabs>
       <b-tabs v-if="userInfo.identity===3">
+          <b-tab title="部门及职务管理">
+              <PartPosition />
+          </b-tab>
+          <b-tab title="内部权限管理">
+          </b-tab>
           <b-tab title="日志管理" class="pt-2">
               <b-tabs class="security-log">
                   <b-tab title="操作日志">Work Log</b-tab>
@@ -43,6 +48,7 @@
     import LoginLog from "./LoginLog";
     import Dictionary from "./Dictionary";
     import Advertising from "./Advertising";
+    import PartPosition from "./PartPosition";
     import { mapState } from "vuex";
 
     export default {
@@ -51,6 +57,7 @@
             LoginLog,
             Dictionary,
             Advertising,
+            PartPosition
         },
         computed: {
             ...mapState(["userInfo"])

@@ -1,5 +1,6 @@
 <template>
-  <div class="register-container">
+<!--  <div class="register-container"> blue -->
+  <div class="register-container" style="margin-top: 5%;">
     <b-container>
       <b-card no-body class="overflow-hidden">
         <b-row no-gutters>
