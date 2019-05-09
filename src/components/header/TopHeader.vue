@@ -1,5 +1,6 @@
 <template>
-  <div class="top-header header-bg position-fixed" style="width: 90%; z-index: 1000; font-family: 'Microsoft JhengHei'; font-weight: bold;">
+<!--  <div class="top-header header-bg position-fixed" style="width: 90%; z-index: 1000; font-family: 'Microsoft JhengHei'; font-weight: bold;"> blue -->
+  <div class="top-header header-bg position-fixed" style="width: 100%; z-index: 1000; font-family: 'Microsoft JhengHei'; font-weight: bold;">
     <b-navbar toggleable="lg" type="dark" class="container py-0">
       <b-navbar-brand class="logo my-auto pl-3 pr-5 py-3" to="/">
         <div class="d-flex justify-content-center p-0">

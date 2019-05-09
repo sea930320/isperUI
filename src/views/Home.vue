@@ -3,7 +3,8 @@
 <!--    <TopHeader>-->
 <!--      <template></template>-->
 <!--    </TopHeader>-->
-    <b-container class=" h-100">
+<!--    <b-container class=" h-100"> blue -->
+    <div class=" h-100">
       <b-card class="home-bg h-100">
         <b-row class=" h-100">
           <b-col cols="6" class="d-flex justify-content-center flex-column">
@@ -23,7 +24,7 @@
               </div>
             </b-card>
           </b-col>
-          <b-col cols="6" class="flex-column">
+          <b-col cols="6" class="flex-column" style="margin-top: 5%;">
             <b-card
               no-body
               v-for="notification in notificationList"
@@ -72,7 +73,7 @@
           </b-col>
         </b-row>
       </b-card>
-    </b-container>
+    </div>
   </div>
 </template>
 

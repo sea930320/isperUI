@@ -1,5 +1,6 @@
 <template>
-  <div class="manager-container main-bg">
+<!--  <div class="manager-container main-bg"> blue -->
+  <div class="manager-container main-bg vh-100">
     <TopHeader>
       <template v-slot:pageMenu>
         <b-nav-item to="/manager/workflow">
