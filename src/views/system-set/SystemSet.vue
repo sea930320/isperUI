@@ -28,6 +28,7 @@
               <PartPosition />
           </b-tab>
           <b-tab title="内部权限管理">
+              <InnerPermission />
           </b-tab>
           <b-tab title="日志管理" class="pt-2">
               <b-tabs class="security-log">
@@ -46,6 +47,7 @@
     import LoginLog from "./LoginLog";
     import Dictionary from "./Dictionary";
     import PartPosition from "./PartPosition";
+    import InnerPermission from "./InnerPermission";
     import { mapState } from "vuex";
 
     export default {
@@ -53,7 +55,8 @@
         components: {
             LoginLog,
             Dictionary,
-            PartPosition
+            PartPosition,
+            InnerPermission
         },
         computed: {
             ...mapState(["userInfo"])
