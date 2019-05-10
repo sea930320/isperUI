@@ -15,14 +15,15 @@
         </b-row>
         <div class="cardDiv">
             <b-table :items="allData.list" small hover :fields="columns" head-variant style="fontSize: 18px">
-                <template slot="id" slot-scope="row">{{ row.item.id }}</template>
                 <template slot="name" slot-scope="row"><span class="text">{{row.item.name}}</span></template>
-                <template slot="company" slot-scope="row">{{row.item.company ? row.item.company : ''}}</template>
-                <template slot="part" slot-scope="row">{{row.item.part ? row.item.part : ''}}</template>
-                <template slot="gender" slot-scope="row"><span class="text">{{row.item.gender}}</span></template>
+                <template slot="comment" slot-scope="row">{{row.item.comment ? row.item.comment : ''}}</template>
+                <template slot="ownPositions" slot-scope="row">
+                    <b-badge pill variant="primary" class="mr-2" v-for="(position, index) in row.item.ownPositions" :key="`position-${index}`">{{ position.text }}</b-badge>
+                </template>
                 <template slot="action" slot-scope="row">
-                    <b-button class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary" @click="resetOpen(row)">
-                        重置密码
+                    <b-button v-if="row.item.id === 1" class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary"
+                              @click="()=>{editInnerPermission = true; edit_InnerPermission = {id:row.item.id, tags:row.item.ownPositions.map(item=>{return {id: item.id, text: item.text}})};}">
+                        对应关系没置
                     </b-button>
                 </template>
             </b-table>
@@ -36,22 +37,24 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
-        <b-modal hide-footer centered  id="resetUserPassword" ref="resetUserPassword" title="重置密码">
+        <b-modal hide-footer centered  v-model="editInnerPermission" title="修改事务类型">
             <div>
-                <b-form @submit="resetPassword" class="container pt-3">
-                    <b-form-group id="input-group-11" label-for="input-2">
-                        <b-form-input
-                                v-model="reset.password"
-                                required
-                                autocomplete="new-password"
-                                type="password"
-                                placeholder="密码"
-                        ></b-form-input>
+                <b-form @submit="editInnerPermissionSave" class="container pt-3" >
+                    <b-form-group id="input-group-10" label-for="input-2">
+                        <vue-tags-input
+                                v-model="tag"
+                                :tags="edit_InnerPermission.tags"
+                                :autocomplete-items="filteredItems"
+                                :add-only-from-autocomplete="true"
+                                :autocomplete-min-length="0"
+                                @tags-changed="newTags => edit_InnerPermission.tags = newTags"
+                        />
                     </b-form-group>
                     <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
                     </b-button>
                     <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
-                              @click="()=>{this.$refs['resetUserPassword'].hide(); reset = {id: null,password:''}}">取 消
+                              @click="()=>{editInnerPermission = false; edit_InnerPermission = {id: null,tags:[]}}">取
+                        消
                     </b-button>
                 </b-form>
             </div>
@@ -62,7 +65,8 @@
 <script>
     import {mapState} from "vuex";
     import Loading from "@/components/loading/Loading";
-    import UserManageService from "@/services/userManageService";
+    import PartPositionService from "@/services/partpositionService";
+    import VueTagsInput from '@johmun/vue-tags-input';
     import _ from "lodash";
     import BRow from "bootstrap-vue/src/components/layout/row";
 
@@ -71,13 +75,17 @@
         components: {
             BRow,
             Loading,
+            VueTagsInput,
         },
         data() {
             return {
-                reset: {
+                tag: '',
+                editInnerPermission: false,
+                edit_InnerPermission: {
                     id: null,
-                    password: ''
+                    tags: []
                 },
+                autocompleteItems: [],
                 editItem: {
                     id: null,
                     name: '',
@@ -86,30 +94,20 @@
                     publish: 1
                 },
                 columns: {
-                    id: {
-                        label: "ID",
-                        sortable: false,
-                        class: "text-center field-id"
-                    },
                     name: {
-                        label: "姓名",
+                        label: "任务类角色",
                         sortable: false,
                         class: "text-center field-name"
                     },
-                    company: {
-                        label: "所在单位",
+                    comment: {
+                        label: "角色描述",
                         sortable: false,
-                        class: "text-center field-company"
+                        class: "text-center field-comment"
                     },
-                    part: {
-                        label: "部门",
+                    ownPositions: {
+                        label: "对应职务",
                         sortable: false,
-                        class: "text-center field-part"
-                    },
-                    gender: {
-                        label: "性别",
-                        sortable: false,
-                        class: "text-center field-gender"
+                        class: "text-center field-ownPositions"
                     },
                     action: {
                         label: "操作",
@@ -138,6 +136,9 @@
         },
         computed: {
             ...mapState(["userInfo"]),
+            filteredItems() { return this.autocompleteItems.filter(i => {
+                return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+            })}
         },
         watch: {
             queryParam: {
@@ -156,10 +157,11 @@
         methods: {
             queryDataList() {
                 this.run();
-                UserManageService
-                    .getGroupUsers({...this.queryParam, ...this.queryDebounceParam})
+                PartPositionService
+                    .getInnerPermissions({...this.queryParam, ...this.queryDebounceParam})
                     .then(data => {
-                        this.allData.list = data.results;
+                        this.allData.list = data.results.data;
+                        this.autocompleteItems = data.results.items;
                         this.allData.total = data.paging.count;
                         this.$emit("data-ready");
                     })
@@ -167,30 +169,26 @@
                         this.$emit("data-failed");
                     });
             },
-            resetOpen(row) {
-                this.reset.id = row.item.id;
-                this.reset.password = '';
-                this.$refs['resetUserPassword'].show();
-            },
-            resetPassword(evt) {
+            editInnerPermissionSave(evt) {
                 evt.preventDefault();
                 this.run();
-                UserManageService
-                    .resetPass(this.reset)
-                    .then((res) => {
-                        if (res.results === 'success')
-                            UserManageService
-                                .getGroupUsers({...this.queryParam, ...this.queryDebounceParam})
+                PartPositionService
+                    .setInnerPermissions({id:this.edit_InnerPermission.id, items: JSON.stringify(this.edit_InnerPermission.tags.map(x=>x.id))})
+                    .then(data => {
+                        if (data.results === 'success') {
+                            PartPositionService
+                                .getInnerPermissions({...this.queryParam, ...this.queryDebounceParam})
                                 .then(data => {
-                                    this.allData.list = data.results;
+                                    this.allData.list = data.results.data;
+                                    this.autocompleteItems = data.results.items;
                                     this.allData.total = data.paging.count;
+                                    this.editInnerPermission = false;
                                     this.$emit("data-ready");
-                                    this.$refs['resetUserPassword'].hide();
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
                                 });
-                        else
+                        } else
                             this.$emit("data-failed");
                     })
                     .catch(() => {
@@ -203,24 +201,17 @@
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
     .inner_permission {
-        .field-id {
-            width: 10%;
-            text-align: left !important;
-        }
         .field-name {
             width: 20%;
-            text-align: left !important;
+            text-align: center !important;
         }
-        .field-company {
+        .field-comment {
             width: 25%;
             text-align: left !important;
         }
-        .field-part {
-            width: 10%;
+        .field-ownPositions {
+            width: 40%;
             text-align: left !important;
-        }
-        .field-gender {
-            width: 10%;
         }
         .field-action {
             width: 10%;

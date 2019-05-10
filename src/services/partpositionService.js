@@ -53,6 +53,22 @@ class PartPositionService {
         })
     }
 
+    getInnerPermissions(data) {
+        return xhr({
+            method: 'post',
+            url: '/partPosition/getInnerPermissions',
+            params: data
+        })
+    }
+
+    setInnerPermissions(data) {
+        return xhr({
+            method: 'post',
+            url: '/partPosition/setInnerPermissions',
+            params: data
+        })
+    }
+
 }
 
 export default new PartPositionService()
