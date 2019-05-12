@@ -27,7 +27,7 @@
                         managerPass: ''
                     }">添加集群
                     </b-button>
-                    <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="this.deleteGroup">删除集群</b-button>
+                    <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="()=>{this.newDefault_tmp = null; this.deleteGroup();}">删除集群</b-button>
                 </b-button-group>
             </b-col>
         </b-row>
@@ -107,6 +107,28 @@
                     </b-button>
                     <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
                               @click="()=>{this.$refs['newDefault'].hide(); editItem.newDefault = null}">取 消
+                    </b-button>
+                </b-form>
+            </div>
+        </b-modal>
+        <b-modal hide-footer centered  id="newDefault_tmp" ref="newDefault_tmp" title="请选择新的默认集群">
+            <div>
+                <b-form @submit="(evt)=>{evt.preventDefault();this.deleteGroup();}" class="container pt-3">
+                    <b-form-group id="input-group-16" label-for="input-2">
+                        <b-form-select
+                                :size="template_size"
+                                class="mx-1"
+                                v-model="newDefault_tmp"
+                                :options="groups_filtered"
+                                value-field="id"
+                                text-field="name"
+                                style="flex:1"
+                        ></b-form-select>
+                    </b-form-group>
+                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                    </b-button>
+                    <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
+                              @click="()=>{this.$refs['newDefault_tmp'].hide(); newDefault_tmp = null}">取 消
                     </b-button>
                 </b-form>
             </div>
@@ -247,6 +269,7 @@
                                         v-model="new_Manager.description"
                                         required
                                         placeholder="备注"
+                                        :disabled="newManagerLock !== 0"
                                 ></b-form-textarea>
                             </b-form-group>
                             <b-form-group id="input-group-9" label-for="input-2">
@@ -256,8 +279,10 @@
                                         autocomplete="new-password"
                                         type="password"
                                         placeholder="密码"
+                                        :disabled="newManagerLock !== 0"
                                 ></b-form-input>
                             </b-form-group>
+                            <span v-if="newManagerLock === 2" style="color: red; font-size: 12px" class="justify-content-center row">该用户已经是 "{{before}}" 的管理员</span>
                             <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
                             </b-button>
                             <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
@@ -331,7 +356,9 @@
             return {
                 selected: [],
                 groups: [],
+                groups_filtered: [],
                 is_edit_default: false,
+                newDefault_tmp: null,
                 editItem: {
                     id: null,
                     name: '',
@@ -475,9 +502,22 @@
             "newGroup.managerName": {
                 handler: function() {
                     if (this.newGroup.managerName !== '') {
-                        this.newManagerLock = 0;
                         GroupService
                             .checkUserGroup({ username: this.newGroup.managerName })
+                            .then(data => {
+                                this.newManagerLock = parseInt(data.results);
+                                this.before = data.before;
+                            });
+                    } else
+                        this.newManagerLock = 0;
+                },
+                deep: true
+            },
+            "new_Manager.name": {
+                handler: function() {
+                    if (this.new_Manager.name !== '') {
+                        GroupService
+                            .checkUserGroup({ username: this.new_Manager.name })
                             .then(data => {
                                 this.newManagerLock = parseInt(data.results);
                                 this.before = data.before;
@@ -573,36 +613,45 @@
                     });
             },
             deleteGroup() {
-                if (confirm("您确定要删除该集群吗？")){
-                    this.run();
-                    GroupService
-                        .deleteGroups({ids: JSON.stringify(this.selected)})
-                        .then(res => {
-                            if (res.results === 'success')
-                                GroupService
-                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                    .then(data => {
-                                        data.results.forEach(item => {
-                                            if (item.checked === undefined) {
-                                                item.checked = false;
-                                            }
-                                            if (item.locked === undefined) {
-                                                item.locked = false;
-                                            }
+                let default_remove = this.selected.filter(item => this.allgroup.list.filter(obj=>obj.id === item)[0].default === 1).length > 0;
+                if (default_remove && this.newDefault_tmp === null) {
+                    this.groups_filtered = this.groups.filter(item=>!this.selected.includes(item.id));
+                    this.$refs['newDefault_tmp'].show();
+                }
+                else {
+                    this.$refs['newDefault_tmp'].hide();
+                    if (confirm("您确定要删除该集群吗？")){
+                        this.run();
+                        GroupService
+                            .deleteGroups({ids: JSON.stringify(this.selected), newDefault: this.newDefault_tmp})
+                            .then(res => {
+                                if (res.results === 'success')
+                                    GroupService
+                                        .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                        .then(data => {
+                                            data.results.forEach(item => {
+                                                if (item.checked === undefined) {
+                                                    item.checked = false;
+                                                }
+                                                if (item.locked === undefined) {
+                                                    item.locked = false;
+                                                }
+                                            });
+                                            this.allgroup.list = data.results;
+                                            this.allgroup.total = data.paging.count;
+                                            this.selected = [];
+                                            this.$emit("data-ready");
+                                        })
+                                        .catch(() => {
+                                            this.$emit("data-failed");
                                         });
-                                        this.allgroup.list = data.results;
-                                        this.allgroup.total = data.paging.count;
-                                        this.$emit("data-ready");
-                                    })
-                                    .catch(() => {
-                                        this.$emit("data-failed");
-                                    });
-                            else
+                                else
+                                    this.$emit("data-failed");
+                            })
+                            .catch(() => {
                                 this.$emit("data-failed");
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
+                            });
+                    }
                 }
             },
             editOpen(row) {
@@ -667,42 +716,46 @@
             },
             newManagerSave(evt) {
                 evt.preventDefault();
-                this.run();
-                GroupService
-                    .addManager({groupID: this.Managers.groupID, data: this.new_Manager})
-                    .then((res) => {
-                        if (res.results === 'success')
-                            GroupService
-                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                .then(data => {
-                                    data.results.forEach(item => {
-                                        if (item.checked === undefined) {
-                                            item.checked = false;
-                                        }
-                                        if (item.locked === undefined) {
-                                            item.locked = false;
-                                        }
+                if (this.newManagerLock === 2 && !confirm("您确定以该用户选为管理员吗？"))
+                    return;
+                else {
+                    this.run();
+                    GroupService
+                        .addManager({groupID: this.Managers.groupID, data: this.new_Manager, order: this.newManagerLock})
+                        .then((res) => {
+                            if (res.results === 'success')
+                                GroupService
+                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                    .then(data => {
+                                        data.results.forEach(item => {
+                                            if (item.checked === undefined) {
+                                                item.checked = false;
+                                            }
+                                            if (item.locked === undefined) {
+                                                item.locked = false;
+                                            }
+                                        });
+                                        this.allgroup.list = data.results;
+                                        this.allgroup.total = data.paging.count;
+                                        let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
+                                        this.Managers.list = selectedData[0].groupManagers;
+                                        this.$emit("data-ready");
+                                        this.newManager = false;
+                                    })
+                                    .catch(() => {
+                                        this.$emit("data-failed");
                                     });
-                                    this.allgroup.list = data.results;
-                                    this.allgroup.total = data.paging.count;
-                                    let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
-                                    this.Managers.list = selectedData[0].groupManagers;
-                                    this.$emit("data-ready");
-                                    this.newManager = false;
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        else if (res.results === 'managerNameError') {
-                            alert("该账号已存在。");
+                            else if (res.results === 'managerNameError') {
+                                alert("该账号已存在。");
+                                this.$emit("data-failed");
+                            }
+                            else
+                                this.$emit("data-failed");
+                        })
+                        .catch(() => {
                             this.$emit("data-failed");
-                        }
-                        else
-                            this.$emit("data-failed");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
+                        });
+                }
             },
             editManagerSave(evt) {
                 evt.preventDefault();
