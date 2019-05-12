@@ -89,7 +89,7 @@
                     v-model="queryParam.page"
             ></b-pagination>
         </b-row>
-        <b-modal hide-footer centered  id="newDefault" ref="newDefault" title="重置密码">
+        <b-modal hide-footer centered  id="newDefault" ref="newDefault" title="请选择新的默认集群">
             <div>
                 <b-form @submit="(evt)=>{evt.preventDefault();this.$refs['newDefault'].hide();}" class="container pt-3">
                     <b-form-group id="input-group-15" label-for="input-2">
@@ -159,8 +159,10 @@
                                 placeholder="管理员密码"
                                 type="password"
                                 autocomplete="new-password"
+                                :disabled="newManagerLock !== 0"
                         ></b-form-input>
                     </b-form-group>
+                    <span v-if="newManagerLock === 2" style="color: red; font-size: 12px">该用户已经是 "{{before}}" 的管理员</span>
                     <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
                 </b-form>
             </div>
@@ -436,6 +438,8 @@
                     managerName: '',
                     managerPass: ''
                 },
+                newManagerLock: 0,
+                before: '',
                 options1: [
                     {text: '是', value: 1},
                     {text: '否', value: 0}
@@ -467,6 +471,21 @@
                 handler: _.debounce(function () {
                     this.queryGroupList();
                 }, 500)
+            },
+            "newGroup.managerName": {
+                handler: function() {
+                    if (this.newGroup.managerName !== '') {
+                        this.newManagerLock = 0;
+                        GroupService
+                            .checkUserGroup({ username: this.newGroup.managerName })
+                            .then(data => {
+                                this.newManagerLock = parseInt(data.results);
+                                this.before = data.before;
+                            });
+                    } else
+                        this.newManagerLock = 0;
+                },
+                deep: true
             }
         },
         methods: {
@@ -485,47 +504,51 @@
             onSubmit(evt) {
                 evt.preventDefault();
                 if (this.newGroup.default === 1 && !confirm("已经有默认集群了，是否更换默认集群")) {
-                    return
+                    return;
                 }
                 else {
-                    this.run();
-                    GroupService
-                        .create(this.newGroup)
-                        .then((res) => {
-                            if (res.results === 'success')
-                                GroupService
-                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                    .then(data => {
-                                        data.results.forEach(item => {
-                                            if (item.checked === undefined) {
-                                                item.checked = false;
-                                            }
-                                            if (item.locked === undefined) {
-                                                item.locked = false;
-                                            }
+                    if (this.newManagerLock === 2 && !confirm("您确定以该用户选为管理员吗？"))
+                        return;
+                    else {
+                        this.run();
+                        GroupService
+                            .create({...this.newGroup, 'order': this.newManagerLock})
+                            .then((res) => {
+                                if (res.results === 'success')
+                                    GroupService
+                                        .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                        .then(data => {
+                                            data.results.forEach(item => {
+                                                if (item.checked === undefined) {
+                                                    item.checked = false;
+                                                }
+                                                if (item.locked === undefined) {
+                                                    item.locked = false;
+                                                }
+                                            });
+                                            this.allgroup.list = data.results;
+                                            this.allgroup.total = data.paging.count;
+                                            this.$emit("data-ready");
+                                            this.$refs['newGroup'].hide();
+                                        })
+                                        .catch(() => {
+                                            this.$emit("data-failed");
                                         });
-                                        this.allgroup.list = data.results;
-                                        this.allgroup.total = data.paging.count;
-                                        this.$emit("data-ready");
-                                        this.$refs['newGroup'].hide();
-                                    })
-                                    .catch(() => {
-                                        this.$emit("data-failed");
-                                    });
-                            else if (res.results === 'nameError') {
-                                alert("该集群名已存在。");
+                                else if (res.results === 'nameError') {
+                                    alert("该集群名已存在。");
+                                    this.$emit("data-failed");
+                                }
+                                else if (res.results === 'managerNameError') {
+                                    alert("该账号已存在。");
+                                    this.$emit("data-failed");
+                                }
+                                else
+                                    this.$emit("data-failed");
+                            })
+                            .catch(() => {
                                 this.$emit("data-failed");
-                            }
-                            else if (res.results === 'managerNameError') {
-                                alert("该账号已存在。");
-                                this.$emit("data-failed");
-                            }
-                            else
-                                this.$emit("data-failed");
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
+                            });
+                    }
                 }
             },
             queryGroupList() {

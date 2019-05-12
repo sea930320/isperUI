@@ -158,6 +158,14 @@ class GroupService {
             params: data
         })
     }
+
+    checkUserGroup(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/checkUserGroup',
+            params: data
+        })
+    }
 }
 
 export default new GroupService()
