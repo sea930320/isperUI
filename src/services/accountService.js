@@ -150,6 +150,18 @@ class AccountService {
   }
   
   /**
+   * Get Assistants
+   * @return {Promise}
+   */
+  setAssistantsActions(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/set/assistants/actions',
+      params: options
+    })
+  }
+
+  /**
    * Get Permissions
    * @return {Promise}
    */
