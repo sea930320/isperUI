@@ -26,8 +26,8 @@
                                 :active="assistant.active"
                                 @click="selectAssistant(assistant)"
                             >
-                                {{assistant.name}}
-                                <b-button size="sm">取消绑定</b-button>
+                                {{assistant.name || assistant.username}}
+                                <b-button size="sm" @click="unsetAssistant(assistant)">取消绑定</b-button>
                             </b-list-group-item>
                         </b-list-group>
                     </b-card-body>
@@ -100,6 +100,25 @@
             </b-col>
         </b-row>
         <assistant-add/>
+
+        <!-- Unset Assistant Modal -->
+        <b-modal
+            v-model="unsetModal"
+            title="Unset Assistant"
+            ok-title="确定"
+            cancel-title="取消"
+            @cancel="unsetModal=false"
+            @ok="confirmUnset"
+        >
+            <div class="modal-msg">
+                <p class="message">Are you Sure</p>
+            </div>
+
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="confirmUnset()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="unsetModal=false">取消</b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -117,7 +136,9 @@ export default {
     data() {
         return {
             assistants: [],
-            permissions: []
+            permissions: [],
+            unsetModal: false,
+            focusAssistant: null
         };
     },
     computed: {
@@ -157,6 +178,10 @@ export default {
         this.$nextTick(() => {
             this.getAssistants();
         });
+
+        this.$on("on-ok-assistant-add", () => {
+            this.getAssistants();
+        });
     },
     methods: {
         ...mapActions({
@@ -188,6 +213,26 @@ export default {
         },
         addAssistant() {
             this.$emit("openAssistantAddModal");
+        },
+        unsetAssistant(assistant) {
+            this.focusAssistant = assistant;
+            this.unsetModal = true;
+        },
+        confirmUnset() {
+            this.unsetModal = false;
+            this.run();
+            let params = {
+                candidates: JSON.stringify([this.focusAssistant.id])
+            };
+            accountService
+                .unsetAssistant(params)
+                .then(() => {
+                    this.$emit("data-ready");
+                    this.getAssistants();
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         },
         selectAssistant(assistant) {
             this.assistants = _.map(this.assistants, assistant => {

@@ -148,15 +148,39 @@ class AccountService {
       params: options
     })
   }
-  
+
   /**
-   * Get Assistants
+   * Set Assistants
+   * @return {Promise}
+   */
+  setAssistants(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/set/assistants',
+      params: options
+    })
+  }
+
+  /**
+   * UnSet Assistant
+   * @return {Promise}
+   */
+  unsetAssistant(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/unset/assistant',
+      params: options
+    })
+  }
+
+  /**
+   * Set Assistant Actions
    * @return {Promise}
    */
   setAssistantsActions(options) {
     return xhr({
       method: 'post',
-      url: '/account/set/assistants/actions',
+      url: '/account/set/assistant/actions',
       params: options
     })
   }
