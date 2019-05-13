@@ -196,6 +196,18 @@ class AccountService {
       params: options
     })
   }
+
+  /**
+   * Get MessageData
+   * @return {Promise}
+   */
+  getMessageData(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/getMessageData',
+      params: options
+    })
+  }
 }
 
 // 实例化后导出，全局单例

@@ -17,7 +17,7 @@
         <b-nav-item v-if="userInfo.role===1" to="#">
           <icon name="sitemap" class="tabIcon"></icon>元模块管理
         </b-nav-item>
-        <b-nav-item to="/manager/user">
+        <b-nav-item to="/manager/user/0">
           <icon name="user-cog" class="tabIcon"></icon>用户管理
         </b-nav-item>
         <b-nav-item to="/manager/system-set">

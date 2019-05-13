@@ -14,34 +14,26 @@
                 <SuperUser4/>
             </b-tab>
         </b-tabs>
-        <b-tabs v-if="userInfo.identity===2">
+        <b-tabs v-if="userInfo.identity===2" v-model="tabIndex">
             <b-tab title="用户管理">
-                <b-tabs class="mt-2">
-                    <b-tab title="用户管理">
-                        <GroupUser1_1/>
-                    </b-tab>
-                    <b-tab title="非单位注册审核">
-                        <GroupUser1_2/>
-                    </b-tab>
-                </b-tabs>
+                <GroupUser1_1/>
             </b-tab>
             <b-tab title="变更集群审核">
                 <GroupUser2/>
             </b-tab>
+            <b-tab title="非单位注册审核">
+                <GroupUser1_2/>
+            </b-tab>
         </b-tabs>
-        <b-tabs v-if="userInfo.identity===3">
+        <b-tabs v-if="userInfo.identity===3" v-model="tabIndex">
             <b-tab title="用户管理">
-                <b-tabs class="mt-2">
-                    <b-tab title="用户管理">
-                        <CompanyUser1_1/>
-                    </b-tab>
-                    <b-tab title="用户注册审核">
-                        <CompanyUser1_2/>
-                    </b-tab>
-                </b-tabs>
+                <CompanyUser1_1/>
             </b-tab>
             <b-tab title="变更单位审核">
                 <CompanyUser2/>
+            </b-tab>
+            <b-tab title="用户注册审核">
+                <CompanyUser1_2/>
             </b-tab>
         </b-tabs>
     </div>
@@ -76,6 +68,11 @@
         },
         computed: {
             ...mapState(["userInfo"])
+        },
+        data() {
+            return {
+                tabIndex: parseInt(this.$route.params.id)
+            };
         },
         created() {
         },

@@ -18,13 +18,16 @@ const personalCenterRoutes = [{
 }, {
     path: 'assistant-set',
     component: () => import('@/views/personal-center/AssistantSet.vue')
-}]
+}, {
+    path: 'message-view',
+    component: () => import('@/views/personal-center/MessageView.vue')
+}];
 
 const systemSetRoutes = [{
     path: 'system-set',
     name: 'system-set',
     component: () => import('@/views/system-set/SystemSet.vue')
-}]
+}];
 
 const routes = [{
     path: '/',
@@ -129,13 +132,13 @@ const routes = [{
             name: 'manager-group_company',
             component: () => import('@/views/manager/group_company/Group_Company_Index.vue')
         }, {
-            path: 'user',
+            path: 'user/:id',
             name: 'super-user-manage',
             component: () => import('@/views/manager/user/UMIndex.vue')
         }
     ]
 }
-]
+];
 
 const router = new VueRouter({
     mode: 'history',

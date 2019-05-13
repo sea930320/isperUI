@@ -27,6 +27,9 @@ export default {
   }, data) {
     commit(types.SET_FLOW_STEP, data)
   },
+  refreshMsg(state) {
+    state.commit('refreshMsg')
+  },
   sendMessage({
     commit
   }, data) {
