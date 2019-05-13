@@ -45,52 +45,97 @@
                     <tbody>
                         <tr>
                             <td class="w-20">系统功能</td>
-                            <td colspan="2" class="m-0 p-0 w-80">
-                                <b-row
-                                    v-for="(permission, index) in permissions"
-                                    :key="index"
-                                    no-gutters
-                                    class="permission-row"
-                                >
-                                    <b-col
-                                        cols="3"
-                                        class="p-1 pl-3 text-left"
-                                        style="border-right: 1px solid #dee2e6;"
+                            <td colspan="2" class="m-0 p-0 w-80" v-if="selectedAssistant">
+                                <template v-if="selectAssistant">
+                                    <b-row
+                                        v-for="(permission, index) in systemFunctionPermissions"
+                                        :key="index"
+                                        no-gutters
+                                        class="permission-row"
                                     >
-                                        <b-form-checkbox
-                                            v-model="selectedAssistant.permissions_check[permission.id]"
-                                            @change="togglePermission($event, permission)"
-                                        >{{permission.name}}</b-form-checkbox>
-                                    </b-col>
-                                    <b-col
-                                        cols="9"
-                                        class="pl-3 text-left"
-                                        style="overflow:hidden; text-overflow: ellipse"
-                                    >
-                                        <b-row>
-                                            <b-col
-                                                cols="4"
-                                                v-for="(action, index1) in permission.actions"
-                                                :key="index1"
-                                                class="my-1"
-                                            >
-                                                <b-form-checkbox
-                                                    value-field="id"
-                                                    text-field="name"
-                                                    v-model="selectedAssistant.actions_check[action.id]"
-                                                    @change="toggleAction($event, action)"
+                                        <b-col
+                                            cols="3"
+                                            class="p-1 pl-3 text-left"
+                                            style="border-right: 1px solid #dee2e6;"
+                                        >
+                                            <b-form-checkbox
+                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                @change="togglePermission($event, permission)"
+                                            >{{permission.name}}</b-form-checkbox>
+                                        </b-col>
+                                        <b-col
+                                            cols="9"
+                                            class="pl-3 text-left"
+                                            style="overflow:hidden; text-overflow: ellipse"
+                                        >
+                                            <b-row>
+                                                <b-col
+                                                    cols="4"
+                                                    v-for="(action, index1) in permission.actions"
+                                                    :key="index1"
+                                                    class="my-1"
                                                 >
-                                                    <div style="width: 100%;">{{action.name}}</div>
-                                                </b-form-checkbox>
-                                            </b-col>
-                                        </b-row>
-                                    </b-col>
-                                </b-row>
+                                                    <b-form-checkbox
+                                                        value-field="id"
+                                                        text-field="name"
+                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        @change="toggleAction($event, action)"
+                                                    >
+                                                        <div style="width: 100%;">{{action.name}}</div>
+                                                    </b-form-checkbox>
+                                                </b-col>
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                </template>
                             </td>
                         </tr>
                         <tr>
-                            <td>系统设置</td>
-                            <td colspan="2"></td>
+                            <td class="w-20 p-0">系统设置</td>
+                            <td colspan="2" class="m-0 p-0 w-80">
+                                <template v-if="selectedAssistant">
+                                    <b-row
+                                        v-for="(permission, index) in systemSettingPermissions"
+                                        :key="index"
+                                        no-gutters
+                                        class="permission-row"
+                                    >
+                                        <b-col
+                                            cols="3"
+                                            class="p-2 pl-3 text-left"
+                                            style="border-right: 1px solid #dee2e6;"
+                                        >
+                                            <b-form-checkbox
+                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                @change="togglePermission($event, permission)"
+                                            >{{permission.name}}</b-form-checkbox>
+                                        </b-col>
+                                        <b-col
+                                            cols="9"
+                                            class="pl-3 text-left"
+                                            style="overflow:hidden; text-overflow: ellipse"
+                                        >
+                                            <b-row>
+                                                <b-col
+                                                    cols="4"
+                                                    v-for="(action, index1) in permission.actions"
+                                                    :key="index1"
+                                                    class="my-1 py-1"
+                                                >
+                                                    <b-form-checkbox
+                                                        value-field="id"
+                                                        text-field="name"
+                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        @change="toggleAction($event, action)"
+                                                    >
+                                                        <div style="width: 100%;">{{action.name}}</div>
+                                                    </b-form-checkbox>
+                                                </b-col>
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                </template>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -143,10 +188,23 @@ export default {
     },
     computed: {
         ...mapState(["userInfo"]),
+        systemFunctionPermissions() {
+            return this.permissions.filter(permission => {
+                return permission.codename != "code_system_set_management";
+            });
+        },
+        systemSettingPermissions() {
+            return this.permissions.filter(permission => {
+                return permission.codename == "code_system_set_management";
+            });
+        },
         selectedAssistant() {
             let assistant = _.find(this.assistants, {
                 active: true
             });
+            if (!assistant) {
+                return null;
+            }
             this.$set(assistant, "permissions_check", {});
             this.$set(assistant, "actions_check", {});
             assistant.permissions = _.mapValues(
