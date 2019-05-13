@@ -27,6 +27,7 @@ import {
 	STORAGE_KEY_USER,
 	STORAGE_KEY_FLOW_STEP
 } from './storageKey'
+import accountService from "@/services/accountService";
 
 const state = {
 	loading: false,
@@ -76,7 +77,8 @@ const state = {
 		process_actions: [],
 		function_actions: [],
 		experiences: []
-	}
+	},
+	messageData: []
 }
 
 const mutations = {
@@ -189,6 +191,13 @@ const mutations = {
 			status: 2
 		}
 		state.meta.experiences.push(ex)
+	},
+	refreshMsg(state) {
+		accountService
+			.getMessageData()
+			.then(data => {
+				state.messageData = data.results;
+			})
 	}
 }
 

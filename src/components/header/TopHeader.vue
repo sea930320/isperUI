@@ -23,6 +23,9 @@
             <b-dropdown-item :to="prefixRoute + 'personal-info'">个人信息</b-dropdown-item>
             <b-dropdown-item :to="prefixRoute + 'password-reset'">重置密码</b-dropdown-item>
             <b-dropdown-item :to="prefixRoute + 'assistant-set'">配置助理</b-dropdown-item>
+            <b-dropdown-item :to="prefixRoute + 'message-view'">消息管理
+              <b-badge variant="primary" pill v-if="message.length > 0" class="ml-3">{{message.length}}</b-badge>
+            </b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item right @click="logoutHandler">
             <icon name="sign-out-alt"></icon>
@@ -34,13 +37,22 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
+import store from '@/store'
 import { STORAGE_KEY_USER } from "@/store/storageKey";
 import prefixRoute from "@/mixins/prefix-route";
 
 export default {
   mixins: [prefixRoute],
-  created() {},
+  created() {
+    store.dispatch('refreshMsg')
+  },
+  computed: {
+    ...mapState(["userInfo"]),
+    message() {
+      return store.getters.getMsg
+    }
+  },
   methods: {
     ...mapActions({
       logoutAction: "logout"
@@ -49,7 +61,7 @@ export default {
       this.$cookie.delete(STORAGE_KEY_USER);
       this.logoutAction();
       this.$router.push({ path: "/login" });
-    }
+    },
   }
 };
 </script>

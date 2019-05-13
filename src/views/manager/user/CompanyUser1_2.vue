@@ -63,6 +63,7 @@
 <script>
     import {mapState} from "vuex";
     import Loading from "@/components/loading/Loading";
+    import store from '@/store'
     import UserManageService from "@/services/userManageService";
     import _ from "lodash";
     import BRow from "bootstrap-vue/src/components/layout/row";
@@ -110,7 +111,7 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 4,
+                    size: 5,
                     group_id: null
                 },
                 queryDebounceParam: {
@@ -170,6 +171,7 @@
                                     this.allData.list = data.results;
                                     this.allData.total = data.paging.count;
                                     this.$emit("data-ready");
+                                    store.dispatch('refreshMsg')
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");

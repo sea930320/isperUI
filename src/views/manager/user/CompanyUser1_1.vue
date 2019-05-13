@@ -245,7 +245,7 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 4,
+                    size: 5,
                     group_id: null
                 },
                 queryDebounceParam: {
