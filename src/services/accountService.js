@@ -28,6 +28,17 @@ class AccountService {
   }
 
   /**
+   * Get Permission for manager
+   * @return {Promise}
+   */
+  permission() {
+    return xhr({
+      method: 'get',
+      url: '/account/permission'
+    })
+  }
+
+  /**
    * 获取所有账户
    * @return {Promise}
    */

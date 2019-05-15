@@ -33,7 +33,7 @@
                         <template slot="action" slot-scope="row">
                             <b-button-group>
                                 <b-button class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary"
-                                          @click="editOpen(row)">
+                                          @click="editOpen(row)" v-if="isActionAllowed('code_group_company_management', 'code_configure_instructor_group_company')">
                                     <icon name="user-plus" style="width: 20px"></icon>
                                     配置指导者
                                 </b-button>

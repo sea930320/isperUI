@@ -183,7 +183,6 @@ export default {
             });
         },
         firstPageGo(data = null) {
-            debugger;
             if (!data) {
                 data = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
             } else {

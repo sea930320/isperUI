@@ -1,5 +1,5 @@
 <template>
-    <div class="workflow-index">
+    <div class="workflow-index" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
             <b-col lg="3" md="6" sm="12">
@@ -26,42 +26,49 @@
                         class="styledBtn"
                         variant="outline-primary"
                         @click="publicProcess"
+                        v-if="isActionAllowed('code_workflow_management', 'code_public_unpublic_workflow')"
                     >公开</b-button>
                     <b-button
                         :size="template_size"
                         class="styledBtn"
                         variant="outline-primary"
                         @click="unpublicProcess"
+                        v-if="isActionAllowed('code_workflow_management', 'code_public_unpublic_workflow')"
                     >不公开</b-button>
                     <b-button
                         :size="template_size"
                         class="styledBtn"
                         variant="outline-primary"
                         @click="newProcess"
+                        v-if="isActionAllowed('code_workflow_management', 'code_create_workflow')"
                     >新建流程</b-button>
                     <b-button
                         class="styledBtn"
                         :size="template_size"
                         variant="outline-primary"
                         @click="publishWorkflowClick"
+                        v-if="isActionAllowed('code_workflow_management', 'code_publish_workflow')"
                     >发布流程</b-button>
                     <b-button
                         class="styledBtn"
                         :size="template_size"
                         variant="outline-primary"
                         @click="copyWorkflowClick"
+                        v-if="isActionAllowed('code_workflow_management', 'code_clone_workflow')"
                     >复制为未发布流程</b-button>
                     <b-button
                         :size="template_size"
                         class="styledBtn"
                         variant="outline-primary"
                         @click="shareClick"
+                        v-if="isActionAllowed('code_workflow_management', 'code_share_unshare_workflow')"
                     >共享</b-button>
                     <b-button
                         :size="template_size"
                         class="styledBtn"
                         variant="outline-primary"
                         @click="unshareClick"
+                        v-if="isActionAllowed('code_workflow_management', 'code_share_unshare_workflow')"
                     >取消共享</b-button>
                 </b-button-group>
             </b-col>
@@ -91,19 +98,21 @@
                 <template
                     slot="creator"
                     slot-scope="row"
-                >{{row.item.created_by ? row.item.created_by.name : 'n/a'}}</template>
+                >{{row.item.created_by ? row.item.created_by.name || row.item.created_by.username : 'n/a'}}</template>
                 <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
                 <template slot="rend_ani_1" slot-scope="row">
                     <a
                         href="javascript:;"
                         class="btn-link"
-                        v-if="!row.item.edited"
+                        v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
                         title="点击查看大图"
                         @click="showBigImg(row.item.animation1)"
                     >
                         <icon name="eye"></icon>
                     </a>
-                    <div v-else>
+                    <div
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow')"
+                    >
                         <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
                     </div>
                 </template>
@@ -111,13 +120,15 @@
                     <a
                         href="javascript:;"
                         class="btn-link"
-                        v-if="!row.item.edited"
+                        v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
                         title="点击查看大图"
                         @click="showBigImg(row.item.animation2)"
                     >
                         <icon name="eye"></icon>
                     </a>
-                    <div v-else>
+                    <div
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow')"
+                    >
                         <toggle-upload
                             :item="row.item"
                             :keyId="2"
@@ -152,7 +163,7 @@
                     <a
                         class="btn-link mx-1"
                         href="javascript:;"
-                        v-if="row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag"
                         @click="saveWorkflow(row.item)"
                     >
                         <icon name="save"></icon>
@@ -160,7 +171,7 @@
                     <a
                         class="btn-link mx-1"
                         href="javascript:;"
-                        v-else-if="row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.created_by.id==userInfo.id && !isSuperFlag"
                         @click="editWorkflow(row.item)"
                     >
                         <icon name="edit"></icon>
@@ -168,13 +179,13 @@
                     <a
                         class="btn-link mx-1"
                         href="javascript:;"
-                        v-if="row.item.status != 1"
+                        v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && row.item.status != 1"
                         @click="viewXmlHandler(row.item)"
                     >
                         <icon name="eye"></icon>
                     </a>
                     <router-link
-                        v-if="!!row.item.id && row.item.status == 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && !!row.item.id && row.item.status == 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
                         :to="{ name: 'manager-workflow-drawXML', params: { flow_id: row.item.id }}"
                         class="mx-1"
                     >
@@ -183,7 +194,7 @@
                     <a
                         class="btn-link mx-1"
                         href="javascript:;"
-                        v-if="row.item.status != 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_set_workflow') && row.item.status != 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
                         @click="toSetPage(row.item)"
                     >
                         <icon name="cog"></icon>
@@ -192,7 +203,7 @@
                         class="mx-1"
                         href="javascript:;"
                         @click="deleteWorkflowClick(row.item)"
-                        v-if="row.item.created_by.id==userInfo.id || isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_delete_workflow') && row.item.created_by.id==userInfo.id || isSuperFlag"
                     >
                         <icon name="trash"></icon>
                     </a>
@@ -231,9 +242,7 @@
         <b-modal v-model="deleteModal" title="删除提醒" size="lg" :showPerson="true">
             <b-container fluid>
                 <div v-if="relatedProjects.length == 0" class="modal-msg">
-                    <p
-                        class="message"
-                    >是否确认删除流程。</p>
+                    <p class="message">是否确认删除流程。</p>
                 </div>
                 <div v-else class="modal-msg">
                     <p class="message">
@@ -722,7 +731,7 @@ export default {
         });
     },
     computed: {
-        ...mapState(["userInfo"]),
+        ...mapState(["userInfo", "userPermission"]),
         checkedItems() {
             return this.workflows.list.filter(item => item.checked === true);
         },
@@ -918,18 +927,31 @@ export default {
         saveWorkflow(workflow) {
             if (this.validateData(workflow)) {
                 let data = this.saveWorkflowData(workflow);
+                this.run();
                 if (workflow.id) {
                     // 更新流程
-                    workflowService.updateWorkflow(data).then(() => {
-                        this.$toasted.success("更新流程成功");
-                        this.queryWorkflowList();
-                    });
+                    workflowService
+                        .updateWorkflow(data)
+                        .then(() => {
+                            this.$emit("data-ready");
+                            this.$toasted.success("更新流程成功");
+                            this.queryWorkflowList();
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
                 } else {
                     // 创建新流程
-                    workflowService.create(data).then(() => {
-                        this.$toasted.success("保存新建流程成功");
-                        this.queryWorkflowList();
-                    });
+                    workflowService
+                        .create(data)
+                        .then(() => {
+                            this.$emit("data-ready");
+                            this.$toasted.success("保存新建流程成功");
+                            this.queryWorkflowList();
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
                 }
                 this.newFlowStatus = false;
             }
@@ -973,11 +995,16 @@ export default {
             }
         },
         deleteWorkflowHandler() {
+            this.run();
             workflowService
                 .deleteWorkflow({ flow_id: this.currentDeleteItem.id })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.$toasted.success("删除流程成功");
                     this.queryWorkflowList();
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         // Ctr+Delete 确定删除
@@ -1003,17 +1030,31 @@ export default {
         },
         // 保护
         lockWorkflowClick(workflow) {
-            workflowService.lockWorkflow({ flow_id: workflow.id }).then(() => {
-                this.$set(workflow, "protected", 1);
-                this.$toasted.success("保护流程成功");
-            });
+            this.run();
+            workflowService
+                .lockWorkflow({ flow_id: workflow.id })
+                .then(() => {
+                    this.$emit("data-ready");
+                    this.$set(workflow, "protected", 1);
+                    this.$toasted.success("保护流程成功");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         },
         // 解除保护
         unlockWorkflowClick(workflow) {
-            workflowService.lockWorkflow({ flow_id: workflow.id }).then(() => {
-                this.$set(workflow, "protected", 0);
-                this.$toasted.success("解除保护流程成功");
-            });
+            this.run();
+            workflowService
+                .lockWorkflow({ flow_id: workflow.id })
+                .then(() => {
+                    this.$emit("data-ready");
+                    this.$set(workflow, "protected", 0);
+                    this.$toasted.success("解除保护流程成功");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         },
         // 点击发布流程按钮
         publishWorkflowClick() {
@@ -1036,11 +1077,13 @@ export default {
             }
             let totalLen = this.checkedItems.length;
             let accessableLen = this.checkedPublishableItems.length;
+            this.run();
             workflowService
                 .publishWorkflow({
                     ids: JSON.stringify(this.checkedPublishableIds)
                 })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.queryWorkflowList();
                     this.$toasted.success(
                         "成功: " +
@@ -1048,6 +1091,9 @@ export default {
                             "个， 失败: " +
                             (totalLen - accessableLen)
                     );
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         // 点击复制流程
@@ -1099,6 +1145,9 @@ export default {
                     this.queryWorkflowList();
                     this.$toasted.success("复制流程成功");
                     this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         // 共享
@@ -1118,11 +1167,13 @@ export default {
             }
             let totalLen = this.checkedItems.length;
             let accessableLen = this.checkedShareableItems.length;
+            this.run();
             workflowService
                 .shareWorkflow({
                     data: JSON.stringify(this.checkedShareableIds)
                 })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.queryWorkflowList(this.queryParam);
                     this.$toasted.success(
                         "成功: " +
@@ -1130,6 +1181,9 @@ export default {
                             "个， 失败: " +
                             (totalLen - accessableLen)
                     );
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         // 共享
@@ -1149,11 +1203,13 @@ export default {
             }
             let totalLen = this.checkedItems.length;
             let accessableLen = this.checkedUnShareableItems.length;
+            this.run();
             workflowService
                 .unshareWorkflow({
                     data: JSON.stringify(this.checkedUnShareableIds)
                 })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.queryWorkflowList(this.queryParam);
                     this.$toasted.success(
                         "成功: " +
@@ -1161,6 +1217,9 @@ export default {
                             "个， 失败: " +
                             (totalLen - accessableLen)
                     );
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         publicProcess() {
@@ -1178,11 +1237,13 @@ export default {
             }
             let totalLen = this.checkedItems.length;
             let accessableLen = this.checkedPublicableItems.length;
+            this.run();
             workflowService
                 .publicWorkflow({
                     data: JSON.stringify(this.checkedPublicableIds)
                 })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.queryWorkflowList();
                     this.$toasted.success(
                         "成功: " +
@@ -1190,6 +1251,9 @@ export default {
                             "个， 失败: " +
                             (totalLen - accessableLen)
                     );
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         },
         unpublicProcess() {
@@ -1207,11 +1271,13 @@ export default {
             }
             let totalLen = this.checkedItems.length;
             let accessableLen = this.checkedUnPublicableItems.length;
+            this.run();
             workflowService
                 .unpublicWorkflow({
                     data: JSON.stringify(this.checkedUnPublicableIds)
                 })
                 .then(() => {
+                    this.$emit("data-ready");
                     this.queryWorkflowList();
                     this.$toasted.success(
                         "成功: " +
@@ -1219,6 +1285,9 @@ export default {
                             "个， 失败: " +
                             (totalLen - accessableLen)
                     );
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
         }
     }

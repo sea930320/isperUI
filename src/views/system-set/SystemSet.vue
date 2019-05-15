@@ -1,117 +1,148 @@
 <template>
-  <div class="system-set">
-    <b-tabs v-if="userInfo.identity===1">
-      <b-tab title="角色管理">Role Management</b-tab>
-      <b-tab title="安全维护" class="pt-2">
-        <b-tabs class="security-log">
-          <b-tab title="操作日志">Work Log</b-tab>
-          <b-tab title="登录记录">
-            <login-log/>
-          </b-tab>
-          <b-tab title="记录统计">Record Statistic</b-tab>
+    <div class="system-set">
+        <b-tabs v-if="userInfo.identity===1">
+            <b-tab title="角色管理">Role Management</b-tab>
+            <b-tab title="安全维护" class="pt-2">
+                <b-tabs class="security-log">
+                    <b-tab title="操作日志">Work Log</b-tab>
+                    <b-tab title="登录记录">
+                        <login-log/>
+                    </b-tab>
+                    <b-tab title="记录统计">Record Statistic</b-tab>
+                </b-tabs>
+            </b-tab>
+            <b-tab title="字典管理">
+                <Dictionary/>
+            </b-tab>
+            <b-tab title="公告管理">
+                <Advertising/>
+            </b-tab>
         </b-tabs>
-      </b-tab>
-      <b-tab title="字典管理">
-          <Dictionary />
-      </b-tab>
-      <b-tab title="公告管理">
-          <Advertising />
-      </b-tab>
-    </b-tabs>
-      <b-tabs v-if="userInfo.identity===2">
-          <b-tab title="操作日志">Work Log</b-tab>
-          <b-tab title="登录记录">
-              <login-log/>
-          </b-tab>
-          <b-tab title="记录统计">Record Statistic</b-tab>
-      </b-tabs>
-      <b-tabs v-if="userInfo.identity===3">
-          <b-tab title="部门及职务管理">
-              <PartPosition />
-          </b-tab>
-          <b-tab title="内部权限管理">
-              <InnerPermission />
-          </b-tab>
-          <b-tab title="日志管理" class="pt-2">
-              <b-tabs class="security-log">
-                  <b-tab title="操作日志">Work Log</b-tab>
-                  <b-tab title="登录记录">
-                      <login-log/>
-                  </b-tab>
-                  <b-tab title="记录统计">Record Statistic</b-tab>
-              </b-tabs>
-          </b-tab>
-      </b-tabs>
-  </div>
+        <b-tabs v-if="[2,6].includes(userInfo.identity)">
+            <b-tab
+                title="操作日志"
+                v-if="isActionAllowed('code_system_set_management', 'code_work_log_system_set')"
+            >Work Log</b-tab>
+            <b-tab
+                title="登录记录"
+                v-if="isActionAllowed('code_system_set_management', 'code_login_log_system_set')"
+            >
+                <login-log/>
+            </b-tab>
+            <b-tab
+                title="记录统计"
+                v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
+            >Record Statistic</b-tab>
+        </b-tabs>
+        <b-tabs v-if="[3,7].includes(userInfo.identity)">
+            <b-tab
+                title="部门及职务管理"
+                v-if="isActionAllowed('code_company_management', 'code_part_position_management_company')"
+            >
+                <PartPosition/>
+            </b-tab>
+            <b-tab
+                title="内部权限管理"
+                v-if="isActionAllowed('code_company_management', 'code_inner_permission_company')"
+            >
+                <InnerPermission/>
+            </b-tab>
+            <b-tab title="日志管理" class="pt-2" v-if="isLogManagementAllowed">
+                <b-tabs class="security-log">
+                    <b-tab
+                        title="操作日志"
+                        v-if="isActionAllowed('code_system_set_management', 'code_work_log_system_set')"
+                    >Work Log</b-tab>
+                    <b-tab
+                        title="登录记录"
+                        v-if="isActionAllowed('code_system_set_management', 'code_login_log_system_set')"
+                    >
+                        <login-log/>
+                    </b-tab>
+                    <b-tab
+                        title="记录统计"
+                        v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
+                    >Record Statistic</b-tab>
+                </b-tabs>
+            </b-tab>
+        </b-tabs>
+    </div>
 </template>
 
 <script>
-    import LoginLog from "./LoginLog";
-    import Dictionary from "./Dictionary";
-    import Advertising from "./Advertising";
-    import PartPosition from "./PartPosition";
-    import InnerPermission from "./InnerPermission";
-    import { mapState } from "vuex";
+import LoginLog from "./LoginLog";
+import Dictionary from "./Dictionary";
+import Advertising from "./Advertising";
+import PartPosition from "./PartPosition";
+import InnerPermission from "./InnerPermission";
+import { mapState } from "vuex";
 
-    export default {
-        name: "system-set",
-        components: {
-            LoginLog,
-            Dictionary,
-            PartPosition,
-            InnerPermission,
-            Advertising
-        },
-        computed: {
-            ...mapState(["userInfo"])
-        },
-        created() {
-        },
-        methods: {}
-    };
+export default {
+    name: "system-set",
+    components: {
+        LoginLog,
+        Dictionary,
+        PartPosition,
+        InnerPermission,
+        Advertising
+    },
+    computed: {
+        ...mapState(["userInfo"]),
+        isLogManagementAllowed() {
+            if (this.userInfo.role === 7) {
+                if (!this.isPermissionAllowed("code_system_set_management")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    },
+    created() {},
+    methods: {}
+};
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-    .system-set {
-        .tabs {
-            ul.nav-tabs {
-                justify-content: center;
+.system-set {
+    .tabs {
+        ul.nav-tabs {
+            justify-content: center;
 
-                .nav-link.active,
-                .nav-item.show .nav-link {
-                    color: #007bff !important;
-                    background-color: transparent;
-                }
-
-                .nav-item .nav-link {
-                    color: #253568;
-                }
+            .nav-link.active,
+            .nav-item.show .nav-link {
+                color: #007bff !important;
+                background-color: transparent;
             }
-        }
 
-        .tabs.security-log {
-            ul.nav-tabs {
-                border-bottom: 0px !important;
-
-                .nav-link.active,
-                .nav-item.show .nav-link {
-                    color: #007bff;
-                    background-color: transparent;
-                }
-
-                .nav-item {
-                    border-bottom: 1px solid #dee2e6;
-                }
-
-                .nav-link.active,
-                .nav-item.show .nav-link {
-                    border: 0px solid;
-                }
+            .nav-item .nav-link {
+                color: #253568;
             }
-        }
-
-        .nav-item {
-            width: 10%;
         }
     }
+
+    .tabs.security-log {
+        ul.nav-tabs {
+            border-bottom: 0px !important;
+
+            .nav-link.active,
+            .nav-item.show .nav-link {
+                color: #007bff;
+                background-color: transparent;
+            }
+
+            .nav-item {
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .nav-link.active,
+            .nav-item.show .nav-link {
+                border: 0px solid;
+            }
+        }
+    }
+
+    .nav-item {
+        width: 10%;
+    }
+}
 </style>
