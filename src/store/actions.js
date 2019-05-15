@@ -70,6 +70,11 @@ export default {
   }, data) {
     commit(types.UPDATE_USER_ROLES, data)
   },
+  setPermission({
+    commit
+  }, data) {
+    commit(types.SET_PERMISSION, data)
+  }
   // getExperimentDetail({
   //   commit
   // }, params) {

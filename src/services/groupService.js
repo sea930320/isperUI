@@ -45,6 +45,14 @@ class GroupService {
         })
     }
 
+    addAssistant(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/addAssistant',
+            params: data
+        })
+    }
+
     updateManager(data) {
         return xhr({
             method: 'post',
@@ -131,6 +139,14 @@ class GroupService {
         return xhr({
             method: 'post',
             url: '/company/addCManager',
+            params: data
+        })
+    }
+
+    addCAssistant(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/addCAssistant',
             params: data
         })
     }

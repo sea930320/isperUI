@@ -1,5 +1,6 @@
 <template>
     <div class="assistant-set">
+        <loading v-if="isRunning"></loading>
         <PersonalCenterTab activeTab="2"/>
         <b-row class="cardDiv">
             <b-col cols="4">
@@ -25,8 +26,8 @@
                                 :active="assistant.active"
                                 @click="selectAssistant(assistant)"
                             >
-                                {{assistant.name}}
-                                <b-button size="sm">取消绑定</b-button>
+                                {{assistant.name || assistant.username}}
+                                <b-button size="sm" @click="unsetAssistant(assistant)">取消绑定</b-button>
                             </b-list-group-item>
                         </b-list-group>
                     </b-card-body>
@@ -36,56 +37,133 @@
                 <table class="table b-table table-sm table-bordered">
                     <thead class>
                         <tr>
-                            <th class="w-25">一级菜单</th>
-                            <th class="w-25">二级菜单</th>
-                            <th class="w-50">操作</th>
+                            <th class="w-20">一级菜单</th>
+                            <th class="w-20">二级菜单</th>
+                            <th class="w-60">操作</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="w-25">系统功能</td>
-                            <td colspan="2" class="m-0 p-0 w-75">
-                                <b-row
-                                    v-for="(permission, index) in permissions"
-                                    :key="index"
-                                    no-gutters
-                                    class="permission-row"
-                                >
-                                    <b-col
-                                        cols="4"
-                                        class="p-1 pl-3 text-left"
-                                        style="border-right: 1px solid #dee2e6;"
+                            <td class="w-20">系统功能</td>
+                            <td colspan="2" class="m-0 p-0 w-80" v-if="selectedAssistant">
+                                <template v-if="selectAssistant">
+                                    <b-row
+                                        v-for="(permission, index) in systemFunctionPermissions"
+                                        :key="index"
+                                        no-gutters
+                                        class="permission-row"
                                     >
-                                        <b-form-checkbox
-                                            v-model="selectedAssistant.permissions_check[permission.id]"
-                                            @change="togglePermission($event, permission)"
-                                        >{{permission.name}}</b-form-checkbox>
-                                    </b-col>
-                                    <b-col cols="8" class="pl-3 text-left" style="overflow:auto">
-                                        <b-form-checkbox
-                                            v-for="(action, index1) in permission.actions"
-                                            :key="index1"
-                                            value-field="id"
-                                            text-field="name"
-                                            v-model="selectedAssistant.actions_check[action.id]"
-                                            @change="toggleAction($event, action)"
-                                        >{{action.name}}</b-form-checkbox>
-                                    </b-col>
-                                </b-row>
+                                        <b-col
+                                            cols="3"
+                                            class="p-1 pl-3 text-left"
+                                            style="border-right: 1px solid #dee2e6;"
+                                        >
+                                            <b-form-checkbox
+                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                @change="togglePermission($event, permission)"
+                                            >{{permission.name}}</b-form-checkbox>
+                                        </b-col>
+                                        <b-col
+                                            cols="9"
+                                            class="pl-3 text-left"
+                                            style="overflow:hidden; text-overflow: ellipse"
+                                        >
+                                            <b-row>
+                                                <b-col
+                                                    cols="4"
+                                                    v-for="(action, index1) in permission.actions"
+                                                    :key="index1"
+                                                    class="my-1"
+                                                >
+                                                    <b-form-checkbox
+                                                        value-field="id"
+                                                        text-field="name"
+                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        @change="toggleAction($event, action)"
+                                                    >
+                                                        <div style="width: 100%;">{{action.name}}</div>
+                                                    </b-form-checkbox>
+                                                </b-col>
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                </template>
                             </td>
                         </tr>
                         <tr>
-                            <td>系统设置</td>
-                            <td colspan="2"></td>
+                            <td class="w-20 p-0">系统设置</td>
+                            <td colspan="2" class="m-0 p-0 w-80">
+                                <template v-if="selectedAssistant">
+                                    <b-row
+                                        v-for="(permission, index) in systemSettingPermissions"
+                                        :key="index"
+                                        no-gutters
+                                        class="permission-row"
+                                    >
+                                        <b-col
+                                            cols="3"
+                                            class="p-2 pl-3 text-left"
+                                            style="border-right: 1px solid #dee2e6;"
+                                        >
+                                            <b-form-checkbox
+                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                @change="togglePermission($event, permission)"
+                                            >{{permission.name}}</b-form-checkbox>
+                                        </b-col>
+                                        <b-col
+                                            cols="9"
+                                            class="pl-3 text-left"
+                                            style="overflow:hidden; text-overflow: ellipse"
+                                        >
+                                            <b-row>
+                                                <b-col
+                                                    cols="4"
+                                                    v-for="(action, index1) in permission.actions"
+                                                    :key="index1"
+                                                    class="my-1 py-1"
+                                                >
+                                                    <b-form-checkbox
+                                                        value-field="id"
+                                                        text-field="name"
+                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        @change="toggleAction($event, action)"
+                                                    >
+                                                        <div style="width: 100%;">{{action.name}}</div>
+                                                    </b-form-checkbox>
+                                                </b-col>
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                </template>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </b-col>
             <b-col cols="12" class="mt-5">
-                <b-button class="styledBtn" type="submit" variant="primary">保存</b-button>
+                <b-button class="styledBtn" type="submit" variant="primary" @click="save()">保存</b-button>
             </b-col>
         </b-row>
         <assistant-add/>
+
+        <!-- Unset Assistant Modal -->
+        <b-modal
+            v-model="unsetModal"
+            title="Unset Assistant"
+            ok-title="确定"
+            cancel-title="取消"
+            @cancel="unsetModal=false"
+            @ok="confirmUnset"
+        >
+            <div class="modal-msg">
+                <p class="message">Are you Sure</p>
+            </div>
+
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="confirmUnset()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="unsetModal=false">取消</b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -95,34 +173,50 @@ import accountService from "@/services/accountService";
 import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
 import AssistantAdd from "@/views/personal-center/AssistantAdd";
 import _ from "lodash";
+import Loading from "@/components/loading/Loading";
 
 export default {
     name: "assistant-set",
-    components: { PersonalCenterTab, AssistantAdd },
+    components: { PersonalCenterTab, AssistantAdd, Loading },
     data() {
         return {
             assistants: [],
-            permissions: []
+            permissions: [],
+            unsetModal: false,
+            focusAssistant: null
         };
     },
     computed: {
         ...mapState(["userInfo"]),
+        systemFunctionPermissions() {
+            return this.permissions.filter(permission => {
+                return permission.codename != "code_system_set_management";
+            });
+        },
+        systemSettingPermissions() {
+            return this.permissions.filter(permission => {
+                return permission.codename == "code_system_set_management";
+            });
+        },
         selectedAssistant() {
             let assistant = _.find(this.assistants, {
                 active: true
             });
-            assistant.permissions_check = {};
-            assistant["actions_check"] = [];
+            if (!assistant) {
+                return null;
+            }
+            this.$set(assistant, "permissions_check", {});
+            this.$set(assistant, "actions_check", {});
             assistant.permissions = _.mapValues(
                 _.groupBy(assistant.actions, "permission_id")
             );
             for (let index in this.permissions) {
                 let permission = this.permissions[index];
                 let actions = permission.actions;
-                assistant.permissions_check[permission.id] = false;
+                this.$set(assistant.permissions_check, permission.id, false);
                 for (let index1 in actions) {
                     let action = actions[index1];
-                    assistant.actions_check[action.id] = false;
+                    this.$set(assistant.actions_check, action.id, false);
                 }
             }
 
@@ -140,6 +234,10 @@ export default {
     },
     created() {
         this.$nextTick(() => {
+            this.getAssistants();
+        });
+
+        this.$on("on-ok-assistant-add", () => {
             this.getAssistants();
         });
     },
@@ -173,6 +271,26 @@ export default {
         },
         addAssistant() {
             this.$emit("openAssistantAddModal");
+        },
+        unsetAssistant(assistant) {
+            this.focusAssistant = assistant;
+            this.unsetModal = true;
+        },
+        confirmUnset() {
+            this.unsetModal = false;
+            this.run();
+            let params = {
+                candidates: JSON.stringify([this.focusAssistant.id])
+            };
+            accountService
+                .unsetAssistant(params)
+                .then(() => {
+                    this.$emit("data-ready");
+                    this.getAssistants();
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         },
         selectAssistant(assistant) {
             this.assistants = _.map(this.assistants, assistant => {
@@ -211,6 +329,25 @@ export default {
                 });
             }
             this.$set(this.selectedAssistant, "actions", actions);
+        },
+        save() {
+            let actions = this.assistants.map(assistant => {
+                return {
+                    actions: assistant.actions_check || null,
+                    id: assistant.id
+                };
+            });
+            this.run();
+            accountService
+                .setAssistantsActions({
+                    assistants_actions: JSON.stringify(actions)
+                })
+                .then(() => {
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         }
     }
 };
@@ -262,6 +399,14 @@ export default {
         }
         .permission-row:last-child {
             border-bottom: 0px;
+        }
+    }
+    .custom-control-label {
+        width: 100%;
+        div {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }

@@ -18,6 +18,7 @@ import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Multiselect from 'vue-multiselect'
+import accountService from "@/services/accountService";
 
 import {
   STORAGE_KEY_USER
@@ -74,6 +75,9 @@ new Vue({
           this.$router.push('/login')
         }
       } else {
+        accountService.permission().then(data => {
+          store.dispatch('setPermission', data)
+        });
         // // 判断用户权限
         // if ((user.identity === 3 || user.identity === 4) && this.$route.matched.some(record => record.name === 'experiment')) {
         //   this.$router.push({

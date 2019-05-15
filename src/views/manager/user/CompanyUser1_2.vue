@@ -14,7 +14,7 @@
                 </b-input-group>
             </b-col>
             <b-col md="7" class="align-self-center">
-                <b-button-group class="float-right">
+                <b-button-group class="float-right" v-if="isActionAllowed('code_user_management', 'code_user_review_user')">
                     <b-button :size="template_size" class="styledBtn fontedBtn" variant="outline-primary" @click="setReview(1,null)">批量审核通过</b-button>
                     <b-button class="styledBtn fontedBtn" :size="template_size" variant="outline-primary" @click="setReview(2,null)">批量审核不通过</b-button>
                 </b-button-group>
@@ -37,11 +37,11 @@
                 <template slot="phone" slot-scope="row">{{row.item.phone ? row.item.phone : ''}}</template>
                 <template slot="gender" slot-scope="row"><span class="text">{{row.item.gender}}</span></template>
                 <template slot="action" slot-scope="row">
-                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(1,row.item.id)">
+                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(1,row.item.id)" v-if="isActionAllowed('code_user_management', 'code_user_review_user')">
                         <icon name="check"></icon>
                         审核通过
                     </b-button>
-                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(2,row.item.id)">
+                    <b-button class="styledBtn" :size="template_size" variant="outline-primary" @click="setReview(2,row.item.id)" v-if="isActionAllowed('code_user_management', 'code_user_review_user')">
                         <icon name="times"></icon>
                         审核不通过
                     </b-button>

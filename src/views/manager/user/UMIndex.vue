@@ -14,7 +14,7 @@
                 <SuperUser4/>
             </b-tab>
         </b-tabs>
-        <b-tabs v-if="userInfo.identity===2" v-model="tabIndex">
+        <b-tabs v-if="[2, 6].includes(userInfo.identity)" v-model="tabIndex">
             <b-tab title="用户管理">
                 <GroupUser1_1/>
             </b-tab>
@@ -25,7 +25,7 @@
                 <GroupUser1_2/>
             </b-tab>
         </b-tabs>
-        <b-tabs v-if="userInfo.identity===3" v-model="tabIndex">
+        <b-tabs v-if="[3, 7].includes(userInfo.identity)" v-model="tabIndex">
             <b-tab title="用户管理">
                 <CompanyUser1_1/>
             </b-tab>

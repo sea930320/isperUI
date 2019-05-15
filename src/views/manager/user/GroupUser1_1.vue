@@ -21,7 +21,7 @@
                 <template slot="part" slot-scope="row">{{row.item.part ? row.item.part : ''}}</template>
                 <template slot="gender" slot-scope="row"><span class="text">{{row.item.gender}}</span></template>
                 <template slot="action" slot-scope="row">
-                    <b-button class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary" @click="resetOpen(row)">
+                    <b-button class="styledBtn" :key="row.item.id" :size="template_size" variant="outline-primary" @click="resetOpen(row)" v-if="isActionAllowed('code_user_management', 'code_reset_password_user')">
                         重置密码
                     </b-button>
                 </template>

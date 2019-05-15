@@ -2,6 +2,7 @@ import {
 	SHOW_LOADING,
 	HIDE_LOADING,
 	LOGIN_SUCCESS,
+	SET_PERMISSION,
 	LOGOUT_SUCCESS,
 	SET_FLOW_STEP,
 	SEND_EXPERIENCE,
@@ -35,6 +36,7 @@ const state = {
 	userInfo: JSON.parse(VueCookie.get(STORAGE_KEY_USER)) || null,
 	// 流程设置步骤
 	flowStep: JSON.parse(window.sessionStorage.getItem(STORAGE_KEY_FLOW_STEP)) || 0,
+	userPermission: {},
 	meta: {
 		info: {
 			huanxinId: null,
@@ -90,6 +92,9 @@ const mutations = {
 	},
 	[LOGIN_SUCCESS](state, data) {
 		state.userInfo = data
+	},
+	[SET_PERMISSION](state, data) {
+		state.userPermission = data
 	},
 	[LOGOUT_SUCCESS](state) {
 		state.userInfo = null

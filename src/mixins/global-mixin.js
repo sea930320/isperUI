@@ -1,4 +1,6 @@
 import { STORAGE_KEY_USER } from "@/store/storageKey";
+import { mapState } from "vuex";
+import _ from 'lodash';
 
 export default {
     data: function () {
@@ -8,21 +10,21 @@ export default {
             },
             get pageSizeOption() {
                 return [{
-                        text: 5,
-                        value: 5
-                    },
-                    {
-                        text: 10,
-                        value: 10
-                    },
-                    {
-                        text: 15,
-                        value: 15
-                    },
-                    {
-                        text: 20,
-                        value: 20
-                    }
+                    text: 5,
+                    value: 5
+                },
+                {
+                    text: 10,
+                    value: 10
+                },
+                {
+                    text: 15,
+                    value: 15
+                },
+                {
+                    text: 20,
+                    value: 20
+                }
                 ]
             }
         }
@@ -39,9 +41,27 @@ export default {
             if (/(iPhone|iPad|iPod)/.test(navigator.platform)) return 'IOS'
             if (/OPR/.test(navigator.userAgent)) return 'Opera'
             if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)) return 'Safari'
+        },
+        isActionAllowed(permissionCodeName, actionCodeName) {
+            if (!this.userPermission) return true
+            if (this.userPermission[permissionCodeName]) {
+                if (_.some(this.userPermission[permissionCodeName], action => {
+                    return action.codename === actionCodeName
+                })) {
+                    return true
+                } else return false
+            }
+            return false
+        },
+        isPermissionAllowed(permissionCodeName) {
+            if (!this.userPermission) return true
+            if (this.userPermission[permissionCodeName]) {
+                return true
+            } else return false
         }
     },
     computed: {
+        ...mapState(["userPermission"]),
         isLoggedIn() {
             const USER = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
             if (USER) {

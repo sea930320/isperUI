@@ -28,6 +28,17 @@ class AccountService {
   }
 
   /**
+   * Get Permission for manager
+   * @return {Promise}
+   */
+  permission() {
+    return xhr({
+      method: 'get',
+      url: '/account/permission'
+    })
+  }
+
+  /**
    * 获取所有账户
    * @return {Promise}
    */
@@ -148,7 +159,43 @@ class AccountService {
       params: options
     })
   }
-  
+
+  /**
+   * Set Assistants
+   * @return {Promise}
+   */
+  setAssistants(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/set/assistants',
+      params: options
+    })
+  }
+
+  /**
+   * UnSet Assistant
+   * @return {Promise}
+   */
+  unsetAssistant(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/unset/assistant',
+      params: options
+    })
+  }
+
+  /**
+   * Set Assistant Actions
+   * @return {Promise}
+   */
+  setAssistantsActions(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/set/assistant/actions',
+      params: options
+    })
+  }
+
   /**
    * Get Permissions
    * @return {Promise}
