@@ -14,8 +14,8 @@
                 <b-nav-item v-if="[2,6].includes(userInfo.role)" to="/manager/group_company">
                     <icon name="users" class="tabIcon"></icon>集群及单位管理
                 </b-nav-item>
-                <b-nav-item v-if="userInfo.role===1" to="#">
-                    <icon name="sitemap" class="tabIcon"></icon>元模块管理
+                <b-nav-item v-if="userInfo.role===1" to="/manager/module_manage">
+                    <icon name="project-diagram" class="tabIcon"></icon>元模块管理
                 </b-nav-item>
                 <b-nav-item v-if="[1,2,3,6,7].includes(userInfo.role)" to="/manager/user/0">
                     <icon name="user-cog" class="tabIcon"></icon>用户管理
