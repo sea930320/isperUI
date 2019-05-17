@@ -52,11 +52,11 @@ export default {
     created() {},
     computed: {
         isSystemSetAllowed() {
-            if (this.userInfo.role === 6) {
+            if ([2, 6].includes(this.userInfo.role)) {
                 if (!this.isPermissionAllowed("code_system_set_management")) {
                     return false;
                 }
-            } else if (this.userInfo.role === 7) {
+            } else if ([3, 7].includes(this.userInfo.role)) {
                 if (
                     !this.isPermissionAllowed("code_system_set_management") &&
                     !this.isPermissionAllowed("code_company_management")

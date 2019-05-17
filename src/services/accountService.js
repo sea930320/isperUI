@@ -197,6 +197,18 @@ class AccountService {
   }
 
   /**
+   * Set Assistant Actions
+   * @return {Promise}
+   */
+  setRolesActions(options) {
+    return xhr({
+      method: 'post',
+      url: '/account/set/roles/actions',
+      params: options
+    })
+  }
+
+  /**
    * Get Permissions
    * @return {Promise}
    */
@@ -216,6 +228,18 @@ class AccountService {
     return xhr({
       method: 'get',
       url: '/account/get/getMessageData',
+      params: options
+    })
+  }
+  
+  /**
+   * Get Roles
+   * @return {Promise}
+   */
+  getRoles(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/roles',
       params: options
     })
   }

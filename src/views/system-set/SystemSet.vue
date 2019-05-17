@@ -1,7 +1,9 @@
 <template>
-    <div class="system-set">
+    <div class="system-set" v-if="userInfo">
         <b-tabs v-if="userInfo.identity===1">
-            <b-tab title="角色管理">Role Management</b-tab>
+            <b-tab title="角色管理">
+                <role-management/>
+            </b-tab>
             <b-tab title="安全维护" class="pt-2">
                 <b-tabs class="security-log">
                     <b-tab title="操作日志">Work Log</b-tab>
@@ -70,6 +72,7 @@
 </template>
 
 <script>
+import RoleManagement from "./RoleManagement";
 import LoginLog from "./LoginLog";
 import Dictionary from "./Dictionary";
 import Advertising from "./Advertising";
@@ -80,6 +83,7 @@ import { mapState } from "vuex";
 export default {
     name: "system-set",
     components: {
+        RoleManagement,
         LoginLog,
         Dictionary,
         PartPosition,
