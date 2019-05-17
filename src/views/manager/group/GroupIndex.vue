@@ -62,7 +62,8 @@
                 </template>
                 <template slot="groupManagers" slot-scope="row">
                     <div>
-                        <span v-for="manager in row.item.groupManagers" :key="manager.id">{{ manager.name + ', ' }}</span>
+                        <span v-for="manager in row.item.groupManagers.slice(0,-1)" :key="manager.id" >{{ manager.name + ', ' }}</span>
+                        <span v-for="manager in row.item.groupManagers.slice(-1)" :key="manager.id">{{ manager.name }}</span>
                     </div>
                 </template>
                 <template slot="action" slot-scope="row">
