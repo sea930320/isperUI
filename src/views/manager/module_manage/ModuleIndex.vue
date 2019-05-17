@@ -150,6 +150,7 @@
             height: 30px !important;
             font-size: 18px !important;
             line-height: 18px;
+            border-radius: 0 !important;
         }
         .list-group-item:hover {
             background-color: #4169e14a;
