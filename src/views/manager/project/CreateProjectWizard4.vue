@@ -1,131 +1,137 @@
 <template>
-  <div>
-    <br>
-    <h3> 跳转设置 </h3>
-    <br><br>
-    <loading v-if="isRunning"></loading>
-    <b-alert variant="success" show class="text-left">
-      <b-container>
-        <b-row>
-          <b-col sm="5">
-            项目名称 :
-            {{projectData.name}}
-          </b-col>
-          <b-col sm="4">
-            相关流程 :
-            {{projectData.flow_name}}
-          </b-col>
-          <b-col sm="3">
-            类型 :
-            {{projectData.type | expType}}
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-alert>
-    <b-form @submit="onSubmit">
-    <b-container fluid>
-      <b-row align-v="left">
-        <b-col sm="4">
-          <div class="cardDiv">
-            <b-table  responsive selectable :select-mode="selectMode" :items="nodes" small hover :fields="columns" head-variant class="subtable table-container" selectedVariant="primary" @row-selected="selectNode">
-            <template slot="id" slot-scope="row">
-              {{ row.index + 1}}
-            </template>
-            <template slot="name" slot-scope="row">
-              {{ row.item.name}}
-            </template>
-            <template slot="matching_name" slot-scope="row">
-              <a href="javascript:;" @click="showBigProcessImg(row.item.process.image)">{{row.item.process.name}}</a>
-            </template>
-          </b-table>
-          </div>
-        </b-col>
-        <b-col sm="4">
-          <div class="cardDiv text-left">
-            <b-table  responsive :items="currentJump" small :fields="columns1" head-variant class="subtable text-left table-container" selectedVariant="primary">
-              <template slot="name" slot-scope="row">
-                {{ row.item.name}}
-                <span style="float:right;" @click="deleteJumpHandle">
+    <div class="mt-5 wizard-4">
+        <loading v-if="isRunning"></loading>
+        <b-alert variant="success" show class="text-left">
+            <b-container>
+                <b-row>
+                    <b-col sm="5">
+                        项目名称 :
+                        {{projectData.name}}
+                    </b-col>
+                    <b-col sm="4">
+                        相关流程 :
+                        {{projectData.flow_name}}
+                    </b-col>
+                    <b-col sm="3">
+                        类型 :
+                        {{projectData.type | expType}}
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-alert>
+        <b-form @submit="onSubmit">
+            <b-container fluid>
+                <b-row align-v="start">
+                    <b-col sm="4">
+                        <div class="cardDiv">
+                            <b-table responsive selectable :select-mode="selectMode" :items="nodes" small hover
+                                     :fields="columns" head-variant class="subtable table-container"
+                                     selectedVariant="primary" @row-selected="selectNode">
+                                <template slot="id" slot-scope="row">
+                                    {{ row.index + 1}}
+                                </template>
+                                <template slot="name" slot-scope="row">
+                                    {{ row.item.name}}
+                                </template>
+                                <template slot="matching_name" slot-scope="row">
+                                    <a href="javascript:;" @click="showBigProcessImg(row.item.process.image)">{{row.item.process.name}}</a>
+                                </template>
+                            </b-table>
+                        </div>
+                    </b-col>
+                    <b-col sm="4">
+                        <div class="cardDiv text-left">
+                            <b-table responsive :items="currentJump" small :fields="columns1" head-variant
+                                     class="subtable text-left table-container" selectedVariant="primary">
+                                <template slot="name" slot-scope="row">
+                                    {{ row.item.name}}
+                                    <span style="float:right;" @click="deleteJumpHandle">
                   <icon name="window-close" title="删除" style="cursor: pointer;"></icon>
                 </span>
-              </template>
-            </b-table>
-          </div>
-        </b-col>
+                                </template>
+                            </b-table>
+                        </div>
+                    </b-col>
 
-        <b-col sm="4">
+                    <b-col sm="4">
 
-          <div class="cardDiv text-left">
-            <b-navbar toggleable="lg" variant="info">
-                <!-- Right aligned nav items -->
-                    <b-input-group>
+                        <div class="cardDiv text-left">
+                            <b-navbar toggleable="lg" variant="info">
+                                <!-- Right aligned nav items -->
+                                <b-input-group>
                           <span class="input-group-text">
                             <icon name="search"></icon>
                           </span>
-                      <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
-                    </b-input-group>
-                    <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
-            </b-navbar>
-            <b-table  responsive selectable :select-mode="selectMode" hover :items="projects.list" small :fields="columns2" head-variant class="subtable text-left table-container"  selectedVariant="primary" @row-selected="selectProjectHandle">
-              <template slot="id" slot-scope="">
-                <span class="icon-select">✔</span>
-              </template>
-              <template slot="name" slot-scope="row">
-                {{ row.item.name }}
-              </template>
-              <template slot="class" slot-scope="row">
-                {{ row.item.type | expType }}
-              </template>
-            </b-table>
-          </div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col sm="4" align-v="center" >
-          <b-button-group class="float-center" >
-            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="previousPage()"> 上一步 </b-button>
-          </b-button-group>
-        </b-col>
-        <b-col sm="4" align-v="center">
-          <b-button-group class="float-center">
-            <b-button size="lg"   style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
-            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
-          </b-button-group>
-        </b-col>
-        <b-col sm="4" align-v="center">
-          <b-button-group class="float-center">
-            <b-button size="lg"  type="submit"  style="width:100%" variant="success" v-b-modal.finishEdit  @click="nextPage()"> 下一步 </b-button>
-            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
-          </b-button-group>
-        </b-col>
-      </b-row>
-      <br><br>
-    </b-container>
-    </b-form>
-    <b-modal id="finishEdit" title="Finish Edit Project" @ok="finishEdit()">
-      <p class="my-4">Do you want to finish editing this project?</p>
-    </b-modal>
-    <imageView :visible="bigprocessModal" :src="processImgSrc" @on-close="bigprocessModal=false"></imageView>
-
-  </div>
+                                    <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容"/>
+                                </b-input-group>
+                                <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
+                            </b-navbar>
+                            <b-table responsive selectable :select-mode="selectMode" hover :items="projects.list" small
+                                     :fields="columns2" head-variant class="subtable text-left table-container"
+                                     selectedVariant="primary" @row-selected="selectProjectHandle">
+                                <template slot="id" slot-scope="">
+                                    <span class="icon-select">✔</span>
+                                </template>
+                                <template slot="name" slot-scope="row">
+                                    {{ row.item.name }}
+                                </template>
+                                <template slot="class" slot-scope="row">
+                                    {{ row.item.type | expType }}
+                                </template>
+                            </b-table>
+                        </div>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col sm="4" align-v="center">
+                        <b-button-group class="float-center">
+                            <b-button size="lg" type="submit" style="width:100%" variant="primary"
+                                      @click="previousPage()"> 上一步
+                            </b-button>
+                        </b-button-group>
+                    </b-col>
+                    <b-col sm="4" align-v="center">
+                        <b-button-group class="float-center">
+                            <b-button size="lg" style="width:100%" variant="primary" @click="savePage()"> 保存</b-button>
+                            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
+                        </b-button-group>
+                    </b-col>
+                    <b-col sm="4" align-v="center">
+                        <b-button-group class="float-center">
+                            <b-button size="lg" type="submit" style="width:100%" variant="primary" v-b-modal.finishEdit
+                                      @click="nextPage()"> 下一步
+                            </b-button>
+                            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
+                        </b-button-group>
+                    </b-col>
+                </b-row>
+                <br><br>
+            </b-container>
+        </b-form>
+        <b-modal id="finishEdit" title="Finish Edit Project" @ok="finishEdit()">
+            <p class="my-4">Do you want to finish editing this project?</p>
+        </b-modal>
+        <imageView :visible="bigprocessModal" :src="processImgSrc" @on-close="bigprocessModal=false"></imageView>
+    </div>
 </template>
 
 <script>
     import ProjectService from "@/services/projectService";
-    import { expType, level, abilityTarget } from "@/filters/fun";
-    import { mapState, mapActions } from "vuex";
+    import {expType, level, abilityTarget} from "@/filters/fun";
+    import {mapState, mapActions} from "vuex";
     import Loading from "@/components/loading/Loading";
-//    import BContainer from "bootstrap-vue/src/components/layout/container";
-//    import ViewXml from "@/components/workflowXML/ViewXML";
+    //    import BContainer from "bootstrap-vue/src/components/layout/container";
+    //    import ViewXml from "@/components/workflowXML/ViewXML";
     import _ from "lodash";
     import imageView from "@/components/imageView/ImageView";
 
     export default {
-        name: "create-project-wizard",
+        name: "wizard-4",
         components: {
             Loading,
             imageView,
         },
+        props: ['value'],
         filters: {
             expType,
             level,
@@ -175,7 +181,7 @@
                     },
                 },
 //                params
-                project_id:-1,
+                project_id: -1,
                 projectData: {},
                 roleImageModalShow: false,
                 successTipModal: false,
@@ -214,18 +220,18 @@
                 },
                 // 流程相关项目
                 relatedProjects: [],
-                selectedFlowName:'',
+                selectedFlowName: '',
                 animationImgSrc: "",
                 copyModalName: "",
                 workflowXml: null,
                 newFlowStatus: false,
                 relatedShow: false,
                 shareModal: false,
-                selectedWorkflow:0,
+                selectedWorkflow: 0,
                 selectMode: 'single',
-                saveBtnClicked:0,
-                previousBtnClicked:0,
-                nextBtnClicked:0,
+                saveBtnClicked: 0,
+                previousBtnClicked: 0,
+                nextBtnClicked: 0,
                 courses: {
                     list: [],
                     total: 0
@@ -260,13 +266,16 @@
             },
             queryDebounceParam: {
                 deep: true,
-                handler: _.debounce(function() {
+                handler: _.debounce(function () {
                     this.queryProjectList();
                 }, 500)
             }
         },
         methods: {
             ...mapActions(["setFlowStep"]),
+            updatePage: function (value) {
+                this.$emit('input', value);
+            },
             // 查询流程列表数据
             queryDetail() {
                 ProjectService
@@ -348,18 +357,18 @@
                 }];
                 this.nodes[this.activeNodeIndex].project_jump = this.currentJump
             },
-            onSubmit(e){
+            onSubmit(e) {
                 e.preventDefault();
             },
-            finishEdit(){
+            finishEdit() {
                 this.$router.push({name: 'manager-project'});
             },
-            nextPage(){
+            nextPage() {
                 this.nextBtnClicked = 1;
                 this.saveBtnClicked = 0;
                 this.previousBtnClicked = 0;
             },
-            savePage(){
+            savePage() {
                 this.nextBtnClicked = 0;
                 this.saveBtnClicked = 1;
                 this.previousBtnClicked = 0;
@@ -385,91 +394,115 @@
                         this.$toasted.success('跳转设置成功');
                     })
             },
-            previousPage(){
+            previousPage() {
                 this.nextBtnClicked = 0;
                 this.saveBtnClicked = 0;
                 this.previousBtnClicked = 1;
-                this.$router.push({name: 'create-project-wizard3'});
+                this.updatePage(2);
             },
         }
     };
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
-  .card-body {
-    padding: 0;
-  }
-  .card-header {
-    text-align: left;
-  }
-  .opened {
-    background-color: yellow;
-  }
-  .table-fixed{
-    tbody{
-      height:200px;
-      overflow-y:auto;
-      width: 100%;
+    .wizard-4 {
+        .card-body {
+            padding: 0;
+        }
+
+        .card-header {
+            text-align: left;
+        }
+
+        .opened {
+            background-color: yellow;
+        }
+
+        .table-fixed {
+            tbody {
+                height: 200px;
+                overflow-y: auto;
+                width: 100%;
+            }
+        }
+
+        .inactive {
+            color: red;
+        }
+
+        icon {
+            cursor: pointer;
+        }
+
+        .table-container {
+            height: calc(100vh - 450px);
+
+        }
+
+        .table-container table {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .table-container table thead {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+
+        .table-container table tbody {
+            flex: 1 1 auto;
+            display: block;
+            width: 100%;
+            overflow-y: scroll;
+        }
+
+        .table-container table tbody tr {
+            width: 100%;
+        }
+
+        .table-container table thead, .table-container table tbody tr {
+            display: table;
+            table-layout: fixed;
+        }
+
+        .table-container table {
+            border-collapse: collapse;
+        }
+
+        .table-container table td, .table-container table th {
+            padding: 0.4em;
+        }
+
+        .table-container table tbody td {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .table-container table thead td {
+            padding: 10px 5px;
+        }
+
+        /* START Adjustments for width and scrollbar hidden */
+        .table-container th.table-action, .table-container td.table-action {
+            width: 5.8vw;
+        }
+
+        .table-container table thead {
+            width: calc(100% - 1px);
+        }
+
+        .table-container table tbody::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        .table-container table tbody::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        .table-container table tbody::-webkit-scrollbar-thumb {
+            width: 1px;
+        }
     }
-  }
-  .inactive { color: red; }
-  icon { cursor: pointer; }
-
-  .table-container {
-    height: calc(100vh - 450px);
-
-  }
-  .table-container table {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    width: 100%;
-    overflow-y:auto;
-  }
-  .table-container table thead {
-    flex: 0 0 auto;
-    width: 100%;
-  }
-  .table-container table tbody {
-    flex: 1 1 auto;
-    display: block;
-    width: 100%;
-    overflow-y: scroll;
-  }
-  .table-container table tbody tr {
-    width: 100%;
-  }
-  .table-container table thead, .table-container table tbody tr {
-    display: table;
-    table-layout: fixed;
-  }
-  .table-container table {
-    border-collapse: collapse;
-  }
-  .table-container table td, .table-container table th {
-    padding: 0.4em;
-  }
-  .table-container table tbody td {
-    padding: 8px;
-    cursor: pointer;
-  }
-  .table-container table thead td {
-    padding: 10px 5px;
-  }
-
-  /* START Adjustments for width and scrollbar hidden */
-  .table-container th.table-action, .table-container td.table-action {
-    width: 5.8vw;
-  }
-  .table-container table thead {
-    width: calc(100% - 1px);
-  }
-  .table-container table tbody::-webkit-scrollbar {
-    width: 1px;
-  }
-  .table-container table tbody::-webkit-scrollbar {
-    width: 1px;
-  }
-  .table-container table tbody::-webkit-scrollbar-thumb {
-    width: 1px;
-  }
 </style>

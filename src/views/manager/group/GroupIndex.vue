@@ -569,8 +569,18 @@
                                             });
                                             this.allgroup.list = data.results;
                                             this.allgroup.total = data.paging.count;
-                                            this.$emit("data-ready");
                                             this.$refs['newGroup'].hide();
+                                            GroupService
+                                                .fetchAllGroupDetail()
+                                                .then(data => {
+                                                    this.groups = data.results;
+                                                    this.groups.unshift({
+                                                        id: null,
+                                                        name: "集群筛选"
+                                                    });
+                                                    this.$emit("data-ready");
+                                                })
+                                                .catch(() => {});
                                         })
                                         .catch(() => {
                                             this.$emit("data-failed");

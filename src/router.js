@@ -108,6 +108,10 @@ const routes = [{
             name: 'manager-project',
             component: () => import('@/views/manager/project/ProjectIndex.vue')
         }, {
+            path: 'project/create_project_wizard',
+            name: 'create-project-wizard',
+            component: () => import('@/views/manager/project/CreateProjectWizard.vue')
+        }, {
             path: 'project/create_project_wizard1',
             name: 'create-project-wizard1',
             component: () => import('@/views/manager/project/CreateProjectWizard1.vue')

@@ -1,213 +1,195 @@
 <template>
-  <div class="projects-index">
-    <br>
-    <h3> 素材设置 </h3>
-    <br><br>
-    <loading v-if="isRunning"></loading>
-    <b-alert variant="success" show class="text-left">
-      <b-container>
-        <b-row>
-          <b-col sm="5">
-            项目名称 :
-            {{projectData.name}}
-          </b-col>
-          <b-col sm="4">
-            相关流程 :
-            {{projectData.flow_name}}
-          </b-col>
-          <b-col sm="3">
-            类型 :
-            {{projectData.type | expType}}
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col sm="5">
-            能力目标 :
-            {{projectData.ability_target | abilityTarget}}
-          </b-col>
-          <b-col sm="3">
-            <a href="javascript:;" class="btn-spe btn-upload" v-b-modal.uploadDoc >上传素材</a>
-          </b-col>
-        </b-row>
-      </b-container>
-    </b-alert>
-    <b-container fluid>
-      <b-row align-v="left">
-        <b-col sm="6">
-          <div class="cardDiv">
-            <!--<b-table  responsive selectable :select-mode="selectMode" :items="projectRolesAssign.project_nodes" small hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected" >-->
-            <b-table  responsive selectable :select-mode="selectMode" :items="projectDocsAssign.docs" small hover :fields="columns" head-variant  class="table-container" selectedVariant="primary" @row-selected="selectDoc">
-            <template slot="id" slot-scope="row">
-              {{ row.index + 1}}
-            </template>
-            <template slot="class" slot-scope="row">
-              {{ row.item.type}}
-            </template>
-            <template slot="name" slot-scope="row">
-              {{ row.item.name}}
-            </template>
-            <template slot="type" slot-scope="row">
-              <b-form-select v-model="row.item.usage" :options="options1" @change="changeUseHandle(row.item)"></b-form-select>
-            </template>
-            <template slot="control" slot-scope="row">
-              <!--test-->
-              <a
-                      href="javascript:;"
-                      class="btn-link"
-                      title="预览"
-                      @click="previewFile(row.item.file)"
-              >
-                <icon name="eye"></icon>
-              </a>&nbsp;&nbsp;
-              <a
-                      :href="row.item.file"
-                      class="btn-link"
-                      title="下载"
-                      target="_blank"
-              >
-                <icon name="download"></icon>
-              </a>&nbsp;&nbsp;
-              <a
-                      v-b-modal.deleteConfirmModal
-                      href="javascript:"
-                      class="btn-link"
-                      title="删除"
-                      @click="deleteDocClick(row.item)"
-              >
-                <icon name="trash"></icon>
-              </a>&nbsp;&nbsp;
-              <b-form-checkbox v-model="row.item.is_initial"  @on-change="setInitial(row.item)">设为初始素材</b-form-checkbox>
-            </template>
-          </b-table>
-          </div>
-        </b-col>
-        <b-col sm="2">
-          <div class="cardDiv">
-            <!--<b-table  responsive selectable :select-mode="selectMode" :items="projectDocsAssign.nodes" small hover :fields="columns1" head-variant class="table-container" selectedVariant="primary" @row-selected="selectNode">-->
-            <b-table  responsive selectable :select-mode="selectMode" :items="projectDocsAssign.nodes" small hover :fields="columns1" head-variant class="table-container" selectedVariant="primary" @row-selected="selectNode">
-              <template slot="number" slot-scope="row">
-                {{ row.index + 1}}
-              </template>
-              <template slot="name" slot-scope="row">
-                {{ row.item.name}}
-              </template>
-            </b-table>
-          </div>
-        </b-col>
-        <b-col sm="4">
-          <div class="cardDiv">
-            <b-table  responsive selectable :select-mode="selectMode" :items="curNode2Roles" small hover :fields="columns2" head-variant class="table-container" selectedVariant="primary" @row-selected="selectDoc">
-              <template slot="character_class" slot-scope="row">
-                {{ row.item.type}}
-              </template>
-              <template slot="character_name" slot-scope="row">
-                {{ row.item.role_name}}
-              </template>
-              <template slot="is_use" slot-scope="row">
-                <b-form-checkbox v-model="row.item.is_use" @change="isCheckUse()"></b-form-checkbox>
-              </template>
-            </b-table>
-          </div>
-        </b-col>
-      </b-row>
-      <br>
-      <b-row>
-        <b-col sm="4" align-v="center" >
-          <b-button-group class="float-center" >
-            <b-button size="lg"  type="submit" style="width:100%" variant="success" @click="goLast()"> 上一步 </b-button>
-          </b-button-group>
-        </b-col>
-        <b-col sm="4" align-v="center">
-          <b-button-group class="float-center">
-            <b-button size="lg"   style="width:100%" variant="success" @click="savePage()"> 保存 </b-button>
-            <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
-          </b-button-group>
-        </b-col>
-        <b-col sm="4" align-v="center">
-          <b-button-group class="float-center">
-            <b-button size="lg"  type="submit"  style="width:100%" variant="success" v-b-modal.finishEdit  @click="goNext()"> 下一步 </b-button>
-            <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
-          </b-button-group>
-        </b-col>
-      </b-row>
-      <br><br>
-      <b-modal id="deleteConfirmModal" title="Delete Doc" @ok="comfirmDelete()">
-        <p class="my-4">Do you want to delete Doc?</p>
-      </b-modal>
-      <b-modal id="uploadDoc" title="Upload Doc" @ok="uploadDoc()">
-        <template>
-          <div>
-            <!--accepted-file-types="text/plain"-->
-            <file-pond
-                    ref="pond"
-                    accepted-file-types="application/pdf"
-                    allow-multiple="true"
-                    max-files="3"
-                    fileValidateTypeLabelExpectedTypes="Must be a plain text file"
-                    instant-upload="true"
-                    allow-replace="false"
-                    allow-revert="false"
-                    :server="server"
-                    @addfile="handleAddFile"
-                    @removefile="handleRemoveFile"
-                    @processfilestart="handleProcessFileStart"
-                    @processfileabort="handleProcessFileAbort"
-                    @processfilerevert="handleProcessFileUndo"
-                    @processfile="handleProcessFile"
-                    name="test"
-                    label-idle="Upload PDF file..."
-                    v-bind:files="myFiles">
-              </file-pond>
-
-          </div>
-        </template>
-      </b-modal>
-    </b-container>
-  </div>
-
+    <div class="mt-5 wizard-3">
+        <loading v-if="isRunning"></loading>
+        <b-alert variant="success" show class="text-left">
+            <b-container>
+                <b-row>
+                    <b-col sm="5">
+                        项目名称 :
+                        {{projectData.name}}
+                    </b-col>
+                    <b-col sm="4">
+                        相关流程 :
+                        {{projectData.flow_name}}
+                    </b-col>
+                    <b-col sm="3">
+                        类型 :
+                        {{projectData.type | expType}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col sm="5">
+                        能力目标 :
+                        {{projectData.ability_target | abilityTarget}}
+                    </b-col>
+                    <b-col sm="3">
+                        <a href="javascript:;" class="btn-spe btn-upload" v-b-modal.uploadDoc>上传素材</a>
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-alert>
+        <b-container fluid>
+            <b-row align-v="start">
+                <b-col sm="6">
+                    <div class="cardDiv">
+                        <!--<b-table  responsive selectable :select-mode="selectMode" :items="projectRolesAssign.project_nodes" small hover :fields="columns" head-variant class="table-container" selectedVariant="primary" @row-selected="rowSelected" >-->
+                        <b-table responsive selectable :select-mode="selectMode" :items="projectDocsAssign.docs" small
+                                 hover :fields="columns" head-variant class="table-container" selectedVariant="primary"
+                                 @row-selected="selectDoc">
+                            <template slot="id" slot-scope="row">
+                                {{ row.index + 1}}
+                            </template>
+                            <template slot="class" slot-scope="row">
+                                {{ row.item.type}}
+                            </template>
+                            <template slot="name" slot-scope="row">
+                                {{ row.item.name}}
+                            </template>
+                            <template slot="type" slot-scope="row">
+                                <b-form-select v-model="row.item.usage" :options="options1"
+                                               @change="changeUseHandle(row.item)"></b-form-select>
+                            </template>
+                            <template slot="control" slot-scope="row">
+                                <!--test-->
+                                <a href="javascript:;"
+                                   class="btn-link"
+                                   title="预览"
+                                   @click="previewFile(row.item.file)">
+                                    <icon name="eye"></icon>
+                                </a>&nbsp;&nbsp;
+                                <a :href="row.item.file"
+                                   class="btn-link"
+                                   title="下载"
+                                   target="_blank">
+                                    <icon name="download"></icon>
+                                </a>&nbsp;&nbsp;
+                                <a v-b-modal.deleteConfirmModal
+                                   href="javascript:"
+                                   class="btn-link"
+                                   title="删除"
+                                   @click="deleteDocClick(row.item)">
+                                    <icon name="trash"></icon>
+                                </a>&nbsp;&nbsp;
+                                <b-form-checkbox v-model="row.item.is_initial" @on-change="setInitial(row.item)">
+                                    设为初始素材
+                                </b-form-checkbox>
+                            </template>
+                        </b-table>
+                    </div>
+                </b-col>
+                <b-col sm="2">
+                    <div class="cardDiv">
+                        <!--<b-table  responsive selectable :select-mode="selectMode" :items="projectDocsAssign.nodes" small hover :fields="columns1" head-variant class="table-container" selectedVariant="primary" @row-selected="selectNode">-->
+                        <b-table responsive selectable :select-mode="selectMode" :items="projectDocsAssign.nodes" small
+                                 hover :fields="columns1" head-variant class="table-container" selectedVariant="primary"
+                                 @row-selected="selectNode">
+                            <template slot="number" slot-scope="row">
+                                {{ row.index + 1}}
+                            </template>
+                            <template slot="name" slot-scope="row">
+                                {{ row.item.name}}
+                            </template>
+                        </b-table>
+                    </div>
+                </b-col>
+                <b-col sm="4">
+                    <div class="cardDiv">
+                        <b-table responsive selectable :select-mode="selectMode" :items="curNode2Roles" small hover
+                                 :fields="columns2" head-variant class="table-container" selectedVariant="primary"
+                                 @row-selected="selectDoc">
+                            <template slot="character_class" slot-scope="row">
+                                {{ row.item.type}}
+                            </template>
+                            <template slot="character_name" slot-scope="row">
+                                {{ row.item.role_name}}
+                            </template>
+                            <template slot="is_use" slot-scope="row">
+                                <b-form-checkbox v-model="row.item.is_use" @change="isCheckUse()"></b-form-checkbox>
+                            </template>
+                        </b-table>
+                    </div>
+                </b-col>
+            </b-row>
+            <br>
+            <b-row>
+                <b-col sm="4" align-v="center">
+                    <b-button-group class="float-center">
+                        <b-button size="lg" type="submit" style="width:100%" variant="primary" @click="goLast()"> 上一步
+                        </b-button>
+                    </b-button-group>
+                </b-col>
+                <b-col sm="4" align-v="center">
+                    <b-button-group class="float-center">
+                        <b-button size="lg" style="width:100%" variant="primary" @click="savePage()"> 保存</b-button>
+                        <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
+                    </b-button-group>
+                </b-col>
+                <b-col sm="4" align-v="center">
+                    <b-button-group class="float-center">
+                        <b-button size="lg" type="submit" style="width:100%" variant="primary" v-b-modal.finishEdit
+                                  @click="goNext()"> 下一步
+                        </b-button>
+                        <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
+                    </b-button-group>
+                </b-col>
+            </b-row>
+            <br><br>
+            <b-modal id="deleteConfirmModal" title="Delete Doc" @ok="confirmDelete()">
+                <p class="my-4">Do you want to delete Doc?</p>
+            </b-modal>
+            <b-modal id="uploadDoc" title="Upload Doc" @ok="uploadDoc()">
+                <template>
+                    <div>
+                        <!--accepted-file-types="text/plain"-->
+<!--                        <file-pond-->
+<!--                                ref="pond"-->
+<!--                                accepted-file-types="application/pdf"-->
+<!--                                allow-multiple="true"-->
+<!--                                max-files="3"-->
+<!--                                fileValidateTypeLabelExpectedTypes="Must be a plain text file"-->
+<!--                                instant-upload="true"-->
+<!--                                allow-replace="false"-->
+<!--                                allow-revert="false"-->
+<!--                                :server="server"-->
+<!--                                @addfile="handleAddFile"-->
+<!--                                @removefile="handleRemoveFile"-->
+<!--                                @processfilestart="handleProcessFileStart"-->
+<!--                                @processfileabort="handleProcessFileAbort"-->
+<!--                                @processfilerevert="handleProcessFileUndo"-->
+<!--                                @processfile="handleProcessFile"-->
+<!--                                name="test"-->
+<!--                                label-idle="Upload PDF file..."-->
+<!--                                v-bind:files="myFiles">-->
+<!--                        </file-pond>-->
+                    </div>
+                </template>
+            </b-modal>
+        </b-container>
+    </div>
 </template>
 
 <script>
-    import { expType, level, abilityTarget } from "@/filters/fun";
-    import { mapState } from "vuex";
+    import {expType, level, abilityTarget} from "@/filters/fun";
+    import {mapState} from "vuex";
     import Loading from "@/components/loading/Loading";
-    import  { openFile }  from "@/components/previewFile";
+    import {openFile} from "@/components/previewFile";
     import ProjectService from "@/services/projectService";
     import _ from "lodash";
 
 
-
-    import vueFilePond from 'vue-filepond';
-//    import vueFilePond, { registerPlugin } from 'vue-filepond';
-    // Import FilePond styles
-//    import 'filepond/dist/filepond.min.css';
-
-    // Import FilePond plugins
-    // Please note that you need to install these plugins separately
-    // `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-//    import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
-//    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-//    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-//    import './filepond-plugin-image-preview.min.css';
+    // import vueFilePond from 'vue-filepond';
     import 'filepond/dist/filepond.min.css';
-    import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-//    registerPlugin(FilePondPluginFileValidateType);
-    const FilePond = vueFilePond(FilePondPluginFileValidateType);
-//    const FilePond = vueFilePond.create({
-//        allowMultiple:true,
-//      maxFiles:3,
-//    });
+    // import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
-
-
-
+    // const FilePond = vueFilePond(FilePondPluginFileValidateType);
 
     export default {
-        name: "project-3",
+        name: "wizard-3",
         components: {
             Loading,
-            FilePond
+            // FilePond
         },
+        props: ['value'],
         filters: {
             expType,
             level,
@@ -215,12 +197,12 @@
         },
         data() {
             return {
-                projectData:{},
+                projectData: {},
                 columns: {
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-10 "
+                        class: "text-center field-10"
                     },
                     class: {
                         label: "素材类型",
@@ -272,17 +254,17 @@
                         class: "text-center field-20"
                     },
                 },
-                options1:[
-                    { value: 1, text:'操作指南' },
-                    { value: 2, text:'关联文件' },
-                    { value: 3, text:'模板' },
-                    { value: 4, text:'材料' },
-                    { value: 5, text:'公文' },
-                    { value: 6, text:'成果参考' },
-                    { value: 7, text:'项目提示' },
+                options1: [
+                    {value: 1, text: '操作指南'},
+                    {value: 2, text: '关联文件'},
+                    {value: 3, text: '模板'},
+                    {value: 4, text: '材料'},
+                    {value: 5, text: '公文'},
+                    {value: 6, text: '成果参考'},
+                    {value: 7, text: '项目提示'},
                 ],
 //                params
-                project_id:-1,
+                project_id: -1,
                 projectDocsAssign: {
                     docs: [],
                     nodes: [],
@@ -303,7 +285,7 @@
                 curNode2Roles: [],
 
                 // 查询参数
-                allChecked:false,
+                allChecked: false,
                 queryParam: {
                     status: "",
                     page: 1,
@@ -320,12 +302,12 @@
                 // 流程相关项目
                 animationImgSrc: "",
                 bigImgModal: false,
-                currentProjectID:{},
-                checkedSharedItemsID:[],
-                checkedUnsharedItemsID:[],
-                checkedSharedItems:[],
-                checkedUnsharedItems:[],
-                myFiles:[]
+                currentProjectID: {},
+                checkedSharedItemsID: [],
+                checkedUnsharedItemsID: [],
+                checkedSharedItems: [],
+                checkedUnsharedItems: [],
+                myFiles: []
             };
         },
         created() {
@@ -350,7 +332,7 @@
             },
             queryDebounceParam: {
                 deep: true,
-                handler: _.debounce(function() {
+                handler: _.debounce(function () {
                     this.queryProjectList();
                 }, 500)
             },
@@ -371,18 +353,19 @@
             }
         },
         methods: {
-            handleFilePondInit: function() {
+            updatePage: function (value) {
+                this.$emit('input', value);
+            },
+            handleFilePondInit: function () {
                 return true;
 //                console.log('FilePond has initialized');
 
                 // FilePond instance methods are available on `this.$refs.pond`
             },
-
-
             queryProjectDocsDetail() {
                 this.run();
                 ProjectService
-                    .getProjectDocsDetail({project_id:this.project_id})
+                    .getProjectDocsDetail({project_id: this.project_id})
                     .then(data => {
                         this.initData(data);
                         this.$emit("data-ready");
@@ -410,13 +393,13 @@
                     }
                 })
             },
-            selectNode (items) {
+            selectNode(items) {
 //                var selectedNodeIndex = this.projectDocsAssign.nodes.indexOf(items[0]);
                 this.activeNodeIndex = this.projectDocsAssign.nodes.indexOf(items[0]);
                 this.activeNodeId = items[0].id;
                 this.getCurNode2Roles()
             },
-            selectDoc (items) {
+            selectDoc(items) {
                 this.activeDocIndex = this.projectDocsAssign.docs.indexOf(items[0]);
                 this.activeDocId = items[0].id;
                 this.currentDoc = items[0];
@@ -453,17 +436,11 @@
                     }
                 }
             },
-            goLast () {
-                this.$router.push({name: 'create-project-wizard2',params:{project_id:this.project_id,currentProject:this.project_data,is_edit:this.is_edit}})
+            goLast() {
+                this.updatePage(1);
             },
             goNext() {
-                this.$router.push({name: 'create-project-wizard4'})
-//                if (this.projectData.has_jump_project) {
-//                    this.$router.push({name: 'create-project-wizard4'})
-//                } else {
-////                    this.$toasted.error('Please set project information.');
-//                    this.successTipModal = true
-//                }
+                this.updatePage(3);
             },
             getSaveData() {
                 let projectDocs = this.projectDocsAssign.docs.map((doc) => {
@@ -547,7 +524,7 @@
             previewFile(fileUrl) {
                 openFile(fileUrl, this.userInfo.id)
             },
-            comfirmDelete() {
+            confirmDelete() {
                 this.deleteModalShow = false;
                 ProjectService
                     .deleteProjectDoc({doc_id: this.currentDoc.id})
@@ -564,7 +541,7 @@
                         this.getCurNode2Roles()
                     })
             },
-            uploadDoc(){
+            uploadDoc() {
                 return true;
             }
         }
@@ -572,142 +549,179 @@
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-  .projects-index {
-    .field-sn {
-      width: 5%;
-    }
-    .field-name {
-      width: 25%;
-    }
-    .field-creator {
-      width: 30%;
-    }
-    .field-create_time {
-      width: 9%;
-    }
-    .field-rend_ani_1 {
-      width: 15%;
-    }
-    .field-rend_ani_2 {
-      width: 35%;
-    }
-    .field-experiment_type_label {
-      width: 10%;
-    }
-    .field-experiment_task_label {
-      width: 10%;
-    }
-    .field-10{
-      width:10%
-    }
-    .field-20{
-      width:20%
-    }
-    .field-30{
-      width:30%
-    }
-    .field-40{
-      width:40%
-    }
-    .field-50{
-      width:50%
-    }
-    .field-60{
-      width:60%
-    }
-    .field-70{
-      width:70%
-    }
-    .field-80{
-      width:80%
-    }
-    .field-90{
-      width:90%
-    }
-    .field-100{
-      width:100%
-    }
+    .wizard-3 {
+        .projects-index {
+            .field-sn {
+                width: 5%;
+            }
 
-    .field_class{
-      width:15%
-    }
-    .field-status {
-      width: 5%;
-    }
-    .field-action {
-      width: 20%;
-    }
-    .table th,
-    .table td {
-      vertical-align: middle;
-    }
-    .modal-body {
-      .message {
-        font-size: 16px;
-      }
-      .tip {
-        font-size: 14px;
-        color: #999;
-      }
-    }
-  }
+            .field-name {
+                width: 25%;
+            }
 
-  .table-container {
-    height: calc(100vh - 450px);
+            .field-creator {
+                width: 30%;
+            }
 
-  }
-  .table-container table {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    width: 100%;
-    overflow-y:auto;
-  }
-  .table-container table thead {
-    flex: 0 0 auto;
-    width: 100%;
-  }
-  .table-container table tbody {
-    flex: 1 1 auto;
-    display: block;
-    width: 100%;
-    overflow-y: scroll;
-  }
-  .table-container table tbody tr {
-    width: 100%;
-  }
-  .table-container table thead, .table-container table tbody tr {
-    display: table;
-    table-layout: fixed;
-  }
-  .table-container table {
-    border-collapse: collapse;
-  }
-  .table-container table td, .table-container table th {
-    padding: 0.4em;
-  }
-  .table-container table tbody td {
-    padding: 8px;
-    cursor: pointer;
-  }
-  .table-container table thead td {
-    padding: 10px 5px;
-  }
+            .field-create_time {
+                width: 9%;
+            }
 
-  /* START Adjustments for width and scrollbar hidden */
-  .table-container th.table-action, .table-container td.table-action {
-    width: 5.8vw;
-  }
-  .table-container table thead {
-    width: calc(100% - 1px);
-  }
-  .table-container table tbody::-webkit-scrollbar {
-    width: 1px;
-  }
-  .table-container table tbody::-webkit-scrollbar {
-    width: 1px;
-  }
-  .table-container table tbody::-webkit-scrollbar-thumb {
-    width: 1px;
-  }
+            .field-rend_ani_1 {
+                width: 15%;
+            }
+
+            .field-rend_ani_2 {
+                width: 35%;
+            }
+
+            .field-experiment_type_label {
+                width: 10%;
+            }
+
+            .field-experiment_task_label {
+                width: 10%;
+            }
+
+            .field-10 {
+                width: 10%
+            }
+
+            .field-20 {
+                width: 20%
+            }
+
+            .field-30 {
+                width: 30%
+            }
+
+            .field-40 {
+                width: 40%
+            }
+
+            .field-50 {
+                width: 50%
+            }
+
+            .field-60 {
+                width: 60%
+            }
+
+            .field-70 {
+                width: 70%
+            }
+
+            .field-80 {
+                width: 80%
+            }
+
+            .field-90 {
+                width: 90%
+            }
+
+            .field-100 {
+                width: 100%
+            }
+
+            .field_class {
+                width: 15%
+            }
+
+            .field-status {
+                width: 5%;
+            }
+
+            .field-action {
+                width: 20%;
+            }
+
+            .table th,
+            .table td {
+                vertical-align: middle;
+            }
+
+            .modal-body {
+                .message {
+                    font-size: 16px;
+                }
+
+                .tip {
+                    font-size: 14px;
+                    color: #999;
+                }
+            }
+        }
+
+        .table-container {
+            height: calc(100vh - 450px);
+
+        }
+
+        .table-container table {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .table-container table thead {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+
+        .table-container table tbody {
+            flex: 1 1 auto;
+            display: block;
+            width: 100%;
+            overflow-y: scroll;
+        }
+
+        .table-container table tbody tr {
+            width: 100%;
+        }
+
+        .table-container table thead, .table-container table tbody tr {
+            display: table;
+            table-layout: fixed;
+        }
+
+        .table-container table {
+            border-collapse: collapse;
+        }
+
+        .table-container table td, .table-container table th {
+            padding: 0.4em;
+        }
+
+        .table-container table tbody td {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .table-container table thead td {
+            padding: 10px 5px;
+        }
+
+        /* START Adjustments for width and scrollbar hidden */
+        .table-container th.table-action, .table-container td.table-action {
+            width: 5.8vw;
+        }
+
+        .table-container table thead {
+            width: calc(100% - 1px);
+        }
+
+        .table-container table tbody::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        .table-container table tbody::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        .table-container table tbody::-webkit-scrollbar-thumb {
+            width: 1px;
+        }
+    }
 </style>
