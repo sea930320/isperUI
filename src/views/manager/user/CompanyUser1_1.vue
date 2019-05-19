@@ -39,7 +39,7 @@
                             username: '',
                             name: '',
                             email: '',
-                            gender: '',
+                            gender: 1,
                             phone: '',
                             position: '',
                         };
@@ -263,7 +263,7 @@ export default {
                 name: "",
                 password: "",
                 email: "",
-                gender: "",
+                gender: 1,
                 phone: "",
                 position: ""
             },

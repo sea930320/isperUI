@@ -86,44 +86,39 @@
                 <template
                     slot="is_open"
                     slot-scope="row"
-                >{{(row.item.is_open==1) ? "自由":((row.item.is_open==2)? "限时":"指定用户")}}</template>
+                >{{(row.item.is_open === 1) ? "自由":((row.item.is_open === 2)? "限时":"指定用户")}}</template>
                 <template slot="mission_type" slot-scope="row">{{row.item.course}}</template>
                 <template slot="edit_control" slot-scope="row">
-                    <a
-                        class="btn-link mx-1"
+                    <a class="btn-link mx-1"
                         href="javascript:"
-                        v-if="isActionAllowed('code_project_management', 'code_edit_project') && (row.item.edit_able == 1) && (userInfo.role == 2 || userInfo.role == 3)"
+                        v-if="isActionAllowed('code_project_management', 'code_edit_project') && (row.item.edit_able === 1) && (userInfo.role === 2 || userInfo.role === 3)"
                         v-b-modal.editConfirmModal
-                        @click="editProjectConfirm(row.item)"
-                    >
+                        @click="editProjectConfirm(row.item)" >
                         <icon name="edit"></icon>
                     </a>
-                    <a class="btn-link mx-1" href="javascript:" @click="showProject(row.item)">
+                    <a class="btn-link mx-1"
+                       href="javascript:"
+                       v-if="userInfo.role === 1"
+                       @click="showProject(row.item)" >
                         <icon name="eye"></icon>
                     </a>
-                    <a
-                        class="btn-link mx-1"
+                    <a class="btn-link mx-1"
                         href="javascript:"
-                        v-if="isActionAllowed('code_project_management', 'code_delete_project') && row.item.delete_able == 1"
+                        v-if="isActionAllowed('code_project_management', 'code_delete_project') && row.item.delete_able === 1"
                         v-b-modal.deleteConfirmModal
-                        @click="deleteProjectConfirm(row.item)"
-                    >
+                        @click="deleteProjectConfirm(row.item)" >
                         <icon name="trash"></icon>
                     </a>
-                    <a
-                        class="btn-link mx-1"
+                    <a class="btn-link mx-1"
                         href="javascript:"
-                        v-if="userInfo.role == 1 && (row.item.protected ==1)"
-                        @click="protectedProject(row.item)"
-                    >
+                        v-if="userInfo.role === 1 && (row.item.protected === 1)"
+                        @click="protectedProject(row.item)" >
                         <icon name="lock"></icon>
                     </a>
-                    <a
-                        class="btn-link mx-1"
+                    <a class="btn-link mx-1"
                         href="javascript:"
-                        v-if="userInfo.role == 1 && (row.item.protected ==0)"
-                        @click="protectedProject(row.item)"
-                    >
+                        v-if="userInfo.role === 1 && (row.item.protected === 0)"
+                        @click="protectedProject(row.item)" >
                         <icon name="lock-open"></icon>
                     </a>
                 </template>
@@ -365,7 +360,7 @@ export default {
         },
         showProject(idVal) {
             this.$router.push({
-                name: "create-project-wizard1",
+                name: "create-project-wizard",
                 params: { project_id: idVal.id }
             });
         },
@@ -434,13 +429,13 @@ export default {
         // Go To Create Project Page
         createProjectPage() {
             this.$router.push({
-                name: "create-project-wizard1",
+                name: "create-project-wizard",
                 params: { currentProject: {}, is_edit: 0 }
             });
         },
         editProject() {
             this.$router.push({
-                name: "create-project-wizard1",
+                name: "create-project-wizard",
                 params: {
                     project_id: this.currentProjectID.id,
                     currentProject: this.currentProjectID,
