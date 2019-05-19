@@ -280,7 +280,10 @@ export default {
             this.unsetModal = false;
             this.run();
             let params = {
-                candidates: JSON.stringify([this.focusAssistant.id])
+                candidates: JSON.stringify([this.focusAssistant.id]),
+                targets:
+                    this.focusAssistant.name ||
+                    this.focusAssistant.name.username
             };
             accountService
                 .unsetAssistant(params)

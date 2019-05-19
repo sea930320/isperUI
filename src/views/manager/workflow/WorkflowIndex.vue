@@ -744,6 +744,18 @@ export default {
         checkedPublishableIds() {
             return this.checkedPublishableItems.map(item => item.id);
         },
+        checkedPublishableTargets() {
+            let targets = "";
+            for (let key in this.checkedPublishableItems) {
+                let item = this.checkedPublishableItems[key];
+                if (targets === "") {
+                    targets = item.name;
+                } else {
+                    targets = targets + ", " + item.name;
+                }
+            }
+            return targets;
+        },
         checkedPublicableItems() {
             return this.checkedItems.filter(
                 item =>
@@ -754,6 +766,18 @@ export default {
         },
         checkedPublicableIds() {
             return this.checkedPublicableItems.map(item => item.id);
+        },
+        checkedPublicableTargets() {
+            let targets = "";
+            for (let key in this.checkedPublicableItems) {
+                let item = this.checkedPublicableItems[key];
+                if (targets === "") {
+                    targets = item.name;
+                } else {
+                    targets = targets + ", " + item.name;
+                }
+            }
+            return targets;
         },
         checkedUnPublicableItems() {
             return this.checkedItems.filter(
@@ -766,6 +790,18 @@ export default {
         checkedUnPublicableIds() {
             return this.checkedUnPublicableItems.map(item => item.id);
         },
+        checkedUnPublicableTargets() {
+            let targets = "";
+            for (let key in this.checkedUnPublicableItems) {
+                let item = this.checkedUnPublicableItems[key];
+                if (targets === "") {
+                    targets = item.name;
+                } else {
+                    targets = targets + ", " + item.name;
+                }
+            }
+            return targets;
+        },
         checkedShareableItems() {
             return this.checkedItems.filter(
                 item =>
@@ -777,6 +813,18 @@ export default {
         checkedShareableIds() {
             return this.checkedShareableItems.map(item => item.id);
         },
+        checkedShareableTargets() {
+            let targets = "";
+            for (let key in this.checkedShareableItems) {
+                let item = this.checkedShareableItems[key];
+                if (targets === "") {
+                    targets = item.name;
+                } else {
+                    targets = targets + ", " + item.name;
+                }
+            }
+            return targets;
+        },
         checkedUnShareableItems() {
             return this.checkedItems.filter(
                 item =>
@@ -787,6 +835,18 @@ export default {
         },
         checkedUnShareableIds() {
             return this.checkedUnShareableItems.map(item => item.id);
+        },
+        checkedUnShareableTargets() {
+            let targets = "";
+            for (let key in this.checkedUnShareableItems) {
+                let item = this.checkedUnShareableItems[key];
+                if (targets === "") {
+                    targets = item.name;
+                } else {
+                    targets = targets + ", " + item.name;
+                }
+            }
+            return targets;
         }
     },
     watch: {
@@ -918,7 +978,8 @@ export default {
                 animation1: workflow.animation1.id,
                 animation2: workflow.animation2.id,
                 type_label: workflow.type_label,
-                task_label: workflow.task_label
+                task_label: workflow.task_label,
+                targets: workflow.name
             };
             if (workflow.id) data.flow_id = workflow.id;
             return data;
@@ -997,7 +1058,10 @@ export default {
         deleteWorkflowHandler() {
             this.run();
             workflowService
-                .deleteWorkflow({ flow_id: this.currentDeleteItem.id })
+                .deleteWorkflow({
+                    flow_id: this.currentDeleteItem.id,
+                    targets: this.currentDeleteItem.name
+                })
                 .then(() => {
                     this.$emit("data-ready");
                     this.$toasted.success("删除流程成功");
@@ -1032,7 +1096,7 @@ export default {
         lockWorkflowClick(workflow) {
             this.run();
             workflowService
-                .lockWorkflow({ flow_id: workflow.id })
+                .lockWorkflow({ flow_id: workflow.id, targets: workflow.name })
                 .then(() => {
                     this.$emit("data-ready");
                     this.$set(workflow, "protected", 1);
@@ -1046,7 +1110,7 @@ export default {
         unlockWorkflowClick(workflow) {
             this.run();
             workflowService
-                .lockWorkflow({ flow_id: workflow.id })
+                .lockWorkflow({ flow_id: workflow.id, targets: workflow.name })
                 .then(() => {
                     this.$emit("data-ready");
                     this.$set(workflow, "protected", 0);
@@ -1080,7 +1144,8 @@ export default {
             this.run();
             workflowService
                 .publishWorkflow({
-                    ids: JSON.stringify(this.checkedPublishableIds)
+                    ids: JSON.stringify(this.checkedPublishableIds),
+                    targets: this.checkedPublishableTargets
                 })
                 .then(() => {
                     this.$emit("data-ready");
@@ -1139,7 +1204,8 @@ export default {
             workflowService
                 .copyWorkflow({
                     flow_id: this.checkedItems[0].id,
-                    name: this.copyModalName
+                    name: this.copyModalName,
+                    targets: this.checkedItems[0].name
                 })
                 .then(() => {
                     this.queryWorkflowList();
@@ -1170,7 +1236,8 @@ export default {
             this.run();
             workflowService
                 .shareWorkflow({
-                    data: JSON.stringify(this.checkedShareableIds)
+                    data: JSON.stringify(this.checkedShareableIds),
+                    targets: this.checkedShareableTargets
                 })
                 .then(() => {
                     this.$emit("data-ready");
@@ -1206,7 +1273,8 @@ export default {
             this.run();
             workflowService
                 .unshareWorkflow({
-                    data: JSON.stringify(this.checkedUnShareableIds)
+                    data: JSON.stringify(this.checkedUnShareableIds),
+                    targets: this.checkedUnShareableTargets
                 })
                 .then(() => {
                     this.$emit("data-ready");
@@ -1240,7 +1308,8 @@ export default {
             this.run();
             workflowService
                 .publicWorkflow({
-                    data: JSON.stringify(this.checkedPublicableIds)
+                    data: JSON.stringify(this.checkedPublicableIds),
+                    targets: this.checkedPublicableTargets
                 })
                 .then(() => {
                     this.$emit("data-ready");
@@ -1274,7 +1343,8 @@ export default {
             this.run();
             workflowService
                 .unpublicWorkflow({
-                    data: JSON.stringify(this.checkedUnPublicableIds)
+                    data: JSON.stringify(this.checkedUnPublicableIds),
+                    targets: this.checkedUnPublicableTargets
                 })
                 .then(() => {
                     this.$emit("data-ready");

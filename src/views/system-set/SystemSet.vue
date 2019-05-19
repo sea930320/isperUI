@@ -6,7 +6,9 @@
             </b-tab>
             <b-tab title="安全维护" class="pt-2">
                 <b-tabs class="security-log">
-                    <b-tab title="操作日志">Work Log</b-tab>
+                    <b-tab title="操作日志">
+                        <work-log/>
+                    </b-tab>
                     <b-tab title="登录记录">
                         <login-log/>
                     </b-tab>
@@ -24,7 +26,9 @@
             <b-tab
                 title="操作日志"
                 v-if="isActionAllowed('code_system_set_management', 'code_work_log_system_set')"
-            >Work Log</b-tab>
+            >
+                <work-log/>
+            </b-tab>
             <b-tab
                 title="登录记录"
                 v-if="isActionAllowed('code_system_set_management', 'code_login_log_system_set')"
@@ -54,7 +58,9 @@
                     <b-tab
                         title="操作日志"
                         v-if="isActionAllowed('code_system_set_management', 'code_work_log_system_set')"
-                    >Work Log</b-tab>
+                    >
+                        <work-log/>
+                    </b-tab>
                     <b-tab
                         title="登录记录"
                         v-if="isActionAllowed('code_system_set_management', 'code_login_log_system_set')"
@@ -74,6 +80,7 @@
 <script>
 import RoleManagement from "./RoleManagement";
 import LoginLog from "./LoginLog";
+import WorkLog from "./WorkLog";
 import Dictionary from "./Dictionary";
 import Advertising from "./Advertising";
 import PartPosition from "./PartPosition";
@@ -84,6 +91,7 @@ export default {
     name: "system-set",
     components: {
         RoleManagement,
+        WorkLog,
         LoginLog,
         Dictionary,
         PartPosition,
