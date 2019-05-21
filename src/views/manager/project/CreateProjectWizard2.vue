@@ -35,7 +35,6 @@
                                     {{ row.item.name}}
                                 </template>
                                 <template slot="appMode" slot-scope="row">
-
                                     <a href="javascript:;" class="case-text"
                                        @click="showBigProcessImg(row.item.process.image)">{{ row.item.process.name}}</a>
                                 </template>
@@ -55,15 +54,15 @@
                                     <thead>
                                     <tr>
                                         <th width="15%">角色类型</th>
-                                        <th width="20%">角色名称</th>
-                                        <th width="20%">角色形象</th>
-                                        <th width="15%">
+                                        <th width="15%">角色名称</th>
+                                        <th width="37%">角色形象</th>
+                                        <th width="11%">
                                             <div class="thead-top">是否使用</div>
                                         </th>
-                                        <th width="15%">
+                                        <th width="11%">
                                             <div class="thead-top">结束环节</div>
                                         </th>
-                                        <th width="15%">身份</th>
+                                        <th width="11%">身份</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -78,22 +77,22 @@
                                         </tr>
                                         <tr v-for="(role, indexRole) in assignDataForType(type)" :key="'role_'+index+'_'+indexRole">
                                             <td width="15%"></td>
-                                            <td width="20%">{{role.role_name}}</td>
-                                            <td width="20%">{{role.image_name}}-{{role.gender ? (role.gender === 1 ? '男'
+                                            <td width="15%">{{role.role_name}}</td>
+                                            <td width="37%">{{role.image_name}}-{{role.gender ? (role.gender === 1 ? '男'
                                                 : '女' ) : ''}} <a v-if="role.image_id" href="javascript:"
                                                                   v-b-modal.roleModal class="btn-link"
                                                                   @click="roleImageReselect(role)">重新选择</a></td>
-                                            <td width="15%">
+                                            <td width="11%" class="check-padding">
                                                 <b-form-checkbox v-model="role.is_use" @change="checkRoleAssign(role)">
                                                 </b-form-checkbox>
                                             </td>
-                                            <td width="15%">
+                                            <td width="11%" class="check-padding">
                                                 <b-form-checkbox v-model="role.can_terminate"
                                                                  @change="checkRoleAssign(role)"
                                                                  @input="checkRoleAssign(role)">
                                                 </b-form-checkbox>
                                             </td>
-                                            <td width="20%">
+                                            <td width="11%" class="check-padding">
                                                 <b-form-checkbox>
                                                 </b-form-checkbox>
                                             </td>
@@ -642,6 +641,10 @@
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss" scoped>
     .wizard-2 {
+        .check-padding {
+            padding: 15px 40px !important;
+        }
+
         .card-body {
             padding: 0;
         }

@@ -322,8 +322,11 @@
             margin: 8px 0;
             box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
         }
+
         .align-items-center.d-flex.justify-content-between.list-group-item {
             padding: 7px 8px 7px 15px;
+            font-family: 'SimHei';
+            font-size: 16px;
         }
         .subListItem {
             padding: 3px 8px 3px 30px !important;

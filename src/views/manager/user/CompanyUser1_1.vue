@@ -254,6 +254,7 @@ export default {
             selected: [],
             tableData: [],
             tableHeader: [],
+            excelDataError: false,
             reset: {
                 id: null,
                 password: ""
@@ -440,19 +441,30 @@ export default {
                 this.tableHeader = header;
             }
         },
+        cancelExcel(errText) {
+            confirm('没有填写好' + errText);
+            this.excelDataError = true;
+            this.$refs["uploadExcel"].hide();
+        },
         excelSave() {
-            this.run();
             let excelData = [];
-            for (let id in this.tableData)
+            for (let id in this.tableData) {
                 excelData.push({
-                    name: this.tableData[id].姓名,
-                    username: this.tableData[id].用户名,
-                    gender: this.tableData[id].性别,
-                    phone: this.tableData[id].手机号,
-                    email: this.tableData[id].邮箱,
-                    part: this.tableData[id].部门,
-                    position: this.tableData[id].职务
+                    name: this.tableData[id].姓名 === undefined ? this.cancelExcel('姓名') : this.tableData[id].姓名,
+                    username: this.tableData[id].用户名 === undefined ? this.cancelExcel('用户名') : this.tableData[id].用户名,
+                    gender: this.tableData[id].性别 === undefined ? this.cancelExcel('性别') : this.tableData[id].性别,
+                    phone: this.tableData[id].手机号 === undefined ? this.cancelExcel('手机号') : this.tableData[id].手机号,
+                    email: this.tableData[id].邮箱 === undefined ? this.cancelExcel('邮箱') : this.tableData[id].邮箱,
+                    part: this.tableData[id].部门 === undefined ? '' : this.tableData[id].部门,
+                    position: this.tableData[id].职务 === undefined ? '' : this.tableData[id].职务
                 });
+            }
+            if (this.excelDataError) {
+                this.excelDataError = false;
+                return;
+            }
+            else
+                this.run();
             UserManageService.excelDataSave({
                 excelData: JSON.stringify(excelData)
             })

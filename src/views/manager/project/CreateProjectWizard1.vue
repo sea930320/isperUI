@@ -12,8 +12,7 @@
                                 label="流程名称:"
                                 label-for="input-horizontal"
                         >
-                            <!--<b-form-input disabled id="input-horizontal" required v-model="this.selectedFlowName"></b-form-input>-->
-                            <b-form-input id="input-horizontal2" required v-model="flow_name"></b-form-input>
+                            <b-form-input id="input-horizontal2" required v-model="flow_name" disabled></b-form-input>
                         </b-form-group>
                         <div class="cardDiv">
                             <b-navbar toggleable="lg" class="theader">
@@ -31,13 +30,10 @@
                                                 <b-form-input v-model.lazy="queryDebounceParam.search"
                                                               placeholder="请输入内容"/>
                                             </b-input-group>
-                                            <!--<b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
                                         </b-nav-form>
                                     </b-navbar-nav>
                                 </b-collapse>
                             </b-navbar>
-                            <!--<div class="subtable_div">-->
-
                             <b-table selectable :select-mode="selectMode" :items="workflows.list" hover
                                      :fields="columns" head-variant class="table-container" selectedVariant="primary"
                                      @row-selected="rowSelected">
@@ -49,7 +45,6 @@
                                 </template>
                                 <template slot="convertedData" slot-scope="row">
                                     {{row.item.convertedData}}
-                                    <!--{{row.item.type_label}}-->
                                 </template>
                                 <template slot="rend_ani_1" slot-scope="row">
                                     <a
@@ -72,8 +67,6 @@
                                     v-model="queryParam.page"
                             ></b-pagination>
                         </b-row>
-
-                        <!--</div>-->
                     </b-col>
                     <b-col sm="8">
                         <b-container fluid>
@@ -160,7 +153,7 @@
                                 <b-col sm="1"></b-col>
                                 <b-col sm="9">
                                     <b-form-group
-                                            v-if="project_data.is_open === 2"
+                                            v-if="project_data.is_open === 3"
                                             id="fieldset-horizontal9"
                                             label-cols-sm="4"
                                             label-cols-lg="3"
@@ -311,7 +304,6 @@
             Loading,
             ViewXml,
         },
-        props: ['value'],
         filters: {
             expType,
             level,
@@ -365,19 +357,21 @@
                 ],
                 options_is_open: [
                     {value: 1, text: '自由'},
-                    {value: 2, text: '限时'},
-                    {value: 2, text: '指定用户'},
+                    {value: 2, text: '不公开'},
+                    {value: 3, text: '限时'},
+                    {value: 4, text: '指定用户'},
+                    {value: 5, text: '指定部门/单位'},
                 ],
                 options_reference: [
                     {value: 1, text: '同步'},
                     {value: 2, text: '后步'},
-                    {value: 2, text: '最后'},
+                    {value: 3, text: '最后'},
                 ],
                 options_course: [],
                 options_classification: [
                     {value: 1, text: 'test1'},
                     {value: 2, text: 'test2'},
-                    {value: 2, text: 'test3'},
+                    {value: 3, text: 'test3'},
                 ],
                 savedBit: false,
                 // 查询参数
@@ -509,7 +503,7 @@
                 handler: _.debounce(function () {
                     this.queryWorkflowList();
                 }, 500)
-            }
+            },
         },
         methods: {
             ...mapActions(["setFlowStep"]),
@@ -580,7 +574,7 @@
                         this.$toasted.success('保存成功');
                         this.$emit("data-ready");
                         this.project_id = data.id;
-//                  this.$router.push('/manager/project' );
+                        this.$emit('update', data);
 
                     })
                     .catch(() => {
@@ -809,6 +803,10 @@
 
         .table-container table tbody::-webkit-scrollbar-thumb {
             width: 1px;
+        }
+
+        .table-primary td {
+            border: none;
         }
 
         /* END Adjustments for width and scrollbar */
