@@ -1,7 +1,7 @@
 <template>
     <div class="mt-5 wizard-1">
         <loading v-if="isRunning"></loading>
-        <b-form v-if="userInfo.role === 2 || userInfo.role === 3" @submit="onSubmit">
+        <b-form v-if="[2,3,6,7].includes(userInfo.role)" @submit="onSubmit">
             <b-container fluid>
                 <b-row align-v="start">
                     <b-col sm="4">

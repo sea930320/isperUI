@@ -121,6 +121,9 @@ export default {
     },
     created() {
         this.$nextTick(() => {
+            this.queryParam.group_id = [2, 6].includes(this.userInfo.identity)
+                ? this.userInfo.manager_info.group_id
+                : null;
             this.getLoginLogs();
             if ([1, 2, 6].includes(this.userInfo.identity)) {
                 this.getGroupList();
@@ -233,17 +236,11 @@ export default {
                     name: "单位筛选"
                 }
             ];
-            if (
-                !this.queryParam.group_id &&
-                ![2, 6].includes(this.userInfo.identity)
-            ) {
+            if (!this.queryParam.group_id) {
                 return items;
-            } else if ([2, 6].includes(this.userInfo.identity)) {
-                this.queryParam.group_id = this.userInfo.manager_info.group_id;
             }
-            let currentGroup = this.groups.filter(
-                group => group.id == this.queryParam.group_id
-            );
+            let groupID = this.queryParam.group_id;
+            let currentGroup = this.groups.filter(group => group.id == groupID);
             if (currentGroup.length > 0) {
                 items = [
                     ...items,

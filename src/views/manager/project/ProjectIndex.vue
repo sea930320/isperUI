@@ -92,8 +92,7 @@
                     <a class="btn-link mx-1"
                         href="javascript:"
                         v-if="isActionAllowed('code_project_management', 'code_edit_project') && (row.item.edit_able === 1) && (userInfo.role === 2 || userInfo.role === 3)"
-                        v-b-modal.editConfirmModal
-                        @click="editProjectConfirm(row.item)" >
+                        @click="editProject(row.item)" >
                         <icon name="edit"></icon>
                     </a>
                     <a class="btn-link mx-1"
@@ -133,9 +132,6 @@
                 v-model="queryParam.page"
             />
         </b-row>
-        <br>
-        <br>
-        <br>
         <!--//Confirm Delete Project-->
         <b-modal id="deleteConfirmModal" title="Delete Project" @ok="deleteProject()">
             <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p>
@@ -170,9 +166,6 @@
                 <template slot="name" slot-scope="row">{{row.item.name}}</template>
                 <template slot="course" slot-scope="row">{{row.item.course}}</template>
             </b-table>
-        </b-modal>
-        <b-modal id="editConfirmModal" title="Cancel Project Sharing" @ok="editProject()">
-            <p class="my-4">Do you want to edit "{{this.currentProjectID.name}}" Project?</p>
         </b-modal>
     </div>
 </template>
@@ -355,9 +348,6 @@ export default {
         deleteProjectConfirm(idValue) {
             this.currentProjectID = idValue;
         },
-        editProjectConfirm(idValue) {
-            this.currentProjectID = idValue;
-        },
         showProject(idVal) {
             this.$router.push({
                 name: "create-project-wizard",
@@ -433,12 +423,12 @@ export default {
                 params: { currentProject: {}, is_edit: 0 }
             });
         },
-        editProject() {
+        editProject(project) {
             this.$router.push({
                 name: "create-project-wizard",
                 params: {
-                    project_id: this.currentProjectID.id,
-                    currentProject: this.currentProjectID,
+                    project_id: project.id,
+                    currentProject: project,
                     is_edit: 1
                 }
             });
