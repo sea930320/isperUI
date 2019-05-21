@@ -1,34 +1,20 @@
 <template>
-    <div class="assistant-set">
+    <div class="role-management">
         <loading v-if="isRunning"></loading>
-        <PersonalCenterTab activeTab="2"/>
         <b-row class="cardDiv">
             <b-col cols="4">
                 <b-card no-body>
-                    <b-card-header class="assistant-add my-0 py-2">
-                        配置助理
-                        <b-button
-                            variant="link"
-                            class="float-right"
-                            size="sm"
-                            @click="addAssistant"
-                        >
-                            <icon name="plus-circle"></icon>
-                        </b-button>
-                    </b-card-header>
+                    <b-card-header class="left-header my-0 py-2">角色</b-card-header>
                     <b-card-body>
                         <b-list-group>
                             <b-list-group-item
-                                v-for="(assistant, index) in assistants"
+                                v-for="(role, index) in roles"
                                 :key="index"
                                 button
                                 class="d-flex justify-content-between align-items-center py-2 my-0"
-                                :active="assistant.active"
-                                @click="selectAssistant(assistant)"
-                            >
-                                {{assistant.name || assistant.username}}
-                                <b-button size="sm" @click="unsetAssistant(assistant)">取消绑定</b-button>
-                            </b-list-group-item>
+                                :active="role.active"
+                                @click="selectRole(role)"
+                            >{{role.name}}</b-list-group-item>
                         </b-list-group>
                     </b-card-body>
                 </b-card>
@@ -45,8 +31,8 @@
                     <tbody>
                         <tr>
                             <td class="w-20">系统功能</td>
-                            <td colspan="2" class="m-0 p-0 w-80" v-if="selectedAssistant">
-                                <template v-if="selectAssistant">
+                            <td colspan="2" class="m-0 p-0 w-80" v-if="selectedRole">
+                                <template v-if="selectedRole">
                                     <b-row
                                         v-for="(permission, index) in systemFunctionPermissions"
                                         :key="index"
@@ -59,7 +45,7 @@
                                             style="border-right: 1px solid #dee2e6;"
                                         >
                                             <b-form-checkbox
-                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                v-model="selectedRole.permissions_check[permission.id]"
                                                 @change="togglePermission($event, permission)"
                                             >{{permission.name}}</b-form-checkbox>
                                         </b-col>
@@ -78,7 +64,7 @@
                                                     <b-form-checkbox
                                                         value-field="id"
                                                         text-field="name"
-                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        v-model="selectedRole.actions_check[action.id]"
                                                         @change="toggleAction($event, action)"
                                                     >
                                                         <div style="width: 100%;">{{action.name}}</div>
@@ -93,7 +79,7 @@
                         <tr>
                             <td class="w-20 p-0">系统设置</td>
                             <td colspan="2" class="m-0 p-0 w-80">
-                                <template v-if="selectedAssistant">
+                                <template v-if="selectedRole">
                                     <b-row
                                         v-for="(permission, index) in systemSettingPermissions"
                                         :key="index"
@@ -106,7 +92,7 @@
                                             style="border-right: 1px solid #dee2e6;"
                                         >
                                             <b-form-checkbox
-                                                v-model="selectedAssistant.permissions_check[permission.id]"
+                                                v-model="selectedRole.permissions_check[permission.id]"
                                                 @change="togglePermission($event, permission)"
                                             >{{permission.name}}</b-form-checkbox>
                                         </b-col>
@@ -125,7 +111,7 @@
                                                     <b-form-checkbox
                                                         value-field="id"
                                                         text-field="name"
-                                                        v-model="selectedAssistant.actions_check[action.id]"
+                                                        v-model="selectedRole.actions_check[action.id]"
                                                         @change="toggleAction($event, action)"
                                                     >
                                                         <div style="width: 100%;">{{action.name}}</div>
@@ -144,52 +130,92 @@
                 <b-button class="styledBtn" type="submit" variant="primary" @click="save()">保存</b-button>
             </b-col>
         </b-row>
-        <assistant-add/>
-
-        <!-- Unset Assistant Modal -->
-        <b-modal
-            v-model="unsetModal"
-            title="解除助理"
-            ok-title="确定"
-            cancel-title="取消"
-            @cancel="unsetModal=false"
-            @ok="confirmUnset"
-        >
-            <div class="modal-msg">
-                <p class="message">您要确定解除助理吗？</p>
-            </div>
-
-            <div slot="modal-footer" class="w-100">
-                <b-button variant="danger" class="float-center mr-2" @click="confirmUnset()">确定</b-button>
-                <b-button variant="secondary" class="float-center" @click="unsetModal=false">取消</b-button>
-            </div>
-        </b-modal>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import accountService from "@/services/accountService";
-import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
-import AssistantAdd from "@/views/personal-center/AssistantAdd";
 import _ from "lodash";
 import Loading from "@/components/loading/Loading";
 
 export default {
     name: "assistant-set",
-    components: { PersonalCenterTab, AssistantAdd, Loading },
+    components: { Loading },
     data() {
         return {
-            assistants: [],
-            permissions: [],
-            unsetModal: false,
-            focusAssistant: null
+            roles: [
+                {
+                    id: 2,
+                    name: "集群管理员"
+                },
+                {
+                    id: 3,
+                    name: "单位管理员"
+                }
+            ],
+            permissions: []
         };
     },
     computed: {
         ...mapState(["userInfo"]),
+        selectedRole() {
+            let role = _.find(this.roles, {
+                active: true
+            });
+            if (!role) {
+                return null;
+            }
+            this.$set(role, "permissions_check", {});
+            this.$set(role, "actions_check", {});
+            role.permissions = _.mapValues(
+                _.groupBy(role.actions, "permission_id")
+            );
+            for (let index in this.permissions) {
+                let permission = this.permissions[index];
+                let actions = permission.actions;
+                this.$set(role.permissions_check, permission.id, false);
+                for (let index1 in actions) {
+                    let action = actions[index1];
+                    this.$set(role.actions_check, action.id, false);
+                }
+            }
+
+            for (let permission_id in role.permissions) {
+                let permission = role.permissions[permission_id];
+                role.permissions_check[permission_id] =
+                    permission && permission.length > 0;
+            }
+            for (let index in role.actions) {
+                let action = role.actions[index];
+                role.actions_check[action.id] = true;
+            }
+            return role;
+        },
+        selectedRoleID() {
+            if (!this.selectedRole) return null;
+            return this.selectedRole.id;
+        },
         systemFunctionPermissions() {
             return this.permissions.filter(permission => {
+                if (this.selectedRoleID == 2) {
+                    if (
+                        ["code_company_management"].includes(
+                            permission.codename
+                        )
+                    ) {
+                        return false;
+                    }
+                } else if (this.selectedRoleID == 3) {
+                    if (
+                        [
+                            "code_business_management",
+                            "code_group_company_management"
+                        ].includes(permission.codename)
+                    ) {
+                        return false;
+                    }
+                }
                 return permission.codename != "code_system_set_management";
             });
         },
@@ -197,71 +223,36 @@ export default {
             return this.permissions.filter(permission => {
                 return permission.codename == "code_system_set_management";
             });
-        },
-        selectedAssistant() {
-            let assistant = _.find(this.assistants, {
-                active: true
-            });
-            if (!assistant) {
-                return null;
-            }
-            this.$set(assistant, "permissions_check", {});
-            this.$set(assistant, "actions_check", {});
-            assistant.permissions = _.mapValues(
-                _.groupBy(assistant.actions, "permission_id")
-            );
-            for (let index in this.permissions) {
-                let permission = this.permissions[index];
-                let actions = permission.actions;
-                this.$set(assistant.permissions_check, permission.id, false);
-                for (let index1 in actions) {
-                    let action = actions[index1];
-                    this.$set(assistant.actions_check, action.id, false);
-                }
-            }
-
-            for (let permission_id in assistant.permissions) {
-                let permission = assistant.permissions[permission_id];
-                assistant.permissions_check[permission_id] =
-                    permission && permission.length > 0;
-            }
-            for (let index in assistant.actions) {
-                let action = assistant.actions[index];
-                assistant.actions_check[action.id] = true;
-            }
-            return assistant;
         }
     },
     created() {
         this.$nextTick(() => {
-            this.getAssistants();
-        });
-
-        this.$on("on-ok-assistant-add", () => {
-            this.getAssistants();
+            this.getRoles();
         });
     },
     methods: {
         ...mapActions({
             loginAction: "login"
         }),
-        getAssistants() {
+        getRoles() {
             this.run();
             let apis = [
-                accountService.getAssistants(),
+                accountService.getRoles(),
                 accountService.getPermissions()
             ];
             Promise.all(apis)
                 .then(repsonse => {
-                    this.assistants = _.map(
-                        repsonse[0].assistants,
-                        assistant => {
-                            assistant.active = false;
-                            return assistant;
+                    this.roles = _.filter(
+                        _.map(repsonse[0].roles, role => {
+                            role.active = false;
+                            return role;
+                        }),
+                        role => {
+                            if ([2, 3].includes(role.id)) return true;
+                            else return false;
                         }
                     );
-                    this.assistants.length > 0 &&
-                        (this.assistants[0].active = true);
+                    this.roles.length > 0 && (this.roles[0].active = true);
                     this.permissions = repsonse[1].permissions;
                     this.$emit("data-ready");
                 })
@@ -269,41 +260,15 @@ export default {
                     this.$emit("data-failed");
                 });
         },
-        addAssistant() {
-            this.$emit("openAssistantAddModal");
-        },
-        unsetAssistant(assistant) {
-            this.focusAssistant = assistant;
-            this.unsetModal = true;
-        },
-        confirmUnset() {
-            this.unsetModal = false;
-            this.run();
-            let params = {
-                candidates: JSON.stringify([this.focusAssistant.id]),
-                targets:
-                    this.focusAssistant.name ||
-                    this.focusAssistant.name.username
-            };
-            accountService
-                .unsetAssistant(params)
-                .then(() => {
-                    this.$emit("data-ready");
-                    this.getAssistants();
-                })
-                .catch(() => {
-                    this.$emit("data-failed");
-                });
-        },
-        selectAssistant(assistant) {
-            this.assistants = _.map(this.assistants, assistant => {
-                assistant.active = false;
-                return assistant;
+        selectRole(role) {
+            this.roles = _.map(this.roles, role => {
+                role.active = false;
+                return role;
             });
-            this.$set(assistant, "active", true);
+            this.$set(role, "active", true);
         },
         togglePermission(val, permission) {
-            let actions = _.map(this.selectedAssistant.actions, _.clone);
+            let actions = _.map(this.selectedRole.actions, _.clone);
             if (val) {
                 actions = _.unionBy(permission.actions, actions, "id");
             } else {
@@ -314,11 +279,11 @@ export default {
                     );
                 });
             }
-            this.$set(this.selectedAssistant, "actions", actions);
+            this.$set(this.selectedRole, "actions", actions);
         },
         toggleAction(val, action) {
-            let actions = _.map(this.selectedAssistant.actions, _.clone);
-            this.selectedAssistant.actions = [];
+            let actions = _.map(this.selectedRole.actions, _.clone);
+            this.selectedRole.actions = [];
             if (val) {
                 let existAction = _.find(actions, {
                     id: action.id
@@ -331,19 +296,19 @@ export default {
                     id: action.id
                 });
             }
-            this.$set(this.selectedAssistant, "actions", actions);
+            this.$set(this.selectedRole, "actions", actions);
         },
         save() {
-            let actions = this.assistants.map(assistant => {
+            let actions = this.roles.map(role => {
                 return {
-                    actions: assistant.actions_check || null,
-                    id: assistant.id
+                    actions: role.actions_check || null,
+                    id: role.id
                 };
             });
             this.run();
             accountService
-                .setAssistantsActions({
-                    assistants_actions: JSON.stringify(actions)
+                .setRolesActions({
+                    roles_actions: JSON.stringify(actions)
                 })
                 .then(() => {
                     this.$emit("data-ready");
@@ -357,16 +322,13 @@ export default {
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-.assistant-set {
-    .assistant-add {
+.role-management {
+    .left-header {
         line-height: 31px;
         text-align: center;
         background: royalblue;
         font-weight: bold;
         color: white;
-        button {
-            color: white;
-        }
     }
     .role-select-card {
         .row > [class*="col-"] {

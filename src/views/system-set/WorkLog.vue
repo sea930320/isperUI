@@ -1,5 +1,5 @@
 <template>
-    <div class="login-log">
+    <div class="work-log">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
             <b-col lg="3" md="6" sm="12">
@@ -55,7 +55,7 @@
         </b-row>
 
         <div class="cardDiv">
-            <b-table :items="loginLogList" small hover :fields="columns" head-variant>
+            <b-table :items="workLogList" small hover :fields="columns" head-variant>
                 <template slot="HEAD_sn" slot-scope="head">
                     <b-form-checkbox v-if="userInfo.identity==1" v-model="allChecked">{{head.label}}</b-form-checkbox>
                     <span v-else>{{head.label}}</span>
@@ -75,8 +75,12 @@
                     slot-scope="row"
                 >{{row.item.company && row.item.company.name}}</template>
                 <template slot="role" slot-scope="row">{{row.item.role && row.item.role.name}}</template>
-                <template slot="login_time" slot-scope="row">{{row.item.login_time}}</template>
-                <template slot="login_ip" slot-scope="row">{{row.item.login_ip}}</template>
+                <template slot="log_at" slot-scope="row">{{row.item.log_at}}</template>
+                <template slot="ip" slot-scope="row">{{row.item.ip}}</template>
+                <template slot="action" slot-scope="row">
+                    <span class="badge badge-info">{{row.item.action}}</span>
+                    {{row.item.targets}}
+                </template>
             </b-table>
         </div>
         <b-row class="justify-content-center row-margin-tweak cardDiv">
@@ -108,20 +112,20 @@
 import Loading from "@/components/loading/Loading";
 import _ from "lodash";
 import DatePicker from "vue2-datepicker";
-import loginLogService from "@/services/loginLogService";
+import workLogService from "@/services/workLogService";
 import groupService from "@/services/groupService";
 import utils from "@/utils/util";
 import { mapState } from "vuex";
 
 export default {
-    name: "login-log",
+    name: "work-log",
     components: {
         Loading,
         DatePicker
     },
     created() {
         this.$nextTick(() => {
-            this.getLoginLogs();
+            this.getWorkLogs();
             if ([1, 2, 6].includes(this.userInfo.identity)) {
                 this.getGroupList();
             }
@@ -160,18 +164,23 @@ export default {
                     sortable: false,
                     class: "text-center field-role"
                 },
-                login_time: {
+                log_at: {
                     label: "登录时间",
                     sortable: false,
-                    class: "text-center field-login_time"
+                    class: "text-center field-log_at"
                 },
-                login_ip: {
+                ip: {
                     label: "登录IP",
                     sortable: false,
-                    class: "text-center field-login_ip"
+                    class: "text-center field-ip"
+                },
+                action: {
+                    label: "操作内容",
+                    sortable: false,
+                    class: "text-left field-action"
                 }
             },
-            loginLogList: [],
+            workLogList: [],
             total: 1,
             // 查询参数
             queryParam: {
@@ -193,7 +202,7 @@ export default {
         // 监控查询参数，如有变化 查询列表数据
         queryParam: {
             handler() {
-                this.getLoginLogs();
+                this.getWorkLogs();
             },
             deep: true
         },
@@ -205,18 +214,18 @@ export default {
         queryDebounceParam: {
             deep: true,
             handler: _.debounce(function() {
-                this.getLoginLogs();
+                this.getWorkLogs();
             }, 500)
         },
         allChecked: {
             handler(val) {
                 if (val) {
-                    this.loginLogList.map(item => {
+                    this.workLogList.map(item => {
                         item.checked = true;
                         return item;
                     });
                 } else {
-                    this.loginLogList.map(item => {
+                    this.workLogList.map(item => {
                         item.checked = false;
                         return item;
                     });
@@ -255,7 +264,7 @@ export default {
             return items;
         },
         checkedItems() {
-            return this.loginLogList.filter(item => item.checked === true);
+            return this.workLogList.filter(item => item.checked === true);
         },
         checkedIds() {
             return this.checkedItems.map(item => item.id);
@@ -274,7 +283,7 @@ export default {
                 })
                 .catch(() => {});
         },
-        getLoginLogs() {
+        getWorkLogs() {
             this.allChecked = false;
             this.run();
             let param = {
@@ -297,7 +306,7 @@ export default {
                 param["start_date"] = "";
                 param["end_date"] = "";
             }
-            loginLogService
+            workLogService
                 .fetchLogs(param)
                 .then(data => {
                     data.results.forEach(item => {
@@ -306,7 +315,7 @@ export default {
                         }
                     });
                     this.total = data.paging.count;
-                    this.loginLogList = data.results;
+                    this.workLogList = data.results;
                     this.$emit("data-ready");
                 })
                 .catch(() => {
@@ -335,7 +344,7 @@ export default {
                 param["end_date"] = "";
             }
             param = utils.jsonToQueryString(param);
-            let url = "/api/account/export/loginlogs" + param;
+            let url = "/api/account/export/worklogs" + param;
             window.open(url);
         },
         deleteLogs() {
@@ -347,10 +356,10 @@ export default {
         },
         removeLogOk() {
             this.removeLogModal = false;
-            loginLogService
+            workLogService
                 .removeLogs({ data: JSON.stringify(this.checkedIds) })
                 .then(() => {
-                    this.getLoginLogs();
+                    this.getWorkLogs();
                     this.$toasted.success("清理成功");
                 });
         }
@@ -359,7 +368,7 @@ export default {
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-.login-log {
+.work-log {
     .mx-input {
         height: 31px;
     }
@@ -372,22 +381,25 @@ export default {
         width: 15%;
     }
     .field-user_name {
-        width: 15%;
+        width: 10%;
     }
     .field-group {
-        width: 15%;
+        width: 10%;
     }
     .field-company {
-        width: 15%;
+        width: 10%;
     }
     .field-role {
-        width: 15%;
+        width: 10%;
     }
-    .field-login_time {
+    .field-log_at {
         width: 9%;
     }
-    .field-login_ip {
+    .field-ip {
         width: 10%;
+    }
+    .field-action {
+        width: 20%;
     }
 }
 </style>

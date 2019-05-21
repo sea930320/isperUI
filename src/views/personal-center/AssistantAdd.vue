@@ -428,10 +428,18 @@ export default {
                     return manager.is_checked;
                 });
                 candidates = _.map(candidates, "id");
+                let targets = "";
+                this.managers.forEach(manager => {
+                    if (targets == "") {
+                        targets = manager.name || manager.username;
+                    }
+                    targets = targets + ", " + manager.name || manager.username;
+                });
                 this.run();
                 accountService
                     .setAssistants({
-                        candidates: JSON.stringify(candidates)
+                        candidates: JSON.stringify(candidates),
+                        targets
                     })
                     .then(() => {
                         this.$emit("data-ready");
@@ -446,10 +454,18 @@ export default {
                     return user.is_checked;
                 });
                 candidates = _.map(candidates, "id");
+                let targets = "";
+                this.users.forEach(user => {
+                    if (targets == "") {
+                        targets = user.name || user.username;
+                    }
+                    targets = targets + ", " + user.name || user.username;
+                });
                 this.run();
                 accountService
                     .setAssistants({
-                        candidates: JSON.stringify(candidates)
+                        candidates: JSON.stringify(candidates),
+                        targets
                     })
                     .then(() => {
                         this.$emit("data-ready");
@@ -464,7 +480,8 @@ export default {
                     ...this.newAssistant,
                     ...{
                         group_id: this.userInfo.manager_info.group_id,
-                        company_id: this.userInfo.manager_info.company_id
+                        company_id: this.userInfo.manager_info.company_id,
+                        targets: this.newAssistant.name
                     }
                 };
                 this.run();
