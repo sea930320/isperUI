@@ -42,7 +42,7 @@
 <script>
     import LoginLog from "./LoginLog";
     import Dictionary from "./Dictionary";
-    import Advertising from "./Advertising";
+    import Advertising from "./advertising/Advertising";
     import { mapState } from "vuex";
 
     export default {
