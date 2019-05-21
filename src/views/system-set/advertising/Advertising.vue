@@ -12,14 +12,9 @@
                             {{row.item.create_time}}
                         </template>
                         <template slot="preview_icon" slot-scope="row">
-                            <a
-                                    :href="row.item.path_html"
-                                    class="btn-link"
-                                    title="预览"
-                                    target="_blank"
-                            >
+                            <b-link :to="row.item.link" style="color:#007bff" target="_blank">
                                 <icon name="eye"></icon>
-                            </a>
+                            </b-link>
                         </template>
                         <template slot="download_icon" slot-scope="row">
                             <a
@@ -215,6 +210,10 @@
                     .then(data => {
                         this.advertising.list = data.results;
                         this.advertising.total = data.paging.count;
+                        for (let j = 0; j < this.advertising.list.length; j++) {
+                            var arr = this.advertising.list[j].path_html.split("/");
+                            this.advertising.list[j].link = "/advertising/" + arr[arr.length-1].replace(".html","");
+                        }
                         this.$emit("data-ready");
                     })
                     .catch(() => {
