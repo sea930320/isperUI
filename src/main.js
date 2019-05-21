@@ -32,7 +32,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //Font awesome
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
-Vue.component('multiselect', Multiselect)
+Vue.component('multiselect', Multiselect);
 Vue.component('icon', Icon);
 
 Vue.config.productionTip = false;

@@ -141,9 +141,13 @@ export function isOpen(num) {
   if (num === 1) {
     return '自由'
   } else if (num === 2) {
-    return '限时'
+    return '不公开'
   } else if (num === 3) {
+    return '限时'
+  } else if (num === 4) {
     return '指定用户'
+  } else if (num === 5) {
+    return '指定部门/单位'
   } else {
     return ''
   }

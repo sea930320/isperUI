@@ -26,7 +26,7 @@
                         class="styledBtn"
                         variant="outline-primary"
                         v-if="isActionAllowed('code_project_management', 'code_export_project')"
-                        @click="projectExport()"
+                        @click="handleDownload()"
                     >导出</b-button>
                     <b-button
                         :size="template_size"
@@ -58,7 +58,7 @@
                 <template
                     slot="currentShare"
                     slot-scope="row"
-                    v-if="userInfo.role == 2 || userInfo.role == 3 "
+                    v-if="userInfo.role === 2 || userInfo.role === 3 "
                 >
                     <span v-if="row.item.current_share==1" class="badge badge-success">
                         <icon scale="0.6" name="share"></icon>
@@ -67,9 +67,9 @@
                 <template
                     slot="is_protected"
                     slot-scope="row"
-                    v-if="userInfo.role == 2 || userInfo.role == 3 "
+                    v-if="userInfo.role === 2 || userInfo.role === 3 "
                 >
-                    <span v-if="row.item.protected == 1" class="badge badge-success">
+                    <span v-if="row.item.protected === 1" class="badge badge-success">
                         <icon scale="0.6" name="lock"></icon>
                     </span>
                     <span class="badge badge-success" v-else>
@@ -86,7 +86,13 @@
                 <template
                     slot="is_open"
                     slot-scope="row"
-                >{{(row.item.is_open === 1) ? "自由":((row.item.is_open === 2)? "限时":"指定用户")}}</template>
+                >{{
+                    (row.item.is_open === 1) ? "自由":
+                    (row.item.is_open === 2) ? "不公开":
+                    (row.item.is_open === 3) ? "限时":
+                    (row.item.is_open === 4) ? "指定用户":
+                    (row.item.is_open === 5) ? "指定部门/单位": ''
+                }}</template>
                 <template slot="mission_type" slot-scope="row">{{row.item.course}}</template>
                 <template slot="edit_control" slot-scope="row">
                     <a class="btn-link mx-1"
@@ -220,7 +226,7 @@ export default {
                     class: "text-center field-create_time"
                 },
                 dependence: {
-                    label: "渲染动画1",
+                    label: "相关流程",
                     sortable: false,
                     class: "text-center field-rend_ani_1"
                 },
@@ -381,16 +387,6 @@ export default {
                 //                        this.shareButtonDisabled = true;
             });
         },
-        //check checked or not
-        //            changeCheckBox(val, rowObj, sharable){
-        //                if (sharable ==1){
-        //                    this.$set(rowObj,'checked',val);
-        //                    this.checkedSharedItems = this.checkedItems().filter(item => item.current_share === 1 );
-        //                    this.checkedUnsharedItems = this.checkedItems().filter(item => item.current_share === 0 );
-        //                    this.checkedSharedItemsID = this.checkedSharedItems.map(item => item.id);
-        //                    this.checkedUnsharedItemsID = this.checkedUnsharedItems.map(item => item.id);
-        //                }
-        //            },
         checkedItems() {
             return this.projects.list.filter(item => item.checked === true);
         },
@@ -420,7 +416,7 @@ export default {
         createProjectPage() {
             this.$router.push({
                 name: "create-project-wizard",
-                params: { currentProject: {}, is_edit: 0 }
+                params: { currentProject: {}, is_edit: 0, project_id: null }
             });
         },
         editProject(project) {
@@ -446,7 +442,46 @@ export default {
             this.checkedUnsharedItemsID = this.checkedUnsharedItems.map(
                 item => item.id
             );
-        }
+        },
+        handleDownload() {
+            this.run();
+            import("@/components/UploadExcel/Export2Excel").then(excel => {
+                const tHeader = [
+                    "项目名称",
+                    "创建者",
+                    "创建时间",
+                    "相关流程",
+                    "开放模式",
+                    "事务类型"
+                ];
+                const list = this.projects.list;
+                const data = this.formatJson(list);
+                excel.export_json_to_excel({
+                    header: tHeader,
+                    data,
+                    filename: "项目列表",
+                    autoWidth: true,
+                    bookType: "xlsx"
+                });
+            });
+            this.$emit("data-ready");
+        },
+        formatJson(jsonData) {
+            return jsonData.map(v =>
+                [
+                    v['name'],
+                    v['created_by']['name'],
+                    v['create_time'],
+                    v['flow']['name'],
+                    v['is_open'] === 1 ? "自由":
+                    v['is_open'] === 2 ? "不公开":
+                    v['is_open'] === 3 ? "限时":
+                    v['is_open'] === 4 ? "指定用户":
+                    v['is_open'] === 5 ? "指定部门/单位": '',
+                    v['course']
+                ]
+            );
+        },
     }
 };
 </script>
