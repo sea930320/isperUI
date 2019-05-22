@@ -112,33 +112,7 @@
                         bgcolor: "#2a3970",
                         category_icon: require("@/assets/imgIsper/cat-1.png"),
                         all_link: '/advertisings',
-                        posts: [
-                            {
-                                title: "2017-2018学年优秀本科生颁奖典礼举行",
-                                link: "#",
-                                created_at: "2019-04-17"
-                            },
-                            {
-                                title: "学校2018年就业质量报告来了",
-                                link: "#",
-                                created_at: "2019-04-17"
-                            },
-                            {
-                                title: "校友会2019中国财经类大学排名出炉。。。",
-                                link: "#",
-                                created_at: "2019-04-17"
-                            },
-                            {
-                                title: "庆：2018年中南大学年度汉字出炉",
-                                link: "#",
-                                created_at: "2019-04-17"
-                            },
-                            {
-                                title: "学校启动教职工大病医疗互助机制",
-                                link: "#",
-                                created_at: "2019-04-17"
-                            }
-                        ]
+                        posts: []
                     },
                     {
                         category: "业务观摩",
@@ -227,16 +201,17 @@
                         this.advertising.list = data.results;
                         this.advertising.total = 0;
                         for (let j = 0; j < this.advertising.list.length; j++) {
-                            this.notificationList[0].posts[j].title = this.advertising.list[j].name;
-                            this.notificationList[0].posts[j].created_at = this.advertising.list[j].create_time;
-                            if (this.notificationList[0].posts[j].created_at == today) {
-                                this.notificationList[0].posts[j].isNew = 1;
+                            var tmpJSON = {};
+                            tmpJSON.title = this.advertising.list[j].name;
+                            tmpJSON.created_at = this.advertising.list[j].create_time;
+                            if (tmpJSON.created_at == today) {
+                                tmpJSON.isNew = 1;
                             } else {
-                                this.notificationList[0].posts[j].isNew = 0;
+                                tmpJSON.isNew = 0;
                             }
                             var arr = this.advertising.list[j].path_html.split("/");
-
-                            this.notificationList[0].posts[j].link = "/advertising/" + arr[arr.length-1].replace(".html","");
+                            tmpJSON.link = "/advertising/" + arr[arr.length-1].replace(".html","");
+                            this.notificationList[0].posts.push(tmpJSON);
                         }
                         this.$emit("data-ready");
                     })

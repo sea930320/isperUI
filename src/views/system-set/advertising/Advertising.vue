@@ -12,7 +12,7 @@
                             {{row.item.create_time}}
                         </template>
                         <template slot="preview_icon" slot-scope="row">
-                            <b-link :to="row.item.link" style="color:#007bff">
+                            <b-link :to="row.item.link" style="color:#007bff" target="_blank">
                                 <icon name="eye"></icon>
                             </b-link>
                         </template>

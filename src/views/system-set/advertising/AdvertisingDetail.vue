@@ -1,8 +1,9 @@
 <template>
     <div class="manager-container main-bg">
         <div class="container" style="min-height: calc(100vh - 210px); padding: 40px 0 0 0;">
+            <loading v-if="isRunning"></loading>
+            <!--<h3><a @click="$router.go(-1)">返回</a></h3>-->
             <h1> {{html_title}} </h1>
-            <!--<h3><a @click="$router.go(-1)">back</a></h3>-->
             <iframe :src="html_link" :key="'html-iframe-'+html_link" class="iframeFull"></iframe>
         </div>
     </div>
@@ -12,9 +13,11 @@
     import AdvertisingService from "@/services/advertisingService";
     import  {openFile}  from "@/components/previewFile";
     import {mapState} from "vuex";
+    import Loading from "@/components/loading/Loading";
     export default {
         name: "advertising_detail",
         components: {
+            Loading,
         },
         created() {
             this.$nextTick(() => {
