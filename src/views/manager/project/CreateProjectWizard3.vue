@@ -41,19 +41,15 @@
         </b-alert>
         <b-row align-v="start">
             <b-col sm="6">
-                <div class="cardDiv">
+                <div class="cardDiv" style="height: 550px; overflow:auto">
                     <b-table
-                        responsive
-                        selectable
-                        :select-mode="selectMode"
                         :items="projectDocsAssign.docs"
                         small
                         hover
                         :fields="docColumns"
                         head-variant
                         class="table-container"
-                        selectedVariant="primary"
-                        @row-selected="selectDoc"
+                        @row-clicked="docOnSelect"
                     >
                         <template slot="id" slot-scope="row">{{ row.index + 1}}</template>
                         <template slot="class" slot-scope="row">{{ row.item.type}}</template>
@@ -68,29 +64,28 @@
                         <template slot="control" slot-scope="row">
                             <a
                                 href="javascript:;"
-                                class="btn-link"
+                                class="btn-link mx-1"
                                 title="预览"
                                 @click="previewFile(row.item.file)"
                             >
                                 <icon name="eye"></icon>
-                            </a>&nbsp;&nbsp;
+                            </a>
                             <a
                                 :href="row.item.file"
-                                class="btn-link"
+                                class="btn-link mx-1"
                                 title="下载"
                                 target="_blank"
                             >
                                 <icon name="download"></icon>
-                            </a>&nbsp;&nbsp;
+                            </a>
                             <a
-                                v-b-modal.deleteConfirmModal
                                 href="javascript:"
-                                class="btn-link"
+                                class="btn-link mx-1"
                                 title="删除"
                                 @click="deleteDocClick(row.item)"
                             >
                                 <icon name="trash"></icon>
-                            </a>&nbsp;&nbsp;
+                            </a>
                             <b-form-checkbox
                                 v-model="row.item.is_initial"
                                 @on-change="setInitial(row.item)"
@@ -100,19 +95,15 @@
                 </div>
             </b-col>
             <b-col sm="2">
-                <div class="cardDiv">
+                <div class="cardDiv" style="height: 550px; overflow:auto">
                     <b-table
-                        responsive
-                        selectable
-                        :select-mode="selectMode"
                         :items="projectDocsAssign.nodes"
                         small
                         hover
                         :fields="nodeColumns"
                         head-variant
                         class="table-container"
-                        selectedVariant="primary"
-                        @row-selected="selectNode"
+                        @row-clicked="nodeOnSelect"
                     >
                         <template slot="number" slot-scope="row">{{ row.index + 1}}</template>
                         <template slot="name" slot-scope="row">{{ row.item.name}}</template>
@@ -120,27 +111,22 @@
                 </div>
             </b-col>
             <b-col sm="4">
-                <div class="cardDiv">
+                <div class="cardDiv" style="height: 550px; overflow:auto">
                     <b-table
-                        responsive
-                        selectable
-                        :select-mode="selectMode"
                         :items="docNodeRelated"
                         small
                         hover
                         :fields="docNodeRelatedColumns"
                         head-variant
                         class="table-container"
-                        selectedVariant="primary"
-                        @row-selected="selectDoc"
                     >
-                        <template slot="HEAD_is_use" slot-scope="head">
+                        <!-- <template slot="HEAD_is_use" slot-scope="head">
                             <b-form-checkbox
                                 v-model="dnrAllCheck"
                                 :indeterminate="dnrIndeterminatedCheck"
                                 @change="toggleAllDnr"
                             >{{head.label}}</b-form-checkbox>
-                        </template>
+                        </template>-->
                         <template slot="character_class" slot-scope="row">{{ row.item.type}}</template>
                         <template slot="character_name" slot-scope="row">{{ row.item.role_name}}</template>
                         <template slot="is_use" slot-scope="row">
@@ -165,7 +151,6 @@
             <b-col sm="4" align-v="center">
                 <b-button-group class="float-center">
                     <b-button size="lg" style="width:100%" variant="primary" @click="savePage()">保存</b-button>
-                    <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
                 </b-button-group>
             </b-col>
             <b-col sm="4" align-v="center">
@@ -178,40 +163,25 @@
                         v-b-modal.finishEdit
                         @click="goNext()"
                     >下一步</b-button>
-                    <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
                 </b-button-group>
             </b-col>
         </b-row>
-        <b-modal id="deleteConfirmModal" title="Delete Doc" @ok="confirmDelete()">
+        <b-modal
+            v-model="deleteModalShow"
+            title="Delete Doc"
+            ok-title="确定"
+            cancel-title="取消"
+            @ok="confirmDelete()"
+            @cancel="deleteModalShow=false"
+        >
             <p class="my-4">Do you want to delete Doc?</p>
         </b-modal>
-        <b-modal id="uploadDoc" title="Upload Doc" @ok="uploadDoc()">
+        <!-- <b-modal id="uploadDoc" title="Upload Doc" @ok="uploadDoc()">
             <template>
                 <div>
-                    <!--accepted-file-types="text/plain"-->
-                    <!--                        <file-pond-->
-                    <!--                                ref="pond"-->
-                    <!--                                accepted-file-types="application/pdf"-->
-                    <!--                                allow-multiple="true"-->
-                    <!--                                max-files="3"-->
-                    <!--                                fileValidateTypeLabelExpectedTypes="Must be a plain text file"-->
-                    <!--                                instant-upload="true"-->
-                    <!--                                allow-replace="false"-->
-                    <!--                                allow-revert="false"-->
-                    <!--                                :server="server"-->
-                    <!--                                @addfile="handleAddFile"-->
-                    <!--                                @removefile="handleRemoveFile"-->
-                    <!--                                @processfilestart="handleProcessFileStart"-->
-                    <!--                                @processfileabort="handleProcessFileAbort"-->
-                    <!--                                @processfilerevert="handleProcessFileUndo"-->
-                    <!--                                @processfile="handleProcessFile"-->
-                    <!--                                name="test"-->
-                    <!--                                label-idle="Upload PDF file..."-->
-                    <!--                                v-bind:files="myFiles">-->
-                    <!--                        </file-pond>-->
                 </div>
             </template>
-        </b-modal>
+        </b-modal>-->
     </div>
 </template>
 
@@ -219,21 +189,14 @@
 import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
-import { openFile } from "@/components/previewFile";
+import { openFile } from "@/utils/previewFile";
 import ProjectService from "@/services/projectService";
 import _ from "lodash";
-
-// import vueFilePond from 'vue-filepond';
-import "filepond/dist/filepond.min.css";
-// import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-
-// const FilePond = vueFilePond(FilePondPluginFileValidateType);
 
 export default {
     name: "wizard-3",
     components: {
         Loading
-        // FilePond
     },
     props: ["value"],
     filters: {
@@ -243,7 +206,6 @@ export default {
     },
     data() {
         return {
-            projectData: {},
             docColumns: {
                 id: {
                     label: "序号",
@@ -309,26 +271,22 @@ export default {
                 { value: 6, text: "成果参考" },
                 { value: 7, text: "项目提示" }
             ],
-            //                params
-            project_id: -1,
+            projectData: {},
+            project_id: null,
+            is_edit: null,
             projectDocsAssign: {
                 docs: [],
                 nodes: [],
                 role_type: []
             },
             activeDocIndex: 0,
-            selectMode: "single",
             activeNodeIndex: 0,
-            activeNodeId: null,
-            activeDocId: null,
-            currentDoc: {},
-            isLoading: false,
+            currentDoc: null,
             successTipModal: false,
             deleteModalShow: false,
             uploadModalShow: false, // 显示隐藏素材上传模态框
             docsUploadUrl: "/api/project/docs/create", // 素材上传接口地址
             nodes2roles: {},
-            docNodeRelated: [],
             queryParam: {
                 status: "",
                 page: 1,
@@ -353,14 +311,44 @@ export default {
             myFiles: []
         };
     },
-    created() {
-        this.$nextTick(() => {
-            this.project_id = 2034;
-            this.queryProjectDocsDetail();
-        });
-    },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo"]),
+        // 当前选中素材ID
+        activeNodeId() {
+            if (this.projectDocsAssign.nodes.length === 0) return null;
+            return this.projectDocsAssign.nodes[this.activeNodeIndex].id;
+        },
+        activeNode() {
+            if (this.projectDocsAssign.nodes.length === 0) return null;
+            return this.projectDocsAssign.nodes[this.activeNodeIndex];
+        },
+        activeDocId() {
+            if (this.projectDocsAssign.docs.length === 0) return null;
+            return this.projectDocsAssign.docs[this.activeDocIndex].id;
+        },
+        activeDoc() {
+            if (this.projectDocsAssign.docs.length === 0) return null;
+            return this.projectDocsAssign.docs[this.activeDocIndex];
+        },
+        docNodeRelated() {
+            if (!this.activeNodeId || !this.activeDocId) return null;
+            let docNodeRelated = this.activeNode.project_role_allocs.map(
+                project_role_alloc => {
+                    return {
+                        role_alloc_id: project_role_alloc.id,
+                        role_id: project_role_alloc.role_id,
+                        type: project_role_alloc.type,
+                        role_name: project_role_alloc.name,
+                        is_use:
+                            project_role_alloc.doc_ids.indexOf(
+                                this.activeDocId
+                            ) !== -1
+                    };
+                }
+            );
+            console.log(docNodeRelated)
+            return docNodeRelated;
+        }
     },
     watch: {
         // 监控查询参数，如有变化 查询列表数据
@@ -376,6 +364,19 @@ export default {
                 this.queryProjectList();
             }, 500)
         }
+    },
+    created() {
+        this.$nextTick(() => {
+            if (this.$route.params.is_edit) {
+                this.is_edit = this.$route.params.is_edit;
+                // this.project_id = this.$route.params.project_id;
+                this.project_id = 2034;
+            } else {
+                this.is_edit = this.$route.params.is_edit;
+                this.project_id = 2034;
+            }
+            this.queryProjectDocsDetail();
+        });
     },
     methods: {
         queryProjectDocsDetail() {
@@ -393,37 +394,29 @@ export default {
             this.projectData = data.project;
             this.projectDocsAssign.nodes = data.project_nodes;
             this.projectDocsAssign.docs = data.project_docs;
-            this.activeNodeId = this.activeNodeId || data.project_nodes[0].id;
-            if (data.project_docs.length > 0)
-                this.activeDocId = this.activeDocId || data.project_docs[0].id;
             this.nodes2roles = data.project_nodes;
-            this.getDocNodeRelated();
+            if (this.projectDocsAssign.nodes.length > 0) {
+                this.nodeOnSelect(this.projectDocsAssign.nodes[0], 0);
+            }
+            if (this.projectDocsAssign.docs.length > 0) {
+                this.docOnSelect(this.projectDocsAssign.docs[0], 0);
+            }
         },
-        getDocNodeRelated() {
-            this.docNodeRelated = this.nodes2roles
-                .filter(node => node.id === this.activeNodeId)[0]
-                .roles.map(role => {
-                    return {
-                        role_id: role.id,
-                        type: role.type,
-                        role_name: role.name,
-                        is_use: role.doc_ids.indexOf(this.activeDocId) !== -1
-                    };
-                });
+        nodeOnSelect(item, index) {
+            this.activeNodeIndex = index;
+            this.projectDocsAssign.nodes.map(node => {
+                node._rowVariant = "";
+                return node;
+            });
+            this.activeNode._rowVariant = "primary";
         },
-        selectNode(items) {
-            //                var selectedNodeIndex = this.projectDocsAssign.nodes.indexOf(items[0]);
-            this.activeNodeIndex = this.projectDocsAssign.nodes.indexOf(
-                items[0]
-            );
-            this.activeNodeId = items[0].id;
-            this.getDocNodeRelated();
-        },
-        selectDoc(items) {
-            this.activeDocIndex = this.projectDocsAssign.docs.indexOf(items[0]);
-            this.activeDocId = items[0].id;
-            this.currentDoc = items[0];
-            this.getDocNodeRelated();
+        docOnSelect(item, index) {
+            this.activeDocIndex = index;
+            this.projectDocsAssign.docs.map(doc => {
+                doc._rowVariant = "";
+                return doc;
+            });
+            this.activeDoc._rowVariant = "primary";
         },
         isCheckUse(role) {
             if (!this.activeDocId) {
@@ -462,6 +455,9 @@ export default {
                     return false;
                 }
             }
+        },
+        previewFile(fileUrl) {
+            openFile(fileUrl, this.userInfo.id);
         },
         goLast() {
             this.updatePage(1);
@@ -557,28 +553,32 @@ export default {
             this.deleteModalShow = true;
             this.currentDoc = item;
         },
-        previewFile(fileUrl) {
-            openFile(fileUrl, this.userInfo.id);
-        },
         confirmDelete() {
             this.deleteModalShow = false;
+            this.run();
             ProjectService.deleteProjectDoc({
                 doc_id: this.currentDoc.id
-            }).then(() => {
-                this.nodes2roles.forEach(item => {
-                    item.roles.forEach(role => {
-                        let index = role.doc_ids.indexOf(this.currentDoc.id);
-                        if (index !== -1) {
-                            role.doc_ids.splice(index, 1);
-                        }
+            })
+                .then(() => {
+                    this.nodes2roles.forEach(item => {
+                        item.roles.forEach(role => {
+                            let index = role.doc_ids.indexOf(
+                                this.currentDoc.id
+                            );
+                            if (index !== -1) {
+                                role.doc_ids.splice(index, 1);
+                            }
+                        });
                     });
+                    this.projectDocsAssign.docs.splice(
+                        this.projectDocsAssign.docs.indexOf(this.currentDoc),
+                        1
+                    );
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
                 });
-                this.projectDocsAssign.docs.splice(
-                    this.projectDocsAssign.docs.indexOf(this.currentDoc),
-                    1
-                );
-                this.getDocNodeRelated();
-            });
         },
         updatePage: function(value) {
             this.$emit("input", value);
@@ -692,10 +692,6 @@ export default {
                 color: #999;
             }
         }
-    }
-
-    .table-container {
-        height: calc(100vh - 450px);
     }
 
     .table-container table {
