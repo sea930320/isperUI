@@ -71,10 +71,13 @@
                                                 class="notification-list-item p-2 px-4 d-flex justify-content-between"
                                                 style="font-size:13px"
                                             >
-                                                <b-link
-                                                    :to="post.link"
-                                                    style="color:black"
-                                                >{{post.title}}</b-link>
+                                                <b-link :to="post.link" style="color:black">
+                                                    {{post.title}}&nbsp;&nbsp;
+                                                    <span
+                                                        class="badge badge-danger"
+                                                        v-if="post.isNew==1"
+                                                    >New</span>
+                                                </b-link>
                                                 <span
                                                     v-if="post.created_at"
                                                     style="color: grey"
@@ -93,14 +96,25 @@
 </template>
 
 <script>
-import AdvertisingService from "@/services/advertisingService";
+import AdvertisingService from "../services/advertisingService";
+import { mapState } from "vuex";
 export default {
     name: "home",
     components: {},
+    watch: {
+        // 监控查询参数，如有变化 查询列表数据
+        queryParam: {
+            handler() {
+                this.queryAdvertisingList();
+            },
+            deep: true
+        }
+    },
+    computed: {
+        ...mapState(["userInfo"])
+    },
     created() {
-        this.$nextTick(() => {
-            this.queryAdvertisingList();
-        });
+        this.queryAdvertisingList();
     },
     data() {
         return {
@@ -109,33 +123,8 @@ export default {
                     category: "公告通知",
                     bgcolor: "#2a3970",
                     category_icon: require("@/assets/imgIsper/cat-1.png"),
-                    posts: [
-                        {
-                            title: "2017-2018学年优秀本科生颁奖典礼举行",
-                            link: "#",
-                            created_at: "2019-04-17"
-                        },
-                        {
-                            title: "学校2018年就业质量报告来了",
-                            link: "#",
-                            created_at: "2019-04-17"
-                        },
-                        {
-                            title: "校友会2019中国财经类大学排名出炉。。。",
-                            link: "#",
-                            created_at: "2019-04-17"
-                        },
-                        {
-                            title: "庆：2018年中南大学年度汉字出炉",
-                            link: "#",
-                            created_at: "2019-04-17"
-                        },
-                        {
-                            title: "学校启动教职工大病医疗互助机制",
-                            link: "#",
-                            created_at: "2019-04-17"
-                        }
-                    ]
+                    all_link: "/advertisings",
+                    posts: []
                 },
                 {
                     category: "业务观摩",
@@ -144,7 +133,7 @@ export default {
                     posts: [
                         {
                             title: "2018药品管理法实验",
-                            link: "#"
+                            link: "/advertising/1"
                         },
                         {
                             title: "律师调解通用模拟实验3",
@@ -196,19 +185,49 @@ export default {
                         }
                     ]
                 }
-            ]
+            ],
+            advertising: {
+                list: [],
+                total: 0
+            },
+            queryParam: {
+                status: "",
+                page: 1,
+                size: 5
+            },
+            queryDebounceParam: {
+                search: ""
+            }
         };
     },
     methods: {
         queryAdvertisingList() {
-            this.run();
-            AdvertisingService.getAdvertisingList({
-                ...this.queryParam,
-                ...this.queryDebounceParam
-            })
+            AdvertisingService.getAdvertisingListHome({ ...this.queryParam })
                 .then(data => {
+                    var today = new Date();
+                    var dd = today.getDate();
+                    var mm = ("0" + (today.getMonth() + 1)).slice(-2);
+                    var yyyy = today.getFullYear();
+                    today = yyyy + "-" + mm + "-" + dd;
                     this.advertising.list = data.results;
-                    this.advertising.total = data.paging.count;
+                    this.advertising.total = 0;
+                    for (let j = 0; j < this.advertising.list.length; j++) {
+                        var tmpJSON = {};
+                        tmpJSON.title = this.advertising.list[j].name;
+                        tmpJSON.created_at = this.advertising.list[
+                            j
+                        ].create_time;
+                        if (tmpJSON.created_at == today) {
+                            tmpJSON.isNew = 1;
+                        } else {
+                            tmpJSON.isNew = 0;
+                        }
+                        var arr = this.advertising.list[j].path_html.split("/");
+                        tmpJSON.link =
+                            "/advertising/" +
+                            arr[arr.length - 1].replace(".html", "");
+                        this.notificationList[0].posts.push(tmpJSON);
+                    }
                     this.$emit("data-ready");
                 })
                 .catch(() => {

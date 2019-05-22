@@ -16,6 +16,14 @@ class AdvertisingService {
         })
     }
 
+    getAdvertisingListHome(data) {
+        return xhr({
+            method: 'get',
+            url: '/advertising/list_home',
+            params: data
+        })
+    }
+
     /**
      * 删除
      * @param data

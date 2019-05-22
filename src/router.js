@@ -45,6 +45,16 @@ const routes = [{
     component: () => import('@/views/Register.vue')
 },
 {
+    path: '/advertisings',
+        name: 'advertisings',
+    component: () => import('@/views/system-set/advertising/AdvertisingList.vue')
+},
+{
+    path: '/advertising/:Pid',
+        name: 'advertising',
+    component: () => import('@/views/system-set/advertising/AdvertisingDetail.vue')
+},
+{
     path: '/manager', // 管理员主页
     meta: {
         requiresAuth: true
@@ -163,7 +173,7 @@ const flowSetEnter = (to, from, next, page) => {
         if (store.state.flowStep > -1 && store.state.flowStep >= page) {
             next()
         } else if (!store.state.flowStep && store.state.flowStep !== 0) {
-            Vue.toasted.error('参数错误')
+            Vue.toasted.error('参数错误');
             next({
                 path: `/manager/workflow`,
                 query: { redirect: to.fullPath }

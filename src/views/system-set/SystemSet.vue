@@ -82,7 +82,7 @@ import RoleManagement from "./RoleManagement";
 import LoginLog from "./LoginLog";
 import WorkLog from "./WorkLog";
 import Dictionary from "./Dictionary";
-import Advertising from "./Advertising";
+import Advertising from "./advertising/Advertising";
 import PartPosition from "./PartPosition";
 import InnerPermission from "./InnerPermission";
 import { mapState } from "vuex";
