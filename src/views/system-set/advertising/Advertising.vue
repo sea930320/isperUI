@@ -12,7 +12,7 @@
                             {{row.item.create_time}}
                         </template>
                         <template slot="preview_icon" slot-scope="row">
-                            <b-link :to="row.item.link" style="color:#007bff" target="_blank">
+                            <b-link :to="row.item.link" style="color:#007bff">
                                 <icon name="eye"></icon>
                             </b-link>
                         </template>
@@ -22,8 +22,6 @@
                                     class="btn-link"
                                     title="下载"
                                     target="_blank"
-
-
                             >
                                 <icon name="file-word"></icon>
                             </a>
