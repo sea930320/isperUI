@@ -1,6 +1,12 @@
 <template>
-    <div class="manager-container main-bg" style = "height:100%">
+    <div class="manager-container main-bg" style="height:100%">
         <div class="container" style="height:100%; padding: 40px 0 0 0;">
+            <h4 style="float:left; color:#007bff; cursor: pointer;">
+                <a class="btn-link" title="返回" @click="$router.go(-1)">
+                    <icon name="arrow-left"></icon>
+                    &nbsp;返回
+                </a>
+            </h4>
             <h1>公 告 列 表</h1>
             <template>
                 <div class="advertising_Index">
@@ -142,7 +148,7 @@
                         this.advertising.total = data.paging.count;
                         for (let j = 0; j < this.advertising.list.length; j++) {
                             var arr = this.advertising.list[j].path_html.split("/");
-                            this.advertising.list[j].link = "/advertising/" + arr[arr.length-1].replace(".html","");
+                            this.advertising.list[j].link = "/advertising/" + arr[arr.length - 1].replace(".html", "");
                         }
                         this.$emit("data-ready");
                     })
@@ -171,7 +177,7 @@
     }
 
     .advertising_Index {
-        padding:10px
+        padding: 10px
     }
 </style>
 
