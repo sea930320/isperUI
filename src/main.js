@@ -19,6 +19,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Multiselect from 'vue-multiselect'
 import accountService from "@/services/accountService";
+import VueClipboard from 'vue-clipboard2'
 
 import {
   STORAGE_KEY_USER
@@ -51,7 +52,11 @@ Vue.mixin(globalMixin);
 Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
 Vue.use(VueSweetalert2);
-Vue.use(VueMoment)
+Vue.use(VueMoment);
+VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard);
+
+
 
 
 new Vue({

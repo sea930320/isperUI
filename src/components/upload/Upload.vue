@@ -15,7 +15,8 @@
         <span class="vuf-progress" :style="progressStyle"></span>
       </div>
       <span class="vuf-no-supported-hint" v-show="!isSupported">{{ lang.noSupported }}</span>
-      <input type="file" v-show="false" @change="handleChange" ref="fileinput">
+      <input type="file" accept=".docx,.pdf,.png,.jpg" v-show="false" @change="handleChange" ref="fileinput" v-if="limitFileType">
+      <input type="file" v-show="false" @change="handleChange" ref="fileinput" v-else>
     </div>
     <div class="vuf-error" v-show="hasError">
       <i class="vuf-icon2"></i>
@@ -71,6 +72,9 @@ export default {
         return [];
       }
     },
+      limitFileType:{
+        default:false
+      },
     // 语言包
     langType: {
       type: String,
@@ -97,7 +101,7 @@ export default {
             onlyImg: "仅限图片格式",
             onlySingle: "仅限单文件上传",
             outOfSize: "单文件大小不能超过 ",
-            extType: "文件格式只限"
+            extType: "文件格式只限",
           }
         },
         en: {
