@@ -2,9 +2,15 @@
     <div class="manager-container main-bg" style="height:100%">
         <div class="container" style="min-height: calc(100vh - 210px); padding: 40px 0 0 0;">
             <loading v-if="isRunning"></loading>
-            <!--<h3><a @click="$router.go(-1)">返回</a></h3>-->
-            <h1> {{html_title}} </h1>
-            <iframe :src="html_link" :key="'html-iframe-'+html_link" class="iframeFull"></iframe>
+            <h4 style="float:left; color:#007bff; cursor: pointer;" v-if="isBack">
+                <a class="btn-link" title="返回" @click="$router.go(-1)">
+                    <icon name="arrow-left"></icon>
+                    &nbsp;返回
+                </a>
+            </h4>
+            <br>
+            <h1> {{html_title}} </h1><br>
+            <iframe :src="html_link" :key="'html-iframe-'+ html_link" class="iframeFull"></iframe>
         </div>
     </div>
 </template>
@@ -19,7 +25,13 @@
         components: {
             Loading,
         },
+        isBack: false,
         created() {
+            if (window.history.length > 1) {
+                this.isBack = true;
+            } else {
+                this.isBack = false;
+            }
             this.$nextTick(() => {
                 this.queryAdvertisingList();
             });
@@ -29,8 +41,8 @@
                 ad_name: "",
                 public_time: "",
                 ad_content: null,
-                html_link:"",
-                html_title:"",
+                html_link: "",
+                html_title: "",
                 advertising: {
                     list: [],
                     total: 0
@@ -64,7 +76,7 @@
                 },
                 queryDebounceParam: {
                     search: "",
-                    html_id:this.$route.params.Pid
+                    html_id: this.$route.params.Pid
                 },
             };
         },
@@ -164,7 +176,8 @@
             transition-property: transform;
         }
     }
-    .iframeFull{
+
+    .iframeFull {
         width: 100%;
         height: 100%;
         border: none;
