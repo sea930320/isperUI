@@ -1,6 +1,6 @@
 <template>
-    <div class="manager-container main-bg">
-        <div class="container" style="min-height: calc(100vh - 210px); padding: 40px 0 0 0;">
+    <div class="manager-container main-bg" style = "height:100%">
+        <div class="container" style="height:100%; padding: 40px 0 0 0;">
             <h1>公 告 列 表</h1>
             <template>
                 <div class="advertising_Index">
@@ -171,45 +171,7 @@
     }
 
     .advertising_Index {
-        .plusBtn {
-            font-size: 13.8px !important;
-            font-weight: bold;
-            width: 20px;
-            height: 20px;
-            margin-top: 2px;
-            float: right;
-            padding: 0;
-        }
-        .cardDiv1 {
-            padding: 15px;
-            background-color: white;
-            margin: 8px 0;
-            box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
-        }
-        .align-items-center.d-flex.justify-content-between.list-group-item {
-            padding: 7px 8px 7px 15px;
-        }
-        .subListItem {
-            padding: 3px 8px 3px 30px !important;
-            font-size: 16px !important;
-            color: darkgrey !important;
-        }
-        .d-inline-flex.list-group.py-2 {
-            width: 22%;
-        }
-        .cardDiv1.d-inline-flex.py-2 {
-            width: 22%;
-        }
-        .cycle {
-            -webkit-transition-duration: 0.3s;
-            -moz-transition-duration: 0.3s;
-            -o-transition-duration: 0.3s;
-            transition-duration: 0.3s;
-            -webkit-transition-property: -webkit-transform;
-            -moz-transition-property: -moz-transform;
-            -o-transition-property: -o-transform;
-            transition-property: transform;
-        }
+        padding:10px
     }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="manager-container main-bg">
+    <div class="manager-container main-bg" style="height:100%">
         <div class="container" style="min-height: calc(100vh - 210px); padding: 40px 0 0 0;">
             <loading v-if="isRunning"></loading>
             <!--<h3><a @click="$router.go(-1)">返回</a></h3>-->
