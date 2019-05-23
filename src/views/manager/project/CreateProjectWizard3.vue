@@ -17,25 +17,15 @@
                 </b-col>
             </b-row>
             <b-row>
-                <b-col sm="4">
-                    等级 :
-                    {{projectData.type | level}}
-                </b-col>
-                <b-col sm="4">
-                    能力目标 :
-                    {{projectData.ability_target | abilityTarget}}
-                </b-col>
-                <b-col sm="4">
-                    <a href="javascript:;" class="btn-spe btn-upload" @click.stop="docUpload">上传素材</a>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col sm="12" class="upload-resource mt-2">
+                <b-col sm="8" class="upload-resource mt-2">
                     <span class="upload-resourse-tip">
                         上传提示：
                         <b>项目提示</b> 和
                         <b>模板</b> 类型只能上传docx格式, 其他的用途类型格式不限
                     </span>
+                </b-col>
+                <b-col sm="4">
+                    <a href="javascript:;" class="btn-spe btn-upload" @click.stop="docUpload">上传素材</a>
                 </b-col>
             </b-row>
         </b-alert>
@@ -650,7 +640,7 @@ export default {
     .upload-resource {
         font-size: 13px;
         .upload-resourse-tip {
-            color: #253568;
+            color: rgb(226, 35, 35);
         }
     }
 }
