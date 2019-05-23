@@ -346,7 +346,6 @@ export default {
                     };
                 }
             );
-            console.log(docNodeRelated)
             return docNodeRelated;
         }
     },

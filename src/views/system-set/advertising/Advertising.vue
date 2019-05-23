@@ -58,7 +58,7 @@
                     <b-col sm="12">
                         <b-form-group
                                 id="fieldset-horizontal"
-                                label-cols-sm="4"
+                                label-cols-sm="2"
                                 label-cols-lg="3"
                                 label="公告名称:"
                                 label-for="input-horizontal"
@@ -74,7 +74,7 @@
                     <b-col sm="12">
                         <b-form-group
                                 id="fieldset-horizontal"
-                                label-cols-sm="4"
+                                label-cols-sm="2"
                                 label-cols-lg="3"
                                 label="发布时间:"
                                 label-for="input-horizontal"
@@ -85,17 +85,17 @@
                     <!--</div>-->
                 </b-row>
                 <b-row>
-                    <div class="cardDiv">
-                        <!--<button @click="saveContent"></button>-->
-                        <!--<button @click="setEditorContent">Set Editor Contents</button>-->
-                        <vue-editor v-model="ad_content"></vue-editor>
-                        <!--<div v-html="content"></div>-->
-                        <!--<vue-editor-->
-                        <!--:customModules="customModulesForEditor"-->
-                        <!--:editorOptions="editorSettings"-->
-                        <!--v-model="content">-->
-                        <!--</vue-editor>-->
-                    </div>
+                    <b-form-group
+                            id="fieldset-horizontal"
+                            label-cols-sm="4"
+                            label-cols-lg="3"
+                            label="公告内容："
+                            label-for="input-horizontal"
+                    >
+                        <div class="cardDiv">
+                            <vue-editor v-model="ad_content"></vue-editor>
+                        </div>
+                    </b-form-group>
                 </b-row>
                 <b-row>
                     <b-col sm="12">
@@ -269,44 +269,6 @@
     }
 
     .advertising_Index {
-        .plusBtn {
-            font-size: 13.8px !important;
-            font-weight: bold;
-            width: 20px;
-            height: 20px;
-            margin-top: 2px;
-            float: right;
-            padding: 0;
-        }
-        .cardDiv1 {
-            padding: 15px;
-            background-color: white;
-            margin: 8px 0;
-            box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
-        }
-        .align-items-center.d-flex.justify-content-between.list-group-item {
-            padding: 7px 8px 7px 15px;
-        }
-        .subListItem {
-            padding: 3px 8px 3px 30px !important;
-            font-size: 16px !important;
-            color: darkgrey !important;
-        }
-        .d-inline-flex.list-group.py-2 {
-            width: 22%;
-        }
-        .cardDiv1.d-inline-flex.py-2 {
-            width: 22%;
-        }
-        .cycle {
-            -webkit-transition-duration: 0.3s;
-            -moz-transition-duration: 0.3s;
-            -o-transition-duration: 0.3s;
-            transition-duration: 0.3s;
-            -webkit-transition-property: -webkit-transform;
-            -moz-transition-property: -moz-transform;
-            -o-transition-property: -o-transform;
-            transition-property: transform;
-        }
+        padding:10px;
     }
 </style>
