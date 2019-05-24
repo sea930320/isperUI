@@ -85,7 +85,7 @@ export default {
                 show: false,
                 params: {},
                 headers: {
-                    smail: "*_~"
+                    // smail: "*_~"
                 }
             },
             session_expire_time: 0,
