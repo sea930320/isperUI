@@ -156,13 +156,13 @@
         </b-row>
         <b-modal
             v-model="deleteModalShow"
-            title="Delete Doc"
-            ok-title="确定"
-            cancel-title="取消"
-            @ok="confirmDelete()"
-            @cancel="deleteModalShow=false"
+            title="删除素材"
         >
-            <p class="my-4">Do you want to delete Doc?</p>
+            <p class="my-4">您确定要删除该素材吗？</p>
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="deleteModalShow=false">取消</b-button>
+            </div>
         </b-modal>
         <!-- upload-modal -->
         <upload-modal @on-uploadConfirm="docUploadConfirm"></upload-modal>
@@ -443,7 +443,8 @@ export default {
             this.deleteModalShow = false;
             this.run();
             ProjectService.deleteProjectDoc({
-                doc_id: this.currentDoc.id
+                doc_id: this.currentDoc.id,
+                targets: this.currentDoc.name
             })
                 .then(() => {
                     this.projectDocsAssign.nodes.forEach(item => {

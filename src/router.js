@@ -78,7 +78,6 @@ const routes = [{
         },
         {
             path: 'workflow/set/:flow_id',
-            name: 'setworkflow',
             component: () => import('@/views/manager/workflow/SettingsBase.vue'),
             meta: {
                 step: true

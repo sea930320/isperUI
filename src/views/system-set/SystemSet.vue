@@ -12,7 +12,9 @@
                     <b-tab title="登录记录">
                         <login-log/>
                     </b-tab>
-                    <b-tab title="记录统计">Record Statistic</b-tab>
+                    <b-tab title="记录统计">
+                        <log-statistic/>
+                    </b-tab>
                 </b-tabs>
             </b-tab>
             <b-tab title="字典管理">
@@ -38,7 +40,9 @@
             <b-tab
                 title="记录统计"
                 v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
-            >Record Statistic</b-tab>
+            >
+                <log-statistic/>
+            </b-tab>
         </b-tabs>
         <b-tabs v-if="[3,7].includes(userInfo.identity)">
             <b-tab
@@ -70,7 +74,9 @@
                     <b-tab
                         title="记录统计"
                         v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
-                    >Record Statistic</b-tab>
+                    >
+                        <log-statistic/>
+                    </b-tab>
                 </b-tabs>
             </b-tab>
         </b-tabs>
@@ -85,6 +91,7 @@ import Dictionary from "./Dictionary";
 import Advertising from "./advertising/Advertising";
 import PartPosition from "./PartPosition";
 import InnerPermission from "./InnerPermission";
+import LogStatistic from "./LogStatistic";
 import { mapState } from "vuex";
 
 export default {
@@ -96,7 +103,8 @@ export default {
         Dictionary,
         PartPosition,
         InnerPermission,
-        Advertising
+        Advertising,
+        LogStatistic
     },
     computed: {
         ...mapState(["userInfo"]),

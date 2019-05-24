@@ -231,7 +231,7 @@ class AccountService {
       params: options
     })
   }
-  
+
   /**
    * Get Roles
    * @return {Promise}
@@ -240,6 +240,30 @@ class AccountService {
     return xhr({
       method: 'get',
       url: '/account/roles',
+      params: options
+    })
+  }
+
+  /**
+   * Get WorkLog Statistics
+   * @return {Promise}
+   */
+  getWorkLogStatistic(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/worklog-statistic',
+      params: options
+    })
+  }
+
+  /**
+   * Get User Statistics
+   * @return {Promise}
+   */
+  getUserStatistic(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/user-statistic',
       params: options
     })
   }

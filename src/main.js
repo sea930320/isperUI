@@ -14,6 +14,7 @@ import VueLodash from 'vue-lodash'
 import VueFormWizard from 'vue-form-wizard'
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueMoment from 'vue-moment'
+import VueApexCharts from 'vue-apexcharts'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -52,6 +53,8 @@ Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
 Vue.use(VueSweetalert2);
 Vue.use(VueMoment)
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
 
 
 new Vue({
