@@ -27,7 +27,14 @@
                     ></b-form-select>
                 </b-col>
                 <b-col cols="4">
-                    <date-picker class="mx-2" v-model="queryParam.range" range format="YYYY-MM-DD"></date-picker>
+                    <date-picker
+                        class="mx-2"
+                        :editable="false"
+                        :clearable="false"
+                        v-model="queryParam.range"
+                        range
+                        format="YYYY-MM-DD"
+                    ></date-picker>
                 </b-col>
             </b-row>
             <b-row class="mt-5 justify-content-center">
@@ -93,7 +100,10 @@ export default {
                 { text: "User Statistic", value: 1 }
             ],
             queryParam: {
-                range: "",
+                range: [
+                    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+                    new Date(Date.now() + 24 * 60 * 60 * 1000)
+                ],
                 group_id: null,
                 company_id: null
             },
@@ -140,6 +150,13 @@ export default {
                 },
                 xaxis: {
                     type: "datetime"
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return Number(val);
+                        }
+                    }
                 },
                 legend: {
                     show: false
@@ -260,67 +277,42 @@ export default {
                     this.$emit("data-failed");
                 });
         },
-        getDayWiseTimeSeries(baseval, count, yrange) {
-            var i = 0;
-            let data = [];
-            while (i < count) {
-                var x = baseval;
-                var y =
-                    Math.floor(Math.random() * (yrange.max - yrange.min + 1)) +
-                    yrange.min;
-
-                data.push({
-                    x,
-                    y
-                });
-                baseval += 86400000;
-                i++;
-            }
-            setTimeout(() => {
-                this.$refs.userChart.updateSeries([
-                    {
-                        data
-                    }
-                ]);
-            }, 20);
-        },
         fetchUserStatistic() {
-            this.getDayWiseTimeSeries(
-                new Date().getTime(),
-                50,
-                {
-                    min: 0,
-                    max: 100
-                }
-            );
-            // this.run();
-            // let param = {
-            //     ...this.queryParam
-            // };
-            // delete param.range;
-            // if (this.queryParam.range != "") {
-            //     param["start_date"] = this.queryParam.range[0]
-            //         ? this.$moment(this.queryParam.range[0]).format(
-            //               "YYYY-MM-DD"
-            //           )
-            //         : "";
-            //     param["end_date"] = this.queryParam.range[1]
-            //         ? this.$moment(this.queryParam.range[1]).format(
-            //               "YYYY-MM-DD"
-            //           )
-            //         : "";
-            // } else {
-            //     param["start_date"] = "";
-            //     param["end_date"] = "";
-            // }
-            // accountService
-            //     .getUserStatistic(param)
-            //     .then(data => {
-            //         this.$emit("data-ready");
-            //     })
-            //     .catch(() => {
-            //         this.$emit("data-failed");
-            //     });
+            this.run();
+            let param = {
+                ...this.queryParam
+            };
+            delete param.range;
+            if (this.queryParam.range != "") {
+                param["start_date"] = this.queryParam.range[0]
+                    ? this.$moment(this.queryParam.range[0]).format(
+                          "YYYY-MM-DD"
+                      )
+                    : "";
+                param["end_date"] = this.queryParam.range[1]
+                    ? this.$moment(this.queryParam.range[1]).format(
+                          "YYYY-MM-DD"
+                      )
+                    : "";
+            } else {
+                param["start_date"] = "";
+                param["end_date"] = "";
+            }
+            accountService
+                .getUserStatistic(param)
+                .then(res => {
+                    setTimeout(() => {
+                        this.$refs.userChart.updateSeries([
+                            {
+                                data: res.results
+                            }
+                        ]);
+                    }, 20);
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         }
     }
 };

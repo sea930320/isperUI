@@ -57,6 +57,10 @@
                                                           @click="()=>{editInstructor = true; newInstructor = false; edit_Instructor = {id:row.item.id, tags:[]}; allgroup.selectedInstructor = row.item.id; tags = row.item.instructorItems.map(item=>{return {text: item.text}});}">
                                                     <icon name="edit" style="width: 20px; margin: 0 0 4px 2px;"></icon>
                                                 </b-button>
+                                                <b-button class="styledBtn" :key="'delete' + row.id" :size="template_size" variant="outline-primary"
+                                                          @click="deleteGroupInstructor(row.item.id)">
+                                                    删除
+                                                </b-button>
                                             </template>
                                         </b-table>
                                         <b-modal hide-footer centered  v-model="newInstructor" title="新增指导者">
@@ -98,6 +102,7 @@
                                                                 :add-only-from-autocomplete="true"
                                                                 :autocomplete-min-length="0"
                                                                 @tags-changed="newTags => tags = newTags"
+                                                                placeholder="添加标签"
                                                         />
                                                     </b-form-group>
                                                     <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
@@ -351,6 +356,43 @@ export default {
                 .catch(() => {
                     this.$emit("data-failed");
                 });
+        },
+        deleteGroupInstructor(iid) {
+            let gid = this.allgroup.selectedID;
+            if (confirm('您确定要删除该指导者吗？')) {
+                this.run();
+                GroupService
+                    .deleteGroupInstructor({ gid: gid, iid: iid })
+                    .then(data => {
+                        if (data.results === 'success')
+                            GroupService
+                                .getOwnGroup({id: this.userInfo.id})
+                                .then(data => {
+                                    this.allgroup.list = data.results;
+                                    GroupService
+                                        .getInstructorItemList({})
+                                        .then(res => {
+                                            this.allgroup.tmpItems = res.results;
+                                            this.autocompleteItems = [];
+                                            this.autocompleteItems = this.allgroup.tmpItems.map(item=>{ return {text: item.text}});
+                                            this.newInstructor = false;
+                                            this.$emit("data-ready");
+                                            this.$refs['editInstructors'].hide();
+                                        })
+                                        .catch(() => {
+                                            this.$emit("data-failed");
+                                        });
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            }
         }
     }
 };
@@ -393,11 +435,11 @@ export default {
             text-align: left !important;
         }
         .field-3 {
-            width: 59%;
+            width: 50%;
             text-align: left !important;
         }
         .field-4 {
-            width: 6%;
+            width: 15%;
             text-align: left !important;
         }
         .vue-tags-input {

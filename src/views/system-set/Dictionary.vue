@@ -326,7 +326,7 @@
         .align-items-center.d-flex.justify-content-between.list-group-item {
             padding: 7px 8px 7px 15px;
             font-family: 'SimHei';
-            font-size: 16px;
+            font-size: 15px;
         }
         .subListItem {
             padding: 3px 8px 3px 30px !important;

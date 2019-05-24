@@ -93,7 +93,7 @@
                     (row.item.is_open === 4) ? "指定用户":
                     (row.item.is_open === 5) ? "指定部门/单位": ''
                 }}</template>
-                <template slot="mission_type" slot-scope="row">{{row.item.course}}</template>
+                <template slot="mission_type" slot-scope="row">{{row.item.course_name}}</template>
                 <template slot="edit_control" slot-scope="row">
                     <a class="btn-link mx-1"
                         href="javascript:"
@@ -198,17 +198,17 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-3"
+                    class: "text-center field-5"
                 },
                 currentShare: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-3"
+                    class: "text-center field-1"
                 },
                 is_protected: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-3"
+                    class: "text-center field-1"
                 },
                 name: {
                     label: "项目名称",
@@ -261,7 +261,6 @@ export default {
             // 查询参数
             allChecked: false,
             queryParam: {
-                status: "",
                 page: 1,
                 size: 15
             },
@@ -332,7 +331,6 @@ export default {
                 ...this.queryParam,
                 ...this.queryDebounceParam
             })
-                //                    .getProjectList()
                 .then(data => {
                     data.results.forEach(item => {
                         if (item.checked === undefined) {
@@ -488,8 +486,11 @@ export default {
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .projects-index {
-    .field-3 {
-        width: 3%;
+    .field-1 {
+        width: 1%;
+    }
+    .field-5 {
+        width: 5%;
     }
     .field-10 {
         width: 10%;
@@ -534,16 +535,16 @@ export default {
         width: 9%;
     }
     .field-rend_ani_1 {
-        width: 20%;
+        width: 19%;
     }
     .field-rend_ani_2 {
         width: 10%;
     }
     .field-experiment_type_label {
-        width: 10%;
+        width: 7%;
     }
     .field-experiment_task_label {
-        width: 10%;
+        width: 23%;
     }
     .field-status {
         width: 5%;

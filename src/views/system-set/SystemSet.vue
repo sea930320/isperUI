@@ -39,7 +39,7 @@
             </b-tab>
             <b-tab
                 title="记录统计"
-                v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
+                v-if="isActionAllowed('code_system_set_management', 'code_log_statistics_system_set')"
             >
                 <log-statistic/>
             </b-tab>
@@ -73,7 +73,7 @@
                     </b-tab>
                     <b-tab
                         title="记录统计"
-                        v-if="isActionAllowed('code_system_set_management', 'code_record_statistics_system_set')"
+                        v-if="isActionAllowed('code_system_set_management', 'code_log_statistics_system_set')"
                     >
                         <log-statistic/>
                     </b-tab>

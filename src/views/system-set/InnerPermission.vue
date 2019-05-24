@@ -48,6 +48,7 @@
                                 :add-only-from-autocomplete="true"
                                 :autocomplete-min-length="0"
                                 @tags-changed="newTags => edit_InnerPermission.tags = newTags"
+                                placeholder="添加标签"
                         />
                     </b-form-group>
                     <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存

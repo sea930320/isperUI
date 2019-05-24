@@ -1,19 +1,10 @@
 <template>
     <div class="mt-5 wizard-1">
         <loading v-if="isRunning"></loading>
-        <b-form v-if="[2,3,6,7].includes(userInfo.role)" @submit="onSubmit">
+        <b-form v-if="[2,3,6,7].includes(userInfo.role)" @submit="savePage">
             <b-container fluid>
                 <b-row align-v="start">
-                    <b-col sm="4">
-                        <b-form-group
-                                id="fieldset-horizontal1"
-                                label-cols-sm="4"
-                                label-cols-lg="3"
-                                label="流程名称:"
-                                label-for="input-horizontal"
-                        >
-                            <b-form-input id="input-horizontal2" required v-model="flow_name" disabled></b-form-input>
-                        </b-form-group>
+                    <b-modal centered hide-footer size="lg" id="selectFlowModal" ref="selectFlowModal" title="流程名称">
                         <div class="cardDiv">
                             <b-navbar toggleable="lg" class="theader">
                                 <b-navbar-brand href="#">流 程</b-navbar-brand>
@@ -67,115 +58,180 @@
                                     v-model="queryParam.page"
                             ></b-pagination>
                         </b-row>
-                    </b-col>
-                    <b-col sm="8">
+                    </b-modal>
+                    <b-modal centered hide-footer size="xl" id="selectCourseModal" ref="selectCourseModal" title="关联课程">
+                        <div class="cardDiv">
+                            <b-col sm="4" class="mb-3">
+                                <b-input-group :size="template_size">
+                                    <b-input-group-prepend>
+                                        <span class="input-group-text">
+                                            <icon name="search"></icon>
+                                        </span>
+                                    </b-input-group-prepend>
+                                    <b-form-input v-model.lazy="filterCourseText" placeholder="请输入内容"/>
+                                </b-input-group>
+                            </b-col>
+                            <b-col sm="12">
+                                <b-form-select v-model="project_data.course" required
+                                               :options="filteredCourse"></b-form-select>
+                            </b-col>
+                        </div>
+                    </b-modal>
+                    <b-col sm="12">
                         <b-container fluid>
                             <b-row align-v="center">
                                 <b-col sm="6">
                                     <b-form-group
-                                            id="fieldset-horizontal3"
-                                            label-cols-sm="4"
-                                            label-cols-lg="3"
-                                            label="项目名称:"
-                                            label-for="input-horizontal"
+                                        id="fieldset-horizontal1"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="流程名称:"
+                                        label-for="input-horizontal"
+                                    >
+                                        <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6">
+                                    <b-form-group
+                                        id="fieldset-horizontal3"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="项目名称:"
+                                        label-for="input-horizontal"
                                     >
                                         <b-form-input id="input-horizontal" required
                                                       v-model="project_data.name"></b-form-input>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm="6">
-                                    <b-form-group
-                                            id="fieldset-horizontal4"
-                                            label-cols-sm="4"
-                                            label="流程图完整显示:"
-                                            label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.entire_graph"
-                                                       :options="options_entire_graph"></b-form-select>
-                                    </b-form-group>
-                                </b-col>
 
                             </b-row>
-
                             <b-row align-v="center">
                                 <b-col sm="6">
                                     <b-form-group
-                                            id="fieldset-horizontal5"
-                                            label-cols-sm="4"
-                                            label-cols-lg="3"
-                                            label="开放模式:"
-                                            label-for="input-horizontal"
+                                        id="fieldset-horizontal7"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="事务类型:"
+                                        label-for="input-horizontal"
                                     >
-                                        <b-form-select v-model="project_data.is_open"
+                                        <b-form-select v-model="project_data.officeItem" required>
+                                            <optgroup
+                                                v-for="part in options_officeItem"
+                                                :key="part.label"
+                                                :label="part.label"
+                                            >
+                                                <option
+                                                    v-for="pos in part.options"
+                                                    :key="pos.value"
+                                                    :value="pos.value"
+                                                >{{pos.text}}</option>
+                                            </optgroup>
+                                        </b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6">
+                                    <b-form-group
+                                        id="fieldset-horizontal8"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="关联课程:"
+                                        label-for="input-horizontal">
+                                        <b-form-input id="input-horizontal8" required v-model="courseText" @focus="()=>{this.$refs['selectCourseModal'].show()}"></b-form-input>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row align-v="center">
+                                <b-col sm="6">
+                                    <b-form-group
+                                        id="fieldset-horizontal5"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="开放模式:"
+                                        label-for="input-horizontal"
+                                    >
+                                        <b-form-select v-model="project_data.is_open" required
                                                        :options="options_is_open"></b-form-select>
                                     </b-form-group>
                                 </b-col>
-                                <b-col sm="6">
+                                <b-col sm="6" v-if="project_data.is_open === 3">
                                     <b-form-group
-                                            id="fieldset-horizontal6"
-                                            label-cols-sm="4"
-                                            label="成果参考释放方式:"
-                                            label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.reference"
-                                                       :options="options_reference"></b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row align-v="center">
-                                <b-col sm="6">
-                                    <b-form-group
-                                            id="fieldset-horizontal7"
-                                            label-cols-sm="4"
-                                            label-cols-lg="3"
-                                            label="事务类型:"
-                                            label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.classification"
-                                                       :options="options_classification"></b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm="6">
-                                    <b-form-group
-                                            id="fieldset-horizontal8"
-                                            label-cols-sm="4"
-                                            label-cols-lg="3"
-                                            label="关联课程:"
-                                            label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.course"
-                                                       :options="options_course"></b-form-select>
-                                        <!--<b-form-select v-model="project_data.all_role" :options="options_all_role"></b-form-select>-->
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row align-v="center">
-                                <b-col sm="1"></b-col>
-                                <b-col sm="9">
-                                    <b-form-group
-                                            v-if="project_data.is_open === 3"
-                                            id="fieldset-horizontal9"
-                                            label-cols-sm="4"
-                                            label-cols-lg="3"
-                                            label="开发时段:"
-                                            label-for="input-horizontal"
+                                        id="fieldset-horizontal9"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label=""
+                                        label-for="input-horizontal"
                                     >
                                         <b-row align-v="center">
-                                            <b-col sm="5">
+                                            <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date"
+                                                    <b-form-input type="date" required
                                                                   v-model="project_data.start_time"></b-form-input>
                                                 </div>
-                                            </b-col>
-                                            &nbsp;&nbsp;&nbsp;到&nbsp;&nbsp;&nbsp;
-                                            <b-col sm="5">
+                                            </div>
+                                            &emsp;&emsp;到&emsp;&emsp;
+                                            <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date"
+                                                    <b-form-input type="date" required
                                                                   v-model="project_data.end_time"></b-form-input>
                                                 </div>
-                                            </b-col>
+                                            </div>
 
                                         </b-row>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6" v-if="project_data.is_open === 4">
+                                    <b-form-group
+                                        id="fieldset-horizontal10"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label=""
+                                        label-for="input-horizontal">
+                                        <vue-tags-input
+                                            style="max-width: 100%;"
+                                            v-model="tag"
+                                            :tags="target_users"
+                                            :autocomplete-items="filteredItems"
+                                            :add-only-from-autocomplete="true"
+                                            :autocomplete-min-length="0"
+                                            @tags-changed="newTags => target_users = newTags"
+                                            placeholder="添加标签"/>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6" v-if="project_data.is_open === 5">
+                                    <b-form-group
+                                        id="fieldset-horizontal11"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label=""
+                                        label-for="input-horizontal">
+                                        <b-form-select v-model="target_parts" required
+                                                       :options="this.allParts"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row align-v="center">
+                                <b-col sm="6">
+                                    <b-form-group
+                                        id="fieldset-horizontal4"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="流程图完整显示:"
+                                        label-for="input-horizontal"
+                                    >
+                                        <b-form-select v-model="project_data.entire_graph" required
+                                                       :options="options_entire_graph"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6">
+                                    <b-form-group
+                                        id="fieldset-horizontal6"
+                                        label-cols-sm="4"
+                                        label-cols-lg="3"
+                                        label="成果参考释放方式:"
+                                        label-for="input-horizontal"
+                                    >
+                                        <b-form-select v-model="project_data.reference" required
+                                                       :options="options_reference"></b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -224,24 +280,19 @@
                         <b-container fluid class="mt-4">
                             <b-row>
                                 <b-col sm="4" align-v="center">
-                                    <!--<b-button-group class="float-left" >-->
-                                    <!--<b-button size="lg"  style="width:300px" variant="success"> 上一步 </b-button>-->
-                                    <!--</b-button-group>-->
                                 </b-col>
                                 <b-col sm="4" align-v="center">
                                     <b-button-group class="float-center">
-                                        <b-button size="lg" type="submit" style="width:100%" variant="primary" @click="savePage()">
+                                        <b-button size="lg" type="submit" style="width:100%" variant="primary">
                                             保 存
                                         </b-button>
-                                        <!--<b-button size="lg"  style="width:300px" variant="success" @click="normal_button()"> 保存 </b-button>-->
                                     </b-button-group>
                                 </b-col>
-                                <b-col sm="4" align-v="center">
+                                <b-col sm="4" align-v="center" v-if="project_id">
                                     <b-button-group class="float-center">
                                         <b-button size="lg" type="submit" style="width:100%" variant="primary" @click="nextPage()">
                                             下一步
                                         </b-button>
-                                        <!--<b-button size="lg"  type="submit"  style="width:300px" variant="success"  @click="savePage()"> 下一步 </b-button>-->
                                     </b-button-group>
                                 </b-col>
                             </b-row>
@@ -296,12 +347,15 @@
     import _ from "lodash";
     import ProjectService from "@/services/projectService";
     import CourseService from "@/services/courseService";
+    import DictionaryService from "@/services/dictionaryService";
+    import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
         name: "wizard-1",
         components: {
             BContainer,
             Loading,
+            VueTagsInput,
             ViewXml,
         },
         filters: {
@@ -311,6 +365,15 @@
         },
         data() {
             return {
+                tag: '',
+                tags: [],
+                allUsers: [],
+                allParts: [],
+                target_users: [],
+                target_parts: null,
+                courseText: '',
+                filterCourseText: '',
+                filteredCourse: [],
                 columns: {
                     id: {
                         label: "序号",
@@ -368,11 +431,7 @@
                     {value: 3, text: '最后'},
                 ],
                 options_course: [],
-                options_classification: [
-                    {value: 1, text: 'test1'},
-                    {value: 2, text: 'test2'},
-                    {value: 3, text: 'test3'},
-                ],
+                options_officeItem: [],
                 savedBit: false,
                 // 查询参数
                 queryParam: {
@@ -444,7 +503,7 @@
         },
         created() {
             this.$nextTick(() => {
-                this.queryCourseList();
+                this.queryItemList();
                 this.project_id = this.$route.params.project_id;
 
                 if (this.userInfo.role === 1) {
@@ -464,7 +523,7 @@
                             all_role: 0,
                             course: '',
                             reference: 1,
-                            classficiation: 0,
+                            officeItem: 0,
                             public_status: 1,
                             level: 0,
                             entire_graph: 1,
@@ -475,7 +534,7 @@
                             purpose: '',
                             requirement: '',
                             start_time: '',
-                            end_time: '',
+                            end_time: ''
                         };
                     }
                     this.queryWorkflowList();
@@ -485,16 +544,17 @@
             });
         },
         computed: {
-            ...mapState(["userInfo"])
+            ...mapState(["userInfo"]),
+            filteredItems() { return this.allUsers.filter(i => {
+                return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+            })}
         },
         watch: {
             // 监控查询参数，如有变化 查询列表数据
             queryParam: {
                 handler() {
                     this.queryWorkflowList();
-                    this.queryProjectCreate();
-                    this.queryProjectUpdate();
-                    this.queryCourseList();
+                    this.queryItemList();
                 },
                 deep: true
             },
@@ -504,6 +564,19 @@
                     this.queryWorkflowList();
                 }, 500)
             },
+            filterCourseText: {
+                handler() {
+                    this.filteredCourse = this.options_course.filter(item => item.text.indexOf(String(this.filterCourseText)) !== -1)
+                },
+                deep: true
+            },
+            'project_data.course': {
+                handler() {
+                    if (this.project_data.course !== '')
+                        this.courseText = this.options_course.filter(item => item.value === this.project_data.course)[0].text
+                },
+                deep: true
+            }
         },
         methods: {
             ...mapActions(["setFlowStep"]),
@@ -551,14 +624,33 @@
                         this.$router.push('/manager/project');
                     });
             },
-
             // get All Course
-            queryCourseList() {
+            queryItemList() {
                 this.run();
                 CourseService
                     .getCourseList()
                     .then(data => {
                         this.options_course = data.results;
+                        this.filteredCourse = this.options_course.filter(item => item.text.indexOf(String(this.filterCourseText)) !== -1)
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                        this.$router.push('/manager/project');
+                    });
+                DictionaryService
+                    .getPPData()
+                    .then(data => {
+                        this.options_officeItem = data.results;
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                        this.$router.push('/manager/project');
+                    });
+                ProjectService
+                    .getAllUsers_AllParts()
+                    .then(data => {
+                        this.allUsers = data.users;
+                        this.allParts = data.parts;
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -568,6 +660,8 @@
             // Go To Crate Project Page
             queryProjectCreate() {
                 this.run();
+                this.project_data.target_users = JSON.stringify(this.target_users.map(item=>item.id));
+                this.project_data.target_parts = this.target_parts;
                 ProjectService
                     .createProject(this.project_data)
                     .then((data) => {
@@ -575,7 +669,6 @@
                         this.$emit("data-ready");
                         this.project_id = data.id;
                         this.$emit('update', data);
-
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -642,7 +735,7 @@
                             },
                             {
                                 'title': '事务类型',
-                                'content': this.options_classification.filter(item => item.value === data.classification)[0]
+                                'content': this.options_officeItem.filter(item => item.value === data.officeItem)[0]
                             },
                             {'title': '关联课程', 'content': ''},
                             {'title': '开发时段（开始时间）', 'content': data.start_time},
@@ -669,15 +762,20 @@
                     this.$toasted.error('请保存你的项目');
                 }
             },
-            savePage() {
-                this.nextBtnClicked = 0;
-                this.saveBtnClicked = 1;
-                if (this.is_edit === 1) {
-                    this.queryProjectUpdate();
-                    this.savedBit = true;
-                }
-                if (this.is_edit === 0) {
-                    this.queryProjectCreate();
+            savePage(evt) {
+                evt.preventDefault();
+                if (this.project_data.flow_name === undefined)
+                    alert('请选择流程名称');
+                else {
+                    this.nextBtnClicked = 0;
+                    this.saveBtnClicked = 1;
+                    if (this.is_edit === 1) {
+                        this.queryProjectUpdate();
+                        this.savedBit = true;
+                    }
+                    if (this.is_edit === 0) {
+                        this.queryProjectCreate();
+                    }
                 }
             },
         }
@@ -807,6 +905,11 @@
 
         .table-primary td {
             border: none;
+        }
+
+        .ti-autocomplete {
+            max-height: 300px;
+            overflow: overlay;
         }
 
         /* END Adjustments for width and scrollbar */
