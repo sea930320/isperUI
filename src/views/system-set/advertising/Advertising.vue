@@ -2,7 +2,7 @@
     <div class="advertising_Index">
         <loading v-if="isRunning"></loading>
         <b-row>
-            <b-col sm="6"><br>
+            <b-col sm="5"><br>
                 <div class="cardDiv">
                     <b-table :items="advertising.list" responsive small hover :fields="columns" head-variant>
                         <template slot="name" slot-scope="row">
@@ -34,7 +34,7 @@
                                     @click="deleteAdvertisingConfirm(row.item)"
                                     v-b-modal.deleteConfirmModal
                             >
-                                <icon name="trash-alt"></icon>
+                                <icon name="trash"></icon>
                             </a>
 
                         </template>
@@ -52,12 +52,11 @@
                     />
                 </b-row>
             </b-col>
-            <b-col sm="6"><br><br>
+            <b-col sm="7"><br><br>
                 <b-row>
                     <!--<div class="cardDiv" style="width:100%">-->
                     <b-col sm="12">
                         <b-form-group
-                                id="fieldset-horizontal"
                                 label-cols-sm="2"
                                 label-cols-lg="3"
                                 label="公告名称:"
@@ -70,10 +69,8 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                    <!--<div class="cardDiv" style="width:100%">-->
-                    <b-col sm="12">
+                        <b-col sm="12">
                         <b-form-group
-                                id="fieldset-horizontal"
                                 label-cols-sm="2"
                                 label-cols-lg="3"
                                 label="发布时间:"
@@ -82,24 +79,28 @@
                             <b-form-input type="date" v-model="public_time"></b-form-input>
                         </b-form-group>
                     </b-col>
-                    <!--</div>-->
-                </b-row>
-                <b-row>
-                    <b-form-group
-                            id="fieldset-horizontal"
-                            label-cols-sm="4"
-                            label-cols-lg="3"
-                            label="公告内容："
-                            label-for="input-horizontal"
-                    >
-                        <div class="cardDiv">
-                            <vue-editor v-model="ad_content"></vue-editor>
-                        </div>
-                    </b-form-group>
                 </b-row>
                 <b-row>
                     <b-col sm="12">
-                        <b-button size="lg" class="styledBtn" variant="outline-primary" @click="saveDoc()">保存</b-button>
+                        <b-form-group
+                                label-cols-sm="2"
+                                label-cols-lg="3"
+                                label="公告内容:"
+                                label-for="input-horizontal"
+                        >
+                            <div class="cardDiv">
+                                <vue-editor v-model="ad_content"></vue-editor>
+                            </div>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col sm="4"></b-col>
+                    <b-col sm="4">
+                        <sub-adver-upload></sub-adver-upload>
+                    </b-col>
+                    <b-col sm="4">
+                        <b-button size="lg" class="styledBtn" variant="outline-primary" @click="saveDoc()"><icon name="save"></icon>&nbsp;保存</b-button>
                     </b-col>
                 </b-row>
             </b-col>
@@ -107,7 +108,7 @@
         </b-row>
         <br><br>
         <b-modal id="deleteConfirmModal" title="删除公告" @ok="deleteAdvertisingConfirmFunction(deleteAdvertising)">
-            <p class="my-4">Do you want to delete this Advertising?</p>
+            <p class="my-4">是否确认删除公告</p>
         </b-modal>
     </div>
 </template>
@@ -119,10 +120,7 @@
     import  {openFile}  from "@/components/previewFile";
     import {mapState} from "vuex";
     import {VueEditor} from 'vue2-editor'
-    //    import { ImageDrop } from 'quill-image-drop-module'
-    //    import ImageResize from 'quill-image-resize-module'
-    //    Quill.register('modules/imageDrop', ImageDrop);
-    //    Quill.register('modules/imageResize', ImageResize);
+    import SubAdverUpload from "@/components/upload/SubAdverUpload";
 
 
     export default {
@@ -130,6 +128,7 @@
         components: {
             Loading,
             VueEditor,
+            SubAdverUpload
         },
         created() {
             this.$nextTick(() => {
@@ -210,7 +209,7 @@
                         this.advertising.total = data.paging.count;
                         for (let j = 0; j < this.advertising.list.length; j++) {
                             var arr = this.advertising.list[j].path_html.split("/");
-                            this.advertising.list[j].link = "/advertising/" + arr[arr.length-1].replace(".html","");
+                            this.advertising.list[j].link = "/advertising/" + arr[arr.length - 1].replace(".html", "");
                         }
                         this.$emit("data-ready");
                     })
@@ -219,7 +218,6 @@
                     });
             },
             saveDoc(){
-//                this.run();
                 AdvertisingService
                     .createAdvertising({
                         "ad_name": this.ad_name,
@@ -227,11 +225,11 @@
                         "ad_content": this.ad_content
                     })
                     .then(() => {
-                        this.$toasted.success('保存成功');
                         this.ad_name = "";
                         this.public_time = null;
                         this.ad_content = "";
                         this.queryAdvertisingList();
+                        this.$toasted.success('保存成功');
                     })
                     .catch(() => {
                         return;
@@ -269,6 +267,6 @@
     }
 
     .advertising_Index {
-        padding:10px;
+        padding: 10px;
     }
 </style>
