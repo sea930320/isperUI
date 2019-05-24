@@ -207,7 +207,7 @@
                         class: "text-center field-creator"
                     },
                     agreeBit: {
-                        label: "AgreeBit",
+                        label: "允许观摩",
                         sortable: false,
                         class: "text-center field-rend_ani_1"
                     },
@@ -339,7 +339,7 @@
         computed: {
             ...mapState(["userInfo"]),
             searchData() {
-                let that = this
+                let that = this;
                 return that.roleImageList.filter(roleItem => {
                     return String(roleItem.name).toLowerCase().indexOf(String(that.searchKey).toLowerCase()) !== -1
                 })

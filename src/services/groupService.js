@@ -167,6 +167,14 @@ class GroupService {
         })
     }
 
+    deleteCompanyManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/company/deleteCompanyManager',
+            params: data
+        })
+    }
+
     fetchAllGroupDetail(data) {
         return xhr({
             method: 'get',
@@ -179,6 +187,22 @@ class GroupService {
         return xhr({
             method: 'post',
             url: '/group/checkUserGroup',
+            params: data
+        })
+    }
+
+    deleteGroupManager(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/deleteGroupManager',
+            params: data
+        })
+    }
+
+    deleteGroupInstructor(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/deleteGroupInstructor',
             params: data
         })
     }

@@ -155,7 +155,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
-})
+});
 
 // 流程设置跳转判断
 const flowSetEnter = (to, from, next, page) => {
@@ -163,13 +163,13 @@ const flowSetEnter = (to, from, next, page) => {
         if (store.state.flowStep > -1 && store.state.flowStep >= page) {
             next()
         } else if (!store.state.flowStep && store.state.flowStep !== 0) {
-            Vue.toasted.error('参数错误')
+            Vue.toasted.error('参数错误');
             next({
                 path: `/manager/workflow`,
                 query: { redirect: to.fullPath }
             })
         } else {
-            Vue.toasted.error('当前环节数据未设置完整，不能跳转到下一步')
+            Vue.toasted.error('当前环节数据未设置完整，不能跳转到下一步');
             next({
                 path: `/manager/workflow/set/${to.params.flow_id}/${store.state.flowStep}`,
                 query: { redirect: to.fullPath }
@@ -178,6 +178,6 @@ const flowSetEnter = (to, from, next, page) => {
     } else {
         next()
     }
-}
+};
 
 export default router

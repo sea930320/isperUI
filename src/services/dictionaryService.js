@@ -13,6 +13,14 @@ class DictionaryService {
         })
     }
 
+    getPPData(data) {
+        return xhr({
+            method: 'post',
+            url: '/dic/getPPData',
+            params: data
+        })
+    }
+
     newItemSave(data) {
         return xhr({
             method: 'post',

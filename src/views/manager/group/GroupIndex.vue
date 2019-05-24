@@ -225,7 +225,7 @@
         </b-modal>
         <b-modal size="xl" centered  hide-footer id="addManager" ref="addManager" title="配置管理员">
             <div class="pb-5">
-                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 82% !important;"
+                <b-button :size="template_size" variant="outline-primary" class="mb-3 offset-10 styledBtn fontedBtn" style="margin-left: 74% !important;"
                           @click="()=>{newManager = true; editManager = false; resetManager = false; new_Manager = {name:'',description:'',password:null}}">
                     新增管理员
                 </b-button>
@@ -248,6 +248,11 @@
                                       variant="outline-primary"
                                       @click="()=>{resetManager = true; newManager = false; editManager = false; reset_Manager = {id:row.item.id,password:''}}">
                                 重置密码
+                            </b-button>
+                            <b-button class="styledBtn" :key="'delete' + row.id" :size="template_size"
+                                      variant="outline-primary"
+                                      @click="deleteGroupManager(row.item.id)">
+                                删除
                             </b-button>
                         </b-button-group>
                     </template>
@@ -449,7 +454,7 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 5
+                    size: 10
                 },
                 queryDebounceParam: {
                     search: ""
@@ -837,6 +842,42 @@
                     .catch(() => {
                         this.$emit("data-failed");
                     });
+            },
+            deleteGroupManager(mid) {
+                let gid = this.Managers.groupID;
+                if (confirm('您确定要删除该集群管理员吗？')) {
+                    this.run();
+                    GroupService
+                        .deleteGroupManager({ gid: gid, mid: mid })
+                        .then(data => {
+                            if (data.results === 'success')
+                                GroupService
+                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                    .then(data => {
+                                        data.results.forEach(item => {
+                                            if (item.checked === undefined) {
+                                                item.checked = false;
+                                            }
+                                            if (item.locked === undefined) {
+                                                item.locked = false;
+                                            }
+                                        });
+                                        this.allgroup.list = data.results;
+                                        this.allgroup.total = data.paging.count;
+                                        this.selected = [];
+                                        this.$emit("data-ready");
+                                        this.$refs['addManager'].hide();
+                                    })
+                                    .catch(() => {
+                                        this.$emit("data-failed");
+                                    });
+                            else
+                                this.$emit("data-failed");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             }
         }
     };

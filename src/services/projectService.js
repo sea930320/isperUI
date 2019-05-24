@@ -228,6 +228,14 @@ class ProjectService {
             params: data
         })
     }
+
+    getAllUsers_AllParts(data) {
+        return xhr({
+            method: 'get',
+            url: '/project/getAllUsers_AllParts',
+            params: data
+        })
+    }
 }
 
 export default new ProjectService()

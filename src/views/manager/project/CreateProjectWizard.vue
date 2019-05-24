@@ -5,17 +5,17 @@
             <b-tab title="基 本 信 息">
                 <CreateProjectWizard1 @update="setNewProjectID" v-model="tabIndex"/>
             </b-tab>
-            <b-tab title="环节及身份配置" v-if="this.$route.params.is_edit">
+            <b-tab title="环节及身份配置" v-if="openTab">
                 <CreateProjectWizard2 v-model="tabIndex"/>
             </b-tab>
 <!--            <b-tab title="环节及身份配置" v-else disabled>-->
 <!--            </b-tab>-->
-            <b-tab title="素 材 设 置" v-if="this.$route.params.is_edit">
+            <b-tab title="素 材 设 置" v-if="openTab">
                 <CreateProjectWizard3 v-model="tabIndex"/>
             </b-tab>
 <!--            <b-tab title="素 材 设 置" v-else disabled>-->
 <!--            </b-tab>-->
-            <b-tab title="跳 转 设 置" v-if="this.$route.params.is_edit">
+            <b-tab title="跳 转 设 置" v-if="openTab">
                 <CreateProjectWizard4 v-model="tabIndex"/>
             </b-tab>
 <!--            <b-tab title="跳 转 设 置" v-else disabled>-->
@@ -40,6 +40,7 @@
             CreateProjectWizard4
         },
         created() {
+            this.openTab = this.$route.params.is_edit;
             if (this.$route.params.is_edit === undefined)
                  this.$router.push('/manager/project' );
         },
@@ -48,14 +49,16 @@
         },
         data() {
             return {
+                openTab: false,
                 tabIndex: 0
             }
         },
         methods: {
             setNewProjectID (value) {
-                this.$route.params.is_edit = 1;
                 this.$route.params.project_id = value.id;
                 this.$route.params.currentProject = value;
+                this.$route.params.is_edit = '1';
+                this.openTab = true;
             }
         }
     }

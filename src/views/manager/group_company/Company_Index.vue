@@ -201,6 +201,11 @@
                                 variant="outline-primary"
                                 @click="()=>{resetCManager = true; newCManager = false; editCManager = false; reset_CManager = {id:row.item.id,password:''}}"
                             >重置密码</b-button>
+                            <b-button class="styledBtn" :key="'delete' + row.id" :size="template_size"
+                                      variant="outline-primary"
+                                      @click="deleteCompanyManager(row.item.id)">
+                                删除
+                            </b-button>
                         </b-button-group>
                     </template>
                 </b-table>
@@ -273,8 +278,7 @@
                                 variant="primary"
                                 @click="()=>{editCManager = false; edit_CManager = {id: null,description:''}}"
                             >
-                                取
-                                消
+                                取 消
                             </b-button>
                         </b-form>
                     </div>
@@ -682,6 +686,36 @@ export default {
                 .catch(() => {
                     this.$emit("data-failed");
                 });
+        },
+        deleteCompanyManager(mid) {
+            let cid = this.cManagers.companyID;
+            if (confirm('您确定要删除该单位管理员吗？')) {
+                this.run();
+                GroupService
+                    .deleteCompanyManager({ cid: cid, mid: mid })
+                    .then(data => {
+                        if (data.results === 'success')
+                            GroupService.fetchCompanyList({
+                                ...this.queryParam,
+                                ...this.queryDebounceParam
+                            })
+                                .then(data => {
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    this.allgroup.cTypes = data.cTypes;
+                                    this.$emit("data-ready");
+                                    this.$refs["addCManager"].hide();
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            }
         }
     }
 };
