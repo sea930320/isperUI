@@ -251,6 +251,7 @@
                 },
 //                params
                 project_data: {},
+                project_id: null,
                 project_role: {},
                 projectRolesAssign: {},
                 is_edit: 0,
@@ -307,6 +308,7 @@
                 if (this.$route.params.is_edit) {
                     this.is_edit = this.$route.params.is_edit;
                     this.project_data = this.$route.params.currentProject;
+                    this.project_id = this.$route.params.project_id;
                 } else {
                     this.is_edit = this.$route.params.is_edit;
                     this.project_data = {

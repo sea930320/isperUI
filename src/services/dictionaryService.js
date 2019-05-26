@@ -13,10 +13,10 @@ class DictionaryService {
         })
     }
 
-    getPPData(data) {
+    getOfficeItemData(data) {
         return xhr({
             method: 'post',
-            url: '/dic/getPPData',
+            url: '/dic/getOfficeItemData',
             params: data
         })
     }

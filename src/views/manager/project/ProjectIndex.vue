@@ -462,7 +462,9 @@ export default {
                     "开放模式",
                     "事务类型"
                 ];
-                const list = this.projects.list;
+                let list = this.projects.list.filter(item=>item.checked);
+                if (list.length === 0)
+                    list = this.projects.list;
                 const data = this.formatJson(list);
                 excel.export_json_to_excel({
                     header: tHeader,
@@ -486,7 +488,7 @@ export default {
                     v['is_open'] === 3 ? "限时":
                     v['is_open'] === 4 ? "指定用户":
                     v['is_open'] === 5 ? "指定部门/单位": '',
-                    v['course']
+                    v['course_name']
                 ]
             );
         },
