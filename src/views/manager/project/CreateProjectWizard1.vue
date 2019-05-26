@@ -51,6 +51,7 @@
                         </div>
                         <b-row class="justify-content-center row-margin-tweak">
                             <b-pagination
+                                    ref="pagination"
                                     :size="template_size"
                                     :total-rows="workflows.total"
                                     :per-page="queryParam.size"
@@ -175,7 +176,6 @@
                                                                   v-model="project_data.end_time"></b-form-input>
                                                 </div>
                                             </div>
-
                                         </b-row>
                                     </b-form-group>
                                 </b-col>
@@ -306,7 +306,6 @@
                 <b-container fluid>
                     <b-row>
                         <b-col sm="12">
-
                             <b-table :items="showProjectDataArray" small bordered responsive fixed hover
                                      :fields="columns1" head-variant class="table-container">
                                 <template slot="name" slot-scope="row">
@@ -537,7 +536,7 @@
                             end_time: ''
                         };
                     }
-                    this.queryWorkflowList();
+                    this.queryWorkflowList(true);
                 }
 
 
@@ -553,7 +552,7 @@
             // 监控查询参数，如有变化 查询列表数据
             queryParam: {
                 handler() {
-                    this.queryWorkflowList();
+                    this.queryWorkflowList(false);
                     this.queryItemList();
                 },
                 deep: true
@@ -561,7 +560,7 @@
             queryDebounceParam: {
                 deep: true,
                 handler: _.debounce(function () {
-                    this.queryWorkflowList();
+                    this.queryWorkflowList(false);
                 }, 500)
             },
             filterCourseText: {
@@ -572,8 +571,10 @@
             },
             'project_data.course': {
                 handler() {
-                    if (this.project_data.course !== '')
+                    if (this.project_data.course !== '' && this.options_course.length !== 0) {
+                        console.log(this.options_course);
                         this.courseText = this.options_course.filter(item => item.value === this.project_data.course)[0].text
+                    }
                 },
                 deep: true
             }
@@ -584,10 +585,11 @@
                 this.$emit('input', value);
             },
             // 查询流程列表数据
-            queryWorkflowList() {
+            queryWorkflowList(firstRequest) {
                 this.run();
+                let flowData = firstRequest && this.$route.params.is_edit ? {flow_id: this.project_data.flow_id} : {};
                 workflowService
-                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                    .fetchList({...this.queryParam, ...this.queryDebounceParam, ...flowData})
                     .then(data => {
                         data.results.forEach(item => {
                             if (item.checked === undefined) {
