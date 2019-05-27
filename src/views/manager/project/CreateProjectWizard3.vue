@@ -154,10 +154,7 @@
                 </b-button-group>
             </b-col>
         </b-row>
-        <b-modal
-            v-model="deleteModalShow"
-            title="删除素材"
-        >
+        <b-modal v-model="deleteModalShow" title="删除素材">
             <p class="my-4">您确定要删除该素材吗？</p>
             <div slot="modal-footer" class="w-100">
                 <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
@@ -350,14 +347,8 @@ export default {
     },
     created() {
         this.$nextTick(() => {
-            if (this.$route.params.is_edit) {
-                this.is_edit = this.$route.params.is_edit;
-                // this.project_id = this.$route.params.project_id;
-                this.project_id = 2034;
-            } else {
-                this.is_edit = this.$route.params.is_edit;
-                this.project_id = 2034;
-            }
+            this.is_edit = this.$route.params.is_edit;
+            this.project_id = this.$route.params.project_id;
             this.queryProjectDocsDetail();
         });
     },
