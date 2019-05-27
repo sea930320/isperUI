@@ -470,7 +470,6 @@ export default {
                 this.updatePage(2);
             }
             if (this.saveBtnClicked === 1) {
-                console.log(this.projectRolesAssign.project_nodes);
                 ProjectService.configurateProjectRoles({
                     project_id: this.project_id,
                     data: JSON.stringify(this.projectRolesAssign.project_nodes)

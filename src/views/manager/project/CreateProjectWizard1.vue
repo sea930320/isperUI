@@ -89,7 +89,8 @@
                                         label="流程名称:"
                                         label-for="input-horizontal"
                                     >
-                                        <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}"></b-form-input>
+                                        <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
+                                        <b-form-input id="input-horizontal22" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6">
@@ -117,15 +118,15 @@
                                     >
                                         <b-form-select v-model="project_data.officeItem" required>
                                             <optgroup
-                                                v-for="part in options_officeItem"
-                                                :key="part.label"
-                                                :label="part.label"
+                                                v-for="kind in options_officeItem"
+                                                :key="kind.label"
+                                                :label="kind.label"
                                             >
                                                 <option
-                                                    v-for="pos in part.options"
-                                                    :key="pos.value"
-                                                    :value="pos.value"
-                                                >{{pos.text}}</option>
+                                                    v-for="item in kind.options"
+                                                    :key="item.value"
+                                                    :value="item.value"
+                                                >{{item.text}}</option>
                                             </optgroup>
                                         </b-form-select>
                                     </b-form-group>
@@ -511,6 +512,9 @@
                     if (this.$route.params.is_edit) {
                         this.is_edit = this.$route.params.is_edit;
                         this.project_data = this.$route.params.currentProject;
+                        this.courseText = this.$route.params.currentProject.course_name;
+                        this.target_users = this.$route.params.currentProject.target_users;
+                        this.target_parts = this.$route.params.currentProject.target_parts.value;
                         this.flow_name = this.project_data.flow_name;
                         this.project_id = this.$route.params.project_id;
                     } else {
@@ -572,7 +576,6 @@
             'project_data.course': {
                 handler() {
                     if (this.project_data.course !== '' && this.options_course.length !== 0) {
-                        console.log(this.options_course);
                         this.courseText = this.options_course.filter(item => item.value === this.project_data.course)[0].text
                     }
                 },
@@ -640,7 +643,7 @@
                         this.$router.push('/manager/project');
                     });
                 DictionaryService
-                    .getPPData()
+                    .getOfficeItemData()
                     .then(data => {
                         this.options_officeItem = data.results;
                     })
@@ -670,7 +673,7 @@
                         this.$toasted.success('保存成功');
                         this.$emit("data-ready");
                         this.project_id = data.id;
-                        this.$emit('update', data);
+                        this.$emit('update', this.project_data);
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -679,6 +682,9 @@
             },
             queryProjectUpdate() {
                 this.run();
+                this.project_data.target_users = JSON.stringify(this.target_users.map(item=>item.id));
+                this.project_data.created_by = JSON.stringify(this.project_data.created_by);
+                this.project_data.target_parts = this.target_parts;
                 ProjectService
                     .updateProject(this.project_data)
                     .then(() => {
@@ -815,10 +821,6 @@
 
         .opened {
             background-color: yellow;
-        }
-
-        .table-container {
-            height: calc(100vh - 450px);
         }
 
         .table-container table {
