@@ -274,6 +274,7 @@ export default {
       new Promise(function(resolve, reject) {
         let client = new XMLHttpRequest();
         client.open("POST", url, true);
+        client.withCredentials = true
         client.onreadystatechange = function() {
           if (this.readyState !== 4) {
             return;

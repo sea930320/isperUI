@@ -210,6 +210,7 @@
                 :headers="avatarOption.headers"
                 img-format="png"
                 langType="zh"
+                :withCredentials="true"
             ></ImageUpload>
         </b-container>
     </div>

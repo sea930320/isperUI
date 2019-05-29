@@ -62,6 +62,7 @@
             :headers="avatarOption.headers"
             img-format="png"
             langType="en"
+            :withCredentials="true"
         ></ImageUpload>
     </div>
 </template>
