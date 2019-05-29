@@ -23,22 +23,24 @@
             </b-row>
         </b-container>
         <div slot="modal-footer" class="w-100">
-            <b-button
-                variant="primary"
-                class="float-center mr-2"
-                @click="viewProjectDetail()"
-            >See Workflow Chart</b-button>
-            <b-button variant="success" class="float-center" @click="startBusiness()">Start Business</b-button>
+            <b-button variant="primary" class="float-center mr-5" @click="xmlModalShow = true">查看流程图</b-button>
+            <b-button variant="success" class="float-center" @click="startBusiness()">启动业务</b-button>
         </div>
+        <!-- 查看流程图 -->
+        <view-xml :visible="xmlModalShow" :xml="project.flow.xml" @on-close="xmlModalShow = false"></view-xml>
     </b-modal>
 </template>
 <script>
+import ViewXml from "@/components/workflowXML/ViewXML";
 export default {
-    components: {},
+    components: {
+        ViewXml
+    },
     data() {
         return {
             visible: false,
-            project: null
+            project: null,
+            xmlModalShow: false
         };
     },
     created() {
@@ -53,7 +55,6 @@ export default {
     },
     computed: {},
     methods: {
-        viewProjectDetail() {},
         startBusiness() {
             this.visible = false;
         }

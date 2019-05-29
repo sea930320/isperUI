@@ -106,7 +106,7 @@
                     </b-row>
                 </div>
 
-                <div class="cardDiv p-0" v-else>
+                <div class="cardDiv p-0 pt-3" v-else>
                     <b-nav tabs v-if="selOfficeKind && selOfficeKind.subItems.length > 0">
                         <b-nav-item
                             v-for="(office, index) in selOfficeKind.subItems"
