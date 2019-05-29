@@ -916,6 +916,9 @@
             overflow: overlay;
         }
 
+        .col-form-label {
+            text-align: left;
+        }
         /* END Adjustments for width and scrollbar */
     }
 </style>
