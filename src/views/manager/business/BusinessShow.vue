@@ -119,6 +119,58 @@
                 </table>
             </b-container>
         </b-modal>
+
+        <b-modal
+                title="事务报告"
+                v-model="showBusinessModal"
+                size="xl"
+                scrollable
+                hide-footer
+        >
+            <h1 style="color:blue">实 验 报 告</h1>
+            <b-container class="modalContainer" v-if="experimentResult">
+                <b-row>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        任务名称：{{experimentResult.detail['name']}}
+                    </b-col>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        项目名称：{{experimentResult.detail['project_name']}}
+                    </b-col>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        流程名称：{{experimentResult.detail['flow_name']}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        课程信息：{{experimentResult.detail['course_class']}}
+                    </b-col>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        任课老师：{{experimentResult.detail['teacher']}}
+                    </b-col>
+                    <b-col lg="4" md="4" sm="4" class="text-left">
+                        小组名称：{{experimentResult.detail['team_name']}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col lg="4" md="4" sm="12" class="text-left">
+                        实际完成时间：{{experimentResult.detail['finish_time']}}
+                    </b-col>
+                    <b-col lg="4" md="4" sm="12" class="text-left">
+                        创建时间：{{experimentResult.detail['create_time']}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col lg="4" md="12" sm="12" class="text-left">
+                        成员名单：{{experimentResult.detail['members'].join()}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col lg="4" md="12" sm="12" class="text-left">
+                        组长：{{experimentResult.detail['leader_name']}}
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-modal>
     </div>
 </template>
 
@@ -128,10 +180,12 @@
     import Loading from "@/components/loading/Loading";
     import businessService from "@/services/businessService";
     import _ from "lodash";
+    import BContainer from "bootstrap-vue/src/components/layout/container";
 
     export default {
         name: "business-show",
         components: {
+            BContainer,
             Loading,
         },
         filters: {
@@ -183,6 +237,24 @@
                         class: "text-center field-10"
                     },
                 },
+                experimentResult:{
+                    detail:{
+                        name:'',
+                        project_name:'',
+                        team_name:'',
+                        members:[],
+                        teacher:'',
+                        finish_time:'',
+                        start_time:'',
+                        end_time:'',
+                        create_time:'',
+                        leader_name:'',
+                        flow_name:'',
+                        flow_xml:'',
+                        course_class:'',
+
+                    }
+                },
                 // 查询参数
                 queryParam: {
                     status: "",
@@ -199,6 +271,7 @@
                 },
                 allChecked: false,
                 deleteBusinessModal: false,
+                showBusinessModal: false
                 // 流程相关项目
             };
         },
@@ -296,8 +369,8 @@
                 businessService
                     .getBusinessResult({'experiment_id':idVal})
                     .then(data => {
-                        this.experimentResult = data.result;
-                        alert('this');
+                        this.experimentResult = data;
+                        this.showBusinessModal = true;
                     });
                 return
             }
@@ -343,6 +416,13 @@
                 font-size: 14px;
                 color: #999;
             }
+        }
+        .modalContainer{
+            padding:10px 0 40px 0;
+        }
+        .modalContainer div{
+            padding:15px 10px 0 10px;
+            font-size: 15px;
         }
     }
 </style>
