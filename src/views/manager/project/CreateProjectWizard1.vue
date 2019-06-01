@@ -73,7 +73,7 @@
                                 </b-input-group>
                             </b-col>
                             <b-col sm="12">
-                                <b-form-select v-model="project_data.course" required
+                                <b-form-select v-model="project_data.course" required @change="$refs['selectCourseModal'].hide()"
                                                :options="filteredCourse"></b-form-select>
                             </b-col>
                         </div>
@@ -88,6 +88,7 @@
                                         label-cols-lg="3"
                                         label="流程名称:"
                                         label-for="input-horizontal"
+                                        class="text-left"
                                     >
                                         <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
                                         <b-form-input id="input-horizontal22" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
@@ -100,6 +101,7 @@
                                         label-cols-lg="3"
                                         label="项目名称:"
                                         label-for="input-horizontal"
+                                        class="text-left"
                                     >
                                         <b-form-input id="input-horizontal" required
                                                       v-model="project_data.name"></b-form-input>
@@ -115,6 +117,7 @@
                                         label-cols-lg="3"
                                         label="事务类型:"
                                         label-for="input-horizontal"
+                                        class="text-left"
                                     >
                                         <b-form-select v-model="project_data.officeItem" required>
                                             <optgroup
@@ -137,7 +140,8 @@
                                         label-cols-sm="4"
                                         label-cols-lg="3"
                                         label="关联课程:"
-                                        label-for="input-horizontal">
+                                        label-for="input-horizontal"
+                                        class="text-left">
                                         <b-form-input id="input-horizontal8" required v-model="courseText" @focus="()=>{this.$refs['selectCourseModal'].show()}"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -150,6 +154,7 @@
                                         label-cols-lg="3"
                                         label="开放模式:"
                                         label-for="input-horizontal"
+                                        class="text-left"
                                     >
                                         <b-form-select v-model="project_data.is_open" required
                                                        :options="options_is_open"></b-form-select>
@@ -160,8 +165,9 @@
                                         id="fieldset-horizontal9"
                                         label-cols-sm="4"
                                         label-cols-lg="3"
-                                        label=""
+                                        label="限时"
                                         label-for="input-horizontal"
+                                        class="text-left"
                                     >
                                         <b-row align-v="center">
                                             <div style="width: 42%;">
@@ -185,7 +191,8 @@
                                         id="fieldset-horizontal10"
                                         label-cols-sm="4"
                                         label-cols-lg="3"
-                                        label=""
+                                        label="指定用户"
+                                        class="text-left"
                                         label-for="input-horizontal">
                                         <vue-tags-input
                                             style="max-width: 100%;"
@@ -203,7 +210,8 @@
                                         id="fieldset-horizontal11"
                                         label-cols-sm="4"
                                         label-cols-lg="3"
-                                        label=""
+                                        label="指定部门/单位"
+                                        class="text-left"
                                         label-for="input-horizontal">
                                         <b-form-select v-model="target_parts" required
                                                        :options="this.allParts"></b-form-select>
@@ -217,6 +225,7 @@
                                         label-cols-sm="4"
                                         label-cols-lg="3"
                                         label="流程图完整显示:"
+                                        class="text-left"
                                         label-for="input-horizontal"
                                     >
                                         <b-form-select v-model="project_data.entire_graph" required
@@ -229,6 +238,7 @@
                                         label-cols-sm="4"
                                         label-cols-lg="3"
                                         label="成果参考释放方式:"
+                                        class="text-left"
                                         label-for="input-horizontal"
                                     >
                                         <b-form-select v-model="project_data.reference" required
@@ -711,6 +721,7 @@
                     this.project_data.flow_id = items[0].id;
                     this.project_data.flow_name = items[0].name;
                     this.flow_name = items[0].name;
+                    this.$refs['selectFlowModal'].hide();
 
                 } else {
                     this.selectedWorkflow = 0;
