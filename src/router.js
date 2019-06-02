@@ -136,6 +136,10 @@ const routes = [{
             path: 'module_manage',
             name: 'super-module-manage',
             component: () => import('@/views/manager/module_manage/ModuleIndex.vue')
+        }, {
+            path: 'business',
+            name: 'business-manager',
+            component: () => import('@/views/manager/business/BusinessIndex.vue')
         }
     ]
 },

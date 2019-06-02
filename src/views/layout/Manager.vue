@@ -26,8 +26,8 @@
                 >
                     <icon name="cogs" class="tabIcon"></icon>系统设置
                 </b-nav-item>
-                <b-nav-item v-if="[2,3,5,6,7,9].includes(userInfo.role)" to="#">
-                    <icon name="user-cog" class="tabIcon"></icon>业务管理
+                <b-nav-item v-if="[2,3,5,6,7,9].includes(userInfo.role)" to="/manager/business">
+                    <icon name="list" class="tabIcon"></icon>业务管理
                 </b-nav-item>
             </template>
         </TopHeader>
