@@ -32,6 +32,7 @@
 </template>
 <script>
 import ViewXml from "@/components/workflowXML/ViewXML";
+import businessService from "@/services/businessService";
 export default {
     components: {
         ViewXml
@@ -57,9 +58,25 @@ export default {
     methods: {
         startBusiness() {
             this.visible = false;
+            businessService
+                .createBusiness({
+                    project_id: this.project.id
+                })
+                .then(data => {
+                    // this.$router.push({
+                    //     name: "editTask",
+                    //     params: { task_id: data.id }
+                    // });
+                });
         }
     },
-    watch: {}
+    watch: {
+        visible(val) {
+            if (!val) {
+                this.$parent.$emit("BusinessStartCancelled");
+            }
+        }
+    }
 };
 </script>
 

@@ -139,7 +139,11 @@
                                 :key="index"
                                 class="my-2"
                             >
-                                <b-card :title="project.name" class>
+                                <b-card
+                                    :title="project.name"
+                                    v-bind:class="{active:startedProject && startedProject.id==project.id}"
+                                    @click="startBusiness(project)"
+                                >
                                     <b-card-text>{{project.intro}}</b-card-text>
                                 </b-card>
                             </b-col>
@@ -276,7 +280,8 @@ export default {
             projects: {
                 list: [],
                 total: 0
-            }
+            },
+            startedProject: null
         };
     },
     beforeRouteUpdate(to, from, next) {
@@ -296,6 +301,9 @@ export default {
             } else {
                 this.getOfficeList();
             }
+            this.$on("BusinessStartCancelled", () => {
+                this.startedProject = null;
+            });
         });
     },
     computed: {
@@ -429,6 +437,7 @@ export default {
         },
         startBusiness(project) {
             this.$emit("openBusinessStartModal", project);
+            this.startedProject = project;
         }
     }
 };
@@ -501,6 +510,13 @@ export default {
                 font-size: 17px;
                 text-align: left;
             }
+        }
+    }
+    .card.active {
+        .card-body {
+            background-color: #6081e6 !important;
+            border-color: #6081e6 !important;
+            color: white !important;
         }
     }
 }

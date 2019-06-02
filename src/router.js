@@ -174,6 +174,12 @@ const routes = [{
                     component: () => import('@/views/business/search/Search2.vue')
                 },
             ]
+        }, {
+            path: 'progress',
+            component: () => import('@/views/business/progress/ProgressIndex.vue'),
+            children: [
+                { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') }
+            ]
         }
     ]
 }
