@@ -73,7 +73,7 @@
                                 </b-input-group>
                             </b-col>
                             <b-col sm="12">
-                                <b-form-select v-model="project_data.course" required @change="$refs['selectCourseModal'].hide()"
+                                <b-form-select v-model="project_data.course" @change="$refs['selectCourseModal'].hide()"
                                                :options="filteredCourse"></b-form-select>
                             </b-col>
                         </div>
@@ -90,8 +90,8 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
-                                        <b-form-input id="input-horizontal22" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
+                                        <b-form-input id="input-horizontal2" v-model="flow_name" required @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
+                                        <b-form-input id="input-horizontal22" v-model="flow_name" required @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6">
@@ -103,7 +103,7 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-input id="input-horizontal" required
+                                        <b-form-input id="input-horizontal" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                       v-model="project_data.name"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -119,7 +119,7 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-select v-model="project_data.officeItem" required>
+                                        <b-form-select v-model="project_data.officeItem" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')">
                                             <optgroup
                                                 v-for="kind in options_officeItem"
                                                 :key="kind.label"
@@ -149,6 +149,34 @@
                             <b-row align-v="center">
                                 <b-col sm="6">
                                     <b-form-group
+                                            id="fieldset-horizontal4"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="流程图完整显示:"
+                                            class="text-left"
+                                            label-for="input-horizontal"
+                                    >
+                                        <b-form-select v-model="project_data.entire_graph" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
+                                                       :options="options_entire_graph"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col sm="6">
+                                    <b-form-group
+                                            id="fieldset-horizontal6"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="成果参考释放方式:"
+                                            class="text-left"
+                                            label-for="input-horizontal"
+                                    >
+                                        <b-form-select v-model="project_data.reference" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
+                                                       :options="options_reference"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row align-v="center">
+                                <b-col sm="6">
+                                    <b-form-group
                                         id="fieldset-horizontal5"
                                         label-cols-sm="4"
                                         label-cols-lg="3"
@@ -156,30 +184,43 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-select v-model="project_data.is_open" required
+                                        <b-form-select v-model="project_data.is_open" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="options_is_open"></b-form-select>
                                     </b-form-group>
                                 </b-col>
+                                <b-col sm="6">
+                                    <b-form-group
+                                            id="fieldset-horizontal111"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="目标部门:"
+                                            class="text-left"
+                                            label-for="input-horizontal">
+                                        <b-form-select v-model="use_to" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
+                                                       :options="this.use_to_list"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                            <b-row align-v="center">
                                 <b-col sm="6" v-if="project_data.is_open === 3">
                                     <b-form-group
-                                        id="fieldset-horizontal9"
-                                        label-cols-sm="4"
-                                        label-cols-lg="3"
-                                        label="限时"
-                                        label-for="input-horizontal"
-                                        class="text-left"
-                                    >
+                                            id="fieldset-horizontal9"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="限时:"
+                                            label-for="input-horizontal"
+                                            class="text-left">
                                         <b-row align-v="center">
                                             <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date" required
+                                                    <b-form-input type="date" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                                   v-model="project_data.start_time"></b-form-input>
                                                 </div>
                                             </div>
                                             &emsp;&emsp;到&emsp;&emsp;
                                             <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date" required
+                                                    <b-form-input type="date" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                                   v-model="project_data.end_time"></b-form-input>
                                                 </div>
                                             </div>
@@ -188,61 +229,33 @@
                                 </b-col>
                                 <b-col sm="6" v-if="project_data.is_open === 4">
                                     <b-form-group
-                                        id="fieldset-horizontal10"
-                                        label-cols-sm="4"
-                                        label-cols-lg="3"
-                                        label="指定用户"
-                                        class="text-left"
-                                        label-for="input-horizontal">
+                                            id="fieldset-horizontal10"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="指定用户:"
+                                            class="text-left"
+                                            label-for="input-horizontal">
                                         <vue-tags-input
-                                            style="max-width: 100%;"
-                                            v-model="tag"
-                                            :tags="target_users"
-                                            :autocomplete-items="filteredItems"
-                                            :add-only-from-autocomplete="true"
-                                            :autocomplete-min-length="0"
-                                            @tags-changed="newTags => target_users = newTags"
-                                            placeholder="添加标签"/>
+                                                style="max-width: 100%;"
+                                                v-model="tag"
+                                                :tags="target_users"
+                                                :autocomplete-items="filteredItems"
+                                                :add-only-from-autocomplete="true"
+                                                :autocomplete-min-length="0"
+                                                @tags-changed="newTags => target_users = newTags"
+                                                placeholder="添加标签"/>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6" v-if="project_data.is_open === 5">
                                     <b-form-group
-                                        id="fieldset-horizontal11"
-                                        label-cols-sm="4"
-                                        label-cols-lg="3"
-                                        label="指定部门/单位"
-                                        class="text-left"
-                                        label-for="input-horizontal">
-                                        <b-form-select v-model="target_parts" required
+                                            id="fieldset-horizontal11"
+                                            label-cols-sm="4"
+                                            label-cols-lg="3"
+                                            label="指定部门/单位:"
+                                            class="text-left"
+                                            label-for="input-horizontal">
+                                        <b-form-select v-model="target_parts" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="this.allParts"></b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                            </b-row>
-                            <b-row align-v="center">
-                                <b-col sm="6">
-                                    <b-form-group
-                                        id="fieldset-horizontal4"
-                                        label-cols-sm="4"
-                                        label-cols-lg="3"
-                                        label="流程图完整显示:"
-                                        class="text-left"
-                                        label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.entire_graph" required
-                                                       :options="options_entire_graph"></b-form-select>
-                                    </b-form-group>
-                                </b-col>
-                                <b-col sm="6">
-                                    <b-form-group
-                                        id="fieldset-horizontal6"
-                                        label-cols-sm="4"
-                                        label-cols-lg="3"
-                                        label="成果参考释放方式:"
-                                        class="text-left"
-                                        label-for="input-horizontal"
-                                    >
-                                        <b-form-select v-model="project_data.reference" required
-                                                       :options="options_reference"></b-form-select>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -254,7 +267,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -268,7 +281,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -282,7 +295,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -379,8 +392,10 @@
                 tags: [],
                 allUsers: [],
                 allParts: [],
+                use_to_list: [],
                 target_users: [],
                 target_parts: null,
+                use_to: null,
                 courseText: '',
                 filterCourseText: '',
                 filteredCourse: [],
@@ -525,6 +540,7 @@
                         this.courseText = this.$route.params.currentProject.course_name;
                         this.target_users = this.$route.params.currentProject.target_users;
                         this.target_parts = this.$route.params.currentProject.target_parts.value;
+                        this.use_to = this.$route.params.currentProject.use_to.value;
                         this.flow_name = this.project_data.flow_name;
                         this.project_id = this.$route.params.project_id;
                     } else {
@@ -666,23 +682,26 @@
                     .then(data => {
                         this.allUsers = data.users;
                         this.allParts = data.parts;
+                        this.use_to_list = data.use_to_list;
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                         this.$router.push('/manager/project');
                     })
             },
-            // Go To Crate Project Page
+            // Crate Project
             queryProjectCreate() {
                 this.run();
                 this.project_data.target_users = JSON.stringify(this.target_users.map(item=>item.id));
                 this.project_data.target_parts = this.target_parts;
+                this.project_data.use_to = this.use_to;
                 ProjectService
                     .createProject(this.project_data)
                     .then((data) => {
                         this.$toasted.success('保存成功');
                         this.$emit("data-ready");
                         this.project_id = data.id;
+                        this.project_data.id = data.id;
                         this.$emit('update', this.project_data);
                     })
                     .catch(() => {
@@ -695,6 +714,7 @@
                 this.project_data.target_users = JSON.stringify(this.target_users.map(item=>item.id));
                 this.project_data.created_by = JSON.stringify(this.project_data.created_by);
                 this.project_data.target_parts = this.target_parts;
+                this.project_data.use_to = this.use_to;
                 ProjectService
                     .updateProject(this.project_data)
                     .then(() => {
@@ -783,7 +803,7 @@
             },
             savePage(evt) {
                 evt.preventDefault();
-                if (this.project_data.flow_name === undefined)
+                if (this.project_data.flow_name === undefined || this.project_data.flow_name === '')
                     alert('请选择流程名称');
                 else {
                     this.nextBtnClicked = 0;

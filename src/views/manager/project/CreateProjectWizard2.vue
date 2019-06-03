@@ -4,7 +4,7 @@
         <b-alert variant="success" show class="text-left px-0" style="margin: 0 15px">
             <b-container>
                 <b-row>
-                    <b-col sm="4">项目名称 : {{projectData.name}}</b-col>
+                    <b-col sm="4">项目名称 : {{projectData.name}} - {{project_id}}</b-col>
                     <b-col sm="4">相关流程 : {{projectData.flow_name}}</b-col>
                     <b-col sm="4">类型 : {{projectData.type | expType}}</b-col>
                 </b-row>
@@ -286,6 +286,7 @@ export default {
             }
             this.is_edit = this.$route.params.is_edit;
             this.project_id = this.$route.params.project_id;
+            console.log(this.project_id);
             this.getProjectRolesDetail();
         });
     },
