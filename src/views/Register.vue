@@ -296,7 +296,7 @@ export default {
                             clearInterval(this.timer);
                         }
                         this.$toasted.success(
-                            "Please wait until we review your profile"
+                            "正在审核中，请等待审核通过。"
                         );
                         setTimeout(() => {
                             this.errorCleared = false;
@@ -332,7 +332,7 @@ export default {
                 })
                 .then(
                     () => {
-                        this.$toasted.success("Please check your phone");
+                        this.$toasted.success("验证码已发送到手机");
                         this.startTimer();
                         this.sendLabel = "获取";
                     },

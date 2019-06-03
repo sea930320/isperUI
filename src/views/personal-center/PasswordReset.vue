@@ -175,7 +175,7 @@ export default {
                         if (this.timer) {
                             clearInterval(this.timer);
                         }
-                        this.$toasted.success("Password Successfully updated");
+                        this.$toasted.success("重置密码成功");
                     });
                 })
                 .catch(() => {
@@ -193,7 +193,7 @@ export default {
                 })
                 .then(
                     () => {
-                        this.$toasted.success("Please check your phone");
+                        this.$toasted.success("验证码已发送到手机");
                         this.startTimer();
                         this.sendLabel = "获取";
                     },

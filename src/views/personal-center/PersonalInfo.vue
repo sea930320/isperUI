@@ -142,7 +142,7 @@ export default {
                     );
                     this.loginAction(this.user);
                     this.$emit("data-ready");
-                    this.$toasted.success("Account Successfully updated");
+                    this.$toasted.success("修改成功");
                 })
                 .catch(() => {
                     this.$emit("data-failed");
@@ -174,7 +174,7 @@ export default {
                 })
                 .then(
                     () => {
-                        this.$toasted.success("Please check your phone");
+                        this.$toasted.success("验证码已发送到手机");
                         this.startTimer();
                         this.sendLabel = "获取";
                     },

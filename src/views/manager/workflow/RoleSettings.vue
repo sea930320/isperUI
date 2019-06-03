@@ -415,7 +415,7 @@ export default {
         },
         addNewRole() {
             if (!this.newRole.type || !this.newRole.name) {
-                this.$toasted.error("Please Enter Correct Data");
+                this.$toasted.error("请完善输入信息");
                 return;
             }
             this.run();
