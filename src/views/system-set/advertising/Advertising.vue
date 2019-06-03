@@ -218,6 +218,7 @@
                     });
             },
             saveDoc(){
+
                 AdvertisingService
                     .createAdvertising({
                         "ad_name": this.ad_name,
