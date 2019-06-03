@@ -2,8 +2,8 @@
     <div class="company-user-index1_2">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
-            <b-col lg="2" md="6" sm="12" style="line-height: 32px;">用户注册审核</b-col>
-            <b-col lg="3" md="6" sm="12">
+            <!-- <b-col lg="2" md="6" sm="12" style="line-height: 32px;">用户注册审核</b-col> -->
+            <b-col lg="5" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
                         <span class="input-group-text">

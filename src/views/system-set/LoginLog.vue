@@ -369,19 +369,19 @@ export default {
         width: 15%;
     }
     .field-user_name {
-        width: 15%;
+        width: 12%;
     }
     .field-group {
-        width: 15%;
+        width: 12%;
     }
     .field-company {
-        width: 15%;
+        width: 12%;
     }
     .field-role {
         width: 15%;
     }
     .field-login_time {
-        width: 9%;
+        width: 18%;
     }
     .field-login_ip {
         width: 10%;
