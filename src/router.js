@@ -45,6 +45,16 @@ const routes = [{
     component: () => import('@/views/Register.vue')
 },
 {
+    path: '/advertisings',
+    name: 'advertisings',
+    component: () => import('@/views/system-set/advertising/AdvertisingList.vue')
+},
+{
+    path: '/advertising/:Pid',
+    name: 'advertising',
+    component: () => import('@/views/system-set/advertising/AdvertisingDetail.vue')
+},
+{
     path: '/manager', // 管理员主页
     meta: {
         requiresAuth: true
@@ -68,7 +78,6 @@ const routes = [{
         },
         {
             path: 'workflow/set/:flow_id',
-            name: 'setworkflow',
             component: () => import('@/views/manager/workflow/SettingsBase.vue'),
             meta: {
                 step: true
@@ -127,6 +136,54 @@ const routes = [{
             path: 'module_manage',
             name: 'super-module-manage',
             component: () => import('@/views/manager/module_manage/ModuleIndex.vue')
+        }, {
+            path: 'business',
+            name: 'business-manager',
+            component: () => import('@/views/manager/business/BusinessIndex.vue')
+        }
+    ]
+},
+{
+    path: '/business',
+    meta: {
+        requiresAuth: true
+    },
+    component: () => import('@/views/layout/Business.vue'),
+    children: [
+        ...personalCenterRoutes,
+        {
+            path: '',
+            redirect: 'search'
+        }, {
+            path: 'search',
+            component: () => import('@/views/business/search/SearchIndex.vue'),
+            children: [
+                {
+                    path: '',
+                    redirect: 'filter-method',
+                },
+                {
+                    path: 'filter-method',
+                    name: 'business-search-filter-method',
+                    component: () => import('@/views/business/search/FilterMethod.vue')
+                },
+                {
+                    path: 'search1/:by',
+                    name: 'business-search-by-company-and-office',
+                    component: () => import('@/views/business/search/Search1.vue')
+                },
+                {
+                    path: 'search2',
+                    name: 'business-search-by-keyword',
+                    component: () => import('@/views/business/search/Search2.vue')
+                },
+            ]
+        }, {
+            path: 'progress',
+            component: () => import('@/views/business/progress/ProgressIndex.vue'),
+            children: [
+                { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') }
+            ]
         }
     ]
 }

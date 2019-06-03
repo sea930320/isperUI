@@ -62,6 +62,7 @@
             :headers="avatarOption.headers"
             img-format="png"
             langType="en"
+            :withCredentials="true"
         ></ImageUpload>
     </div>
 </template>
@@ -85,7 +86,7 @@ export default {
                 show: false,
                 params: {},
                 headers: {
-                    smail: "*_~"
+                    // smail: "*_~"
                 }
             },
             session_expire_time: 0,

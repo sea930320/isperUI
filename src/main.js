@@ -14,11 +14,13 @@ import VueLodash from 'vue-lodash'
 import VueFormWizard from 'vue-form-wizard'
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueMoment from 'vue-moment'
+import VueApexCharts from 'vue-apexcharts'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Multiselect from 'vue-multiselect'
 import accountService from "@/services/accountService";
+import VueClipboard from 'vue-clipboard2'
 
 import {
   STORAGE_KEY_USER
@@ -52,6 +54,12 @@ Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
 Vue.use(VueSweetalert2);
 Vue.use(VueMoment)
+Vue.use(VueApexCharts)
+Vue.component('apexchart', VueApexCharts)
+VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard);
+
+
 
 
 new Vue({
@@ -69,7 +77,7 @@ new Vue({
       // 检查是否存在session
       const user = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
       if (!user) {
-        if (!this.$route.name || ['home', 'register'].includes(this.$route.name)) {
+        if (!this.$route.name || ['home', 'register', 'advertising','advertisings'].includes(this.$route.name)) {
           this.$router.push(this.$route.fullPath)
         } else {
           this.$router.push('/login')

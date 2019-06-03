@@ -191,6 +191,8 @@ export default {
             }
             if ([1, 2, 3, 6, 7].includes(data.role)) {
                 this.$router.push("/manager/workflow");
+            } else if ([5, 9].includes(data.role)) {
+                this.$router.push("/business/search");
             }
         },
         getQrcode() {

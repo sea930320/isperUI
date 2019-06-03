@@ -1,7 +1,7 @@
 <template>
     <div class="mt-5 wizard-1">
         <loading v-if="isRunning"></loading>
-        <b-form v-if="userInfo.role === 2 || userInfo.role === 3" @submit="savePage">
+        <b-form v-if="[2,3,6,7].includes(userInfo.role)" @submit="savePage">
             <b-container fluid>
                 <b-row align-v="start">
                     <b-modal centered hide-footer size="lg" id="selectFlowModal" ref="selectFlowModal" title="流程名称">
@@ -927,6 +927,9 @@
             overflow: overlay;
         }
 
+        .col-form-label {
+            text-align: left;
+        }
         /* END Adjustments for width and scrollbar */
     }
 </style>
