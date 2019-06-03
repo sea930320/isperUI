@@ -138,7 +138,7 @@
                                 <th class="text-center field-role-assign-role_name">身份</th>
                                 <th class="text-center field-role-assign-role_job_type">职务</th>
                                 <th
-                                    v-if="activeNode.is_start_node"
+                                    v-if="activeNode && activeNode.is_start_node"
                                     class="text-center field-role-assign-startable"
                                 >可否启动业务</th>
                                 <th class="text-center field-role-assign-endable">结束环节权限</th>
@@ -153,7 +153,7 @@
                                     v-if="roleGroupAllocation.role_allocations.length > 0"
                                     :key="key"
                                 >
-                                    <td :colspan="activeNode.is_start_node?5:4" class="text-left">
+                                    <td :colspan="activeNode && activeNode.is_start_node?5:4" class="text-left">
                                         <b-form-checkbox
                                             v-model="roleGroupAllocation.all_check"
                                             :indeterminate="roleGroupAllocation.indeterminated_check"
@@ -184,7 +184,7 @@
                                         </td>
                                         <td>{{allocation.role.name}}</td>
                                         <td>{{getJobName(allocation.role.job_type)}}</td>
-                                        <td v-if="activeNode.is_start_node">
+                                        <td v-if="activeNode && activeNode.is_start_node">
                                             <b-form-checkbox
                                                 v-model="allocation.can_start"
                                                 @change="can_start($event, allocation)"

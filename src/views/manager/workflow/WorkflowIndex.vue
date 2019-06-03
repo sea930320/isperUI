@@ -710,14 +710,14 @@ export default {
         this.$nextTick(() => {
             this.isSuperFlag = this.userInfo.identity === 1;
             workflowService
-                .getJobTypes()
+                .getOfficeItems()
                 .then(data => {
                     this.experimentTypeOptions = _.map(
-                        data.job_types,
-                        job_type => {
+                        data.office_items,
+                        office_item => {
                             return {
-                                value: job_type.id,
-                                text: job_type.name
+                                value: office_item.id,
+                                text: office_item.name
                             };
                         }
                     );
