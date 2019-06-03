@@ -62,7 +62,7 @@ export default {
                 .createBusiness({
                     project_id: this.project.id
                 })
-                .then(data => {
+                .then(() => {
                     // this.$router.push({
                     //     name: "editTask",
                     //     params: { task_id: data.id }
