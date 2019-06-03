@@ -286,7 +286,6 @@ export default {
             }
             this.is_edit = this.$route.params.is_edit;
             this.project_id = this.$route.params.project_id;
-            console.log(this.project_id);
             this.getProjectRolesDetail();
         });
     },
