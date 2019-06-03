@@ -73,7 +73,7 @@
                                 </b-input-group>
                             </b-col>
                             <b-col sm="12">
-                                <b-form-select v-model="project_data.course" required @change="$refs['selectCourseModal'].hide()"
+                                <b-form-select v-model="project_data.course" @change="$refs['selectCourseModal'].hide()"
                                                :options="filteredCourse"></b-form-select>
                             </b-col>
                         </div>
@@ -90,8 +90,8 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-input id="input-horizontal2" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
-                                        <b-form-input id="input-horizontal22" required v-model="flow_name" @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
+                                        <b-form-input id="input-horizontal2" v-model="flow_name" required @focus="()=>{this.$refs['selectFlowModal'].show()}" v-if="is_edit === 0"></b-form-input>
+                                        <b-form-input id="input-horizontal22" v-model="flow_name" required @focus="()=>{this.$refs['selectFlowModal'].show()}" v-else disabled></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6">
@@ -103,7 +103,7 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-input id="input-horizontal" required
+                                        <b-form-input id="input-horizontal" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                       v-model="project_data.name"></b-form-input>
                                     </b-form-group>
                                 </b-col>
@@ -119,7 +119,7 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-select v-model="project_data.officeItem" required>
+                                        <b-form-select v-model="project_data.officeItem" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')">
                                             <optgroup
                                                 v-for="kind in options_officeItem"
                                                 :key="kind.label"
@@ -156,7 +156,7 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-select v-model="project_data.is_open" required
+                                        <b-form-select v-model="project_data.is_open" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="options_is_open"></b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -172,14 +172,14 @@
                                         <b-row align-v="center">
                                             <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date" required
+                                                    <b-form-input type="date" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                                   v-model="project_data.start_time"></b-form-input>
                                                 </div>
                                             </div>
                                             &emsp;&emsp;到&emsp;&emsp;
                                             <div style="width: 42%;">
                                                 <div class="form-date-control">
-                                                    <b-form-input type="date" required
+                                                    <b-form-input type="date" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                                   v-model="project_data.end_time"></b-form-input>
                                                 </div>
                                             </div>
@@ -213,7 +213,7 @@
                                         label="指定部门/单位"
                                         class="text-left"
                                         label-for="input-horizontal">
-                                        <b-form-select v-model="target_parts" required
+                                        <b-form-select v-model="target_parts" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="this.allParts"></b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -228,7 +228,7 @@
                                         class="text-left"
                                         label-for="input-horizontal"
                                     >
-                                        <b-form-select v-model="project_data.entire_graph" required
+                                        <b-form-select v-model="project_data.entire_graph" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="options_entire_graph"></b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -241,7 +241,7 @@
                                         class="text-left"
                                         label-for="input-horizontal"
                                     >
-                                        <b-form-select v-model="project_data.reference" required
+                                        <b-form-select v-model="project_data.reference" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                                        :options="options_reference"></b-form-select>
                                     </b-form-group>
                                 </b-col>
@@ -254,7 +254,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -268,7 +268,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -282,7 +282,7 @@
                                                 placeholder=""
                                                 rows="5"
                                                 max-rows="6"
-                                                required
+                                                required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
                                         ></b-form-textarea>
                                     </b-card>
                                 </b-col>
@@ -783,7 +783,7 @@
             },
             savePage(evt) {
                 evt.preventDefault();
-                if (this.project_data.flow_name === undefined)
+                if (this.project_data.flow_name === undefined || this.project_data.flow_name === '')
                     alert('请选择流程名称');
                 else {
                     this.nextBtnClicked = 0;
