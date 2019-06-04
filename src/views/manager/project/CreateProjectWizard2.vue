@@ -519,12 +519,18 @@ export default {
                 this.updatePage(2);
             }
             if (this.saveBtnClicked === 1) {
+                this.run();
                 ProjectService.configurateProjectRoles({
                     project_id: this.project_id,
                     data: JSON.stringify(this.projectRolesAssign.project_nodes)
-                }).then(() => {
-                    this.$toasted.success("保存项目角色设置成功");
-                });
+                })
+                    .then(() => {
+                        this.$emit("data-ready");
+                        this.$toasted.success("保存项目角色设置成功");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             }
             if (this.previousBtnClicked === 1) {
                 this.updatePage(0);

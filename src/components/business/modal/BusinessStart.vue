@@ -58,6 +58,7 @@ export default {
     methods: {
         startBusiness() {
             if (this.project) {
+                this.run();
                 businessService
                     .createBusiness({
                         project_id: this.project.id
@@ -67,7 +68,11 @@ export default {
                         //     name: "editTask",
                         //     params: { task_id: data.id }
                         // });
+                        this.$emit("data-ready");
                         this.visible = false;
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
                     });
             }
         }

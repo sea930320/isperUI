@@ -295,12 +295,11 @@ export default {
                         if (this.timer) {
                             clearInterval(this.timer);
                         }
-                        this.$toasted.success(
-                            "注册成功，请等待审核通过。"
-                        );
+                        this.$toasted.success("注册成功，请等待审核通过。");
                         setTimeout(() => {
                             this.errorCleared = false;
                             this.errors.clear();
+                            this.$router.push({ path: "/" });
                         }, 0);
                     });
                 })
