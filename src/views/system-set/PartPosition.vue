@@ -103,7 +103,19 @@
                                 required
                                 autocomplete="username"
                                 placeholder="名称"
+                                v-if="newItem.target === 1"
                         ></b-form-input>
+                        <b-form-input
+                                v-model="newItem.name"
+                                required
+                                autocomplete="username"
+                                placeholder="名称"
+                                list="my-list-id"
+                                v-if="newItem.target === 2"
+                        ></b-form-input>
+                        <datalist id="my-list-id" v-if="newItem.target === 2">
+                            <option v-for="jobType in jobTypes" :key="jobType">{{ jobType }}</option>
+                        </datalist>
                     </b-form-group>
                     <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
                     </b-button>
@@ -121,6 +133,7 @@
     import _ from "lodash";
     import JQuery from "jquery";
     import PartPositionService from "@/services/partpositionService";
+    import DictionaryService from "@/services/dictionaryService";
 
     export default {
         name: "part_position",
@@ -141,6 +154,7 @@
                 queryDebounceParam: {
                     search: ""
                 },
+                jobTypes: [],
                 currentSelect: null,
                 selected: [],
                 selectedPP: null,
@@ -250,6 +264,11 @@
                     .catch(() => {
                         this.$emit("data-failed");
                     });
+                DictionaryService
+                    .getDicData({})
+                    .then(data => {
+                        this.jobTypes = data.results.job
+                    })
             },
             cycled(target) {
                 if ( JQuery('#'+target + ' svg:first').css( "transform" ) === 'none' ){
