@@ -566,12 +566,18 @@ export default {
         },
         savePage() {
             if (this.validateSaveData()) {
+                this.run();
                 ProjectService.saveProjectDocsAllocate({
                     project_id: this.project_id,
                     data: this.getSaveData()
-                }).then(() => {
-                    this.$toasted.success("保存成功");
-                });
+                })
+                    .then(() => {
+                        this.$emit("data-ready");
+                        this.$toasted.success("保存成功");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             }
         }
     }

@@ -475,6 +475,32 @@ class WorkflowService {
    * @param  {String}
    * @return {Object}
    */
+  getJobTypes(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/job_types',
+      params: data
+    })
+  }
+
+  /**
+   * Public
+   * @param  {String}
+   * @return {Object}
+   */
+  getOfficeItems(data) {
+    return xhr({
+      method: 'get',
+      url: '/workflow/office_items',
+      params: data
+    })
+  }
+
+  /**
+   * Public
+   * @param  {String}
+   * @return {Object}
+   */
   getCandidateJobType(data) {
     return xhr({
       method: 'get',

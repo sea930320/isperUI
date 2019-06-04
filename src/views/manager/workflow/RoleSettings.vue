@@ -137,6 +137,10 @@
                                 <th class="text-center field-role-assign-sn">是否使用</th>
                                 <th class="text-center field-role-assign-role_name">身份</th>
                                 <th class="text-center field-role-assign-role_job_type">职务</th>
+                                <th
+                                    v-if="activeNode && activeNode.is_start_node"
+                                    class="text-center field-role-assign-startable"
+                                >可否启动业务</th>
                                 <th class="text-center field-role-assign-endable">结束环节权限</th>
                                 <th class="text-center field-role-assign-takeable">是否被带入</th>
                                 <th class="text-center field-role-assign-action"></th>
@@ -149,7 +153,10 @@
                                     v-if="roleGroupAllocation.role_allocations.length > 0"
                                     :key="key"
                                 >
-                                    <td colspan="4" class="text-left">
+                                    <td
+                                        :colspan="activeNode && activeNode.is_start_node?5:4"
+                                        class="text-left"
+                                    >
                                         <b-form-checkbox
                                             v-model="roleGroupAllocation.all_check"
                                             :indeterminate="roleGroupAllocation.indeterminated_check"
@@ -180,6 +187,12 @@
                                         </td>
                                         <td>{{allocation.role.name}}</td>
                                         <td>{{getJobName(allocation.role.job_type)}}</td>
+                                        <td v-if="activeNode && activeNode.is_start_node">
+                                            <b-form-checkbox
+                                                v-model="allocation.can_start"
+                                                @change="can_start($event, allocation)"
+                                            ></b-form-checkbox>
+                                        </td>
                                         <td>
                                             <b-form-checkbox
                                                 v-model="allocation.can_terminate"
@@ -405,7 +418,7 @@ export default {
         },
         addNewRole() {
             if (!this.newRole.type || !this.newRole.name) {
-                this.$toasted.error("Please Enter Correct Data");
+                this.$toasted.error("请完善输入信息");
                 return;
             }
             this.run();
@@ -573,7 +586,8 @@ export default {
                                                 ..._.pick(oldAllocation, [
                                                     "can_take_in",
                                                     "can_brought",
-                                                    "can_terminate"
+                                                    "can_terminate",
+                                                    "can_start"
                                                 ])
                                             };
                                         }
@@ -607,12 +621,18 @@ export default {
             this.$set(roleGroupAllocation, "indeterminated_check", false);
             roleGroupAllocation.role_allocations.forEach(roleAllocation => {
                 roleAllocation.allocations.forEach(allocation => {
+                    if (!value) {
+                        this.$set(allocation, "can_start", false);
+                    }
                     this.$set(allocation, "can_take_in", value);
                 });
             });
         },
         take_in(value, roleGroupAllocation, allocation) {
             this.$set(allocation, "can_take_in", value);
+            if (!value) {
+                this.$set(allocation, "can_start", false);
+            }
             let isAllSelected = roleGroupAllocation.role_allocations.every(
                 roleAllocation => {
                     return roleAllocation.allocations.every(allocation => {
@@ -695,6 +715,27 @@ export default {
             }
             this.$set(allocation, "can_terminate", value);
         },
+        can_start(value, allocation) {
+            if (value) {
+                if (!allocation.can_take_in) {
+                    this.$toasted.error("参与第一环节的人才能启动业务！");
+                    setTimeout(() => {
+                        this.$set(allocation, "can_start", false);
+                    }, 500);
+                    return;
+                }
+                this.roleGroupAllocations.forEach(roleGroupAllocation => {
+                    roleGroupAllocation.role_allocations.forEach(
+                        roleAllocation => {
+                            roleAllocation.allocations.forEach(item => {
+                                this.$set(item, "can_start", false);
+                            });
+                        }
+                    );
+                });
+            }
+            this.$set(allocation, "can_start", value);
+        },
         removeAllocation(roleGroupAllocation, roleAllocation, allocation) {
             for (let key in this.nodeRoleGroupAllocations) {
                 let nodeRoleGroupAllocation = _.find(
@@ -750,7 +791,12 @@ export default {
         // 点击保存
         savePage() {
             let allocations = [];
+            let hasStartRole = false;
             for (let nodeIndex in this.nodeRoleGroupAllocations) {
+                let isStartNode = false;
+                if (this.nodes[nodeIndex].is_start_node) {
+                    isStartNode = true;
+                }
                 for (let typeIndex in this.nodeRoleGroupAllocations[
                     nodeIndex
                 ]) {
@@ -775,13 +821,21 @@ export default {
                                     "id",
                                     "can_take_in",
                                     "can_terminate",
-                                    "can_brought"
+                                    "can_brought",
+                                    "can_start"
                                 ]
                             );
+                            if (allocation.can_start != 0) {
+                                hasStartRole = true;
+                            }
                             allocations.push(allocation);
                         }
                     }
                 }
+            }
+            if (!hasStartRole) {
+                this.$toasted.error("There is no start role");
+                return;
             }
             let params = {
                 flow_id: this.flowId,
@@ -857,9 +911,13 @@ export default {
     }
     .field-role-assign-role_name {
         vertical-align: middle;
-        width: 20%;
+        width: 12%;
     }
     .field-role-assign-role_job_type {
+        vertical-align: middle;
+        width: 13%;
+    }
+    .field-role-assign-startable {
         vertical-align: middle;
         width: 20%;
     }
@@ -869,7 +927,7 @@ export default {
     }
     .field-role-assign-takeable {
         vertical-align: middle;
-        width: 20%;
+        width: 15%;
     }
     .field-role-assign-action {
         vertical-align: middle;

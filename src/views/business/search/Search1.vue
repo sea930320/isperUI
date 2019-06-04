@@ -360,9 +360,34 @@ export default {
                 .then(data => {
                     this.groups = data.results;
                     if (this.groups.length > 0) {
-                        this.activeItemId = "groupIndex0";
-                        this.queryParam.group_id = this.groups[0].id;
-                        this.queryParam.company_id = null;
+                        this.queryParam.group_id = this.userInfo.manager_info.group_id;
+                        let groupIndex = this.groups.findIndex(group => {
+                            return group.id == this.queryParam.group_id;
+                        }, this);
+                        if (this.userInfo.manager_info.company_id) {
+                            this.queryParam.company_id = this.userInfo.manager_info.company_id;
+                            let companyIndex = this.groups[
+                                groupIndex
+                            ].companies.findIndex(company => {
+                                return company.id == this.queryParam.company_id;
+                            }, this);
+                            let groupId = this.queryParam.group_id;
+                            setTimeout(() => {
+                                this.$root.$emit(
+                                    "bv::toggle::collapse",
+                                    "collapse-" + groupId
+                                );
+                                this.groupClicked(
+                                    null,
+                                    "groupIndex" + groupIndex
+                                );
+                            }, 500);
+                            this.activeItemId =
+                                "companyIndex" + groupIndex + companyIndex;
+                        } else {
+                            this.queryParam.company_id = null;
+                            this.activeItemId = "groupIndex" + groupIndex;
+                        }
                     }
                     this.$emit("data-ready");
                 })
@@ -422,6 +447,7 @@ export default {
             } else {
                 JQuery("#" + target + " svg:first").css("transform", "");
             }
+            if (!group) return;
             this.activeItemId = target;
             this.queryParam.group_id = group.id;
             this.queryParam.company_id = null;

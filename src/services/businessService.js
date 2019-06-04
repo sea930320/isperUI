@@ -9,7 +9,7 @@ class BusinessService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
-    createExperiment(data) {
+    createBusiness(data) {
         return xhr({
             method: 'post',
             url: '/business/create',

@@ -62,8 +62,14 @@
                 </template>
                 <template slot="control" slot-scope="row">
                     <!--<b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>-->
-                    <b-button variant="danger" class="float-center mr-2" @click="showBusiness(row.item.id)">查看
-                    </b-button>
+                    <a
+                            href="javascript:;"
+                            class="btn-link"
+                            title="查看"
+                            @click="showBusiness(row.item.id)"
+                    >
+                        <icon name="eye"></icon>
+                    </a>
                 </template>
             </b-table>
         </div>
@@ -121,17 +127,17 @@
         </b-modal>
 
         <b-modal
-                title="事务报告"
+                title="业务报告"
                 v-model="showBusinessModal"
                 size="xl"
                 scrollable
                 hide-footer
         >
-            <h1 style="color:blue">实 验 报 告</h1>
+            <h1 style="color:blue">业 务 报 告</h1>
             <b-container class="modalContainer" v-if="experimentResult">
                 <b-row>
                     <b-col lg="4" md="4" sm="4" class="text-left">
-                        任务名称：{{experimentResult.detail['name']}}
+                        业务名称：{{experimentResult.detail['name']}}
                     </b-col>
                     <b-col lg="4" md="4" sm="4" class="text-left">
                         项目名称：{{experimentResult.detail['project_name']}}
@@ -148,7 +154,7 @@
                         任课老师：{{experimentResult.detail['teacher']}}
                     </b-col>
                     <b-col lg="4" md="4" sm="4" class="text-left">
-                        小组名称：{{experimentResult.detail['team_name']}}
+                        团队名称：{{experimentResult.detail['team_name']}}
                     </b-col>
                 </b-row>
                 <b-row>
@@ -166,7 +172,7 @@
                 </b-row>
                 <b-row>
                     <b-col lg="4" md="12" sm="12" class="text-left">
-                        组长：{{experimentResult.detail['leader_name']}}
+                        启动人：{{experimentResult.detail['leader_name']}}
                     </b-col>
                 </b-row>
             </b-container>

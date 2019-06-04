@@ -43,12 +43,16 @@
                         <table class="table b-table table-sm text-left">
                             <thead role="rowgroup">
                                 <tr>
-                                    <th width="15%">角色类型</th>
-                                    <th width="15%">角色名称</th>
-                                    <th width="37%">角色形象</th>
-                                    <th width="11%">是否使用</th>
-                                    <th width="11%">结束环节</th>
-                                    <th width="11%">是否被带入</th>
+                                    <th width="13%">角色类型</th>
+                                    <th width="13%">角色名称</th>
+                                    <th width="30%">角色形象</th>
+                                    <th width="10%">是否使用</th>
+                                    <th
+                                        v-if="activeNode && activeNode.is_start_node"
+                                        width="14%"
+                                    >可否启动业务</th>
+                                    <th width="10%">结束环节</th>
+                                    <th width="10%">是否被带入</th>
                                 </tr>
                             </thead>
                             <tbody role="rowgroup">
@@ -57,15 +61,18 @@
                                     v-key="type"
                                 >
                                     <tr class="tr-type" :key="'project_role_type_'+ type">
-                                        <td colspan="7" text-left>{{type}}</td>
+                                        <td
+                                            :colspan="activeNode && activeNode.is_start_node?8:7"
+                                            text-left
+                                        >{{type}}</td>
                                     </tr>
                                     <tr
                                         v-for="(roleNodeRelated, index) in roleNodeRelatedGroup"
                                         :key="'role_allocation_'+type+'_'+index"
                                     >
-                                        <td width="15%"></td>
-                                        <td width="15%">{{roleNodeRelated.role_name}}</td>
-                                        <td width="37%">
+                                        <td width="13%"></td>
+                                        <td width="13%">{{roleNodeRelated.role_name}}</td>
+                                        <td width="30%">
                                             <!-- {{roleNodeRelated.image_name}}-{{roleNodeRelated.gender ? (roleNodeRelated.gender === 1 ? '男'
                                             : '女' ) : ''}}-->
                                             {{roleNodeRelated.image_name}}
@@ -76,19 +83,29 @@
                                                 @click="roleImageReselect(roleNodeRelated)"
                                             >重新选择</a>-->
                                         </td>
-                                        <td width="11%" class="check-padding">
+                                        <td width="10%" class="check-padding">
                                             <b-form-checkbox
                                                 v-model="roleNodeRelated.can_take_in"
                                                 @change="toggleCanTakeIn($event, roleNodeRelated)"
                                             ></b-form-checkbox>
                                         </td>
-                                        <td width="11%" class="check-padding">
+                                        <td
+                                            width="14%"
+                                            v-if="activeNode && activeNode.is_start_node"
+                                        >
                                             <b-form-checkbox
-                                                v-model="roleNodeRelated.can_terminate"
-                                                @change="toggleCanTerminate($event, roleNodeRelated)"
+                                                v-model="roleNodeRelated.can_start"
+                                                :disabled="!roleNodeRelated.can_take_in"
+                                                @change="toggleCanStart($event, roleNodeRelated)"
                                             ></b-form-checkbox>
                                         </td>
-                                        <td width="11%" class="check-padding">
+                                        <td width="10%" class="check-padding">
+                                            <b-form-checkbox
+                                                v-model="roleNodeRelated.can_terminate"
+                                                @change="toggleCanTerminate($event, roleNodeRelated, roleNodeRelatedGroup)"
+                                            ></b-form-checkbox>
+                                        </td>
+                                        <td width="10%" class="check-padding">
                                             <b-form-checkbox
                                                 v-model="roleNodeRelated.can_brought"
                                                 @change="toggleCanBrought($event, roleNodeRelated)"
@@ -395,8 +412,40 @@ export default {
                 }
             );
             this.$set(selectedRoleNodeRelated, "can_take_in", val);
+            if (!val) {
+                this.$set(selectedRoleNodeRelated, "can_start", false);
+            }
         },
-        toggleCanTerminate(val, roleNodeRelated) {
+        toggleCanStart(val, selRoleNodeRelated) {
+            if (!selRoleNodeRelated.can_take_in) {
+                this.$toasted.error("参与第一环节的人才能启动业务！");
+                return;
+            }
+            this.activeNode.project_role_allocs.forEach(roleNodeRelated => {
+                if (selRoleNodeRelated.id == roleNodeRelated.id) {
+                    this.$set(roleNodeRelated, "can_start", val);
+                } else {
+                    this.$set(roleNodeRelated, "can_start", false);
+                }
+            });
+            // let selectedRoleNodeRelated = _.find(
+            //     this.activeNode.project_role_allocs,
+            //     {
+            //         id: selRoleNodeRelated.id
+            //     }
+            // );
+            // this.$set(selectedRoleNodeRelated, "can_start", val);
+        },
+        toggleCanTerminate(val, roleNodeRelated, roleNodeRelatedGroup) {
+            roleNodeRelatedGroup.forEach(roleNodeRel => {
+                let selRoleNodeRel = _.find(
+                    this.activeNode.project_role_allocs,
+                    {
+                        id: roleNodeRel.id
+                    }
+                );
+                this.$set(selRoleNodeRel, "can_terminate", false);
+            });
             let selectedRoleNodeRelated = _.find(
                 this.activeNode.project_role_allocs,
                 {
@@ -470,12 +519,18 @@ export default {
                 this.updatePage(2);
             }
             if (this.saveBtnClicked === 1) {
+                this.run();
                 ProjectService.configurateProjectRoles({
                     project_id: this.project_id,
                     data: JSON.stringify(this.projectRolesAssign.project_nodes)
-                }).then(() => {
-                    this.$toasted.success("保存项目角色设置成功");
-                });
+                })
+                    .then(() => {
+                        this.$emit("data-ready");
+                        this.$toasted.success("保存项目角色设置成功");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             }
             if (this.previousBtnClicked === 1) {
                 this.updatePage(0);

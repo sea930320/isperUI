@@ -142,7 +142,7 @@
                         v-model="row.item.type_label"
                         :options="experimentTypeOptions"
                     ></b-form-select>
-                    <span v-else class="text">{{ row.item.type_label | expType}}</span>
+                    <span v-else class="text">{{ expType(row.item.type_label)}}</span>
                 </template>
                 <template slot="experiment_task_label" slot-scope="row">
                     <b-form-input v-if="row.item.edited" type="text" v-model="row.item.task_label"/>
@@ -268,7 +268,7 @@
                                 <template v-for="project in relatedProjects">
                                     <tr :key="project.id">
                                         <td>{{project.name}}</td>
-                                        <td>{{project.type | expType}}</td>
+                                        <td>{{expType(project.type)}}</td>
                                         <td>{{project.level | level}}</td>
                                         <td>{{project.ability_tartget | abilityTarget}}</td>
                                         <td>
@@ -588,7 +588,7 @@
 </template>
 
 <script>
-import { expType, level, abilityTarget } from "@/filters/fun";
+import { level, abilityTarget } from "@/filters/fun";
 import { mapState, mapActions } from "vuex";
 import Loading from "@/components/loading/Loading";
 import ToggleUpload from "@/components/upload/ToggleUpload";
@@ -608,7 +608,6 @@ export default {
         ToggleUpload
     },
     filters: {
-        expType,
         level,
         abilityTarget
     },
@@ -703,22 +702,27 @@ export default {
             unshareModal: false,
             publicModal: false,
             unpublicModal: false,
-            experimentTypeOptions: [
-                { value: "1", text: "立法类型实验" },
-                { value: "2", text: "执法类型实验" },
-                { value: "3", text: "诉讼与仲裁实验" },
-                { value: "4", text: "自由类型实验" },
-                { value: "5", text: "非诉讼与法务管理类型实验" },
-                { value: "6", text: "法律思维类型实验" },
-                { value: "7", text: "证据科学类型实验" },
-                { value: "8", text: "法律实效评价类型实验" }
-            ],
+            experimentTypeOptions: [],
             newProcessAdded: false
         };
     },
     created() {
         this.$nextTick(() => {
             this.isSuperFlag = this.userInfo.identity === 1;
+            workflowService
+                .getOfficeItems()
+                .then(data => {
+                    this.experimentTypeOptions = _.map(
+                        data.office_items,
+                        office_item => {
+                            return {
+                                value: office_item.id,
+                                text: office_item.name
+                            };
+                        }
+                    );
+                })
+                .catch(() => {});
             this.queryWorkflowList();
         });
     },
@@ -881,6 +885,14 @@ export default {
     },
     methods: {
         ...mapActions(["setFlowStep"]),
+        expType(id) {
+            let exprType = _.find(this.experimentTypeOptions, { value: id });
+            if (exprType) {
+                return exprType.text;
+            } else {
+                return "";
+            }
+        },
         // 查询流程列表数据
         queryWorkflowList() {
             this.allChecked = false;
@@ -956,7 +968,9 @@ export default {
                 create_time: dateUtils.todayString(),
                 animation1: "",
                 animation2: "",
-                type_label: 1,
+                type_label:
+                    this.experimentTypeOptions.length > 0 &&
+                    this.experimentTypeOptions[0].value,
                 task_label: "",
                 status: 1,
                 edited: true,

@@ -1,6 +1,7 @@
 <template>
     <div class="personal-info">
         <PersonalCenterTab activeTab="0"/>
+        <loading v-if="isRunning"></loading>
         <b-form @submit.prevent="updateInfo" class="cardDiv">
             <b-form-group label-cols="4" label-cols-lg="2" label="姓名 *" label-for="userName">
                 <b-form-input type="text" v-model="user.name" name="userName" required/>
@@ -73,10 +74,11 @@ import ImageUpload from "vue-image-crop-upload";
 import accountService from "@/services/accountService";
 import { STORAGE_KEY_USER } from "@/store/storageKey";
 import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
+import Loading from "@/components/loading/Loading";
 
 export default {
     name: "personal-info",
-    components: { ImageUpload, PersonalCenterTab },
+    components: { ImageUpload, PersonalCenterTab, Loading },
     data() {
         return {
             rootPath: process.env.VUE_APP_ENDPOINT,
@@ -123,18 +125,28 @@ export default {
             if (!this.validate) {
                 return;
             }
+            this.run();
             let user = Object.assign({}, this.user);
             user.verification_code = this.verificationCode;
-            accountService.updateAccount(user).then(() => {
-                this.session_expire_time = 0;
-                this.verificationCode = "";
-                if (this.timer) {
-                    clearInterval(this.timer);
-                }
-                this.$cookie.set(STORAGE_KEY_USER, JSON.stringify(this.user));
-                this.loginAction(this.user);
-                this.$toasted.success("Account Successfully updated");
-            });
+            accountService
+                .updateAccount(user)
+                .then(() => {
+                    this.session_expire_time = 0;
+                    this.verificationCode = "";
+                    if (this.timer) {
+                        clearInterval(this.timer);
+                    }
+                    this.$cookie.set(
+                        STORAGE_KEY_USER,
+                        JSON.stringify(this.user)
+                    );
+                    this.loginAction(this.user);
+                    this.$emit("data-ready");
+                    this.$toasted.success("修改成功");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         },
         resetInfo() {
             this.user = { ...this.userInfo };
@@ -162,7 +174,7 @@ export default {
                 })
                 .then(
                     () => {
-                        this.$toasted.success("Please check your phone");
+                        this.$toasted.success("验证码已发送到手机");
                         this.startTimer();
                         this.sendLabel = "获取";
                     },
