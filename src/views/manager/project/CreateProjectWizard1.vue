@@ -197,7 +197,7 @@
                                             class="text-left"
                                             v-if="[3, 7].includes(this.userInfo.role)"
                                             label-for="input-horizontal">
-                                        <b-form-select v-model="use_to" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
+                                        <b-form-select v-model="use_to"
                                                        :options="this.use_to_list"></b-form-select>
                                     </b-form-group>
                                 </b-col>
