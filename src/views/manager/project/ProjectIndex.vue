@@ -386,7 +386,7 @@ export default {
             });
         },
         checkedItems() {
-            return this.projects.list.filter(item => item.checked === true);
+            return this.projects.list.filter(item => item.checked === true && item.edit_able === 1);
         },
         // 查看渲染动画的大图
         showBigImg(animation) {
