@@ -296,7 +296,7 @@ export default {
                             clearInterval(this.timer);
                         }
                         this.$toasted.success(
-                            "正在审核中，请等待审核通过。"
+                            "注册成功，请等待审核通过。"
                         );
                         setTimeout(() => {
                             this.errorCleared = false;

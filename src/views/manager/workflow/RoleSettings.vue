@@ -153,7 +153,10 @@
                                     v-if="roleGroupAllocation.role_allocations.length > 0"
                                     :key="key"
                                 >
-                                    <td :colspan="activeNode && activeNode.is_start_node?5:4" class="text-left">
+                                    <td
+                                        :colspan="activeNode && activeNode.is_start_node?5:4"
+                                        class="text-left"
+                                    >
                                         <b-form-checkbox
                                             v-model="roleGroupAllocation.all_check"
                                             :indeterminate="roleGroupAllocation.indeterminated_check"
@@ -788,7 +791,12 @@ export default {
         // 点击保存
         savePage() {
             let allocations = [];
+            let hasStartRole = false;
             for (let nodeIndex in this.nodeRoleGroupAllocations) {
+                let isStartNode = false;
+                if (this.nodes[nodeIndex].is_start_node) {
+                    isStartNode = true;
+                }
                 for (let typeIndex in this.nodeRoleGroupAllocations[
                     nodeIndex
                 ]) {
@@ -817,10 +825,17 @@ export default {
                                     "can_start"
                                 ]
                             );
+                            if (allocation.can_start != 0) {
+                                hasStartRole = true;
+                            }
                             allocations.push(allocation);
                         }
                     }
                 }
+            }
+            if (!hasStartRole) {
+                this.$toasted.error("There is no start role");
+                return;
             }
             let params = {
                 flow_id: this.flowId,

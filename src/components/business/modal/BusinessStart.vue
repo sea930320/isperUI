@@ -57,17 +57,19 @@ export default {
     computed: {},
     methods: {
         startBusiness() {
-            this.visible = false;
-            businessService
-                .createBusiness({
-                    project_id: this.project.id
-                })
-                .then(() => {
-                    // this.$router.push({
-                    //     name: "editTask",
-                    //     params: { task_id: data.id }
-                    // });
-                });
+            if (this.project) {
+                businessService
+                    .createBusiness({
+                        project_id: this.project.id
+                    })
+                    .then(() => {
+                        // this.$router.push({
+                        //     name: "editTask",
+                        //     params: { task_id: data.id }
+                        // });
+                        this.visible = false;
+                    });
+            }
         }
     },
     watch: {
