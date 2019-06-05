@@ -2,13 +2,13 @@
     <div class="business-container main-bg" style="height: 100%; overflow: auto">
         <TopHeader v-if="userInfo">
             <template v-slot:pageMenu>
-                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/search">
+                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/prepare">
                     <icon name="list" class="tabIcon"></icon>业务查找
                 </b-nav-item>
-                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/completed">
+                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/list/progress">
                     <icon name="box-open" class="tabIcon"></icon>办理中业务
                 </b-nav-item>
-                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/progress">
+                <b-nav-item v-if="[5].includes(userInfo.role)" to="/business/list/done">
                     <icon name="box" class="tabIcon"></icon>已完成业务
                 </b-nav-item>
             </template>

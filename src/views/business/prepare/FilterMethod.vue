@@ -8,19 +8,19 @@
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/company1.png">
                         </div>
-                        <b-button variant="outline-dark" to="/business/search/search1/company">单位</b-button>
+                        <b-button variant="outline-dark" to="/business/prepare/prepare1/company">单位</b-button>
                     </div>
                     <div class="cardDiv mx-3">
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/affair1.png">
                         </div>
-                        <b-button variant="outline-dark" to="/business/search/search1/office">事务</b-button>
+                        <b-button variant="outline-dark" to="/business/prepare/prepare1/office">事务</b-button>
                     </div>
                     <div class="cardDiv mx-3">
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/search1.png">
                         </div>
-                        <b-button variant="outline-dark" to="{name:'business-search-by-keyword'}">检索</b-button>
+                        <b-button variant="outline-dark" to="{name:'business-prepare-by-keyword'}">检索</b-button>
                     </div>
                 </div>
             </div>

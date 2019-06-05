@@ -1,5 +1,5 @@
 <template>
-    <div class="search1" v-if="userInfo">
+    <div class="prepare1" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <b-row>
             <b-col cols="3">
@@ -12,7 +12,7 @@
                                 v-bind:class="{active:queryParam.by_method=='company', inactive:queryParam.by_method!='company'}"
                                 block
                                 size="sm"
-                                to="/business/search/search1/company"
+                                to="/business/prepare/prepare1/company"
                             >单位</b-button>
                         </div>
                         <div class="flex-fill">
@@ -22,7 +22,7 @@
                                 class="no-round"
                                 block
                                 size="sm"
-                                to="/business/search/search1/office"
+                                to="/business/prepare/prepare1/office"
                             >事务</b-button>
                         </div>
                     </div>
@@ -224,7 +224,7 @@ import JQuery from "jquery";
 import _ from "lodash";
 
 export default {
-    name: "search1",
+    name: "prepare1",
     components: { Loading, BusinessStartModal },
     filters: {},
     data() {
@@ -470,7 +470,7 @@ export default {
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-.search1 {
+.prepare1 {
     .no-round {
         border-radius: 0px;
     }

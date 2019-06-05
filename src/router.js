@@ -153,10 +153,10 @@ const routes = [{
         ...personalCenterRoutes,
         {
             path: '',
-            redirect: 'search'
+            redirect: 'prepare'
         }, {
-            path: 'search',
-            component: () => import('@/views/business/search/SearchIndex.vue'),
+            path: 'prepare',
+            component: () => import('@/views/business/prepare/PrepareIndex.vue'),
             children: [
                 {
                     path: '',
@@ -164,20 +164,26 @@ const routes = [{
                 },
                 {
                     path: 'filter-method',
-                    name: 'business-search-filter-method',
-                    component: () => import('@/views/business/search/FilterMethod.vue')
+                    name: 'business-prepare-filter-method',
+                    component: () => import('@/views/business/prepare/FilterMethod.vue')
                 },
                 {
-                    path: 'search1/:by',
-                    name: 'business-search-by-company-and-office',
-                    component: () => import('@/views/business/search/Search1.vue')
+                    path: 'prepare1/:by',
+                    name: 'business-prepare-by-company-and-office',
+                    component: () => import('@/views/business/prepare/Prepare1.vue')
                 },
                 {
-                    path: 'search2',
-                    name: 'business-search-by-keyword',
-                    component: () => import('@/views/business/search/Search2.vue')
+                    path: 'prepare2',
+                    name: 'business-prepare-by-keyword',
+                    component: () => import('@/views/business/prepare/Prepare1.vue')
                 },
             ]
+        }, {
+            path: 'list/progress',
+            component: () => import('@/views/business/list/ProgressListIndex.vue')
+        }, {
+            path: 'list/done',
+            component: () => import('@/views/business/list/DoneListIndex.vue')
         }, {
             path: 'progress',
             component: () => import('@/views/business/progress/ProgressIndex.vue'),

@@ -1,5 +1,5 @@
 <template>
-    <div class="search-index" v-if="userInfo">
+    <div class="prepare-index" v-if="userInfo">
         <router-view></router-view>
     </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-    name: "search-index",
+    name: "prepare-index",
     components: {},
     filters: {},
     data() {
@@ -25,6 +25,6 @@ export default {
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-.search-index {
+.prepare-index {
 }
 </style>

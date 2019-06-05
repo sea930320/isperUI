@@ -186,6 +186,19 @@ export function categoryValue(value) {
 }
 
 // 实验任务状态
+export function businessStatus(value) {
+  if (value === 1) {
+    return '等待中'
+  } else if (value === 2) {
+    return '进行中'
+  } else if (value === 9) {
+    return '已结束'
+  } else {
+    return ''
+  }
+}
+
+// 实验任务状态
 export function experimentStatus(value) {
   if (value === 1) {
     return '等待中'

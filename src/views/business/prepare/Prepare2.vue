@@ -1,11 +1,11 @@
 <template>
-    <div class="search2" v-if="userInfo">Search2</div>
+    <div class="prepare2" v-if="userInfo">Prepare2</div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-    name: "search2",
+    name: "prepare2",
     components: {},
     filters: {},
     data() {
@@ -23,6 +23,6 @@ export default {
 </script>
 
 <style type="text/css" lang="scss" rel="stylesheet/scss">
-.search2 {
+.prepare2 {
 }
 </style>

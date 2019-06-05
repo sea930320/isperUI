@@ -16,7 +16,35 @@ class BusinessService {
             params: data
         })
     }
-    
+
+    /**
+     * 获取实验列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    fetchList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/list',
+            params: data
+        })
+    }
+
+    /**
+     * 开始实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    startBusiness(data) {
+      return xhr({
+        method: 'post',
+        url: '/business/start',
+        params: data
+      })
+    }
+
+
+
     /**
      * 业务
      */
