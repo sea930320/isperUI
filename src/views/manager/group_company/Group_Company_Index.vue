@@ -81,9 +81,14 @@
                                                                 autocomplete="new-password"
                                                                 type="password"
                                                                 placeholder="密码"
+                                                                :disabled="newManagerLock !== 0"
                                                         ></b-form-input>
                                                     </b-form-group>
-                                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                                                    <span v-if="newManagerLock === 4" style="color: red; font-size: 12px" class="justify-content-center row">该账号是超级管理员</span>
+                                                    <span v-if="newManagerLock === 2" style="color: red; font-size: 12px" class="justify-content-center row">该账号是另一个集群的账号</span>
+                                                    <span v-if="newManagerLock === 3" style="color: red; font-size: 12px" class="justify-content-center row">该账号在本集群已经有对应的权限</span>
+                                                    <span v-if="newManagerLock === 1" style="color: red; font-size: 12px" class="justify-content-center row">已存在的账号，可以分配该权限</span>
+                                                    <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary" :disabled="![0, 1].includes(newManagerLock)">保 存
                                                     </b-button>
                                                     <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
                                                               @click="()=>{newInstructor = false; new_Instructor = {name:'', password:null}}">取 消
@@ -150,6 +155,7 @@ export default {
         return {
             tag: '',
             tags: [],
+            newManagerLock: 0,
             autocompleteItems: [],
             newInstructor: false,
             new_Instructor: {
@@ -248,7 +254,20 @@ export default {
             handler: _.debounce(function () {
                 this.queryGroupList();
             }, 500)
-        }
+        },
+        "new_Instructor.name": {
+            handler: function() {
+                if (this.new_Instructor.name !== '') {
+                    GroupService
+                        .checkUserGroup({ username: this.new_Instructor.name, group: this.allgroup.selectedID, role: 4 })
+                        .then(data => {
+                            this.newManagerLock = parseInt(data.results);
+                        });
+                } else
+                    this.newManagerLock = 0;
+            },
+            deep: true
+        },
     },
     methods: {
         queryGroupList() {
@@ -291,7 +310,7 @@ export default {
             evt.preventDefault();
             this.run();
             GroupService
-                .createInstructors({id: this.allgroup.selectedID, data: this.new_Instructor})
+                .createInstructors({id: this.allgroup.selectedID, data: this.new_Instructor, order: this.newManagerLock})
                 .then((result) => {
                     if (result.results === 'success')
                         GroupService

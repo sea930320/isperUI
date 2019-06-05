@@ -227,6 +227,7 @@
                                     v-model="new_CManager.description"
                                     required
                                     placeholder="备注"
+                                    :disabled="newManagerLock !== 0"
                                 ></b-form-textarea>
                             </b-form-group>
                             <b-form-group id="input-group-9" label-for="input-2">
@@ -236,13 +237,19 @@
                                     autocomplete="new-password"
                                     type="password"
                                     placeholder="密码"
+                                    :disabled="newManagerLock !== 0"
                                 ></b-form-input>
                             </b-form-group>
+                            <span v-if="newManagerLock === 4" style="color: red; font-size: 12px" class="justify-content-center row">该账号是超级管理员</span>
+                            <span v-if="newManagerLock === 2" style="color: red; font-size: 12px" class="justify-content-center row">该账号是另一个集群的账号</span>
+                            <span v-if="newManagerLock === 3" style="color: red; font-size: 12px" class="justify-content-center row">该账号在本集群已经有对应的权限</span>
+                            <span v-if="newManagerLock === 1" style="color: red; font-size: 12px" class="justify-content-center row">已存在的账号，可以分配该权限</span>
                             <b-button
                                 class="mt-3 my-4 col-5 float-left"
                                 block
                                 type="submit"
                                 variant="primary"
+                                :disabled="![0, 1].includes(newManagerLock)"
                             >保 存</b-button>
                             <b-button
                                 class="mt-3 my-4 col-5 float-right"
@@ -446,7 +453,8 @@ export default {
                 comment: "",
                 cManagerName: "",
                 cManagerPass: ""
-            }
+            },
+            newManagerLock: 0
         };
     },
     created() {
@@ -469,6 +477,19 @@ export default {
             handler: _.debounce(function() {
                 this.queryCompanyList();
             }, 500)
+        },
+        "new_CManager.name": {
+            handler: function() {
+                if (this.new_CManager.name !== '') {
+                    GroupService
+                        .checkUserGroup({ username: this.new_CManager.name, group: this.userInfo.manager_info.group_id, role: 3 })
+                        .then(data => {
+                            this.newManagerLock = parseInt(data.results);
+                        });
+                } else
+                    this.newManagerLock = 0;
+            },
+            deep: true
         }
     },
     methods: {
@@ -593,7 +614,8 @@ export default {
             this.run();
             GroupService.addCManager({
                 companyID: this.cManagers.companyID,
-                data: this.new_CManager
+                data: this.new_CManager,
+                order: this.newManagerLock
             })
                 .then(res => {
                     if (res.results === "success")
