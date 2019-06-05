@@ -47,6 +47,7 @@
                 </b-button-group>
             </b-col>
         </b-row>
+        <view-xml :visible="xmlModalShow" :xml="workflowXml" @on-close="xmlModalShow = false"></view-xml>
         <div class="cardDiv">
             <b-table :items="projects.list" responsive small hover :fields="columns" head-variant>
                 <template slot="HEAD_sn" slot-scope="head">
@@ -103,8 +104,7 @@
                     </a>
                     <a class="btn-link mx-1"
                        href="javascript:"
-                       v-if="userInfo.role === 1"
-                       @click="showProject(row.item)" >
+                       @click="viewXmlHandler(row.item.flow)" >
                         <icon name="eye"></icon>
                     </a>
                     <a class="btn-link mx-1"
@@ -181,11 +181,13 @@ import { expType, level, abilityTarget } from "@/filters/fun";
 import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
 import ProjectService from "@/services/projectService";
+import ViewXml from "@/components/workflowXML/ViewXML";
 import _ from "lodash";
 export default {
     name: "project-index",
     components: {
-        Loading
+        Loading,
+        ViewXml
     },
     filters: {
         expType,
@@ -258,6 +260,8 @@ export default {
                     class: "text-center field-sn"
                 }
             },
+            xmlModalShow: false,
+            workflowXml: null,
             // 查询参数
             allChecked: false,
             queryParam: {
@@ -352,11 +356,9 @@ export default {
         deleteProjectConfirm(idValue) {
             this.currentProjectID = idValue;
         },
-        showProject(idVal) {
-            this.$router.push({
-                name: "create-project-wizard",
-                params: { project_id: idVal.id }
-            });
+        viewXmlHandler(workflow) {
+            this.workflowXml = workflow.xml;
+            this.xmlModalShow = true;
         },
         // Delete Project
         deleteProject() {

@@ -185,8 +185,8 @@
                                 :disabled="newManagerLock !== 0"
                         ></b-form-input>
                     </b-form-group>
-                    <span v-if="newManagerLock === 2" style="color: red; font-size: 12px">该用户已经是 "{{before}}" 的管理员</span>
-                    <b-button class="mt-3 my-4" block type="submit" variant="primary">保 存</b-button>
+                    <span v-if="newManagerLock === 2" style="color: red; font-size: 12px">该账号是另一个集群的账号</span>
+                    <b-button class="mt-3 my-4" block type="submit" variant="primary" :disabled="newManagerLock !== 0">保 存</b-button>
                 </b-form>
             </div>
         </b-modal>
@@ -288,8 +288,11 @@
                                         :disabled="newManagerLock !== 0"
                                 ></b-form-input>
                             </b-form-group>
-                            <span v-if="newManagerLock === 2" style="color: red; font-size: 12px" class="justify-content-center row">该用户已经是 "{{before}}" 的管理员</span>
-                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存
+                            <span v-if="newManagerLock === 4" style="color: red; font-size: 12px" class="justify-content-center row">该账号是超级管理员</span>
+                            <span v-if="newManagerLock === 2" style="color: red; font-size: 12px" class="justify-content-center row">该账号是另一个集群的账号</span>
+                            <span v-if="newManagerLock === 3" style="color: red; font-size: 12px" class="justify-content-center row">该账号在本集群已经有对应的权限</span>
+                            <span v-if="newManagerLock === 1" style="color: red; font-size: 12px" class="justify-content-center row">已存在的账号，可以分配该权限</span>
+                            <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary" :disabled="![0, 1].includes(newManagerLock)">保 存
                             </b-button>
                             <b-button class="mt-3 my-4 col-5 float-right" block variant="primary"
                                       @click="()=>{newManager = false; new_Manager = {name:'',description:'',password:null}}">取 消
@@ -472,7 +475,6 @@
                     managerPass: ''
                 },
                 newManagerLock: 0,
-                before: '',
                 options1: [
                     {text: '是', value: 1},
                     {text: '否', value: 0}
@@ -509,10 +511,9 @@
                 handler: function() {
                     if (this.newGroup.managerName !== '') {
                         GroupService
-                            .checkUserGroup({ username: this.newGroup.managerName })
+                            .checkUserGroup({ username: this.newGroup.managerName, group: -1 })
                             .then(data => {
                                 this.newManagerLock = parseInt(data.results);
-                                this.before = data.before;
                             });
                     } else
                         this.newManagerLock = 0;
@@ -523,10 +524,9 @@
                 handler: function() {
                     if (this.new_Manager.name !== '') {
                         GroupService
-                            .checkUserGroup({ username: this.new_Manager.name })
+                            .checkUserGroup({ username: this.new_Manager.name, group: this.Managers.groupID, role: 2 })
                             .then(data => {
                                 this.newManagerLock = parseInt(data.results);
-                                this.before = data.before;
                             });
                     } else
                         this.newManagerLock = 0;
@@ -553,58 +553,54 @@
                     return;
                 }
                 else {
-                    if (this.newManagerLock === 2 && !confirm("您确定以该用户选为管理员吗？"))
-                        return;
-                    else {
-                        this.run();
-                        GroupService
-                            .create({...this.newGroup, 'order': this.newManagerLock})
-                            .then((res) => {
-                                if (res.results === 'success')
-                                    GroupService
-                                        .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                        .then(data => {
-                                            data.results.forEach(item => {
-                                                if (item.checked === undefined) {
-                                                    item.checked = false;
-                                                }
-                                                if (item.locked === undefined) {
-                                                    item.locked = false;
-                                                }
-                                            });
-                                            this.allgroup.list = data.results;
-                                            this.allgroup.total = data.paging.count;
-                                            this.$refs['newGroup'].hide();
-                                            GroupService
-                                                .fetchAllGroupDetail()
-                                                .then(data => {
-                                                    this.groups = data.results;
-                                                    this.groups.unshift({
-                                                        id: null,
-                                                        name: "集群筛选"
-                                                    });
-                                                    this.$emit("data-ready");
-                                                })
-                                                .catch(() => {});
-                                        })
-                                        .catch(() => {
-                                            this.$emit("data-failed");
+                    this.run();
+                    GroupService
+                        .create({...this.newGroup})
+                        .then((res) => {
+                            if (res.results === 'success')
+                                GroupService
+                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                    .then(data => {
+                                        data.results.forEach(item => {
+                                            if (item.checked === undefined) {
+                                                item.checked = false;
+                                            }
+                                            if (item.locked === undefined) {
+                                                item.locked = false;
+                                            }
                                         });
-                                else if (res.results === 'nameError') {
-                                    alert("该集群名已存在。");
-                                    this.$emit("data-failed");
-                                }
-                                else if (res.results === 'managerNameError') {
-                                    alert("该账号已存在。");
-                                    this.$emit("data-failed");
-                                }
-                                else
-                                    this.$emit("data-failed");
-                            })
-                            .catch(() => {
+                                        this.allgroup.list = data.results;
+                                        this.allgroup.total = data.paging.count;
+                                        this.$refs['newGroup'].hide();
+                                        GroupService
+                                            .fetchAllGroupDetail()
+                                            .then(data => {
+                                                this.groups = data.results;
+                                                this.groups.unshift({
+                                                    id: null,
+                                                    name: "集群筛选"
+                                                });
+                                                this.$emit("data-ready");
+                                            })
+                                            .catch(() => {});
+                                    })
+                                    .catch(() => {
+                                        this.$emit("data-failed");
+                                    });
+                            else if (res.results === 'nameError') {
+                                alert("该集群名已存在。");
                                 this.$emit("data-failed");
-                            });
-                    }
+                            }
+                            else if (res.results === 'managerNameError') {
+                                alert("该账号已存在。");
+                                this.$emit("data-failed");
+                            }
+                            else
+                                this.$emit("data-failed");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
                 }
             },
             queryGroupList() {
@@ -732,46 +728,42 @@
             },
             newManagerSave(evt) {
                 evt.preventDefault();
-                if (this.newManagerLock === 2 && !confirm("您确定以该用户选为管理员吗？"))
-                    return;
-                else {
-                    this.run();
-                    GroupService
-                        .addManager({groupID: this.Managers.groupID, data: this.new_Manager, order: this.newManagerLock})
-                        .then((res) => {
-                            if (res.results === 'success')
-                                GroupService
-                                    .fetchList({...this.queryParam, ...this.queryDebounceParam})
-                                    .then(data => {
-                                        data.results.forEach(item => {
-                                            if (item.checked === undefined) {
-                                                item.checked = false;
-                                            }
-                                            if (item.locked === undefined) {
-                                                item.locked = false;
-                                            }
-                                        });
-                                        this.allgroup.list = data.results;
-                                        this.allgroup.total = data.paging.count;
-                                        let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
-                                        this.Managers.list = selectedData[0].groupManagers;
-                                        this.$emit("data-ready");
-                                        this.newManager = false;
-                                    })
-                                    .catch(() => {
-                                        this.$emit("data-failed");
+                this.run();
+                GroupService
+                    .addManager({groupID: this.Managers.groupID, data: this.new_Manager, order: this.newManagerLock})
+                    .then((res) => {
+                        if (res.results === 'success')
+                            GroupService
+                                .fetchList({...this.queryParam, ...this.queryDebounceParam})
+                                .then(data => {
+                                    data.results.forEach(item => {
+                                        if (item.checked === undefined) {
+                                            item.checked = false;
+                                        }
+                                        if (item.locked === undefined) {
+                                            item.locked = false;
+                                        }
                                     });
-                            else if (res.results === 'managerNameError') {
-                                alert("该账号已存在。");
-                                this.$emit("data-failed");
-                            }
-                            else
-                                this.$emit("data-failed");
-                        })
-                        .catch(() => {
+                                    this.allgroup.list = data.results;
+                                    this.allgroup.total = data.paging.count;
+                                    let selectedData = data.results.filter(obj => { return obj.id === this.Managers.groupID});
+                                    this.Managers.list = selectedData[0].groupManagers;
+                                    this.$emit("data-ready");
+                                    this.newManager = false;
+                                })
+                                .catch(() => {
+                                    this.$emit("data-failed");
+                                });
+                        else if (res.results === 'managerNameError') {
+                            alert("该账号已存在。");
                             this.$emit("data-failed");
-                        });
-                }
+                        }
+                        else
+                            this.$emit("data-failed");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             },
             editManagerSave(evt) {
                 evt.preventDefault();
