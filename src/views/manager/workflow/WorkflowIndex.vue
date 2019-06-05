@@ -162,30 +162,30 @@
                 <template slot="action" slot-scope="row">
                     <a
                         class="btn-link mx-1"
-                        href="javascript:;"
-                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        href="javascript:"
+                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag && row.item.created_role==userInfo.role"
                         @click="saveWorkflow(row.item)"
                     >
                         <icon name="save"></icon>
                     </a>
                     <a
                         class="btn-link mx-1"
-                        href="javascript:;"
-                        v-else-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        href="javascript:"
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.created_by.id==userInfo.id && !isSuperFlag && row.item.created_role==userInfo.role"
                         @click="editWorkflow(row.item)"
                     >
                         <icon name="edit"></icon>
                     </a>
                     <a
                         class="btn-link mx-1"
-                        href="javascript:;"
+                        href="javascript:"
                         v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && row.item.status != 1"
                         @click="viewXmlHandler(row.item)"
                     >
                         <icon name="eye"></icon>
                     </a>
                     <router-link
-                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && !!row.item.id && row.item.status == 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && !!row.item.id && row.item.status == 1 && row.item.created_by.id==userInfo.id && !isSuperFlag && row.item.created_role==userInfo.role"
                         :to="{ name: 'manager-workflow-drawXML', params: { flow_id: row.item.id }}"
                         class="mx-1"
                     >
@@ -193,23 +193,23 @@
                     </router-link>
                     <a
                         class="btn-link mx-1"
-                        href="javascript:;"
-                        v-if="isActionAllowed('code_workflow_management', 'code_set_workflow') && row.item.status != 1 && row.item.created_by.id==userInfo.id && !isSuperFlag"
+                        href="javascript:"
+                        v-if="isActionAllowed('code_workflow_management', 'code_set_workflow') && row.item.status != 1 && row.item.created_by.id==userInfo.id && !isSuperFlag && row.item.created_role==userInfo.role"
                         @click="toSetPage(row.item)"
                     >
                         <icon name="cog"></icon>
                     </a>
                     <a
                         class="mx-1"
-                        href="javascript:;"
+                        href="javascript:"
                         @click="deleteWorkflowClick(row.item)"
-                        v-if="isActionAllowed('code_workflow_management', 'code_delete_workflow') && row.item.created_by.id==userInfo.id || isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_delete_workflow') && row.item.created_by.id==userInfo.id  && row.item.created_role==userInfo.role || isSuperFlag"
                     >
                         <icon name="trash"></icon>
                     </a>
                     <a
                         class="mx-1"
-                        href="javascript:;"
+                        href="javascript:"
                         v-if="isSuperFlag && row.item.protected == 0"
                         @click="lockWorkflowClick(row.item)"
                     >
@@ -217,7 +217,7 @@
                     </a>
                     <a
                         class="mx-1"
-                        href="javascript:;"
+                        href="javascript:"
                         v-if="isSuperFlag && row.item.protected == 1"
                         @click="unlockWorkflowClick(row.item)"
                     >
