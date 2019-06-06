@@ -13,14 +13,6 @@ class DictionaryService {
         })
     }
 
-    getOfficeItemData(data) {
-        return xhr({
-            method: 'post',
-            url: '/dic/getOfficeItemData',
-            params: data
-        })
-    }
-
     newItemSave(data) {
         return xhr({
             method: 'post',

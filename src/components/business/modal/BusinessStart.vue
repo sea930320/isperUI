@@ -12,7 +12,7 @@
                 </b-col>
                 <b-col cols="4" class="text-left text-content">
                     <label>事务类型 :</label>
-                    {{project.officeItem && project.officeItem.name}}
+                    {{project.officeItem_name}}
                 </b-col>
             </b-row>
             <b-row>
@@ -28,11 +28,23 @@
         </div>
         <!-- 查看流程图 -->
         <view-xml :visible="xmlModalShow" :xml="project.flow.xml" @on-close="xmlModalShow = false"></view-xml>
+        <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
+            <div>
+                <b-col sm="4" class="mb-3">
+                </b-col>
+                <b-col sm="12">
+                    <b-form-select v-model="project.use_to_company"
+                                   :options="company_list"></b-form-select>
+                </b-col>
+                <b-button variant="success" class="float-center" @click="startBusiness()">确定</b-button>
+            </div>
+        </b-modal>
     </b-modal>
 </template>
 <script>
 import ViewXml from "@/components/workflowXML/ViewXML";
 import businessService from "@/services/businessService";
+import GroupService from "@/services/groupService";
 export default {
     components: {
         ViewXml
@@ -41,7 +53,8 @@ export default {
         return {
             visible: false,
             project: null,
-            xmlModalShow: false
+            xmlModalShow: false,
+            company_list: []
         };
     },
     created() {
@@ -56,24 +69,40 @@ export default {
     },
     computed: {},
     methods: {
+        isEmpty(obj) {
+            for(let key in obj) {
+                if(obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+        },
         startBusiness() {
-            if (this.project) {
-                this.run();
-                businessService
-                    .createBusiness({
-                        project_id: this.project.id
-                    })
-                    .then(() => {
-                        // this.$router.push({
-                        //     name: "editTask",
-                        //     params: { task_id: data.id }
-                        // });
-                        this.$emit("data-ready");
-                        this.visible = false;
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
+            if (this.project.created_role === 2 && this.project.use_to_company === undefined){
+                GroupService
+                    .getCompanyListOfGroup({groupID: this.$parent.queryParam.group_id})
+                    .then(data => {
+                        this.company_list = data.results;
+                        this.$refs['selectUse_to'].show()
                     });
+            } else {
+                this.$refs['selectUse_to'].hide();
+                let postData = {};
+                if (this.project.created_role === 2)
+                    postData = { project_id: this.project.id, use_to: this.project.use_to_company };
+                else
+                    postData = { project_id: this.project.id};
+                if (this.project) {
+                    this.run();
+                    businessService
+                        .createBusiness(postData)
+                        .then(() => {
+                            this.$emit("data-ready");
+                            this.visible = false;
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             }
         }
     },

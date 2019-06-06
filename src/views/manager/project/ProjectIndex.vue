@@ -94,7 +94,7 @@
                     (row.item.is_open === 4) ? "指定用户":
                     (row.item.is_open === 5) ? "指定部门/单位": ''
                 }}</template>
-                <template slot="mission_type" slot-scope="row">{{row.item.course_name}}</template>
+                <template slot="mission_type" slot-scope="row">{{row.item.officeItem_name}}</template>
                 <template slot="edit_control" slot-scope="row">
                     <a class="btn-link mx-1"
                         href="javascript:"

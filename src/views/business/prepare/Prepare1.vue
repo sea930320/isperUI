@@ -180,11 +180,11 @@
                         <template
                             slot="office_type"
                             slot-scope="row"
-                        >{{row.item.officeItem && row.item.officeItem.name}}</template>
+                        >{{row.item.officeItem_name}}</template>
                         <template
                             slot="part"
                             slot-scope="row"
-                        >{{row.item.target_parts && row.item.target_parts.text}}</template>
+                        >{{row.item.use_to && row.item.use_to.text}}</template>
                         <template slot="action" slot-scope="row">
                             <a
                                 class="btn-link mx-1"
@@ -209,7 +209,7 @@
                 </div>
             </b-col>
         </b-row>
-        <business-start-modal></business-start-modal>
+        <business-start-modal ></business-start-modal>
     </div>
 </template>
 
