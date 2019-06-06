@@ -63,7 +63,7 @@
                                 label-for="input-horizontal"
                         >
                             <b-form-input id="input-horizontal" maxlength="32" v-model="ad_name"
-                                          required></b-form-input>
+                                          placeholder="请输入名称（32个字以下）" required></b-form-input>
                         </b-form-group>
                         <!--</div>-->
                     </b-col>
@@ -174,7 +174,8 @@
                 },
                 queryParam: {
                     page: 1,
-                    size: 7
+                    size: 7,
+                    is_home:false
                 },
                 queryDebounceParam: {
                     search: ""
@@ -218,6 +219,7 @@
                     });
             },
             saveDoc(){
+
                 AdvertisingService
                     .createAdvertising({
                         "ad_name": this.ad_name,

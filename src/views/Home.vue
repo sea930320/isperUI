@@ -196,7 +196,8 @@
                 queryParam: {
                     status: "",
                     page: 1,
-                    size: 5
+                    size: 5,
+                    is_home:true
                 },
                 queryDebounceParam: {
                     search: ""
@@ -219,7 +220,7 @@
                             tmpJSON.title = this.advertising.list[j].name;
                             tmpJSON.created_at = this.advertising.list[
                                 j
-                                ].create_time;
+                                ].public_time;
                             if (tmpJSON.created_at.split(' ')[0] == today) {
                                 tmpJSON.isNew = 1;
                             } else {
