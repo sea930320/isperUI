@@ -43,7 +43,18 @@ class BusinessService {
       })
     }
 
-
+    /**
+     * 获取实验详情
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/detail',
+            params: data
+        })
+    }
 
     /**
      * 业务

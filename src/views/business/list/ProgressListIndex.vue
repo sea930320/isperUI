@@ -32,7 +32,7 @@
                         :size="template_size"
                         class="styledBtn"
                         variant="outline-primary"
-                        @click="startBusiness(row.item)"
+                        @click="runBusiness(row.item)"
                     >办理</b-button>
                 </template>
             </b-table>
@@ -148,16 +148,44 @@ export default {
                     this.$emit("data-failed");
                 });
         },
-        startBusiness(business) {
+        runBusiness(business) {
+            if (business.status === 9) {
+                this.$toasted.error("该实验已结束不能重新开始");
+                return false;
+            }
+            if (business.status === 2) {
+                this.run();
+                businessService
+                    .getBusinessDetail({ business_id: business.id })
+                    .then(data => {
+                        this.$emit("data-ready");
+                        if (data.role_not_set) {
+                            this.$toasted.error(data.role_not_set);
+                            return;
+                        }
+                        this.toProgress(data);
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+                return;
+            }
             this.run();
             businessService
                 .startBusiness({ business_id: business.id })
-                .then(() => {
+                .then(data => {
                     this.$emit("data-ready");
+                    this.toProgress(data);
                 })
                 .catch(() => {
                     this.$emit("data-failed");
                 });
+        },
+        toProgress(data) {
+            let type = data.node.process_type;
+            this.$router.push({
+                path: `/business/progress/${type}/${data.id}/${data.node.id}`
+            });
         }
     }
 };
