@@ -163,7 +163,7 @@
                     <a
                         class="btn-link mx-1"
                         href="javascript:"
-                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag && row.item.created_role==userInfo.role"
+                        v-if="isActionAllowed('code_workflow_management', 'code_edit_workflow') && row.item.edited && row.item.created_by.id==userInfo.id && !isSuperFlag"
                         @click="saveWorkflow(row.item)"
                     >
                         <icon name="save"></icon>
