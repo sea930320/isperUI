@@ -97,9 +97,9 @@ export default {
     // 退出
     quit() {
       if (this.userInfo.identity === 4) {
-        this.$router.push({ path: "/mentor/guide" });
+        this.$router.push({ path: "/business/guide" });
       } else {
-        this.$router.push({ path: "/experiment/doing" });
+        this.$router.push({ path: "/business/list/progress" });
       }
     },
     // 编辑成员角色

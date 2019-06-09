@@ -1,5 +1,5 @@
 import * as types from './types'
-// import experimentService from '@/services/experimentService'
+import businessService from '@/services/businessService'
 
 export default {
   showLoading({
@@ -35,10 +35,10 @@ export default {
   }, data) {
     commit(types.SEND_MESSAGE_SUCCESS, data)
   },
-  setCurrentRole({
+  setCurrentRoleAllocation({
     commit
   }, data) {
-    commit(types.SET_CURRENT_ROLE, data)
+    commit(types.SET_CURRENT_ROLE_ALLOCATION, data)
   },
   dispatchFlashAction({
     commit
@@ -65,99 +65,99 @@ export default {
   }, data) {
     commit(types.UPDATE_VOTE_STATUS, data)
   },
-  updateUserRoles({
+  updateUserRoleAllocs({
     commit
   }, data) {
-    commit(types.UPDATE_USER_ROLES, data)
+    commit(types.UPDATE_USER_ROLE_ALLOCS, data)
   },
   setPermission({
     commit
   }, data) {
     commit(types.SET_PERMISSION, data)
-  }
-  // getExperimentDetail({
-  //   commit
-  // }, params) {
-  //   return new Promise((resolve, reject) => {
-  //     experimentService
-  //       .getExperimentDetail(params)
-  //       .then(data => {
-  //         resolve(data)
-  //         commit(types.GET_EXPERIMENT_DETAIL_SUCCESS, data)
-  //       }).catch(err => {
-  //         reject(err)
-  //       })
-  //   })
-  // },
-  // getExperimentNodeDetail({
-  //   commit
-  // }, params) {
-  //   return new Promise((resolve, reject) => {
-  //     experimentService
-  //       .getExperimentNodeDetail(params)
-  //       .then(data => {
-  //         resolve(data)
-  //         commit(types.GET_EXPERIMENT_NODE_DETAIL_SUCCESS, data)
-  //       }).catch((err) => {
-  //         reject(err)
-  //       })
-  //   })
-  // },
-  // getExperimentNodeMessages({
-  //   commit
-  // }, params) {
-  //   experimentService
-  //     .getExperimentNodeMessages(params)
-  //     .then(data => {
-  //       commit(types.GET_EXPERIMENT_NODE_MESSAGES_SUCCESS, data.results)
-  //     })
-  // },
-  // getExperimentNodeDocs({
-  //   commit
-  // }, params) {
-  //   experimentService
-  //     .getExperimentNodeDocs(params)
-  //     .then(data => {
-  //       commit(types.GET_EXPERIMENT_NODE_DOCS_SUCCESS, data)
-  //     })
-  // },
+  },
+  getBusinessDetail({
+    commit
+  }, params) {
+    return new Promise((resolve, reject) => {
+      businessService
+        .getBusinessDetail(params)
+        .then(data => {
+          resolve(data)
+          commit(types.GET_BUSINESS_DETAIL_SUCCESS, data)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getBusinessNodeDetail({
+    commit
+  }, params) {
+    return new Promise((resolve, reject) => {
+      businessService
+        .getBusinessNodeDetail(params)
+        .then(data => {
+          resolve(data)
+          commit(types.GET_BUSINESS_NODE_DETAIL_SUCCESS, data)
+        }).catch((err) => {
+          reject(err)
+        })
+    })
+  },
+  getBusinessNodeMessages({
+    commit
+  }, params) {
+    businessService
+      .getBusinessNodeMessages(params)
+      .then(data => {
+        commit(types.GET_BUSINESS_NODE_MESSAGES_SUCCESS, data.results)
+      })
+  },
+  getBusinessNodeFunction({
+    commit
+  }, params) {
+    businessService
+      .getBusinessNodeFunction(params)
+      .then(data => {
+        commit(types.GET_BUSINESS_NODE_FUNCTION_SUCCESS, data)
+        commit(types.UPDATE_USER_ROLE_ALLOCS, data.user_role_allocs)
+        commit(types.HIDE_LOADING)
+      })
+  },
+  getBusinessNodeDocs({
+    commit
+  }, params) {
+    businessService
+      .getBusinessNodeDocs(params)
+      .then(data => {
+        commit(types.GET_BUSINESS_NODE_DOCS_SUCCESS, data)
+      })
+  },
   // queryVoteStatus({
   //   commit
   // }, params) {
-  //   experimentService
+  //   businessService
   //     .queryVoteStatus(params)
   //     .then(data => {
   //       commit(types.QUERY_VOTE_STATUS_SUCCESS, data)
   //       commit(types.HIDE_LOADING)
   //     })
   // },
-  // getExperimentProjectTips({
+  // getBusinessProjectTips({
   //   commit
   // }, params) {
-  //   experimentService
-  //     .getExperimentTemplates(params)
+  //   businessService
+  //     .getBusinessTemplates(params)
   //     .then(data => {
-  //       commit(types.GET_EXPERIMENT_PROJECT_TIPS_SUCCESS, data)
-  //     })
-  // },
-  // getExperimentNodeFunction({
-  //   commit
-  // }, params) {
-  //   experimentService
-  //     .getExperimentNodeFunction(params)
-  //     .then(data => {
-  //       commit(types.GET_EXPERIMENT_NODE_FUNCTION_SUCCESS, data)
-  //       commit(types.UPDATE_USER_ROLES, data.user_roles)
-  //       commit(types.HIDE_LOADING)
+  //       commit(types.GET_BUSINESS_PROJECT_TIPS_SUCCESS, data)
   //     })
   // },
   // getExperienceList({
   //   commit
   // }, params) {
-  //   experimentService
+  //   businessService
   //     .getExperienceList(params)
   //     .then(data => {
-  //       commit(types.GET_EXPERIMENT_EXPERIENCE_SUCCESS, data)
+  //       commit(types.GET_BUSINESS_EXPERIENCE_SUCCESS, data)
   //     })
   // }
 }

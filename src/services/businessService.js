@@ -36,11 +36,11 @@ class BusinessService {
      * @returns {{pre, visitor}|*}
      */
     startBusiness(data) {
-      return xhr({
-        method: 'post',
-        url: '/business/start',
-        params: data
-      })
+        return xhr({
+            method: 'post',
+            url: '/business/start',
+            params: data
+        })
     }
 
     /**
@@ -52,6 +52,71 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/business/detail',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验环节详情
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessNodeDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/node/detail',
+            params: data
+        })
+    }
+
+    /**
+     * 获得结束并走向的 选项
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessTransPath(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/trans/path',
+            params: data
+        })
+    }
+
+    /**
+     * 获取环节交流历史记录
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessNodeMessages(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/node/messages',
+            params: data
+        })
+    }
+
+    /**
+     * 获取动画环节所有功能按钮
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessNodeFunction(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/node/function',
+            params: data
+        })
+    }
+    
+    /**
+     * 获取实验环节所有素材
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessNodeDocs(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/node/role/docs',
             params: data
         })
     }
