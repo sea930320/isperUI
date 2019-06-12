@@ -96,14 +96,9 @@ import businessService from "@/services/businessService";
 import { mapState } from "vuex";
 export default {
     components: { Loading },
-    props: {
-        visible: {
-            type: Boolean,
-            default: false
-        }
-    },
     data() {
         return {
+            visible: false,
             signShow: -1,
             checkSignModal: false,
             checkFileModal: false,
@@ -120,6 +115,11 @@ export default {
     },
     computed: {
         ...mapState(["userInfo"])
+    },
+    created() {
+        this.$parent.$on("openSubmittedFileModal", () => {
+            this.visible = true;
+        });
     },
     methods: {
         cancelCommit() {
@@ -147,7 +147,6 @@ export default {
         }
     },
     mounted() {
-        this.init();
         document.addEventListener("click", () => {
             this.signShow = -1;
         });
@@ -159,7 +158,7 @@ export default {
             }
         },
         pageParam: {
-            handler(param) {
+            handler() {
                 this.init();
             },
             deep: true

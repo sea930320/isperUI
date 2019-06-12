@@ -159,7 +159,8 @@ export default {
         Dropdown,
         sendMsgModal,
         receiveMsgModal,
-        resultsModal
+        resultsModal,
+        submittedFileModal
     },
     data() {
         return {

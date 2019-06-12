@@ -1,41 +1,59 @@
 <template>
-    <b-modal centered v-model="visible" size="lg" v-if="project">
-        <b-container fluid class="business-start-modal">
-            <b-row align-v="start">
-                <b-col cols="4" class="text-left text-content">
-                    <label>项目创建单位 :</label>
-                    {{project.company_name}}
-                </b-col>
-                <b-col cols="4" class="text-left text-content">
-                    <label>项目名称 :</label>
-                    {{project.name}}
-                </b-col>
-                <b-col cols="4" class="text-left text-content">
-                    <label>事务类型 :</label>
-                    {{project.officeItem_name}}
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col cols="12" class="text-left text-content mt-4">
-                    <label>项目简介</label>
-                    <div class="project-description w-100 p-2">{{project.intro}}</div>
-                </b-col>
-            </b-row>
-        </b-container>
-        <div slot="modal-footer" class="w-100">
-            <b-button variant="primary" class="float-center mr-5" @click="xmlModalShow = true">查看流程图</b-button>
-            <b-button variant="success" class="float-center" @click="startBusiness(true)">启动业务</b-button>
-        </div>
-        <!-- 查看流程图 -->
-        <view-xml :visible="xmlModalShow" :xml="project.flow.xml" @on-close="xmlModalShow = false"></view-xml>
-        <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
-            <div class="row">
-                <b-form-select v-model="project.use_to_company" class="col-7 offset-1"
-                               :options="company_list"></b-form-select>
-                <b-button variant="success" class="float-center col-2 offset-1" @click="startBusiness(false)">确定</b-button>
+    <div>
+        <loading v-if="isRunning"></loading>
+        <b-modal centered v-model="visible" size="lg" v-if="project">
+            <b-container fluid class="business-start-modal">
+                <b-row align-v="start">
+                    <b-col cols="4" class="text-left text-content">
+                        <label>项目创建单位 :</label>
+                        {{project.company_name}}
+                    </b-col>
+                    <b-col cols="4" class="text-left text-content">
+                        <label>项目名称 :</label>
+                        {{project.name}}
+                    </b-col>
+                    <b-col cols="4" class="text-left text-content">
+                        <label>事务类型 :</label>
+                        {{project.officeItem_name}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col cols="12" class="text-left text-content mt-4">
+                        <label>项目简介</label>
+                        <div class="project-description w-100 p-2">{{project.intro}}</div>
+                    </b-col>
+                </b-row>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-button
+                    variant="primary"
+                    class="float-center mr-5"
+                    @click="xmlModalShow = true"
+                >查看流程图</b-button>
+                <b-button variant="success" class="float-center" @click="startBusiness(true)">启动业务</b-button>
             </div>
+            <!-- 查看流程图 -->
+            <view-xml
+                :visible="xmlModalShow"
+                :xml="project.flow.xml"
+                @on-close="xmlModalShow = false"
+            ></view-xml>
+            <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
+                <div class="row">
+                    <b-form-select
+                        v-model="project.use_to_company"
+                        class="col-7 offset-1"
+                        :options="company_list"
+                    ></b-form-select>
+                    <b-button
+                        variant="success"
+                        class="float-center col-2 offset-1"
+                        @click="startBusiness(false)"
+                    >确定</b-button>
+                </div>
+            </b-modal>
         </b-modal>
-    </b-modal>
+    </div>
 </template>
 <script>
 import ViewXml from "@/components/workflowXML/ViewXML";
@@ -69,27 +87,31 @@ export default {
     computed: {},
     methods: {
         isEmpty(obj) {
-            for(let key in obj) {
-                if(obj.hasOwnProperty(key))
-                    return false;
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) return false;
             }
             return true;
         },
         startBusiness(init) {
-            if (this.project.created_role === 2 && (this.project.use_to_company === undefined || init)){
-                GroupService
-                    .getCompanyListOfGroup({groupID: this.$parent.queryParam.group_id})
-                    .then(data => {
-                        this.company_list = data.results;
-                        this.$refs['selectUse_to'].show()
-                    });
+            if (
+                this.project.created_role === 2 &&
+                (this.project.use_to_company === undefined || init)
+            ) {
+                GroupService.getCompanyListOfGroup({
+                    groupID: this.$parent.queryParam.group_id
+                }).then(data => {
+                    this.company_list = data.results;
+                    this.$refs["selectUse_to"].show();
+                });
             } else {
-                this.$refs['selectUse_to'].hide();
+                this.$refs["selectUse_to"].hide();
                 let postData = {};
                 if (this.project.created_role === 2)
-                    postData = { project_id: this.project.id, use_to: this.project.use_to_company };
-                else
-                    postData = { project_id: this.project.id};
+                    postData = {
+                        project_id: this.project.id,
+                        use_to: this.project.use_to_company
+                    };
+                else postData = { project_id: this.project.id };
                 if (this.project) {
                     this.visible = false;
                     businessService
