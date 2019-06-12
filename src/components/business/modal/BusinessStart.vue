@@ -1,5 +1,5 @@
 <template>
-    <b-modal v-model="visible" size="lg" v-if="project">
+    <b-modal centered v-model="visible" size="lg" v-if="project">
         <b-container fluid class="business-start-modal">
             <b-row align-v="start">
                 <b-col cols="4" class="text-left text-content">
@@ -12,7 +12,7 @@
                 </b-col>
                 <b-col cols="4" class="text-left text-content">
                     <label>事务类型 :</label>
-                    {{project.officeItem && project.officeItem.name}}
+                    {{project.officeItem_name}}
                 </b-col>
             </b-row>
             <b-row>
@@ -24,24 +24,36 @@
         </b-container>
         <div slot="modal-footer" class="w-100">
             <b-button variant="primary" class="float-center mr-5" @click="xmlModalShow = true">查看流程图</b-button>
-            <b-button variant="success" class="float-center" @click="startBusiness()">启动业务</b-button>
+            <b-button variant="success" class="float-center" @click="startBusiness(true)">启动业务</b-button>
         </div>
         <!-- 查看流程图 -->
         <view-xml :visible="xmlModalShow" :xml="project.flow.xml" @on-close="xmlModalShow = false"></view-xml>
+        <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
+            <div class="row">
+                <b-form-select v-model="project.use_to_company" class="col-7 offset-1"
+                               :options="company_list"></b-form-select>
+                <b-button variant="success" class="float-center col-2 offset-1" @click="startBusiness(false)">确定</b-button>
+            </div>
+        </b-modal>
     </b-modal>
 </template>
 <script>
 import ViewXml from "@/components/workflowXML/ViewXML";
 import businessService from "@/services/businessService";
+import GroupService from "@/services/groupService";
+import Loading from "@/components/loading/Loading";
+
 export default {
     components: {
+        Loading,
         ViewXml
     },
     data() {
         return {
             visible: false,
             project: null,
-            xmlModalShow: false
+            xmlModalShow: false,
+            company_list: []
         };
     },
     created() {
@@ -56,24 +68,40 @@ export default {
     },
     computed: {},
     methods: {
-        startBusiness() {
-            if (this.project) {
-                this.run();
-                businessService
-                    .createBusiness({
-                        project_id: this.project.id
-                    })
-                    .then(() => {
-                        // this.$router.push({
-                        //     name: "editTask",
-                        //     params: { task_id: data.id }
-                        // });
-                        this.$emit("data-ready");
-                        this.visible = false;
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
+        isEmpty(obj) {
+            for(let key in obj) {
+                if(obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+        },
+        startBusiness(init) {
+            if (this.project.created_role === 2 && (this.project.use_to_company === undefined || init)){
+                GroupService
+                    .getCompanyListOfGroup({groupID: this.$parent.queryParam.group_id})
+                    .then(data => {
+                        this.company_list = data.results;
+                        this.$refs['selectUse_to'].show()
                     });
+            } else {
+                this.$refs['selectUse_to'].hide();
+                let postData = {};
+                if (this.project.created_role === 2)
+                    postData = { project_id: this.project.id, use_to: this.project.use_to_company };
+                else
+                    postData = { project_id: this.project.id};
+                if (this.project) {
+                    this.visible = false;
+                    businessService
+                        .createBusiness(postData)
+                        .then(() => {
+                            this.$emit("data-ready");
+                            this.$toasted.success("创建成功。");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             }
         }
     },

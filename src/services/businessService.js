@@ -232,6 +232,17 @@ class BusinessService {
     }
 
     /**
+     * 业务
+     */
+    getUnitUserList(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/getUnitUserList',
+            params: data
+        })
+    }
+
+    /**
      * 回复留言
      * @param data 参数
      * @param data.from_user_id 发送者id
@@ -269,6 +280,16 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/business/file/display/list',
+            params: data
+        })
+    }
+    /**
+     * 业务
+     */
+    addMoreTeammates(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/addMoreTeammates',
             params: data
         })
     }

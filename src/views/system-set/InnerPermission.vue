@@ -28,15 +28,6 @@
                 </template>
             </b-table>
         </div>
-        <b-row class="justify-content-end row-margin-tweak mx-0 mt-4 cardDiv">
-            <b-pagination
-                    :size="template_size"
-                    :total-rows="allData.total"
-                    :per-page="queryParam.size"
-                    limit="5"
-                    v-model="queryParam.page"
-            ></b-pagination>
-        </b-row>
         <b-modal hide-footer centered  v-model="editInnerPermission" title="修改事务类型">
             <div>
                 <b-form @submit="editInnerPermissionSave" class="container pt-3" >
@@ -116,11 +107,6 @@
                         class: "text-center field-action"
                     }
                 },
-                queryParam: {
-                    page: 1,
-                    size: 5,
-                    group_id: null
-                },
                 queryDebounceParam: {
                     search: ""
                 },
@@ -142,12 +128,6 @@
             })}
         },
         watch: {
-            queryParam: {
-                handler() {
-                    this.queryDataList();
-                },
-                deep: true
-            },
             queryDebounceParam: {
                 deep: true,
                 handler: _.debounce(function () {
@@ -159,7 +139,7 @@
             queryDataList() {
                 this.run();
                 PartPositionService
-                    .getInnerPermissions({...this.queryParam, ...this.queryDebounceParam})
+                    .getInnerPermissions({...this.queryDebounceParam})
                     .then(data => {
                         this.allData.list = data.results.data;
                         this.autocompleteItems = data.results.items;
@@ -178,7 +158,7 @@
                     .then(data => {
                         if (data.results === 'success') {
                             PartPositionService
-                                .getInnerPermissions({...this.queryParam, ...this.queryDebounceParam})
+                                .getInnerPermissions({...this.queryDebounceParam})
                                 .then(data => {
                                     this.allData.list = data.results.data;
                                     this.autocompleteItems = data.results.items;

@@ -119,19 +119,8 @@
                                         label-for="input-horizontal"
                                         class="text-left"
                                     >
-                                        <b-form-select v-model="project_data.officeItem" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')">
-                                            <optgroup
-                                                v-for="kind in options_officeItem"
-                                                :key="kind.label"
-                                                :label="kind.label"
-                                            >
-                                                <option
-                                                    v-for="item in kind.options"
-                                                    :key="item.value"
-                                                    :value="item.value"
-                                                >{{item.text}}</option>
-                                            </optgroup>
-                                        </b-form-select>
+                                        <b-form-input id="input-horizontal5" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
+                                                      v-model="project_data.officeItem_name" disabled></b-form-input>
                                     </b-form-group>
                                 </b-col>
                                 <b-col sm="6">
@@ -315,7 +304,7 @@
                                 </b-col>
                                 <b-col sm="4" align-v="center" v-if="project_id">
                                     <b-button-group class="float-center">
-                                        <b-button size="lg" type="submit" style="width:100%" variant="primary" @click="nextPage()">
+                                        <b-button size="lg" style="width:100%" variant="primary" @click="nextPage()">
                                             下一步
                                         </b-button>
                                     </b-button-group>
@@ -371,7 +360,6 @@
     import _ from "lodash";
     import ProjectService from "@/services/projectService";
     import CourseService from "@/services/courseService";
-    import DictionaryService from "@/services/dictionaryService";
     import VueTagsInput from '@johmun/vue-tags-input';
 
     export default {
@@ -457,7 +445,6 @@
                     {value: 3, text: '最后'},
                 ],
                 options_course: [],
-                options_officeItem: [],
                 savedBit: false,
                 // 查询参数
                 queryParam: {
@@ -554,6 +541,7 @@
                             course: '',
                             reference: 1,
                             officeItem: 0,
+                            officeItem_name: '',
                             public_status: 1,
                             level: 0,
                             entire_graph: 1,
@@ -669,15 +657,6 @@
                         this.$emit("data-failed");
                         this.$router.push('/manager/project');
                     });
-                DictionaryService
-                    .getOfficeItemData()
-                    .then(data => {
-                        this.options_officeItem = data.results;
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                        this.$router.push('/manager/project');
-                    });
                 ProjectService
                     .getAllUsers_AllParts()
                     .then(data => {
@@ -741,6 +720,8 @@
                     this.selectedWorkflow = items[0].id;
                     this.project_data.flow_id = items[0].id;
                     this.project_data.flow_name = items[0].name;
+                    this.project_data.officeItem = items[0].officeItem;
+                    this.project_data.officeItem_name = items[0].officeItem_name;
                     this.flow_name = items[0].name;
                     this.$refs['selectFlowModal'].hide();
 
@@ -775,7 +756,7 @@
                             },
                             {
                                 'title': '事务类型',
-                                'content': this.options_officeItem.filter(item => item.value === data.officeItem)[0]
+                                'content': data.officeItem_name
                             },
                             {'title': '关联课程', 'content': ''},
                             {'title': '开发时段（开始时间）', 'content': data.start_time},
