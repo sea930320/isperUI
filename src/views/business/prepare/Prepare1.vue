@@ -7,9 +7,9 @@
                     <div class="d-flex flex-row flex-wrap">
                         <div class="flex-fill">
                             <b-button
-                                :variant="queryParam.by_method=='company' ? 'primary':'secondary'"
+                                :variant="queryParam.by_method==='company' ? 'primary':'secondary'"
                                 class="no-round"
-                                v-bind:class="{active:queryParam.by_method=='company', inactive:queryParam.by_method!='company'}"
+                                v-bind:class="{active:queryParam.by_method==='company', inactive:queryParam.by_method!=='company'}"
                                 block
                                 size="sm"
                                 to="/business/prepare/prepare1/company"
@@ -17,8 +17,8 @@
                         </div>
                         <div class="flex-fill">
                             <b-button
-                                :variant="queryParam.by_method!='company' ? 'primary':'secondary'"
-                                v-bind:class="{active:queryParam.by_method!='company', inactive:queryParam.by_method=='company'}"
+                                :variant="queryParam.by_method!=='company' ? 'primary':'secondary'"
+                                v-bind:class="{active:queryParam.by_method!=='company', inactive:queryParam.by_method==='company'}"
                                 class="no-round"
                                 block
                                 size="sm"
@@ -28,7 +28,7 @@
                     </div>
                     <b-list-group
                         class="d-inline-flex m-0 p-0 w-100 mt-1"
-                        v-if="queryParam.by_method == 'company'"
+                        v-if="queryParam.by_method === 'company'"
                     >
                         <template v-for="(group, index) in groups">
                             <b-list-group-item
@@ -37,7 +37,7 @@
                                 :id="'groupIndex' + index"
                                 v-b-toggle="'collapse-'+group.id"
                                 @click="groupClicked(group, 'groupIndex' + index)"
-                                :active="activeItemId=='groupIndex' + index"
+                                :active="activeItemId==='groupIndex' + index"
                             >
                                 {{group.name}}
                                 <icon
@@ -55,8 +55,8 @@
                                         <b-list-group-item
                                             class="d-flex justify-content-between align-items-center subListItem no-round"
                                             :key="'companyIndex' + index + index1"
-                                            v-if="company.name !='DEFAULT-COMPANY'"
-                                            :active="activeItemId=='companyIndex' + index + index1"
+                                            v-if="company.name !=='DEFAULT-COMPANY'"
+                                            :active="activeItemId==='companyIndex' + index + index1"
                                             @click="companyClicked(group, company, 'companyIndex' + index + index1)"
                                         >{{company.name}}</b-list-group-item>
                                     </template>
@@ -70,14 +70,14 @@
                                 class="d-flex justify-content-between align-items-center no-round"
                                 :key="'officeKindIndex' + index"
                                 @click="officeKindClicked(officeKind, index)"
-                                :active="activeItemId=='officeKindIndex' + index"
+                                :active="activeItemId==='officeKindIndex' + index"
                             >{{officeKind.name}}</b-list-group-item>
                         </template>
                     </b-list-group>
                 </div>
             </b-col>
             <b-col cols="9">
-                <div class="cardDiv p-0" v-if="queryParam.by_method=='company'">
+                <div class="cardDiv p-0" v-if="queryParam.by_method==='company'">
                     <b-row class="mb-3">
                         <b-col class="text-center py-3 bordered">
                             <h3>{{queryParam.company_id?'单位简介':queryParam.group_id?'集群简介':''}}</h3>
@@ -85,8 +85,8 @@
                                 class="text-left"
                             >{{queryParam.company_id?selectedCompany && selectedCompany.comment:queryParam.group_id?selectedGroup && selectedGroup.comment:''}}</div>
                         </b-col>
-                        <b-col class="text-center py-3 bordered" style="border-left: 0px">
-                            <h4>gong ji sa hang</h4>
+                        <b-col class="text-center py-3 bordered" style="border-left: 0">
+                            <h4>公示栏</h4>
                             <div class="text-left">
                                 <b-list-group>
                                     <b-list-group-item
@@ -112,7 +112,7 @@
                             v-for="(office, index) in selOfficeKind.subItems"
                             :key="index"
                             class="no-round transparent-bg mx-2"
-                            :active="queryParam.office_id==office.sid"
+                            :active="queryParam.office_id===office.sid"
                             @click="queryParam.office_id=office.sid"
                         >{{office.sname}}</b-nav-item>
                     </b-nav>
@@ -141,7 +141,7 @@
                             >
                                 <b-card
                                     :title="project.name"
-                                    v-bind:class="{active:startedProject && startedProject.id==project.id}"
+                                    v-bind:class="{active:startedProject && startedProject.id===project.id}"
                                     @click="startBusiness(project)"
                                 >
                                     <b-card-text>{{project.intro}}</b-card-text>
@@ -150,7 +150,7 @@
                         </b-row>
                     </div>
                 </div>
-                <b-row class="cardDiv" v-if="queryParam.by_method=='company'">
+                <b-row class="cardDiv" v-if="queryParam.by_method==='company'">
                     <b-col lg="3" md="6" sm="12">
                         <b-input-group :size="template_size">
                             <b-input-group-prepend>
@@ -165,7 +165,7 @@
                         </b-input-group>
                     </b-col>
                 </b-row>
-                <div class="cardDiv" v-if="queryParam.by_method=='company'">
+                <div class="cardDiv" v-if="queryParam.by_method==='company'">
                     <b-table
                         :items="projects.list"
                         responsive
@@ -254,27 +254,27 @@ export default {
                 company_name: {
                     label: "项目创建单位",
                     sortable: false,
-                    class: "text-center w-20"
+                    class: "text-center w-25"
                 },
                 name: {
                     label: "项目名称",
                     sortable: false,
-                    class: "text-center w-20"
+                    class: "text-center w-25"
                 },
                 office_type: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center w-20"
+                    class: "text-center w-25"
                 },
                 part: {
                     label: "部门",
                     sortable: false,
-                    class: "text-center w-20"
+                    class: "text-center w-15"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center w-15"
+                    class: "text-center w-5"
                 }
             },
             projects: {
@@ -286,7 +286,7 @@ export default {
     },
     beforeRouteUpdate(to, from, next) {
         this.queryParam.by_method = to.params.by;
-        if (this.queryParam.by_method == "company") {
+        if (this.queryParam.by_method === "company") {
             this.getGroupList();
         } else {
             this.getOfficeList();
@@ -296,7 +296,7 @@ export default {
     created() {
         this.$nextTick(() => {
             this.queryParam.by_method = this.$route.params.by;
-            if (this.queryParam.by_method == "company") {
+            if (this.queryParam.by_method === "company") {
                 this.getGroupList();
             } else {
                 this.getOfficeList();
@@ -362,14 +362,14 @@ export default {
                     if (this.groups.length > 0) {
                         this.queryParam.group_id = this.userInfo.manager_info.group_id;
                         let groupIndex = this.groups.findIndex(group => {
-                            return group.id == this.queryParam.group_id;
+                            return group.id === this.queryParam.group_id;
                         }, this);
                         if (this.userInfo.manager_info.company_id) {
                             this.queryParam.company_id = this.userInfo.manager_info.company_id;
                             let companyIndex = this.groups[
                                 groupIndex
                             ].companies.findIndex(company => {
-                                return company.id == this.queryParam.company_id;
+                                return company.id === this.queryParam.company_id;
                             }, this);
                             let groupId = this.queryParam.group_id;
                             setTimeout(() => {
@@ -411,10 +411,7 @@ export default {
                 });
         },
         queryProjectList() {
-            if (
-                this.queryParam.by_method == "office" &&
-                this.queryParam.office_id == null
-            ) {
+            if ( this.queryParam.by_method === "office" && this.queryParam.office_id === null ) {
                 this.projects = {
                     list: [],
                     total: 0

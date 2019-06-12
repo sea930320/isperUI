@@ -110,6 +110,28 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 业务
+     */
+    getUnitUserList(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/getUnitUserList',
+            params: data
+        })
+    }
+
+    /**
+     * 业务
+     */
+    addMoreTeammates(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/addMoreTeammates',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

@@ -14,7 +14,7 @@ export default {
             } else if ([6, 7, 8].includes(role)) {
                 return "/assistant/";
             } else {
-                return "/user/";
+                return "/business/";
             }
         }
     },

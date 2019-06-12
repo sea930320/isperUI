@@ -140,6 +140,10 @@ const routes = [{
             path: 'business',
             name: 'business-manager',
             component: () => import('@/views/manager/business/BusinessIndex.vue')
+        }, {
+            path: '/moreTeammates',
+            name: 'manager-moreTeammates',
+            component: () => import('@/views/personal-center/MoreTeammates.vue')
         }
     ]
 },
@@ -190,6 +194,10 @@ const routes = [{
             children: [
                 { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') }
             ]
+        }, {
+            path: '/moreTeammates',
+            name: 'business-moreTeammates',
+            component: () => import('@/views/personal-center/MoreTeammates.vue')
         }
     ]
 }

@@ -1,5 +1,5 @@
 <template>
-    <b-modal v-model="visible" size="lg" v-if="project">
+    <b-modal centered v-model="visible" size="lg" v-if="project">
         <b-container fluid class="business-start-modal">
             <b-row align-v="start">
                 <b-col cols="4" class="text-left text-content">
@@ -24,19 +24,15 @@
         </b-container>
         <div slot="modal-footer" class="w-100">
             <b-button variant="primary" class="float-center mr-5" @click="xmlModalShow = true">查看流程图</b-button>
-            <b-button variant="success" class="float-center" @click="startBusiness()">启动业务</b-button>
+            <b-button variant="success" class="float-center" @click="startBusiness(true)">启动业务</b-button>
         </div>
         <!-- 查看流程图 -->
         <view-xml :visible="xmlModalShow" :xml="project.flow.xml" @on-close="xmlModalShow = false"></view-xml>
         <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
-            <div>
-                <b-col sm="4" class="mb-3">
-                </b-col>
-                <b-col sm="12">
-                    <b-form-select v-model="project.use_to_company"
-                                   :options="company_list"></b-form-select>
-                </b-col>
-                <b-button variant="success" class="float-center" @click="startBusiness()">确定</b-button>
+            <div class="row">
+                <b-form-select v-model="project.use_to_company" class="col-7 offset-1"
+                               :options="company_list"></b-form-select>
+                <b-button variant="success" class="float-center col-2 offset-1" @click="startBusiness(false)">确定</b-button>
             </div>
         </b-modal>
     </b-modal>
@@ -45,8 +41,11 @@
 import ViewXml from "@/components/workflowXML/ViewXML";
 import businessService from "@/services/businessService";
 import GroupService from "@/services/groupService";
+import Loading from "@/components/loading/Loading";
+
 export default {
     components: {
+        Loading,
         ViewXml
     },
     data() {
@@ -76,8 +75,8 @@ export default {
             }
             return true;
         },
-        startBusiness() {
-            if (this.project.created_role === 2 && this.project.use_to_company === undefined){
+        startBusiness(init) {
+            if (this.project.created_role === 2 && (this.project.use_to_company === undefined || init)){
                 GroupService
                     .getCompanyListOfGroup({groupID: this.$parent.queryParam.group_id})
                     .then(data => {
@@ -92,12 +91,12 @@ export default {
                 else
                     postData = { project_id: this.project.id};
                 if (this.project) {
-                    this.run();
+                    this.visible = false;
                     businessService
                         .createBusiness(postData)
                         .then(() => {
                             this.$emit("data-ready");
-                            this.visible = false;
+                            this.$toasted.success("创建成功。");
                         })
                         .catch(() => {
                             this.$emit("data-failed");

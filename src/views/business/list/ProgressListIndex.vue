@@ -33,6 +33,7 @@
                         class="styledBtn"
                         variant="outline-primary"
                         @click="runBusiness(row.item)"
+                        :disabled="row.item.status === 1"
                     >办理</b-button>
                 </template>
             </b-table>
