@@ -13,6 +13,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.16",
+    "bp-vuejs-dropdown": "^2.1.1",
     "bpmn-js": "^0.19.0",
     "bpmn-js-in-color": "github:bpmn-io/bpmn-js-in-color",
     "core-js": "^2.6.5",

@@ -1,17 +1,28 @@
 <template>
     <div class="progress-index" v-if="userInfo">
-        <router-view></router-view>
-        <view-xml :visible="XMLModal" :xml="flowChart.xml" :options="flowChart.options" @on-close="XMLModal = false"></view-xml>
+        <progress-menu @emit-viewxml="showFlowChart"></progress-menu>
+        <div class="container" style="minHeight: calc(100vh - 210px); padding: 130px 0 0 0;">
+            <router-view v-if="!XMLModal"></router-view>
+        </div>
+        <view-xml
+            :visible="XMLModal"
+            :xml="flowChart.xml"
+            :options="flowChart.options"
+            @on-close="XMLModal = false"
+        ></view-xml>
+        <loading v-if="loaderShow"></loading>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
 import businessService from "@/services/businessService";
+import Loading from "@/components/loading/FullLoading";
 import ViewXml from "@/components/workflowXML/ViewXML";
+import ProgressMenu from "@/components/business/progress/Menu";
 export default {
     name: "progress-index",
-    components: {ViewXml},
+    components: { Loading, ViewXml, ProgressMenu },
     filters: {},
     data() {
         return {
@@ -56,13 +67,13 @@ export default {
         $route() {
             this.flowChart.options.parttern = 2;
             this.init();
-        },
-        meta: {
-            handler(val) {
-                console.log(val);
-            },
-            deep: true
         }
+        // meta: {
+        //     handler(val) {
+        //         console.log(val);
+        //     },
+        //     deep: true
+        // }
     },
     methods: {
         ...mapActions([
@@ -173,6 +184,21 @@ export default {
                     });
             }
             // 逐步显示
+        },
+        // 查看流程图
+        showFlowChart() {
+            // 获取流程图数据
+            businessService
+                .getBusinessTransPath({
+                    business_id: this.$route.params.bid
+                })
+                .then(data => {
+                    this.flowChart.xml = data.xml;
+                    this.flowChart.options.parttern = 1;
+                    this.flowChart.options.currentTask = data.node.task_id;
+                    this.flowChart.options.paths = data.paths;
+                    this.XMLModal = true;
+                });
         },
         // 初始化动画（法庭）环节数据
         initAnimationData() {

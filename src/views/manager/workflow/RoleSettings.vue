@@ -793,10 +793,10 @@ export default {
             let allocations = [];
             let hasStartRole = false;
             for (let nodeIndex in this.nodeRoleGroupAllocations) {
-                let isStartNode = false;
-                if (this.nodes[nodeIndex].is_start_node) {
-                    isStartNode = true;
-                }
+                // let isStartNode = false;
+                // if (this.nodes[nodeIndex].is_start_node) {
+                //     isStartNode = true;
+                // }
                 for (let typeIndex in this.nodeRoleGroupAllocations[
                     nodeIndex
                 ]) {

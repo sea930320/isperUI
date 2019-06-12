@@ -61,7 +61,6 @@ Vue.use(VueClipboard);
 
 
 
-
 new Vue({
   router,
   store,
@@ -77,7 +76,7 @@ new Vue({
       // 检查是否存在session
       const user = JSON.parse(this.$cookie.get(STORAGE_KEY_USER));
       if (!user) {
-        if (!this.$route.name || ['home', 'register', 'advertising','advertisings'].includes(this.$route.name)) {
+        if (!this.$route.name || ['home', 'register', 'advertising', 'advertisings'].includes(this.$route.name)) {
           this.$router.push(this.$route.fullPath)
         } else {
           this.$router.push('/login')

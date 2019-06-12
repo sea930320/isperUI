@@ -107,7 +107,7 @@ class BusinessService {
             params: data
         })
     }
-    
+
     /**
      * 获取实验环节所有素材
      * @param data
@@ -172,6 +172,103 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/business/result',
+            params: data
+        })
+    }
+
+    /**
+     * 查询未读留言
+     * @param data 参数
+     * @param data.from_user_id 发送者id
+     */
+    unReadBusinessMessage(data) {
+        return xhr({
+            method: 'get',
+            url: '/cms/new/msg-business/num',
+            params: data
+        })
+    }
+    /**
+     * 发送留言
+     * @param data 参数
+     * @param data.from_user_id 发送者id
+     * @param data.content 发送内容
+     * @param data.to_user_ids 发送对象ids
+     * @param data.host_id 主题贴ID，回贴时必要
+     */
+    sendMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/cms/send/msg-business',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言的成员表
+     * @param data 参数
+     * @param data.business_id 实验id
+     */
+    getSendMembers(data) {
+        return xhr({
+            method: 'get',
+            url: '/cms/to/user/list-business',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getMessageList(data) {
+        return xhr({
+            method: 'get',
+            url: '/cms/msg/list-business',
+            params: data
+        })
+    }
+
+    /**
+     * 回复留言
+     * @param data 参数
+     * @param data.from_user_id 发送者id
+     * @param data.content 发送内容
+     * @param data.to_user_ids 发送对象ids
+     * @param data.host_id 主题贴ID，回贴时必要
+     */
+    replyMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/cms/send/msg-business',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验成果
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessResults(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/messages',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验展示列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessDisplayList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/file/display/list',
             params: data
         })
     }
