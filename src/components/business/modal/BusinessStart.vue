@@ -64,10 +64,10 @@ export default {
                         project_id: this.project.id
                     })
                     .then(() => {
-                        // this.$router.push({
-                        //     name: "editTask",
-                        //     params: { task_id: data.id }
-                        // });
+//                         this.$router.push({
+//                             name: "editTask",
+////                             params: { task_id: data.id }
+//                         });
                         this.$emit("data-ready");
                         this.visible = false;
                     })
