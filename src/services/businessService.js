@@ -283,6 +283,59 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 获取实验模板
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessTemplates(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/templates',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验所有环节对应笔记
+     * @param data
+     * @returns {*|{pre, visitor}}
+     */
+    getBusinessNoteList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/note/list',
+            params: data
+        })
+    }
+
+    /**
+     * 保存实验笔记
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    saveBusinessNote(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/note/create',
+            params: data
+        })
+    }
+
+    /**
+     * 发送消息到后端
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    pushMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/message/push',
+            params: data
+        })
+    }
+
     /**
      * 业务
      */

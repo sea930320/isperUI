@@ -1,10 +1,10 @@
 <template>
-    <modal :visible="visible" title="实验成果" :footerHide="true" size="large">
+    <b-modal v-model="visible" title="实验成果" :hide-footer="true" size="lg">
         <div class="collapse-wrapper my-notes-wrapper">
             <p class="tip">每个环节对应的实验成果如下</p>
             <div class></div>
         </div>
-    </modal>
+    </b-modal>
 </template>
 <script type="text/ecmascript-6">
 // import modal from 'components/modal/modal'

@@ -65,13 +65,13 @@
                                     <a href="javascript:;" @click="viewSubmittedFile">已提交文件</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;" @click="showModal = 3">成果参考</a>
+                                    <a href="javascript:;" @click="viewResultsRef">成果参考</a>
                                 </li>
                                 <li>
                                     <a
                                         href="javascript:;"
                                         v-if="userInfo.identity == 5"
-                                        @click="showModal = 4"
+                                        @click="viewMyNotes"
                                     >我的笔记</a>
                                 </li>
                             </ul>
@@ -101,7 +101,7 @@
                         </template>
                     </dropdown>
                 </b-nav-item>
-                <b-nav-item v-if="userInfo && userInfo.id && userInfo.id == metaInfo.leader">
+                <!-- <b-nav-item v-if="userInfo&&userInfo.id&&currentRoleAllocation.can_terminate">
                     <dropdown>
                         <template slot="btn">操作</template>
                         <template slot="icon">
@@ -111,25 +111,25 @@
                         <template slot="body">
                             <ul>
                                 <li>
-                                    <a href="javascript:;" @click="tipModal = 1">重新开始</a>
+                                    <a href="javascript:;" @click="restartBusiness()">重新开始</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;" @click="tipModal = 2">提前结束</a>
+                                    <a href="javascript:;" @click="endBusiness()">提前结束</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;" @click="backLastHandler">返回上一步</a>
+                                    <a href="javascript:;" @click="backLastHandler()">返回上一步</a>
                                 </li>
                             </ul>
                         </template>
                     </dropdown>
-                </b-nav-item>
+                </b-nav-item>-->
                 <b-nav-item
                     v-if="metaInfo && metaInfo.process_type == 1"
-                    @click="showModal = 5"
+                    @click="showProjectGuideModal = true"
                 >操作指南</b-nav-item>
                 <b-nav-item
                     v-if="metaInfo && metaInfo.process_type == 1"
-                    @click="showModal = 6"
+                    @click="showProjectDocsModal = true"
                 >项目素材</b-nav-item>
             </template>
         </TopHeader>
@@ -141,6 +141,56 @@
         <results-modal></results-modal>
         <!-- 已提交文件Modal -->
         <submitted-file-modal></submitted-file-modal>
+        <!-- 成果参考modal -->
+        <results-ref-modal></results-ref-modal>
+        <!-- 我的笔记modal -->
+        <my-notes-modal></my-notes-modal>
+        <!-- 操作指南 -->
+        <b-modal v-model="showProjectGuideModal" size="lg" title="操作指南" :hide-footer="true">
+            <project-guide></project-guide>
+        </b-modal>
+        <!-- 项目素材 -->
+        <b-modal v-model="showProjectDocsModal" size="lg" title="项目素材" :hide-footer="true">
+            <project-docs></project-docs>
+        </b-modal>
+        <!-- 重新开始提示 -->
+        <b-modal v-model="tipModalRestart" title="提示">
+            <b-container>
+                <div class="modal-msg">
+                    <p class="message">是否确定要重新开始</p>
+                    <p class="tip">提示：如果您选择重新开始本实验，实验成果将被清空</p>
+                </div>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="restartOk()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="tipModalRestart=false">取消</b-button>
+            </div>
+        </b-modal>
+        <!-- 提前结束Modal -->
+        <b-modal v-model="tipModalEnd" title="提示">
+            <b-container>
+                <div class="modal-msg">
+                    <p class="message">是否确定要提前结束</p>
+                </div>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="finishOk()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="tipModalEnd=false">取消</b-button>
+            </div>
+        </b-modal>
+        <!-- 返回上一步Modal -->
+        <b-modal v-model="tipModalBack" title="提示">
+            <b-container>
+                <div class="modal-msg">
+                    <p class="message">是否确定要返回上一步</p>
+                    <p class="tip">提示：若返回上一步，本环节数据将被清空</p>
+                </div>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-button variant="danger" class="float-center mr-2" @click="goBackOk()">确定</b-button>
+                <b-button variant="secondary" class="float-center" @click="tipModalBack=false">取消</b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 <script>
@@ -153,6 +203,10 @@ import sendMsgModal from "@/components/business/modal/sendMsgModal";
 import receiveMsgModal from "@/components/business/modal/receiveMsgModal";
 import resultsModal from "@/components/business/modal/resultsModal";
 import submittedFileModal from "@/components/business/modal/submittedFileModal";
+import resultsRefModal from "@/components/business/modal/resultsRefModal";
+import myNotesModal from "@/components/business/modal/myNotesModal";
+import projectGuide from "@/components/business/progress/ProjectGuide";
+import projectDocs from "@/components/business/progress/ProjectDocs";
 export default {
     components: {
         TopHeader,
@@ -160,17 +214,25 @@ export default {
         sendMsgModal,
         receiveMsgModal,
         resultsModal,
-        submittedFileModal
+        submittedFileModal,
+        resultsRefModal,
+        myNotesModal,
+        projectGuide,
+        projectDocs
     },
     data() {
         return {
             viewStatus: true,
             showModal: 0,
-            tipModal: 0,
+            tipModalRestart: false,
+            tipModalEnd: false,
+            tipModalBack: false,
             canHandle: true,
             unReadMsgCount: 0,
             intervalFlag: "",
-            showSecendMend: false
+            showSecendMend: false,
+            showProjectGuideModal: false,
+            showProjectDocsModal: false
         };
     },
     created() {},
@@ -237,6 +299,12 @@ export default {
         viewSubmittedFile() {
             this.$emit("openSubmittedFileModal");
         },
+        viewResultsRef() {
+            this.$emit("openResultsRefModal");
+        },
+        viewMyNotes() {
+            this.$emit("openMyNotesModal");
+        },
         // 切换视角
         switchView() {
             if (!this.metaInfo.can_switch) {
@@ -275,22 +343,19 @@ export default {
                 this.$router.push({ path: "/business/list/progress" });
             }
         },
+        restartBusiness() {
+            this.tipModalRestart = true;
+        },
+        endBusiness() {
+            this.tipModalEnd = true;
+        },
         // 返回上一步确认
         backLastHandler() {
             if (!this.metaInfo.pre_node_id) {
                 this.$toasted.error("没有上一步无法返回");
                 return;
             }
-            this.tipModal = 3;
-            // this.$store.dispatch('showTransModal', {
-            //   title: '返回上一步选项',
-            //   type: 'back',
-            //   param: {
-            //     node_id: this.metaInfo.pre_node_id,
-            //     flow_id: this.metaInfo.flow_id,
-            //     direction: 'back'
-            //   }
-            // })
+            this.tipModalBack = true;
         },
         // 确定返回上一步
         goBackOk() {
@@ -303,7 +368,7 @@ export default {
                 cmd: actionCmd.ACTION_BUSINESS_BACK,
                 data: JSON.stringify({ tran_id: this.metaInfo.pre_node_id })
             });
-            this.tipModal = 0;
+            this.tipModalBack = false;
         },
         // 重新开始确认操作
         restartOk() {
@@ -315,7 +380,7 @@ export default {
                 msg: "重新开始实验",
                 cmd: actionCmd.ACTION_BUSINESS_RESTART
             });
-            this.tipModal = 0;
+            this.tipModalRestart = false;
         },
         // 提前结束确认
         finishOk() {
@@ -327,7 +392,7 @@ export default {
                 type: "cmd",
                 cmd: actionCmd.ACTION_BUSINESS_FINISH
             });
-            this.tipModal = 0;
+            this.tipModalEnd = false;
         },
         // 查看流程图
         showFlowChart() {
@@ -345,6 +410,9 @@ export default {
     }
     .bp-dropdown__btn--active {
         background-color: #253568;
+    }
+    a.disabled {
+        color: #999 !important;
     }
     .bp-dropdown__body {
         color: #212529;
