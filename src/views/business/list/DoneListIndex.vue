@@ -1,5 +1,5 @@
 <template>
-    <div class="done-list-index" v-if="userInfo">
+    <div class="done-list-index container" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
             <b-col lg="3" md="6" sm="12">

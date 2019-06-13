@@ -1,5 +1,5 @@
 <template>
-    <div class="message-view">
+    <div class="message-view container">
         <PersonalCenterTab activeTab="3"/>
         <div @submit.prevent="updateInfo" class="cardDiv">
             <b-list-group>

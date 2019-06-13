@@ -558,7 +558,7 @@ global.bpmnio = {
   }
 })();
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"bpmn-js-cli":2,"bpmn-js/lib/Modeler":22,"diagram-js-origin":158,"jquery":"jquery","lodash/function/debounce":376,"lodash/function/defer":377}],2:[function(require,module,exports){
 module.exports = require('./lib');
 },{"./lib":16}],3:[function(require,module,exports){
@@ -65115,6 +65115,3 @@ return jQuery;
 }));
 
 },{}]},{},[1]);
-
-// 结束
-}

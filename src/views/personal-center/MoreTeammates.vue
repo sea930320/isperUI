@@ -1,9 +1,9 @@
 <template>
-    <div class="more-teammates">
+    <div class="more-teammates container">
         <loading v-if="isRunning"></loading>
         <PersonalCenterTab activeTab="3"/>
         <div class="cardDiv" v-if="$route.params.messageId && formData.length !== 0">
-            <h3 class="my-5 container">该 业 务 需 要 下 面 的 队 友</h3>
+            <h3 class="my-5 container">该 业 务 需 要 下 面 的 参 与 人 员</h3>
             <div class="row m-4" v-for="(item, index) in $route.params.messageId.content" :key="`${index}`">
                 <h5 class="col-2 align-self-md-end">{{ item.role_name === null ? '无职务' : item.role_name }}</h5>
                 <vue-tags-input
@@ -16,7 +16,7 @@
                         :autocomplete-min-length="0"
                         :max-tags="item.moreCount"
                         @tags-changed="newTags => formData[index].userIds = newTags"
-                        :placeholder="'此角色需要' + item.moreCount + '名团队成员。'"/>
+                        :placeholder="'该身份需要' + item.moreCount + '名参与人员。'"/>
             </div>
             <b-button class="styledBtn w-10" :size="template_size" variant="outline-primary" @click="addMoreTeammates()">
                 确 定

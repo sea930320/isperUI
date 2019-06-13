@@ -1,5 +1,5 @@
 <template>
-    <div class="assistant-set">
+    <div class="assistant-set container">
         <loading v-if="isRunning"></loading>
         <PersonalCenterTab activeTab="2"/>
         <b-row class="cardDiv">
