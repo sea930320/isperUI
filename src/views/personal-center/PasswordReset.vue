@@ -1,5 +1,5 @@
 <template>
-    <div class="password-reset">
+    <div class="password-reset container">
         <PersonalCenterTab activeTab="1"/>
 
         <b-form @submit.prevent="updatePassword" class="cardDiv">

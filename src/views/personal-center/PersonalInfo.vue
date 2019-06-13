@@ -1,5 +1,5 @@
 <template>
-    <div class="personal-info">
+    <div class="personal-info container">
         <PersonalCenterTab activeTab="0"/>
         <loading v-if="isRunning"></loading>
         <b-form @submit.prevent="updateInfo" class="cardDiv">

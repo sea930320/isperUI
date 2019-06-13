@@ -1,5 +1,5 @@
 <template>
-    <div class="filter-method" v-if="userInfo">
+    <div class="filter-method container" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <div class="cardDiv filter-method-panel p-0">
             <div class="transparent-bg">

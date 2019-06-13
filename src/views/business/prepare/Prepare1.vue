@@ -1,5 +1,5 @@
 <template>
-    <div class="prepare1" v-if="userInfo">
+    <div class="prepare1 container" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <b-row>
             <b-col cols="3">

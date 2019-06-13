@@ -31,19 +31,6 @@ class BusinessService {
     }
 
     /**
-     * 开始实验
-     * @param data
-     * @returns {{pre, visitor}|*}
-     */
-    startBusiness(data) {
-        return xhr({
-            method: 'post',
-            url: '/business/start',
-            params: data
-        })
-    }
-
-    /**
      * 获取实验详情
      * @param data
      * @returns {{pre, visitor}|*}
@@ -343,6 +330,19 @@ class BusinessService {
         return xhr({
             method: 'post',
             url: '/business/addMoreTeammates',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验角色flash状态
+     * @param data
+     * @returns {*|{pre, visitor}}
+     */
+    getBusinessRoleStatus(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/role/status',
             params: data
         })
     }

@@ -1,5 +1,5 @@
 <template>
-    <div class="progress-list-index" v-if="userInfo">
+    <div class="progress-list-index container" v-if="userInfo">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
             <b-col lg="3" md="6" sm="12">
@@ -171,16 +171,6 @@ export default {
                     });
                 return;
             }
-            this.run();
-            businessService
-                .startBusiness({ business_id: business.id })
-                .then(data => {
-                    this.$emit("data-ready");
-                    this.toProgress(data);
-                })
-                .catch(() => {
-                    this.$emit("data-failed");
-                });
         },
         toProgress(data) {
             let type = data.node.process_type;
