@@ -2,7 +2,7 @@
     <div>
         <loading v-if="isRunning"></loading>
         <!-- 已提交文件Modal -->
-        <b-modal v-model="visible" title="已提交文件" size="lg" class :footerHide="true">
+        <b-modal v-model="visible" title="已提交文件" size="lg" class :hide-footer="true">
             <div class="table-wrapper table-fixed-header">
                 <div class="table-header">
                     <table class="table table-green table-border table-hover">
@@ -34,7 +34,6 @@
                             <col width="15%">
                         </colgroup>
                         <tbody>
-                            <!-- <tr v-if="docs.total == 0"><td colspan="4">╮(╯_╰)╭没有任何已提交文件</td></tr> -->
                             <tr v-for="(doc, index) in docs.list" :key="index">
                                 <td>
                                     <a href="javascript:;">{{doc.filename}}</a>
@@ -42,7 +41,6 @@
                                 <td>{{doc.node_name}}</td>
                                 <td>{{doc.created_by ? doc.created_by.name : ''}}</td>
                                 <td>
-                                    <!-- <a href="javascript:;" class="btn-link" target="_blank" @click="signShow = index">查看</a> -->
                                     <div class="pr">
                                         <span
                                             class="btn-link"
@@ -61,10 +59,6 @@
                                                 v-for="(sign, index) in doc.signs"
                                                 :key="index"
                                             >
-                                                <!-- {{#if sign.sign_status == 1}}
-                                                {{/if}}-->
-                                                <!-- {{sign.sign_status == 1 ? sign.sign}}'已签字'
-                                                {{sign.sign_status == 2 ? sign.sign'已取消签字'}}-->
                                                 <span v-if="sign.sign_status == 1">{{sign.sign}}已签字</span>
                                                 <span
                                                     v-if="sign.sign_status == 2"
@@ -89,7 +83,7 @@
         </b-modal>
     </div>
 </template>
-<script type="text/ecmascript-6">
+<script>
 import Loading from "@/components/loading/Loading";
 import { openFile } from "@/utils/previewFile";
 import businessService from "@/services/businessService";
