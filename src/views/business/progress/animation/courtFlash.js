@@ -4,15 +4,15 @@ export default class CourtFlash {
     if (!obj) {
       return
     }
-    let preload = true
+    let preload = true;
     if (options.preload !== undefined && options.preload === false) {
         preload = false
     }
-    this.obj = obj
+    this.obj = obj;
     this.tmp = {
         obj: obj,
         options: options
-    }
+    };
 
     if (preload) {
         this.init(options)
@@ -21,11 +21,11 @@ export default class CourtFlash {
 
   init(options) {
     // 如果已有角色，先隐藏
-    let roleStr = this.getRoles()
-    let oldRolesPosition = typeof roleStr === 'string' && roleStr.length > 0 ? roleStr.split(',') : []
+    let roleStr = this.getRoles();
+    let oldRolesPosition = typeof roleStr === 'string' && roleStr.length > 0 ? roleStr.split(',') : [];
     oldRolesPosition.forEach(position => {
       this.roleShow(position, 0)
-    })
+    });
     // 重新初始化角色
     this.roleInit(options.status)
   }
@@ -35,12 +35,12 @@ export default class CourtFlash {
    * @param  {Object} flash
    */
   roleInit(status) {
-    let self = this
-    let cmds = self.createCmds(status)
+    let self = this;
+    let cmds = self.createCmds(status);
     // console.log(cmds)
     cmds.forEach(cmd => {
-      self.setRole(cmd.role_cmd)
-      self.roleAction(cmd.show_cmd)
+      self.setRole(cmd.role_cmd);
+      self.roleAction(cmd.show_cmd);
       self.roleAction(cmd.move_cmd)
     })
   }
@@ -51,7 +51,7 @@ export default class CourtFlash {
    * @return {array} array
    */
   createCmds(status) {
-    let self = this
+    let self = this;
     if (Array.isArray(status)) {
       return status.filter(item => {
         return item.position
@@ -152,10 +152,10 @@ export default class CourtFlash {
    * @param  {Object} status 角色状态数据
    */
   sittingRole(status) {
-    let cmds = this.createCmds(status)
+    let cmds = this.createCmds(status);
     // console.log(cmds)
     try {
-      this.setRole(cmds.role_cmd)
+      this.setRole(cmds.role_cmd);
       this.roleAction(cmds.show_cmd)
       // this.roleShow(status.position.code_position, 1)
     } catch (e) {
@@ -169,9 +169,9 @@ export default class CourtFlash {
    * @param  {Object} status 角色状态数据
    */
   sittingReportRole(status) {
-    let cmds = this.createCmds(status)
+    let cmds = this.createCmds(status);
     try {
-      this.setRole(cmds.role_cmd)
+      this.setRole(cmds.role_cmd);
       this.roleAction(cmds.show_cmd)
       // this.roleShow(status.position.code_position, 1)
     } catch (e) {
@@ -184,7 +184,7 @@ export default class CourtFlash {
    * @param  {Object} flash
    */
   sittingRoles(roles) {
-    let self = this
+    let self = this;
     roles.forEach(role => {
       self.sittingRole(role)
     })
