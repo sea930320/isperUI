@@ -13,10 +13,10 @@
                     <processActions></processActions>
                 </div>
             </div>-->
-            <b-col cols="9"></b-col>
-            <b-col cols="3">
-                <progress-chat></progress-chat>
-                <!--                <chatInput v-if="userInfo.identity === 1"></chatInput>-->
+            <b-col cols="8"></b-col>
+            <b-col cols="4">
+                <animation-chat></animation-chat>
+                <chat-input v-if="userInfo.identity === 5"></chat-input>
             </b-col>
         </b-row>
     </div>
@@ -24,16 +24,17 @@
 
 <script>
 import { mapState } from "vuex";
-// import chatInput from './chat-input'
 // import functionActions from './function-actions'
 // import processActions from './process-actions'
 // import courtFlash from "./court-flash";
-import ProgressChat from "./ProgressChat";
+import AnimationChat from "@/components/business/common/AnimationChat";
+import ChatInput from "@/components/business/common/ChatInput";
 export default {
     name: "animation-index",
     components: {
+        AnimationChat,
+        ChatInput
         // courtFlash,
-        ProgressChat
         // courtChat,
         // chatInput,
         // functionActions,

@@ -21,6 +21,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Multiselect from 'vue-multiselect'
 import accountService from "@/services/accountService";
 import VueClipboard from 'vue-clipboard2'
+// import Chat from 'vue-beautiful-chat'
+import VueSocketio from 'vue-socket.io-extended';
+import io from 'socket.io-client';
 
 import {
   STORAGE_KEY_USER
@@ -58,7 +61,8 @@ Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
 VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard);
-
+// Vue.use(Chat)
+Vue.use(VueSocketio, io('http://localhost:4000'));
 
 
 new Vue({

@@ -247,9 +247,9 @@ export default {
     },
     mounted() {
         this.queryUnreadMsg();
-        this.intervalFlag = setInterval(() => {
-            this.queryUnreadMsg();
-        }, 20000);
+        // this.intervalFlag = setInterval(() => {
+        //     this.queryUnreadMsg();
+        // }, 20000);
     },
     beforeDestroy() {
         clearInterval(this.intervalFlag);

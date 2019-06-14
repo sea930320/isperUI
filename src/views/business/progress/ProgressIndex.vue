@@ -23,6 +23,12 @@ import ProgressMenu from "@/components/business/progress/Menu";
 export default {
     name: "progress-index",
     components: { Loading, ViewXml, ProgressMenu },
+    sockets: {
+        connect() {},
+        getMessage(msg) {
+            this.$store.dispatch("sendMessage", msg.result);
+        }
+    },
     filters: {},
     data() {
         return {
