@@ -1,7 +1,7 @@
 <template>
     <div class="progress-index" v-if="userInfo">
         <progress-menu @emit-viewxml="showFlowChart"></progress-menu>
-        <div class="container" style="minHeight: calc(100vh - 210px); padding: 130px 0 0 0;">
+        <div class="container" style="minHeight: calc(100vh - 210px); padding: 110px 0 0 0;">
             <router-view v-if="!XMLModal"></router-view>
         </div>
         <view-xml

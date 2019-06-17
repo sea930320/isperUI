@@ -1,7 +1,7 @@
 <template>
     <b-modal v-model="visible" title="成果参考" size="lg" :hide-footer="true">
         <div class="results-ref-wrapper">
-            <div v-if="templates.length == 0" class="no-result">
+            <div v-if="templates.length === 0" class="no-result">
                 <p class="text">没有配置相关数据</p>
             </div>
             <div v-else class="table-wrapper">

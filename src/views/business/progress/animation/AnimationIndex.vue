@@ -1,11 +1,11 @@
 <template>
-    <div class="court-container">
+    <div class="court-container animation-index">
         <div class="meta-content-wrapper row">
             <!-- 场景显示 -->
             <div class="court-flash-container">
                 <courtFlash></courtFlash>
-                <div class="court-action-wrap" v-if="userInfo.identity === 1" v-loading="btnLoading">
-<!--                    <functionActions></functionActions>-->
+                <div class="court-action-wrap" v-if="userInfo.identity === 5" v-loading="isRunning">
+                    <functionActions></functionActions>
 <!--                    <processActions></processActions>-->
                 </div>
             </div>
@@ -20,7 +20,7 @@
 <script>
 import { mapState } from "vuex";
 // import chatInput from './chat-input'
-// import functionActions from './function-actions'
+import functionActions from './function-actions'
 // import processActions from './process-actions'
 import courtFlash from './court-flash'
 // import courtChat from './court-chat'
@@ -30,7 +30,7 @@ export default {
         courtFlash,
         // courtChat,
         // chatInput,
-        // functionActions,
+        functionActions,
         // processActions
     },
     filters: {},
@@ -41,7 +41,7 @@ export default {
         this.$nextTick(() => {});
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo"]),
     },
     watch: {},
     methods: {}
@@ -51,12 +51,12 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .animation-index {
     .flash-height {
-        height: 800px;
+        height: 670px;
     }
     .court-flash-container {
         float: left;
-        background-color: #eee;
-        width: 1000px;
+        background-color: #fff;
+        width: 830px;
     }
     .court-chat-container {
         margin-left: 1000px;
@@ -65,7 +65,7 @@ export default {
 
     .court-action-wrap {
         padding: 10px;
-        height: 192px;
+        height: 140px;
         margin-right: -5px;
     }
     .btn-ex{
@@ -90,13 +90,14 @@ export default {
         color: #fff;
     }
     .btn-ex-blue{
-        background-color: #68a3d5;
+        background-color: #68a3d582;
     }
     .btn-ex-blue:hover{
-        background-color: #44a5f7;
+        background-color: #58acf3;
         color: #fff;
     }
     .action-container .btn-ex {
+        text-decoration: none;
         margin-bottom: 10px;
     }
     .speak-container .speak-field{
