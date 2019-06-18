@@ -129,12 +129,7 @@
             },
             // 初始化flash对象
             initCourtFlash(roleStatus) {
-                this.flashObj = new CourtFlash(
-                    this.$refs.flash,
-                    {
-                        status: roleStatus
-                    }
-                )
+                this.flashObj = new CourtFlash( this.$refs.flash, { status: roleStatus } )
             },
             // 动作处理函数
             actionHandler(action) {
@@ -213,7 +208,7 @@
             // 检查浏览器的flash情况
             flashCheck() {
                 if (window.navigator.plugins) {
-                    for (var i = 0; i < window.navigator.plugins.length; i++) {
+                    for (let i = 0; i < window.navigator.plugins.length; i++) {
                         if (window.navigator.plugins[i].name.toLowerCase().indexOf('shockwave flash') >= 0) {
                             this.hasFlash = true;
                             break;
@@ -237,12 +232,15 @@
     }
     .flash{
         height: 100%;
-        overflow: auto;
+        overflow: unset;
     }
     @media screen and (max-width: 1200px) {
         #FlashID {
             max-height: 580px;
         }
+    }
+    .action-container.clearfix {
+        text-align: left;
     }
     .chat-flash-wrap {
         position: relative;
@@ -256,7 +254,7 @@
         height: 40px;
         line-height: 40px;
         color: #fff;
-        background-color: rgba(0, 0, 0, .3);
+        background-color: rgb(73, 104, 202);
     }
     .panel-container {
         position: relative;
