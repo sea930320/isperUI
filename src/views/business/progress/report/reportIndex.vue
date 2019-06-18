@@ -20,11 +20,42 @@
                             </b-button-group>
                         </b-col>
                     </b-row>
-                    <!--<span >Header Slot</span>-->
                     <b-card-text>
                         <!--<VueFaqAccordion-->
                                 <!--:items="myItems"-->
                         <!--/>-->
+
+                        <!--<template>-->
+                            <!--<div role="tablist">-->
+                                <!--<b-card no-body class="mb-1">-->
+                                    <!--<b-card-header header-tag="header" class="p-1" role="tab">-->
+                                        <!--<b-button block href="#" v-b-toggle.accordion-3 class="float-left">Accordion 3</b-button>-->
+                                    <!--</b-card-header>-->
+                                    <!--<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">-->
+                                        <!--<b-card-body>-->
+                                            <!--<b-card-text>text</b-card-text>-->
+                                        <!--</b-card-body>-->
+                                    <!--</b-collapse>-->
+                                <!--</b-card>-->
+                            <!--</div>-->
+                        <!--</template>-->
+                        <BulmaAccordion
+                                :dropdown="false"
+                                :icon="'custom'"
+                        > <!-- The wrapper component for all the items -->
+                            <BulmaAccordionItem>
+                                <h4 class="title align-self-center float-left" slot="title">Title</h4>
+                                <!--<div class="high" slot="content">-->
+                                    <!--<p>This is a div with content</p>-->
+                                <!--</div>-->
+                                <!--<button class="button is-primary" slot="footer">Click Me!</button>-->
+                                <p slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus eos illo expedita asperiores rem iure aliquid dolore, pariatur dignissimos, minima inventore? Minima voluptatum nulla, error omnis laboriosam voluptatibus rem aperiam.</p>
+                            </BulmaAccordionItem> <!-- add as many of these items as you need - fill them with content via the slots -->
+                            <BulmaAccordionItem>
+                                <h4 slot="title" class="align-self-center float-left">A title with content</h4>
+                                <p slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus eos illo expedita asperiores rem iure aliquid dolore, pariatur dignissimos, minima inventore? Minima voluptatum nulla, error omnis laboriosam voluptatibus rem aperiam.</p>
+                            </BulmaAccordionItem>
+                        </BulmaAccordion>
 
                     </b-card-text>
                 </b-card>
@@ -35,12 +66,15 @@
 
 <script>
 //    import VueFaqAccordion from 'vue-faq-accordion'
-import BusinessService from '@/services/businessService';
-import { mapState } from "vuex";
+//    import BusinessService from '@/services/businessService';
+    import { mapState } from "vuex";
+    import { BulmaAccordion, BulmaAccordionItem } from 'vue-bulma-accordion'
 
     export default {
         components: {
-//            VueFaqAccordion
+            BulmaAccordion,
+            BulmaAccordionItem,
+//            VueFaqAccordion,
         },
         data () {
             return {
@@ -68,40 +102,41 @@ import { mapState } from "vuex";
             }
         },
         created() {
-            this.$nextTick(() => {
-                this.generateBusinessReport();
-            });
+//            this.$nextTick(() => {
+//                this.generateBusinessReport();
+//            });
         },
         computed:{
             ...mapState(["userInfo"]),
         },
         mounted(){},
         methods:{
-            generateBusinessReport(){
-                this.run();
-                BusinessService.genarateBusinessReport({
-                    business_id:this.$route.params.bid,
-                    user_id:this.userInfo.id
-                })
-                    .then(data => {
-                        alert(data.nodes.length);
-//                        data.results.forEach(item => {
-//                            if (item.checked === undefined) {
-//                                item.checked = false;
-//                            }
-//                            if (item.locked === undefined) {
-//                                item.locked = false;
-//                            }
-//                        });
-//                        this.projects.list = data.results;
-//                        this.projects.total = data.paging.count;
-//                        this.$emit("data-ready");
-                    })
-                    .catch(() => {
-//                        alert("failed");
-//                        this.$emit("data-failed");
-                    });
-            }
+//            generateBusinessReport(){
+//                this.run();
+//                BusinessService.genarateBusinessReport({
+//                    business_id:this.$route.params.bid,
+//                    user_id:this.userInfo.id
+//                })
+////                    .then(data => {
+//                    .then(() => {
+////                        alert(data.nodes.length);
+////                        data.results.forEach(item => {
+////                            if (item.checked === undefined) {
+////                                item.checked = false;
+////                            }
+////                            if (item.locked === undefined) {
+////                                item.locked = false;
+////                            }
+////                        });
+////                        this.projects.list = data.results;
+////                        this.projects.total = data.paging.count;
+////                        this.$emit("data-ready");
+//                    })
+//                    .catch(() => {
+////                        alert("failed");
+////                        this.$emit("data-failed");
+//                    });
+//            }
         }
     }
 </script>
