@@ -59,7 +59,7 @@
 </template>
 <script>
 // import * as actionCmd from "@/components/business/common/actionCmds";
-// import businessService from "@/services/businessService";
+import businessService from "@/services/businessService";
 import emoji from "@/components/business/common/emoji";
 // import endNodeHandle from "@/components/business/modal/endNodeHandle";
 
@@ -123,16 +123,29 @@ export default {
                 this.$toasted.error("消息长度不得超过200个字符");
                 return;
             }
-            this.$socket.emit("message", {
-                user_id: this.userInfo.id,
-                login_type: this.userInfo.identity,
-                business_id: this.$route.params.bid,
-                node_id: this.$route.params.nid,
-                role_alloc_id: this.currentRoleAllocation.alloc_id,
-                type: "txt",
-                msg: this.content
-            });
-            this.content = "";
+            // this.$socket.emit("message", {
+            //     user_id: this.userInfo.id,
+            //     login_type: this.userInfo.identity,
+            //     business_id: this.$route.params.bid,
+            //     node_id: this.$route.params.nid,
+            //     role_alloc_id: this.currentRoleAllocation.alloc_id,
+            //     type: "txt",
+            //     msg: this.content
+            // });
+
+            // 发送消息
+            businessService
+                .saveMessage({
+                    business_id: this.$route.params.bid,
+                    node_id: this.$route.params.nid,
+                    role_alloc_id: this.currentRoleAllocation.alloc_id,
+                    type: "txt",
+                    msg: this.content
+                })
+                .then(() => {
+                    this.content = "";
+                });
+            // this.content = "";
         },
         endNodeCancel() {
             this.commitEnd = false;

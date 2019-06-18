@@ -324,6 +324,19 @@ class BusinessService {
     }
 
     /**
+     * 发送消息到后端
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    saveMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/message/save',
+            params: data
+        })
+    }
+
+    /**
      * 业务
      */
     addMoreTeammates(data) {
