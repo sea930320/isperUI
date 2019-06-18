@@ -245,7 +245,7 @@
                 businessService.pushMessage({
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                    role_id: this.currentRole.alloc_id,
+                    role_alloc_id: this.currentRole.alloc_id,
                     msg: msg,
                     type: 'cmd',
                     cmd: cmd,
