@@ -289,6 +289,7 @@ export default {
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .progress-chat-container {
+    height: 80%;
     background: #ffffff3d;
     .chat-message {
         height: calc(100vh - 410px);

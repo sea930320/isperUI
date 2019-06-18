@@ -142,14 +142,14 @@ export default {
 </script>
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .speak-container {
-    height: 200px;
+    height: 20%;
     background: rgba(243, 243, 243, 0.5);
     position: relative;
     padding: 6px;
 
     .speak-input {
         position: absolute;
-        bottom: 10px;
+        /*bottom: 10px;*/
         left: 0px;
         width: 100%;
         .speak-option {
