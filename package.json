@@ -42,6 +42,7 @@
     "vue-beautiful-chat": "^2.2.2",
     "vue-clipboard2": "^0.3.0",
     "vue-cookie": "^1.1.4",
+    "vue-faq-accordion": "^1.2.1",
     "vue-filepond": "^5.1.0",
     "vue-image-crop-upload": "^2.5.0",
     "vue-loading-spinner": "^1.0.11",

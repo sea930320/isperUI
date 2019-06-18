@@ -42,6 +42,14 @@ class BusinessService {
             params: data
         })
     }
+    genarateBusinessReport(data){
+        alert(data);
+        return xhr({
+            method: 'get',
+            url: '/business/report/generate',
+            params: data
+        })
+    }
 
     /**
      * 获取实验环节详情
