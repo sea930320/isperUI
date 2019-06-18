@@ -62,8 +62,8 @@ Vue.component('apexchart', VueApexCharts)
 VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard);
 // Vue.use(Chat)
-Vue.use(VueSocketio, io('http://localhost:4000'));
-
+let host = 'http://' + window.location.hostname + ':4000'
+Vue.use(VueSocketio, io(host));
 
 new Vue({
   router,
