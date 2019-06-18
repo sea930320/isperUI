@@ -19,7 +19,7 @@
                     <b-form-radio value="1">未发布流程</b-form-radio>
                 </b-form-radio-group>
             </b-col>
-            <b-col lg="5" md="6" sm="12" class="align-self-center">
+            <b-col lg="5" md="6" sm="12" class="align-self-center"> 
                 <b-button-group class="float-right" v-if="!isSuperFlag">
                     <b-button
                         :size="template_size"
