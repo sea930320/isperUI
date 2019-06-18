@@ -4,11 +4,7 @@
             <!-- 场景显示 -->
             <!-- <div class="court-flash-container">
                 <courtFlash></courtFlash>
-                <div
-                    class="court-action-wrap"
-                    v-if="userInfo.identity === 1"
-                    v-loading="btnLoading"
-                >
+                <div class="court-action-wrap" v-if="userInfo.identity === 5" v-loading="isRunning">
                     <functionActions></functionActions>
                     <processActions></processActions>
                 </div>
@@ -24,7 +20,7 @@
 
 <script>
 import { mapState } from "vuex";
-// import functionActions from './function-actions'
+import functionActions from "./function-actions";
 // import processActions from './process-actions'
 // import courtFlash from "./court-flash";
 import AnimationChat from "@/components/business/common/AnimationChat";
@@ -33,11 +29,11 @@ export default {
     name: "animation-index",
     components: {
         AnimationChat,
-        ChatInput
+        ChatInput,
         // courtFlash,
         // courtChat,
         // chatInput,
-        // functionActions,
+        functionActions
         // processActions
     },
     filters: {},
@@ -58,12 +54,12 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .animation-index {
     .flash-height {
-        height: 800px;
+        height: 670px;
     }
     .court-flash-container {
         float: left;
-        background-color: #eee;
-        width: 1000px;
+        background-color: #fff;
+        width: 830px;
     }
     .court-chat-container {
         background-color: #eee;
@@ -71,7 +67,7 @@ export default {
 
     .court-action-wrap {
         padding: 10px;
-        height: 192px;
+        height: 140px;
         margin-right: -5px;
     }
     .btn-ex {
@@ -96,13 +92,14 @@ export default {
         color: #fff;
     }
     .btn-ex-blue {
-        background-color: #68a3d5;
+        background-color: #68a3d582;
     }
     .btn-ex-blue:hover {
-        background-color: #44a5f7;
+        background-color: #58acf3;
         color: #fff;
     }
     .action-container .btn-ex {
+        text-decoration: none;
         margin-bottom: 10px;
     }
     .speak-container .speak-field {
