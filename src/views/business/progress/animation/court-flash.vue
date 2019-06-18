@@ -57,7 +57,7 @@
         ACTION_ROLE_STAND,
         ACTION_ROLE_SITDOWN,
         ACTION_TRANS,
-        ACTION_EXP_RESTART,
+        ACTION_BUSINESS_RESTART,
         ACTION_ROLE_LETIN,
         ACTION_ROLE_LETOUT,
         ACTION_ROLE_TOWARD_REPORT,
@@ -194,7 +194,7 @@
                             this.flashObj.roleShow(action.ext.opt.origin_position.code_position, 1)
                         }
                         break;
-                    case ACTION_EXP_RESTART:
+                    case ACTION_BUSINESS_RESTART:
                         this.initFlashRole()
                 }
                 if (action.ext.code_position) {
