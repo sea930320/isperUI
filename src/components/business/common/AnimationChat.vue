@@ -201,7 +201,7 @@ export default {
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SHOW) {
                 return `<a href="${
                     msg.ext.opt.url
-                }" class="btn-underline" target="_blank">${msg.data}</a>`;
+                }" class="btn-underline" target="_blank">${msg.msg}</a>`;
             }
             // 提交文件
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SUBMIT) {
@@ -241,7 +241,7 @@ export default {
             if (msg.ext.cmd === actionCmd.ACTION_ROLE_SCHEDULE_REPORT) {
                 if (
                     msg.ext.opt &&
-                    parseInt(msg.ext.opt.role_id) === this.currentRole.id
+                    parseInt(msg.ext.opt.role_id) === this.currentRoleAllocation.alloc_id
                 ) {
                     return `<a href="javascript:void(0)" class="btn-underline" title="点击左下侧走向发言席按钮">请走向发言席作报告</a>`;
                 } else {
@@ -253,7 +253,7 @@ export default {
             if (
                 msg.ext.cmd === actionCmd.ACTION_ROLE_REQUEST_SIGN &&
                 msg.ext.opt &&
-                parseInt(msg.ext.opt.role_id) !== this.currentRole.id
+                parseInt(msg.ext.opt.role_id) !== this.currentRoleAllocation.alloc_id
             ) {
                 return `<span>要求${msg.ext.opt.role_name}签字</span>`;
             }

@@ -63,6 +63,7 @@ VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard);
 // Vue.use(Chat)
 let host = 'http://' + window.location.hostname + ':4000'
+// let host = 'http://39.107.122.234'
 Vue.use(VueSocketio, io(host));
 
 new Vue({
