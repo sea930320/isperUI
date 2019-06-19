@@ -200,7 +200,7 @@
                 if (action.ext.code_position) {
                     let msgData = '****';
                     if (this.currentRole.sitting_status === 2) {
-                        msgData = action.data;
+                        msgData = action.msg;
                     }
                     this.flashObj.roleAction(`cmd=speak&rolename=${action.ext.code_position}&says=${msgData}`)
                 }

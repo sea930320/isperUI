@@ -14,7 +14,7 @@
 
     watch: {
       value(value) {
-        this.$emit('change', value)
+        this.$emit('change', value);
         this.dispatch('ElFormItem', 'el.form.change', [value])
       }
     }
@@ -22,7 +22,7 @@
 </script>
 
 <template>
-  <div class="el-checkbox-group">
+  <div class="px-5">
     <slot></slot>
   </div>
 </template>

@@ -130,7 +130,7 @@ export default class CourtFlash {
    */
   roleAction(cmd) {
     try {
-      this.obj.action(cmd)
+      this.obj.action(cmd);
     } catch (e) {
       console.log(e)
     }

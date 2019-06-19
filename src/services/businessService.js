@@ -359,6 +359,19 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 获取请入实验角色
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessRoleInList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/role/in/list',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
