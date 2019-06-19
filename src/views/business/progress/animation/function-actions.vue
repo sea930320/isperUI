@@ -10,7 +10,7 @@
         </div>
         <div class="modals-wrapper">
             <!-- 请入Modal -->
-            <b-modal :visible="modalShow === 1" centered title="选择被请入角色" id="finishEdit" @ok="roleLetinOk()" @cancel="modalShow = 0">
+            <b-modal :visible="modalShow === 1" centered title="选择被请入角色" @ok="roleLetinOk()" @cancel="modalShow = 0">
                 <div v-if="roleInList.length === 0" class="modal-msg">
                     <p class="message">当前没有可被请入的角色</p>
                 </div>
@@ -23,24 +23,19 @@
                 </div>
             </b-modal>
             <!-- 送出Modal -->
-<!--            <modal-->
-<!--                    :visible="modalShow === 2"-->
-<!--                    title="选择被送出角色"-->
-<!--                    size="large"-->
-<!--                    @on-cancel="modalShow = 0"-->
-<!--                    @on-ok="roleLetoutOk">-->
-<!--                <div v-if="roleOutList.length === 0" class="modal-msg">-->
-<!--                    <p class="message">当前没有可被送出的角色</p>-->
-<!--                </div>-->
-<!--                <div v-else class="row">-->
-<!--                    <checkboxGroup v-model="roleOutArr">-->
-<!--                        <div class="col-xs-3" v-for="role in roleOutList" :key="role.name">-->
-<!--                            <checkbox :label="role.name" :value="role"></checkbox>-->
-<!--                        </div>-->
-<!--                    </checkboxGroup>-->
-<!--                </div>-->
-<!--            </modal>-->
-<!--            &lt;!&ndash; 约见 &ndash;&gt;-->
+            <b-modal :visible="modalShow === 2" centered title="选择被送出角色" @ok="roleLetoutOk()" @cancel="modalShow = 0">
+                <div v-if="roleOutList.length === 0" class="modal-msg">
+                    <p class="message">当前没有可被送出的角色</p>
+                </div>
+                <div v-else class="row">
+                    <checkboxGroup v-model="roleOutArr">
+                        <div class="col-xs-3" v-for="role in roleOutList" :key="role.name">
+                            <checkbox :label="role.name" :value="role"></checkbox>
+                        </div>
+                    </checkboxGroup>
+                </div>
+            </b-modal>
+            <!-- 约见 -->
 <!--            <modal-->
 <!--                    :visible="modalShow === 3"-->
 <!--                    title="约见"-->
@@ -71,16 +66,8 @@
 <!--                    <p class="message">{{metaInfo.isBanned ? '是否取消发言、提交、展示控制' : '是否启动发言、提交、展示控制'}}</p>-->
 <!--                </div>-->
 <!--            </modal>-->
-<!--            &lt;!&ndash; 提交modal &ndash;&gt;-->
-<!--            <uploadModal-->
-<!--                    :modalShow="modalShow === 7"-->
-<!--                    title="提交上传文件"-->
-<!--                    okText="提交"-->
-<!--                    :cancelHide="true"-->
-<!--                    uploadUrl="/api/experiment/docs/create"-->
-<!--                    :uploadParams="docSubmitParam"-->
-<!--                    @on-cancel="modalShow = 0"-->
-<!--                    @on-uploadConfirm="submitDocOk"></uploadModal>-->
+            <!-- 提交modal -->
+            <upload-modal :modalShow="modalShow === 7" @on-uploadConfirm="submitDocOk" @on-cancel="modalShow = 0"></upload-modal>
 <!--            &lt;!&ndash; 展示modal &ndash;&gt;-->
 <!--            <modal-->
 <!--                    title="展示"-->
@@ -231,7 +218,7 @@
                 this.docSubmitParam = {
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                    role_id: this.currentRole.alloc_id,
+                    role_alloc_id: this.currentRole.alloc_id,
                     cmd: actionCmd.ACTION_DOC_SUBMIT
                 }
             },
@@ -251,7 +238,7 @@
             // 触发动作
             commitAction(action) {
                 if (action.disable) {
-                    this.$toast.info('当前无权操作该功能');
+                    this.$toasted.info('当前无权操作该功能');
                     return
                 }
                 switch (action.cmd) {
@@ -298,10 +285,10 @@
                         break;
                     case actionCmd.ACTION_ROLE_LETOUT:
                         businessService
-                            .getExperimentRoleOutList({
+                            .getBusinessRoleOutList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
-                                role_id: this.currentRole.alloc_id
+                                role_alloc_id: this.currentRole.alloc_id
                             })
                             .then(data => {
                                 this.roleOutList = data;
@@ -314,37 +301,45 @@
                         break;
                     case actionCmd.ACTION_ROLE_APPLY_SPEAK:
                         if (this.currentRole.can_terminate) {
-                            this.$toast.info('您是主持人始终拥有发言权限，无须申请发言');
+                            this.$toasted.info('您是主持人始终拥有发言权限，无须申请发言');
                             return
                         }
                         if (!this.metaInfo.isBanned) {
-                            this.$toast.info('当前未启动表达管理，无须申请发言');
+                            this.$toasted.info('当前未启动表达管理，无须申请发言');
                             return
                         }
                         this.modalShow = 4;
                         break;
                     case actionCmd.ACTION_ROLE_BANNED:
                         if (!this.currentRole.can_terminate) {
-                            this.$toast.warn('您无权操作表达管理');
+                            this.$toasted.warn('您无权操作表达管理');
                             return
                         }
                         this.modalShow = 5;
                         break;
                     case actionCmd.ACTION_DOC_SUBMIT:
                         if (action.disable) {
-                            this.$toast.info('当前无权操作该功能');
+                            this.$toasted.info('当前无权操作该功能');
                             return
                         }
                         this.docSubmitParam.cmd = actionCmd.ACTION_DOC_SUBMIT;
                         this.modalShow = 7;
+
+                        this.$emit("openUploadModal", {
+                            uploadUrl: "/api/business/docs/create",
+                            uploadParams: this.docSubmitParam,
+                            title: "提交上传文件",
+                            cancelHide: true,
+                            okText: "提交",
+                        });
                         break;
                     case actionCmd.ACTION_DOC_APPLY_SUBMIT:
                         if (this.currentRole.can_terminate) {
-                            this.$toast.info('您是主持人拥有所有权限，无须申请提交');
+                            this.$toasted.info('您是主持人拥有所有权限，无须申请提交');
                             return
                         }
                         if (!this.metaInfo.isBanned) {
-                            this.$toast.info('当前未启动表达管理，无须申请提交');
+                            this.$toasted.info('当前未启动表达管理，无须申请提交');
                             return
                         }
                         this.sendCMDMessage('申请提交文件', actionCmd.ACTION_DOC_APPLY_SUBMIT);
@@ -364,11 +359,11 @@
                         break;
                     case actionCmd.ACTION_DOC_APPLY_SHOW:
                         if (this.currentRole.can_terminate) {
-                            this.$toast.info('您是主持人拥有所有权限，无须申请展示');
+                            this.$toasted.info('您是主持人拥有所有权限，无须申请展示');
                             return
                         }
                         if (!this.metaInfo.isBanned) {
-                            this.$toast.info('当前未启动表达管理，无须申请展示');
+                            this.$toasted.info('当前未启动表达管理，无须申请展示');
                             return
                         }
                         this.sendCMDMessage('申请展示', actionCmd.ACTION_DOC_APPLY_SHOW);
@@ -432,7 +427,7 @@
                     return
                 }
                 if (this.roleInArr.length === 0) {
-                    this.$toast.warn('请选择需要请入的角色');
+                    this.$toasted.warn('请选择需要请入的角色');
                     return false
                 }
                 let roleInNames = this.roleInArr.map((role) => {
@@ -440,7 +435,7 @@
                 });
                 let roleInIds = this.roleInArr.map(role => role.id);
                 // console.log(roleInNames)
-                this.sendCMDMessage('', actionCmd.ACTION_ROLE_LETIN, null, JSON.stringify(roleInIds));
+                this.sendCMDMessage(`请入 ${roleOutNames.join('、')}`, actionCmd.ACTION_ROLE_LETIN, null, JSON.stringify(roleInIds));
                 this.modalShow = 0
             },
             // 请出角色确定
@@ -450,14 +445,14 @@
                     return
                 }
                 if (this.roleOutArr.length === 0) {
-                    this.$toast.warn('请选择需要送出的角色');
+                    this.$toasted.warn('请选择需要送出的角色');
                     return false
                 }
                 let roleOutNames = this.roleOutArr.map((role) => {
                     return role.name
                 });
                 let roleOutIds = this.roleOutArr.map(role => role.id);
-                this.sendCMDMessage(`送出${roleOutNames.join('、')}`, actionCmd.ACTION_ROLE_LETOUT, null, JSON.stringify(roleOutIds));
+                this.sendCMDMessage(`送出 ${roleOutNames.join('、')}`, actionCmd.ACTION_ROLE_LETOUT, null, JSON.stringify(roleOutIds));
                 this.modalShow = 0
             },
             // 申请约见确定
@@ -508,16 +503,16 @@
             // 要求签字确定
             requestSignOk() {
                 if (this.displayFiles.length === 0) {
-                    this.$toast.warn('当前没有可签字的文件，请先上传');
+                    this.$toasted.warn('当前没有可签字的文件，请先上传');
                     return
                 }
                 let selectDoc = this.displayFiles[this.activeDocIndex];
                 if ('docx'.indexOf(selectDoc.filename.substring(selectDoc.filename.lastIndexOf('.') + 1).toLowerCase()) === -1) {
-                    this.$toast.warn('您选择的文件不是docx格式的，无法签名，请重新选择');
+                    this.$toasted.warn('您选择的文件不是docx格式的，无法签名，请重新选择');
                     return
                 }
                 if (!this.signRole || !this.signRole.id) {
-                    this.$toast.warn('请选择要签字的对象');
+                    this.$toasted.warn('请选择要签字的对象');
                     return
                 }
                 this.sendCMDMessage(
@@ -536,7 +531,7 @@
             // 确定安排报告
             requestReportOk() {
                 if (!this.reportRole) {
-                    this.$toast.warn('你未选择需要安排报告的人员');
+                    this.$toasted.warn('你未选择需要安排报告的人员');
                     return
                 }
                 this.sendCMDMessage(
