@@ -108,7 +108,8 @@ export default {
             flowNodes: [],
             flowNodeRoles: [],
             roleAllcation: [],
-            flowNodePositions: []
+            flowNodePositions: [],
+            selectedAlloc: null
         };
     },
     computed: {
@@ -196,9 +197,26 @@ export default {
             });
         },
         setImage(alloc) {
+            this.selectedAlloc = alloc;
+            this.selectedAlloc["node_id"] = this.flowNodes[
+                this.activeNodeIndex
+            ].id;
             this.$emit("openRoleAllocImageModal", alloc);
         },
-        setRoleAllocImageConfirm() {}
+        setRoleAllocImageConfirm(roleAlloc) {
+            this.selectedAlloc.image = roleAlloc.image;
+            this.selectedAlloc.image_id = roleAlloc.image.id;
+            console.log(roleAlloc);
+            this.run();
+            workflowService
+                .updateWorkflowRoleAllocImage(this.selectedAlloc)
+                .then(() => {
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
+        }
     }
 };
 </script>

@@ -39,6 +39,7 @@
                                 </span>
                                 <span
                                     class="module-text"
+                                    :class="{'role-text-active': activeRoleId==roleImageItem.id}"
                                 >{{roleImageItem.name}}-{{roleImageItem.gender == 1? '男' : '女'}}</span>
                             </a>
                         </li>
@@ -99,6 +100,9 @@ export default {
                     this.activeTypeId = allocation.image
                         ? allocation.image.type
                         : this.activeTypeId;
+                    this.activeRoleId = allocation.image
+                        ? allocation.image.id
+                        : this.activeRoleId;
                     this.$emit("data-ready");
                     this.show = true;
                 })
@@ -215,11 +219,14 @@ export default {
             }
         }
         .role-img-active {
-            border: 3px solid #3a7de0;
+            border: 5px solid #3a7de0;
         }
         .module-text {
-            color: grey;
+            color: #9c9c9c;
             text-decoration: none;
+        }
+        .role-text-active {
+            color: black;
         }
     }
 }
