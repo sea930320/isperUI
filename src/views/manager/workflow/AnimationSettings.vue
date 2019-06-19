@@ -2,10 +2,10 @@
     <div class="animation-settings">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv px-0">
-            <b-col md="3" sm="12">
+            <!-- <b-col md="3" sm="12">
                 <workflow-module :flowName="workflow.name" :flowXml="workflow.xml"></workflow-module>
-            </b-col>
-            <b-col md="3" sm="12">
+            </b-col> -->
+            <b-col md="4" sm="12">
                 <div class style="height: 460px; border: 1px solid #eaeaea; overflow: auto">
                     <b-table
                         :items="nodes"
@@ -28,7 +28,7 @@
                     </b-table>
                 </div>
             </b-col>
-            <b-col md="2" sm="12">
+            <b-col md="3" sm="12">
                 <div class style="height: 460px; border: 1px solid #eaeaea; overflow: auto">
                     <b-table
                         :items="processActions"
@@ -43,7 +43,7 @@
                     </b-table>
                 </div>
             </b-col>
-            <b-col md="4" sm="12">
+            <b-col md="5" sm="12">
                 <div class style="height: 460px; border: 1px solid #eaeaea; overflow: auto">
                     <table
                         class="table b-table table-hover table-borderless table-sm role-allocation"
