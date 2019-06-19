@@ -73,7 +73,6 @@
                                 <div
                                     class="chat-text"
                                     v-html="replaceFace(item)"
-                                    @click="messageHandler(item)"
                                 ></div>
                             </li>
                             <li class="chat-bubble chat-others" :key="index" v-else>
@@ -93,7 +92,6 @@
                                 <div
                                     class="chat-text"
                                     v-html="replaceFace(item)"
-                                    @click="messageHandler(item)"
                                 ></div>
                             </li>
                         </template>
@@ -201,7 +199,7 @@ export default {
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SHOW) {
                 return `<a href="${
                     msg.ext.opt.url
-                }" class="btn-underline" target="_blank">${msg.data}</a>`;
+                }" class="btn-underline" target="_blank">${msg.msg}</a>`;
             }
             // 提交文件
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SUBMIT) {

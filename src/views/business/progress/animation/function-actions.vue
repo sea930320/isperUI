@@ -10,7 +10,7 @@
         </div>
         <div class="modals-wrapper">
             <!-- 请入Modal -->
-            <b-modal :visible="modalShow === 1" centered title="选择被请入角色" @ok="roleLetinOk()" @cancel="modalShow = 0">
+            <b-modal :visible="modalShow === 1" centered title="选择被请入角色" @ok="roleLetinOk()" @hidden="modalShow = 0">
                 <div v-if="roleInList.length === 0" class="modal-msg">
                     <p class="message">当前没有可被请入的角色</p>
                 </div>
@@ -23,7 +23,7 @@
                 </div>
             </b-modal>
             <!-- 送出Modal -->
-            <b-modal :visible="modalShow === 2" centered title="选择被送出角色" @ok="roleLetoutOk()" @cancel="modalShow = 0">
+            <b-modal :visible="modalShow === 2" centered title="选择被送出角色" @ok="roleLetoutOk()" @hidden="modalShow = 0">
                 <div v-if="roleOutList.length === 0" class="modal-msg">
                     <p class="message">当前没有可被送出的角色</p>
                 </div>
@@ -68,37 +68,32 @@
 <!--            </modal>-->
             <!-- 提交modal -->
             <upload-modal :modalShow="modalShow === 7" @on-uploadConfirm="submitDocOk" @on-cancel="modalShow = 0"></upload-modal>
-<!--            &lt;!&ndash; 展示modal &ndash;&gt;-->
-<!--            <modal-->
-<!--                    title="展示"-->
-<!--                    :visible="modalShow === 8"-->
-<!--                    :showPerson="true"-->
-<!--                    @on-ok="displayOkHandler"-->
-<!--                    @on-cancel="modalShow = 0">-->
-<!--                <div v-if="displayFiles.length === 0" class="modal-msg">-->
-<!--                    <p class="message">没有任何可供展示的文件，请先上传</p>-->
-<!--                </div>-->
-<!--                <div v-else class="modal-msg">-->
-<!--                    <p class="message">请选择要申请展示的文件？</p>-->
-<!--                    <p class="tip">以下是实验中提交过的所有文件，一次只能选择一个</p>-->
-<!--                    <div class="detail max-hight-box">-->
-<!--                        <table class="table table-gray table-striped table-hover table-border">-->
-<!--                            <thead>-->
-<!--                            <tr>-->
-<!--                                <th>文件名称</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr v-for="(file, index) in displayFiles" :key="index"-->
-<!--                                :class="{'tr-choose': index === activeDocIndex}"-->
-<!--                                @click="activeDocIndex = index">-->
-<!--                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </modal>-->
+            <!-- 展示modal -->
+            <b-modal :visible="modalShow === 8" centered title="展示" :showPerson="true" @ok="displayOkHandler()" @hidden="modalShow = 0">
+                <div v-if="displayFiles.length === 0" class="modal-msg">
+                    <p class="message">没有任何可供展示的文件，请先上传</p>
+                </div>
+                <div v-else class="modal-msg">
+                    <p class="message">请选择要申请展示的文件？</p>
+                    <p class="tip">以下是实验中提交过的所有文件，一次只能选择一个</p>
+                    <div class="detail max-hight-box">
+                        <table class="table table-gray table-striped table-hover table-border">
+                            <thead>
+                            <tr>
+                                <th>文件名称</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(file, index) in displayFiles" :key="index"
+                                :class="{'tr-choose': index === activeDocIndex}"
+                                @click="activeDocIndex = index">
+                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </b-modal>
 <!--            &lt;!&ndash; 要求签字 &ndash;&gt;-->
 <!--            <modal-->
 <!--                    :visible="modalShow === 9"-->
@@ -237,6 +232,7 @@
             },
             // 触发动作
             commitAction(action) {
+                console.log(action);
                 if (action.disable) {
                     this.$toasted.info('当前无权操作该功能');
                     return
@@ -346,7 +342,7 @@
                         break;
                     case actionCmd.ACTION_DOC_SHOW:
                         businessService
-                            .getExperimentDisplayList({
+                            .getBusinessDisplayList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
                                 path_id: this.metaInfo.path_id,
@@ -435,7 +431,7 @@
                 });
                 let roleInIds = this.roleInArr.map(role => role.id);
                 // console.log(roleInNames)
-                this.sendCMDMessage(`请入 ${roleOutNames.join('、')}`, actionCmd.ACTION_ROLE_LETIN, null, JSON.stringify(roleInIds));
+                this.sendCMDMessage(`请入 ${roleInNames.join('、')}`, actionCmd.ACTION_ROLE_LETIN, null, JSON.stringify(roleInIds));
                 this.modalShow = 0
             },
             // 请出角色确定

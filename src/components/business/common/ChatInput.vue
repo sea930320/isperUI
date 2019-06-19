@@ -119,6 +119,10 @@ export default {
             if (this.content === "") {
                 return;
             }
+            if (this.currentRoleAllocation.sitting_status !== 2) {
+                this.$toasted.error("角色未入席，不能执行相关操作！");
+                return;
+            }
             if (this.content.length > 200) {
                 this.$toasted.error("消息长度不得超过200个字符");
                 return;

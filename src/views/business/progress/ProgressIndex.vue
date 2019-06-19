@@ -73,7 +73,7 @@ export default {
             this.dispatchFlashAction(msg);
             if (
                 this.currentRoleAllocation.sitting_status === 2 ||
-                msg.ext.opt.sitting_status === 2
+                (msg.ext.opt && msg.ext.opt.sitting_status === 2)
             ) {
                 this.$store.dispatch("sendMessage", msg);
             }

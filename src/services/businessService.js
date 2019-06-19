@@ -385,6 +385,19 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 获取实验展示列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getBusinessDisplayList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/file/display/list',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
