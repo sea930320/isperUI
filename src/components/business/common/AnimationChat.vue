@@ -292,7 +292,7 @@ export default {
     height: 80%;
     background: #ffffff3d;
     .chat-message {
-        height: calc(100vh - 410px);
+        height: 600px;
         .chatlist {
             height: 100%;
             padding: 10px 20px;

@@ -10,12 +10,7 @@
         </div>
         <div class="modals-wrapper">
             <!-- 请入Modal -->
-            <modal
-                    :visible="modalShow === 1"
-                    title="选择被请入角色"
-                    size="large"
-                    @on-cancel="modalShow = 0"
-                    @on-ok="roleLetinOk">
+            <b-modal :visible="modalShow === 1" centered title="选择被请入角色" id="finishEdit" @ok="roleLetinOk()" @cancel="modalShow = 0">
                 <div v-if="roleInList.length === 0" class="modal-msg">
                     <p class="message">当前没有可被请入的角色</p>
                 </div>
@@ -26,153 +21,153 @@
                         </div>
                     </checkboxGroup>
                 </div>
-            </modal>
+            </b-modal>
             <!-- 送出Modal -->
-            <modal
-                    :visible="modalShow === 2"
-                    title="选择被送出角色"
-                    size="large"
-                    @on-cancel="modalShow = 0"
-                    @on-ok="roleLetoutOk">
-                <div v-if="roleOutList.length === 0" class="modal-msg">
-                    <p class="message">当前没有可被送出的角色</p>
-                </div>
-                <div v-else class="row">
-                    <checkboxGroup v-model="roleOutArr">
-                        <div class="col-xs-3" v-for="role in roleOutList" :key="role.name">
-                            <checkbox :label="role.name" :value="role"></checkbox>
-                        </div>
-                    </checkboxGroup>
-                </div>
-            </modal>
-            <!-- 约见 -->
-            <modal
-                    :visible="modalShow === 3"
-                    title="约见"
-                    @on-cancel="modalShow = 0"
-                    @on-ok="meetApplyOk">
-                <div class="modal-msg">
-                    <p class="message">确定提交约见申请？</p>
-                </div>
-            </modal>
-            <!-- 申请发言 -->
-            <modal
-                    :visible="modalShow === 4"
-                    title="申请发言"
-                    @on-cancel="modalShow = 0"
-                    @on-ok="speakApplyOk">
-                <div class="modal-msg">
-                    <p class="message">确定向主持人提交发言申请？</p>
-                </div>
-            </modal>
-            <!-- 表达管理 -->
-            <modal
-                    :visible="modalShow === 5"
-                    title="表达管理" okText="是"
-                    cancelText="否"
-                    @on-cancel="modalShow = 0"
-                    @on-ok="bannedOk">
-                <div class="modal-msg">
-                    <p class="message">{{metaInfo.isBanned ? '是否取消发言、提交、展示控制' : '是否启动发言、提交、展示控制'}}</p>
-                </div>
-            </modal>
-            <!-- 提交modal -->
-            <uploadModal
-                    :modalShow="modalShow === 7"
-                    title="提交上传文件"
-                    okText="提交"
-                    :cancelHide="true"
-                    uploadUrl="/api/experiment/docs/create"
-                    :uploadParams="docSubmitParam"
-                    @on-cancel="modalShow = 0"
-                    @on-uploadConfirm="submitDocOk"></uploadModal>
-            <!-- 展示modal -->
-            <modal
-                    title="展示"
-                    :visible="modalShow === 8"
-                    :showPerson="true"
-                    @on-ok="displayOkHandler"
-                    @on-cancel="modalShow = 0">
-                <div v-if="displayFiles.length === 0" class="modal-msg">
-                    <p class="message">没有任何可供展示的文件，请先上传</p>
-                </div>
-                <div v-else class="modal-msg">
-                    <p class="message">请选择要申请展示的文件？</p>
-                    <p class="tip">以下是实验中提交过的所有文件，一次只能选择一个</p>
-                    <div class="detail max-hight-box">
-                        <table class="table table-gray table-striped table-hover table-border">
-                            <thead>
-                            <tr>
-                                <th>文件名称</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(file, index) in displayFiles" :key="index"
-                                :class="{'tr-choose': index === activeDocIndex}"
-                                @click="activeDocIndex = index">
-                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </modal>
-            <!-- 要求签字 -->
-            <modal
-                    :visible="modalShow === 9"
-                    title="选择需要签字的文件"
-                    size="large"
-                    :cancelHide="true"
-                    @on-ok="requestSignOk"
-                    @on-cancel="modalShow = 0">
-                <!-- <div v-if="displayFiles.length == 0" class="modal-msg">
-                  <p class="message">没有任何可供签字的文件，请先上传</p>
-                </div> -->
-                <div class="detail">
-                    <div class="max-hight-box">
-                        <table class="table table-gray table-striped table-hover table-border">
-                            <thead>
-                            <tr>
-                                <th>文件名称</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="(file, index) in displayFiles" :key="index"
-                                :class="{'tr-choose': index === activeDocIndex}"
-                                @click="activeDocIndex = index">
-                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <h3 class="mr">要求签字的人员</h3>
-                    <div class="max-hight-box">
-                        <div class="row">
-                            <radioGroup v-model="signRole">
-                                <div class="col-xs-3" v-for="role in signRoles" :key="role.name">
-                                    <radio :label="role">{{role.name}}</radio>
-                                </div>
-                            </radioGroup>
-                        </div>
-                    </div>
-                </div>
-            </modal>
-            <!-- 安排报告 -->
-            <modal
-                    :visible="modalShow === 10"
-                    title="选择需要安排报告的人员"
-                    size="large"
-                    :cancelHide="true"
-                    @on-ok="requestReportOk"
-                    @on-cancel="modalShow = 0">
-                <div class="row">
-                    <radioGroup v-model="reportRole">
-                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="index">
-                            <radio :label="role">{{role.name}}</radio>
-                        </div>
-                    </radioGroup>
-                </div>
-            </modal>
+<!--            <modal-->
+<!--                    :visible="modalShow === 2"-->
+<!--                    title="选择被送出角色"-->
+<!--                    size="large"-->
+<!--                    @on-cancel="modalShow = 0"-->
+<!--                    @on-ok="roleLetoutOk">-->
+<!--                <div v-if="roleOutList.length === 0" class="modal-msg">-->
+<!--                    <p class="message">当前没有可被送出的角色</p>-->
+<!--                </div>-->
+<!--                <div v-else class="row">-->
+<!--                    <checkboxGroup v-model="roleOutArr">-->
+<!--                        <div class="col-xs-3" v-for="role in roleOutList" :key="role.name">-->
+<!--                            <checkbox :label="role.name" :value="role"></checkbox>-->
+<!--                        </div>-->
+<!--                    </checkboxGroup>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 约见 &ndash;&gt;-->
+<!--            <modal-->
+<!--                    :visible="modalShow === 3"-->
+<!--                    title="约见"-->
+<!--                    @on-cancel="modalShow = 0"-->
+<!--                    @on-ok="meetApplyOk">-->
+<!--                <div class="modal-msg">-->
+<!--                    <p class="message">确定提交约见申请？</p>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 申请发言 &ndash;&gt;-->
+<!--            <modal-->
+<!--                    :visible="modalShow === 4"-->
+<!--                    title="申请发言"-->
+<!--                    @on-cancel="modalShow = 0"-->
+<!--                    @on-ok="speakApplyOk">-->
+<!--                <div class="modal-msg">-->
+<!--                    <p class="message">确定向主持人提交发言申请？</p>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 表达管理 &ndash;&gt;-->
+<!--            <modal-->
+<!--                    :visible="modalShow === 5"-->
+<!--                    title="表达管理" okText="是"-->
+<!--                    cancelText="否"-->
+<!--                    @on-cancel="modalShow = 0"-->
+<!--                    @on-ok="bannedOk">-->
+<!--                <div class="modal-msg">-->
+<!--                    <p class="message">{{metaInfo.isBanned ? '是否取消发言、提交、展示控制' : '是否启动发言、提交、展示控制'}}</p>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 提交modal &ndash;&gt;-->
+<!--            <uploadModal-->
+<!--                    :modalShow="modalShow === 7"-->
+<!--                    title="提交上传文件"-->
+<!--                    okText="提交"-->
+<!--                    :cancelHide="true"-->
+<!--                    uploadUrl="/api/experiment/docs/create"-->
+<!--                    :uploadParams="docSubmitParam"-->
+<!--                    @on-cancel="modalShow = 0"-->
+<!--                    @on-uploadConfirm="submitDocOk"></uploadModal>-->
+<!--            &lt;!&ndash; 展示modal &ndash;&gt;-->
+<!--            <modal-->
+<!--                    title="展示"-->
+<!--                    :visible="modalShow === 8"-->
+<!--                    :showPerson="true"-->
+<!--                    @on-ok="displayOkHandler"-->
+<!--                    @on-cancel="modalShow = 0">-->
+<!--                <div v-if="displayFiles.length === 0" class="modal-msg">-->
+<!--                    <p class="message">没有任何可供展示的文件，请先上传</p>-->
+<!--                </div>-->
+<!--                <div v-else class="modal-msg">-->
+<!--                    <p class="message">请选择要申请展示的文件？</p>-->
+<!--                    <p class="tip">以下是实验中提交过的所有文件，一次只能选择一个</p>-->
+<!--                    <div class="detail max-hight-box">-->
+<!--                        <table class="table table-gray table-striped table-hover table-border">-->
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th>文件名称</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(file, index) in displayFiles" :key="index"-->
+<!--                                :class="{'tr-choose': index === activeDocIndex}"-->
+<!--                                @click="activeDocIndex = index">-->
+<!--                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 要求签字 &ndash;&gt;-->
+<!--            <modal-->
+<!--                    :visible="modalShow === 9"-->
+<!--                    title="选择需要签字的文件"-->
+<!--                    size="large"-->
+<!--                    :cancelHide="true"-->
+<!--                    @on-ok="requestSignOk"-->
+<!--                    @on-cancel="modalShow = 0">-->
+<!--                &lt;!&ndash; <div v-if="displayFiles.length == 0" class="modal-msg">-->
+<!--                  <p class="message">没有任何可供签字的文件，请先上传</p>-->
+<!--                </div> &ndash;&gt;-->
+<!--                <div class="detail">-->
+<!--                    <div class="max-hight-box">-->
+<!--                        <table class="table table-gray table-striped table-hover table-border">-->
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th>文件名称</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            <tr v-for="(file, index) in displayFiles" :key="index"-->
+<!--                                :class="{'tr-choose': index === activeDocIndex}"-->
+<!--                                @click="activeDocIndex = index">-->
+<!--                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
+<!--                    <h3 class="mr">要求签字的人员</h3>-->
+<!--                    <div class="max-hight-box">-->
+<!--                        <div class="row">-->
+<!--                            <radioGroup v-model="signRole">-->
+<!--                                <div class="col-xs-3" v-for="role in signRoles" :key="role.name">-->
+<!--                                    <radio :label="role">{{role.name}}</radio>-->
+<!--                                </div>-->
+<!--                            </radioGroup>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </modal>-->
+<!--            &lt;!&ndash; 安排报告 &ndash;&gt;-->
+<!--            <modal-->
+<!--                    :visible="modalShow === 10"-->
+<!--                    title="选择需要安排报告的人员"-->
+<!--                    size="large"-->
+<!--                    :cancelHide="true"-->
+<!--                    @on-ok="requestReportOk"-->
+<!--                    @on-cancel="modalShow = 0">-->
+<!--                <div class="row">-->
+<!--                    <radioGroup v-model="reportRole">-->
+<!--                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="index">-->
+<!--                            <radio :label="role">{{role.name}}</radio>-->
+<!--                        </div>-->
+<!--                    </radioGroup>-->
+<!--                </div>-->
+<!--            </modal>-->
 
         </div>
     </div>
@@ -182,7 +177,7 @@
     import checkboxGroup from '@/views/components/checkbox/checkbox-group'
     import radio from '@/views/components/radio/radio'
     import radioGroup from '@/views/components/radio/radio-group'
-    import modal from '@/views/components/modal/modal'
+    // import modal from '@/views/components/modal/modal'
     import uploadModal from "@/components/common/uploadModal";
     import * as actionCmd from "@/components/business/common/actionCmds"
     import businessService from "@/services/businessService";
@@ -191,7 +186,7 @@
     export default {
         name: 'MetaCourtFunctionBtns',
         components: {
-            modal, checkbox, checkboxGroup, radio, radioGroup, uploadModal
+            checkbox, checkboxGroup, radio, radioGroup, uploadModal
         },
         data() {
             return {
@@ -290,10 +285,10 @@
                         break;
                     case actionCmd.ACTION_ROLE_LETIN:
                         businessService
-                            .getExperimentRoleInList({
+                            .getBusinessRoleInList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
-                                role_id: this.currentRole.alloc_id
+                                role_alloc_id: this.currentRole.alloc_id
                             })
                             .then(data => {
                                 this.roleInList = data;
