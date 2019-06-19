@@ -43,7 +43,6 @@ class BusinessService {
         })
     }
     genarateBusinessReport(data){
-        alert(data);
         return xhr({
             method: 'get',
             url: '/business/report/generate',
