@@ -38,7 +38,8 @@
                             <tr>
                                 <th class="text-center field-role-alloc-type">身份类型</th>
                                 <th class="text-center field-role-alloc-name">身份名称</th>
-                                <th class="text-center field-role-allo-action">配置动作</th>
+                                <th class="text-center field-role-alloc-image">身份形象</th>
+                                <th class="text-center field-role-alloc-action">配置动作</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup">
@@ -49,6 +50,11 @@
                             >
                                 <td>{{item.role_type}}</td>
                                 <td>{{item.role_name}}</td>
+                                <td>
+                                    <a href="javascript:;" class="btn-link" @click="setImage(item)">
+                                        <icon name="portrait"></icon>
+                                    </a>
+                                </td>
                                 <td>
                                     <select
                                         name="position"
@@ -69,16 +75,19 @@
                 </div>
             </b-col>
         </b-row>
+        <!-- 添加角色Modal -->
+        <role-alloc-image-modal @on-ok="setRoleAllocImageConfirm"></role-alloc-image-modal>
     </div>
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
 import Loading from "@/components/loading/Loading";
 import workflowService from "@/services/workflowService";
+import RoleAllocImageModal from "@/components/workflow/role-alloc-image-modal";
 
 export default {
     name: "position-settings",
-    components: { Loading },
+    components: { Loading, RoleAllocImageModal },
     data() {
         return {
             nodeColumns: {
@@ -99,7 +108,8 @@ export default {
             flowNodes: [],
             flowNodeRoles: [],
             roleAllcation: [],
-            flowNodePositions: []
+            flowNodePositions: [],
+            selectedAlloc: null
         };
     },
     computed: {
@@ -185,6 +195,26 @@ export default {
                 no: role.no,
                 position_id: role.position_id
             });
+        },
+        setImage(alloc) {
+            this.selectedAlloc = alloc;
+            this.selectedAlloc["node_id"] = this.flowNodes[
+                this.activeNodeIndex
+            ].id;
+            this.$emit("openRoleAllocImageModal", alloc);
+        },
+        setRoleAllocImageConfirm(roleAlloc) {
+            this.selectedAlloc.image = roleAlloc.image;
+            this.selectedAlloc.image_id = roleAlloc.image.id;
+            this.run();
+            workflowService
+                .updateWorkflowRoleAllocImage(this.selectedAlloc)
+                .then(() => {
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         }
     }
 };
@@ -206,13 +236,17 @@ export default {
     }
     .field-role-alloc-type {
         vertical-align: middle;
-        width: 40%;
+        width: 30%;
     }
     .field-role-alloc-name {
         vertical-align: middle;
-        width: 40%;
+        width: 30%;
     }
     .field-role-alloc-action {
+        vertical-align: middle;
+        width: 20%;
+    }
+    .field-role-alloc-image {
         vertical-align: middle;
         width: 20%;
     }

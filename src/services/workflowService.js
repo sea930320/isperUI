@@ -560,6 +560,14 @@ class WorkflowService {
       params: data
     })
   }
+
+  updateWorkflowRoleAllocImage(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/role/allocation/image_update',
+      params: data
+    })
+  }
 }
 
 export default new WorkflowService()
