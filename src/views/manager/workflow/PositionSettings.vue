@@ -206,7 +206,6 @@ export default {
         setRoleAllocImageConfirm(roleAlloc) {
             this.selectedAlloc.image = roleAlloc.image;
             this.selectedAlloc.image_id = roleAlloc.image.id;
-            console.log(roleAlloc);
             this.run();
             workflowService
                 .updateWorkflowRoleAllocImage(this.selectedAlloc)
