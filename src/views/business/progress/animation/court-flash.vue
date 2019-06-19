@@ -82,7 +82,7 @@
                 return this.$store.state.meta.actionCmd
             },
             currentRole() {
-                return this.$store.state.meta.currentRole
+                return this.$store.state.meta.currentRoleAllocation
             }
         },
         mounted() {

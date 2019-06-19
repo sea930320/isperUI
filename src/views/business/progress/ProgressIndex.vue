@@ -51,6 +51,7 @@ export default {
     sockets: {
         connect() {},
         getMessage(msg) {
+            msg = msg.result;
             if (this.$route.name === "wait") {
                 if (actionForWaiting.indexOf(msg.ext.cmd) > -1) {
                     this.messageHandler(msg.ext, msg);
