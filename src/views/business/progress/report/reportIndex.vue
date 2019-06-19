@@ -31,34 +31,35 @@
                                     <p>
                                         <span v-if="node.type === 4">实验心得：</span>
                                         <span v-else>交流记录：</span>
-                                        <!--<span v-if="node.type === 4 && node.messages.length == 0">无</span>-->
-                                        <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(1,node.messages)">详情</a>-->
+                                        <!--<a href="javascript:;" class="btn-link" @click="handlerDetailClick(1,node.messages)">详情</a>-->
+                                        <span v-if="node.type === 4 && node.messages.length == 0">无</span>
+                                        <a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(1,node.messages)">详情</a>
                                     </p>
                                     <p v-if="node.type === 5">
                                         <span>投票结果：</span>
-                                        <!--<span v-if="!node.vote_status || node.vote_status.length == 0">无</span>-->
-                                        <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(6, node.vote_status)">详情</a>-->
+                                        <span v-if="!node.vote_status || node.vote_status.length == 0">无</span>
+                                        <a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(6, node.vote_status)">详情</a>
                                     </p>
                                     <p>
                                         <span v-if="node.type === 3">展示文件：</span>
                                         <span v-else>提交文件：</span>
-                                        <!--<span v-if="node.docs && node.docs.length == 0">无</span>-->
-                                        <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(2, node.docs)">详情</a>-->
+                                        <span v-if="node.docs && node.docs.length == 0">无</span>
+                                        <a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(2, node.docs)">详情</a>
                                     </p>
                                     <p>自我备忘：
-                                        <!--<span v-if="node.note == null">无</span>-->
-                                        <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(3, node.note)">详情</a>-->
+                                        <span v-if="node.note == null">无</span>
+                                        <a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(3, node.note)">详情</a>
                                     </p>
-                                    <!--<template v-if="status == 2">-->
-                                        <!--<p>操作指南：-->
-                                            <!--&lt;!&ndash;<span v-if="node.operation_guides.length == 0">无</span>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(4, node.operation_guides)">详情</a>&ndash;&gt;-->
-                                        <!--</p>-->
-                                        <!--<p>项目素材：-->
-                                            <!--&lt;!&ndash;<span v-if="node.project_docs.length == 0">无</span>&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(5, node.project_docs)">详情</a>&ndash;&gt;-->
-                                        <!--</p>-->
-                                    <!--</template>-->
+                                    <template v-if="status == 2">
+                                        <p>操作指南：
+                                            <!--<span v-if="node.operation_guides.length == 0">无</span>-->
+                                            <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(4, node.operation_guides)">详情</a>-->
+                                        </p>
+                                        <p>项目素材：
+                                            <!--<span v-if="node.project_docs.length == 0">无</span>-->
+                                            <!--<a v-else href="javascript:;" class="btn-link" @click="handlerDetailClick(5, node.project_docs)">详情</a>-->
+                                        </p>
+                                    </template>
                                 </div>
                             </BulmaAccordionItem>
                         </BulmaAccordion>
@@ -70,6 +71,7 @@
                                             placeholder="请填写心得！"
                                             rows="3"
                                             max-rows="4"
+                                            v-model="experienceContent"
                                     >
                                     </b-form-textarea>
                             </b-col>
@@ -80,6 +82,7 @@
                                 <b-button
                                         class="styledBtn"
                                         variant="outline-primary"
+                                        @click="handleSave()"
                                 >
                                     提交心得
                                 </b-button>
@@ -101,9 +104,14 @@
                             <p v-if="record.url">
                                 <chataudio :src="record.url"></chataudio>
                             </p>
-                            <!--<p v-else-if="record.ext.cmd == 'action_role_letin'">请入{{record.ext.opt.data.map(role => role.role_name).join('、')}}</p>-->
-                            <!--<p v-else-if="record.ext.cmd == 'action_submit_experience'">{{record.ext.opt.content}}</p>-->
-                            <!--<p v-else>{{record.msg}}</p>-->
+                            <p v-else-if="record.ext.cmd == 'action_role_letin'">请入
+                                <span v-for="(recordData, index) in record.ext.opt.data" :key="index">
+                                    {{recordData.role_name}}、
+                                </span>
+                                <!--{{record.ext.opt.data.map(role=>role.role_name).join('、')}}-->
+                            </p>
+                            <p v-else-if="record.ext.cmd == 'action_submit_experience'">{{record.ext.opt.content}}</p>
+                            <p v-else>{{record.msg}}</p>
                         </li>
                     </ul>
                 </div>
@@ -215,6 +223,7 @@
                     data:{},
                     nodes:[]
                 },
+                experienceContent:"",
                 signShow: -1,
                 modalShow: false,
                 detail: {
@@ -281,6 +290,20 @@
             },
             previewFile(fileUrl) {
                 openFile(fileUrl, this.userInfo.id)
+            },
+            handleSave(){
+                if (this.experienceContent === ''){
+                    this.$toasted.error('请输入实验心得');
+                    return
+                }
+                BusinessService
+                    .postBusinessExperience({
+                        business_id:this.$route.params.bid,
+                        content:this.experienceContent
+                    })
+                    .then(() =>{
+                        this.$toasted.success('保存成功');
+                    })
             }
         }
     }

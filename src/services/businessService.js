@@ -353,6 +353,14 @@ class BusinessService {
             params: data
         })
     }
+
+    postBusinessExperience(data){
+        return xhr({
+            method: 'post',
+            url: '/business/experience/save',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
