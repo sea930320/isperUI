@@ -1,7 +1,7 @@
 <template>
     <div class="progress-chat-container">
         <div class="progress-chat-hd" v-if="currentRoleAllocation">
-            <b-dropdown
+            <!-- <b-dropdown
                 v-if="currentRoleAllocation.role"
                 size="sm"
                 :text="currentRoleAllocation.role.name+' ( '+ currentRoleAllocation.no + ' ) '"
@@ -13,7 +13,7 @@
                     v-for="(roleAlloc, index) in userRoleAllocs"
                     :key="index"
                 >{{roleAlloc.role.name}}({{currentRoleAllocation.no}}){{roleAlloc.sitting_status == 2 ? '' : '（未入席）'}}</b-dropdown-item>
-            </b-dropdown>
+            </b-dropdown>-->
             <div class="chat-message">
                 <section ref="chat" class="chatlist" v-scroll-bottom="messages">
                     <ul>
@@ -70,10 +70,7 @@
                                 <!-- <div v-if="item.url" class="chat-text">
                                     <chataudio :src="item.url"></chataudio>
                                 </div>-->
-                                <div
-                                    class="chat-text"
-                                    v-html="replaceFace(item)"
-                                ></div>
+                                <div class="chat-text" v-html="replaceFace(item)"></div>
                             </li>
                             <li class="chat-bubble chat-others" :key="index" v-else>
                                 <div class="chat-user">
@@ -89,10 +86,7 @@
                                 <!-- <div v-if="item.url" class="chat-text">
                                     <chataudio :src="item.url"></chataudio>
                                 </div>-->
-                                <div
-                                    class="chat-text"
-                                    v-html="replaceFace(item)"
-                                ></div>
+                                <div class="chat-text" v-html="replaceFace(item)"></div>
                             </li>
                         </template>
                     </ul>
@@ -219,8 +213,8 @@ export default {
                 if (msg.ext.opt_status) {
                     con = `<span>要求${
                         msg.ext.opt.role_name
-                        }签字（已完成）</span>`;
-                }else {
+                    }签字（已完成）</span>`;
+                } else {
                     con = `<span>${msg.data}</span>`;
                 }
                 return con;
@@ -239,7 +233,8 @@ export default {
             if (msg.ext.cmd === actionCmd.ACTION_ROLE_SCHEDULE_REPORT) {
                 if (
                     msg.ext.opt &&
-                    parseInt(msg.ext.opt.role_id) === this.currentRoleAllocation.alloc_id
+                    parseInt(msg.ext.opt.role_id) ===
+                        this.currentRoleAllocation.alloc_id
                 ) {
                     return `<a href="javascript:void(0)" class="btn-underline" title="点击左下侧走向发言席按钮">请走向发言席作报告</a>`;
                 } else {
@@ -251,7 +246,8 @@ export default {
             if (
                 msg.ext.cmd === actionCmd.ACTION_ROLE_REQUEST_SIGN &&
                 msg.ext.opt &&
-                parseInt(msg.ext.opt.role_id) !== this.currentRoleAllocation.alloc_id
+                parseInt(msg.ext.opt.role_id) !==
+                    this.currentRoleAllocation.alloc_id
             ) {
                 return `<span>要求${msg.ext.opt.role_name}签字</span>`;
             }
@@ -290,7 +286,7 @@ export default {
     height: 80%;
     background: #ffffff3d;
     .chat-message {
-        height: 600px;
+        height: 645px;
         .chatlist {
             height: 100%;
             padding: 10px 20px;

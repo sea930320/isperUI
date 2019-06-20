@@ -52,6 +52,9 @@ export default {
         connect() {},
         getMessage(msg) {
             msg = msg.result;
+            if (msg.business != this.metaInfo.businessID) {
+                return;
+            }
             if (this.$route.name === "wait") {
                 if (actionForWaiting.indexOf(msg.ext.cmd) > -1) {
                     this.messageHandler(msg.ext, msg);
@@ -69,7 +72,7 @@ export default {
             }
 
             // 需要刷新按钮状态的命令
-            // console.log(msg);
+            console.log(msg);
             this.dispatchFlashAction(msg);
             if (
                 this.currentRoleAllocation.sitting_status === 2 ||
@@ -398,7 +401,8 @@ export default {
                 case actionCmd.ACTION_ROLE_APPLY_SPEAK_OPT:
                     if (
                         this.currentRoleAllocation.alloc_id &&
-                        this.currentRoleAllocation.alloc_id === parseInt(action.opt.role_alloc_id)
+                        this.currentRoleAllocation.alloc_id ===
+                            parseInt(action.opt.role_alloc_id)
                     ) {
                         this.$toasted.error(
                             action.opt.result === 1
@@ -410,7 +414,8 @@ export default {
                 case actionCmd.ACTION_DOC_APPLY_SHOW_OPT:
                     if (
                         this.currentRoleAllocation.alloc_id &&
-                        this.currentRoleAllocation.alloc_id === parseInt(action.opt.role_alloc_id)
+                        this.currentRoleAllocation.alloc_id ===
+                            parseInt(action.opt.role_alloc_id)
                     ) {
                         this.$toasted.error(
                             action.opt.result === 1
@@ -422,7 +427,8 @@ export default {
                 case actionCmd.ACTION_DOC_APPLY_SUBMIT_OPT:
                     if (
                         this.currentRoleAllocation.alloc_id &&
-                        this.currentRoleAllocation.alloc_id === parseInt(action.opt.role_alloc_id)
+                        this.currentRoleAllocation.alloc_id ===
+                            parseInt(action.opt.role_alloc_id)
                     ) {
                         this.$toasted.error(
                             action.opt.result === 1
@@ -444,7 +450,8 @@ export default {
                 case actionCmd.ACTION_ROLE_SCHEDULE_REPORT:
                     if (
                         this.currentRoleAllocation.alloc_id &&
-                        this.currentRoleAllocation.alloc_id === parseInt(msg.ext.opt.role_alloc_id)
+                        this.currentRoleAllocation.alloc_id ===
+                            parseInt(msg.ext.opt.role_alloc_id)
                     ) {
                         this.$toasted.error("请走向发言席作演讲");
                     }
