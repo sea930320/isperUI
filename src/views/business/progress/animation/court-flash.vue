@@ -137,6 +137,7 @@
                     this.$toast.info('flash未初始化');
                     return
                 }
+                let roleCmd = null;
                 switch (action.ext.cmd) {
                     case ACTION_ROLE_SHOW:
                         this.flashObj.sittingRole(action.ext.opt);
@@ -182,7 +183,7 @@
                         if (action.ext.opt.origin_position.sitting_status === 2 && action.ext.opt.origin_position.is_self) {
                             this.flashObj.roleShow(action.ext.opt.origin_position.code_position, 0)
                         }
-                        let roleCmd = this.flashObj.getRoleCmd(action.ext.opt.report_position.code_position, action.ext.opt.gender, action.ext.opt.actors, action.ext.opt.user.name);
+                        roleCmd = this.flashObj.getRoleCmd(action.ext.opt.report_position.code_position, action.ext.opt.gender, action.ext.opt.actors, action.ext.opt.user.name);
                         this.flashObj.setRole(roleCmd);
                         this.flashObj.roleShow(action.ext.opt.report_position.code_position, 1);
                         break;

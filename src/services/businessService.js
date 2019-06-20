@@ -387,14 +387,32 @@ class BusinessService {
     }
 
     /**
-     * 获取实验展示列表
-     * @param data
+     * 获取实验环节可以被安排报告的角色
+     * @param data 参数
+     * @param data.experiment_id 实验id
+     * @param data.node_id 环节id
      * @returns {{pre, visitor}|*}
      */
-    getBusinessDisplayList(data) {
+    getReportRoles(data) {
         return xhr({
             method: 'get',
-            url: '/business/file/display/list',
+            url: '/business/role/report/list',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验环节中需要签字的角色
+     * @param data 参数
+     * @param data.experiment_id 实验id
+     * @param data.node_id 环节id
+     * @param data.role_id 当前角色id
+     * @returns {{pre, visitor}|*}
+     */
+    querySignRoles(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/request/sign/roles',
             params: data
         })
     }

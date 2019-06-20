@@ -112,7 +112,7 @@ export default class CourtFlash {
     try {
       this.obj.setRole(cmd)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 
@@ -132,7 +132,7 @@ export default class CourtFlash {
     try {
       this.obj.action(cmd);
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 
@@ -159,7 +159,7 @@ export default class CourtFlash {
       this.roleAction(cmds.show_cmd)
       // this.roleShow(status.position.code_position, 1)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 
@@ -175,7 +175,7 @@ export default class CourtFlash {
       this.roleAction(cmds.show_cmd)
       // this.roleShow(status.position.code_position, 1)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
     }
   }
 

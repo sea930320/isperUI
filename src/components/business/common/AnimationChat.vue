@@ -59,7 +59,7 @@
                             >
                                 <div class="chat-user">
                                     <!-- <img :src="item.ext.avatar"> -->
-                                    <img src="@/assets/imgIsper/business/avatar1.png">
+                                    <img :src="item.ext.avatar">
                                 </div>
                                 <div class="time">
                                     <cite>
@@ -78,7 +78,7 @@
                             <li class="chat-bubble chat-others" :key="index" v-else>
                                 <div class="chat-user">
                                     <!-- <img :src="item.ext.avatar"> -->
-                                    <img src="@/assets/imgIsper/business/avatar2.png">
+                                    <img :src="item.ext.avatar">
                                 </div>
                                 <div class="time">
                                     <cite>
@@ -199,11 +199,11 @@ export default {
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SHOW) {
                 return `<a href="${
                     msg.ext.opt.url
-                }" class="btn-underline" target="_blank">${msg.msg}</a>`;
+                }" class="btn-underline" target="_blank">${msg.data}</a>`;
             }
             // 提交文件
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SUBMIT) {
-                con += "提交文件";
+                con += "提交文件 : ";
                 msg.ext.opt.data.forEach(dt => {
                     con += `<a href="${
                         dt.url
@@ -215,13 +215,13 @@ export default {
             }
 
             // 签字
-            if (msg.ext.opt_status) {
-                if (msg.ext.cmd === actionCmd.ACTION_ROLE_REQUEST_SIGN) {
+            if (msg.ext.cmd === actionCmd.ACTION_ROLE_REQUEST_SIGN) {
+                if (msg.ext.opt_status) {
                     con = `<span>要求${
                         msg.ext.opt.role_name
-                    }签字（已完成）</span>`;
-                } else {
-                    con = `<span>${msg.data}（已完成）</span>`;
+                        }签字（已完成）</span>`;
+                }else {
+                    con = `<span>${msg.data}</span>`;
                 }
                 return con;
             }
@@ -261,7 +261,7 @@ export default {
                 (msg.ext.cmd === actionCmd.ACTION_DOC_APPLY_SUBMIT ||
                     msg.ext.cmd === actionCmd.ACTION_DOC_APPLY_SHOW ||
                     msg.ext.cmd === actionCmd.ACTION_ROLE_APPLY_SPEAK) &&
-                !this.currentRole.can_terminate
+                !this.currentRoleAllocation.can_terminate
             ) {
                 return `${msg.data}`;
             }

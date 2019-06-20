@@ -69,7 +69,7 @@ export default {
             }
 
             // 需要刷新按钮状态的命令
-            console.log(msg);
+            // console.log(msg);
             this.dispatchFlashAction(msg);
             if (
                 this.currentRoleAllocation.sitting_status === 2 ||
@@ -384,7 +384,7 @@ export default {
                     break;
                 // 表达管理
                 case actionCmd.ACTION_ROLE_BANNED:
-                    this.$toasted.error(
+                    this.$toasted.info(
                         action.opt.control_status === 1
                             ? "主持人取消了表达管理"
                             : "主持人启动了表达管理"

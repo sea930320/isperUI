@@ -88,7 +88,6 @@
 </template>
 <script>
 import { mapState, mapActions } from "vuex";
-import workflowModule from "@/components/workflow/flow-module";
 import ImageView from "@/components/imageView/ImageView";
 import Loading from "@/components/loading/Loading";
 import workflowService from "@/services/workflowService";
@@ -96,7 +95,7 @@ import _ from "lodash";
 
 export default {
     name: "animation-settings",
-    components: { Loading, workflowModule, ImageView },
+    components: { Loading, ImageView },
     data() {
         return {
             nodeColumns: {

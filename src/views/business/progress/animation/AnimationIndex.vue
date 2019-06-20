@@ -6,7 +6,7 @@
                 <courtFlash></courtFlash>
                 <div class="court-action-wrap" v-if="userInfo.identity === 5" v-loading="isRunning">
                     <functionActions></functionActions>
-                    <!--                    <processActions></processActions>-->
+                    <processActions></processActions>
                 </div>
             </div>
             <div class="court-chat-container ml-auto">
@@ -21,7 +21,7 @@
     import { mapState } from "vuex";
     import chatInput from "@/components/business/common/ChatInput";
     import functionActions from './function-actions'
-    // import processActions from './process-actions'
+    import processActions from './process-actions'
     import courtFlash from './court-flash'
     import AnimationChat from "@/components/business/common/AnimationChat";
     export default {
@@ -31,7 +31,7 @@
             AnimationChat,
             chatInput,
             functionActions,
-            // processActions
+            processActions
         },
         filters: {},
         data() {
@@ -91,10 +91,10 @@
             color: #fff;
         }
         .btn-ex-blue{
-            background-color: #68a3d582;
+            background-color: darkgrey;
         }
         .btn-ex-blue:hover{
-            background-color: #58acf3;
+            background-color: lightgrey;
             color: #fff;
         }
         .action-container .btn-ex {

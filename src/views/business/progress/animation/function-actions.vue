@@ -36,36 +36,23 @@
                 </div>
             </b-modal>
             <!-- 约见 -->
-<!--            <modal-->
-<!--                    :visible="modalShow === 3"-->
-<!--                    title="约见"-->
-<!--                    @on-cancel="modalShow = 0"-->
-<!--                    @on-ok="meetApplyOk">-->
-<!--                <div class="modal-msg">-->
-<!--                    <p class="message">确定提交约见申请？</p>-->
-<!--                </div>-->
-<!--            </modal>-->
-<!--            &lt;!&ndash; 申请发言 &ndash;&gt;-->
-<!--            <modal-->
-<!--                    :visible="modalShow === 4"-->
-<!--                    title="申请发言"-->
-<!--                    @on-cancel="modalShow = 0"-->
-<!--                    @on-ok="speakApplyOk">-->
-<!--                <div class="modal-msg">-->
-<!--                    <p class="message">确定向主持人提交发言申请？</p>-->
-<!--                </div>-->
-<!--            </modal>-->
-<!--            &lt;!&ndash; 表达管理 &ndash;&gt;-->
-<!--            <modal-->
-<!--                    :visible="modalShow === 5"-->
-<!--                    title="表达管理" okText="是"-->
-<!--                    cancelText="否"-->
-<!--                    @on-cancel="modalShow = 0"-->
-<!--                    @on-ok="bannedOk">-->
-<!--                <div class="modal-msg">-->
-<!--                    <p class="message">{{metaInfo.isBanned ? '是否取消发言、提交、展示控制' : '是否启动发言、提交、展示控制'}}</p>-->
-<!--                </div>-->
-<!--            </modal>-->
+            <b-modal :visible="modalShow === 3" centered title="约见" @ok="meetApplyOk()" @hidden="modalShow = 0">
+                <div class="modal-msg">
+                    <p class="message">确定提交约见申请？</p>
+                </div>
+            </b-modal>
+            <!-- 申请发言 -->
+            <b-modal :visible="modalShow === 4" centered title="申请发言" @ok="speakApplyOk()" @hidden="modalShow = 0">
+                <div class="modal-msg">
+                    <p class="message">确定向主持人提交发言申请？</p>
+                </div>
+            </b-modal>
+            <!-- 表达管理 -->
+            <b-modal :visible="modalShow === 5" centered title="表达管理" @ok="bannedOk()" ok-title="是" cancel-title="否" @hidden="modalShow = 0">
+                <div class="modal-msg">
+                    <p class="message">{{metaInfo.isBanned ? '是否取消发言、提交、展示控制' : '是否启动发言、提交、展示控制'}}</p>
+                </div>
+            </b-modal>
             <!-- 提交modal -->
             <upload-modal :modalShow="modalShow === 7" @on-uploadConfirm="submitDocOk" @on-cancel="modalShow = 0"></upload-modal>
             <!-- 展示modal -->
@@ -94,63 +81,47 @@
                     </div>
                 </div>
             </b-modal>
-<!--            &lt;!&ndash; 要求签字 &ndash;&gt;-->
-<!--            <modal-->
-<!--                    :visible="modalShow === 9"-->
-<!--                    title="选择需要签字的文件"-->
-<!--                    size="large"-->
-<!--                    :cancelHide="true"-->
-<!--                    @on-ok="requestSignOk"-->
-<!--                    @on-cancel="modalShow = 0">-->
-<!--                &lt;!&ndash; <div v-if="displayFiles.length == 0" class="modal-msg">-->
-<!--                  <p class="message">没有任何可供签字的文件，请先上传</p>-->
-<!--                </div> &ndash;&gt;-->
-<!--                <div class="detail">-->
-<!--                    <div class="max-hight-box">-->
-<!--                        <table class="table table-gray table-striped table-hover table-border">-->
-<!--                            <thead>-->
-<!--                            <tr>-->
-<!--                                <th>文件名称</th>-->
-<!--                            </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                            <tr v-for="(file, index) in displayFiles" :key="index"-->
-<!--                                :class="{'tr-choose': index === activeDocIndex}"-->
-<!--                                @click="activeDocIndex = index">-->
-<!--                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>-->
-<!--                            </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-<!--                    </div>-->
-<!--                    <h3 class="mr">要求签字的人员</h3>-->
-<!--                    <div class="max-hight-box">-->
-<!--                        <div class="row">-->
-<!--                            <radioGroup v-model="signRole">-->
-<!--                                <div class="col-xs-3" v-for="role in signRoles" :key="role.name">-->
-<!--                                    <radio :label="role">{{role.name}}</radio>-->
-<!--                                </div>-->
-<!--                            </radioGroup>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </modal>-->
-<!--            &lt;!&ndash; 安排报告 &ndash;&gt;-->
-<!--            <modal-->
-<!--                    :visible="modalShow === 10"-->
-<!--                    title="选择需要安排报告的人员"-->
-<!--                    size="large"-->
-<!--                    :cancelHide="true"-->
-<!--                    @on-ok="requestReportOk"-->
-<!--                    @on-cancel="modalShow = 0">-->
-<!--                <div class="row">-->
-<!--                    <radioGroup v-model="reportRole">-->
-<!--                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="index">-->
-<!--                            <radio :label="role">{{role.name}}</radio>-->
-<!--                        </div>-->
-<!--                    </radioGroup>-->
-<!--                </div>-->
-<!--            </modal>-->
-
+            <!-- 要求签字 -->
+            <b-modal :visible="modalShow === 9" centered title="选择需要签字的文件" :ok-only="true" @ok="requestSignOk()" @hidden="modalShow = 0">
+                <div class="detail">
+                    <div class="max-hight-box">
+                        <table class="table table-gray table-striped table-hover table-border">
+                            <thead>
+                            <tr>
+                                <th>文件名称</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(file, index) in displayFiles" :key="index"
+                                :class="{'tr-choose': index === activeDocIndex}"
+                                @click="activeDocIndex = index">
+                                <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 class="mr">要求签字的人员</h3>
+                    <div class="max-hight-box">
+                        <div class="row">
+                            <radioGroup v-model="signRole">
+                                <div class="col-xs-3" v-for="role in signRoles" :key="role.name">
+                                    <radio :label="role">{{role.name}}</radio>
+                                </div>
+                            </radioGroup>
+                        </div>
+                    </div>
+                </div>
+            </b-modal>
+            <!-- 安排报告 -->
+            <b-modal :visible="modalShow === 10" centered title="选择需要安排报告的人员" :ok-only="true" @ok="requestReportOk()" @hidden="modalShow = 0">
+                <div class="row text-left mx-5">
+                    <radioGroup v-model="reportRole">
+                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="index">
+                            <radio :label="role">{{role.name}}</radio>
+                        </div>
+                    </radioGroup>
+                </div>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -199,7 +170,7 @@
         computed: {
             ...mapState({
                 metaInfo: state => state.meta.info,
-                currentRole: state => state.meta.currentRoleAllocation,
+                currentRoleAllocation: state => state.meta.currentRoleAllocation,
                 functionActions: state => state.meta.function_actions,
                 roles: state => state.meta.info.role_status
             }),
@@ -209,11 +180,11 @@
         },
         methods: {
             init() {
-                if (!this.metaInfo || !this.currentRole) return;
+                if (!this.metaInfo || !this.currentRoleAllocation) return;
                 this.docSubmitParam = {
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                    role_alloc_id: this.currentRole.alloc_id,
+                    role_alloc_id: this.currentRoleAllocation.alloc_id,
                     cmd: actionCmd.ACTION_DOC_SUBMIT
                 }
             },
@@ -222,7 +193,7 @@
                 businessService.pushMessage({
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                    role_alloc_id: this.currentRole.alloc_id,
+                    role_alloc_id: this.currentRoleAllocation.alloc_id,
                     msg: msg,
                     type: 'cmd',
                     cmd: cmd,
@@ -232,7 +203,6 @@
             },
             // 触发动作
             commitAction(action) {
-                console.log(action);
                 if (action.disable) {
                     this.$toasted.info('当前无权操作该功能');
                     return
@@ -271,7 +241,7 @@
                             .getBusinessRoleInList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
-                                role_alloc_id: this.currentRole.alloc_id
+                                role_alloc_id: this.currentRoleAllocation.alloc_id
                             })
                             .then(data => {
                                 this.roleInList = data;
@@ -284,7 +254,7 @@
                             .getBusinessRoleOutList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
-                                role_alloc_id: this.currentRole.alloc_id
+                                role_alloc_id: this.currentRoleAllocation.alloc_id
                             })
                             .then(data => {
                                 this.roleOutList = data;
@@ -296,7 +266,7 @@
                         this.modalShow = 3;
                         break;
                     case actionCmd.ACTION_ROLE_APPLY_SPEAK:
-                        if (this.currentRole.can_terminate) {
+                        if (this.currentRoleAllocation.can_terminate) {
                             this.$toasted.info('您是主持人始终拥有发言权限，无须申请发言');
                             return
                         }
@@ -307,8 +277,8 @@
                         this.modalShow = 4;
                         break;
                     case actionCmd.ACTION_ROLE_BANNED:
-                        if (!this.currentRole.can_terminate) {
-                            this.$toasted.warn('您无权操作表达管理');
+                        if (!this.currentRoleAllocation.can_terminate) {
+                            this.$toasted.error('您无权操作表达管理');
                             return
                         }
                         this.modalShow = 5;
@@ -330,7 +300,7 @@
                         });
                         break;
                     case actionCmd.ACTION_DOC_APPLY_SUBMIT:
-                        if (this.currentRole.can_terminate) {
+                        if (this.currentRoleAllocation.can_terminate) {
                             this.$toasted.info('您是主持人拥有所有权限，无须申请提交');
                             return
                         }
@@ -354,7 +324,7 @@
                         this.modalShow = 8;
                         break;
                     case actionCmd.ACTION_DOC_APPLY_SHOW:
-                        if (this.currentRole.can_terminate) {
+                        if (this.currentRoleAllocation.can_terminate) {
                             this.$toasted.info('您是主持人拥有所有权限，无须申请展示');
                             return
                         }
@@ -367,7 +337,7 @@
                         break;
                     case actionCmd.ACTION_ROLE_REQUEST_SIGN:
                         businessService
-                            .getExperimentDisplayList({
+                            .getBusinessDisplayList({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
                                 path_id: this.metaInfo.path_id,
@@ -381,7 +351,7 @@
                             .querySignRoles({
                                 business_id: this.$route.params.bid,
                                 node_id: this.$route.params.nid,
-                                role_id: this.currentRole.alloc_id
+                                role_alloc_id: this.currentRoleAllocation.alloc_id
                             })
                             .then(data => {
                                 this.signRoles = data
@@ -423,7 +393,7 @@
                     return
                 }
                 if (this.roleInArr.length === 0) {
-                    this.$toasted.warn('请选择需要请入的角色');
+                    this.$toasted.error('请选择需要请入的角色');
                     return false
                 }
                 let roleInNames = this.roleInArr.map((role) => {
@@ -441,7 +411,7 @@
                     return
                 }
                 if (this.roleOutArr.length === 0) {
-                    this.$toasted.warn('请选择需要送出的角色');
+                    this.$toasted.error('请选择需要送出的角色');
                     return false
                 }
                 let roleOutNames = this.roleOutArr.map((role) => {
@@ -499,16 +469,16 @@
             // 要求签字确定
             requestSignOk() {
                 if (this.displayFiles.length === 0) {
-                    this.$toasted.warn('当前没有可签字的文件，请先上传');
+                    this.$toasted.error('当前没有可签字的文件，请先上传');
                     return
                 }
                 let selectDoc = this.displayFiles[this.activeDocIndex];
                 if ('docx'.indexOf(selectDoc.filename.substring(selectDoc.filename.lastIndexOf('.') + 1).toLowerCase()) === -1) {
-                    this.$toasted.warn('您选择的文件不是docx格式的，无法签名，请重新选择');
+                    this.$toasted.error('您选择的文件不是docx格式的，无法签名，请重新选择');
                     return
                 }
                 if (!this.signRole || !this.signRole.id) {
-                    this.$toasted.warn('请选择要签字的对象');
+                    this.$toasted.error('请选择要签字的对象');
                     return
                 }
                 this.sendCMDMessage(
@@ -518,7 +488,7 @@
                     JSON.stringify({
                         'doc_id': selectDoc.id,
                         'doc_name': selectDoc.filename,
-                        'role_id': this.signRole.id,
+                        'role_alloc_id': this.signRole.id,
                         'role_name': this.signRole.name
                     })
                 );
@@ -527,14 +497,14 @@
             // 确定安排报告
             requestReportOk() {
                 if (!this.reportRole) {
-                    this.$toasted.warn('你未选择需要安排报告的人员');
+                    this.$toasted.error('你未选择需要安排报告的人员');
                     return
                 }
                 this.sendCMDMessage(
                     `${this.reportRole.name}将向大会作报告`,
                     actionCmd.ACTION_ROLE_SCHEDULE_REPORT,
                     null,
-                    JSON.stringify({role_id: this.reportRole.id, role_name: this.reportRole.name})
+                    JSON.stringify({role_alloc_id: this.reportRole.id, role_name: this.reportRole.name})
                 );
                 this.modalShow = 0
             }
@@ -544,7 +514,7 @@
                 this.docSubmitParam = {
                     business_id: to.params.bid,
                     node_id: to.params.nid,
-                    role_id: this.currentRole.alloc_id,
+                    role_id: this.currentRoleAllocation.alloc_id,
                     cmd: actionCmd.ACTION_DOC_SUBMIT
                 }
             },
@@ -556,7 +526,7 @@
                     this.roleOutArr = []
                 }
             },
-            'currentRole': {
+            'currentRoleAllocation': {
                 handler(data) {
                     if (data) {
                         this.docSubmitParam = {
