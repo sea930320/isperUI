@@ -54,14 +54,14 @@
                 </p>
             </div>
         </div>
-        <!-- <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle> -->
+         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
     </div>
 </template>
 <script>
 // import * as actionCmd from "@/components/business/common/actionCmds";
 import businessService from "@/services/businessService";
 import emoji from "@/components/business/common/emoji";
-// import endNodeHandle from "@/components/business/modal/endNodeHandle";
+import endNodeHandle from "@/components/business/modal/endNodeHandle";
 
 export default {
     name: "AnimationChatInput",
@@ -73,7 +73,7 @@ export default {
             content: ""
         };
     },
-    components: {},
+    components: {endNodeHandle},
     computed: {
         metaInfo() {
             return this.$store.state.meta.info;

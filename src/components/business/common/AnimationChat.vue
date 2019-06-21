@@ -49,6 +49,10 @@
                                 >{{item.data}}</div>
                                 <div
                                     class="status-info"
+                                    v-else-if="item.ext.cmd == 'action_trans'"
+                                >{{item.ext.role_name}}（{{item.ext.username}}）{{item.msg || item.data}}</div>
+                                <div
+                                    class="status-info"
                                     v-else
                                 >{{item.ext.role_name}}（{{item.ext.username}}）{{item.data}}</div>
                             </li>
