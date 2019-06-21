@@ -20,9 +20,17 @@
                 </b-navbar-nav>
                 <b-navbar-nav class="ml-auto" v-if="userInfo && userInfo.role">
                     <b-nav-item-dropdown right>
-                        <template slot="button-content" class="text-white">
+                        <template
+                            slot="button-content"
+                            class="text-white"
+                            v-if="!['animation'].includes(this.$route.name)"
+                        >
                             <icon name="users"></icon>
                             &nbsp;&nbsp; {{userInfo.username}}-{{userInfo.manager_info.group_name && (userInfo.manager_info.group_name)}}{{userInfo.manager_info.company_name && ('/' + userInfo.manager_info.company_name)}}{{userInfo.manager_info.part_name && ('/' + userInfo.manager_info.part_name)}}({{userInfo.role_name}})
+                        </template>
+                        <template slot="button-content" class="text-white" v-else>
+                            <icon name="users"></icon>
+                            &nbsp;&nbsp; {{userInfo.username}}-({{userInfo.role_name}})
                         </template>
                         <b-dropdown-item :to="prefixRoute + 'personal-info'">个人信息</b-dropdown-item>
                         <b-dropdown-item :to="prefixRoute + 'password-reset'">重置密码</b-dropdown-item>
