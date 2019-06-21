@@ -96,6 +96,13 @@
                     </ul>
                 </section>
             </div>
+            <div class="online-user inactive">
+                <div class="online-user-handle">
+                    <a href="javascript:void(0);">
+                        <icon name="caret-right" size="xs"></icon>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -399,6 +406,32 @@ export default {
                 }
             }
         }
+    }
+    .progress-chat-hd {
+        position: relative;
+    }
+    .online-user {
+        background: #dde7f9;
+        height: 645px;
+        width: 300px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        .online-user-handle {
+            position: absolute;
+            left: 0px;
+            top: 320px;
+        }
+    }
+    .inactive {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s linear 300ms, opacity 300ms;
+    }
+    .active {
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0s linear 0s, opacity 300ms;
     }
 }
 </style>
