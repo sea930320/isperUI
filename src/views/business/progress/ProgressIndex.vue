@@ -72,7 +72,6 @@ export default {
             }
 
             // 需要刷新按钮状态的命令
-            console.log(msg);
             this.dispatchFlashAction(msg);
             if (
                 this.currentRoleAllocation.sitting_status === 2 ||
