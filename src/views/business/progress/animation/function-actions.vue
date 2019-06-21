@@ -1,7 +1,7 @@
 <template>
     <div class="function-action-wrapper">
         <div class="action-container clearfix">
-            <a v-for="action in functionActions" :key="action.name"
+            <a v-for="(action, index) in functionActions" :key="action.name + index"
                :class="['col-xs-3', 'btn-ex', {'btn-primary': !action.disable, 'btn-ex-blue': action.disable}]"
                href="javascript:"
                @click="commitAction(action)">
@@ -16,7 +16,7 @@
                 </div>
                 <div v-else class="row">
                     <checkboxGroup v-model="roleInArr">
-                        <div class="col-xs-3" v-for="role in roleInList" :key="role.name">
+                        <div class="col-xs-3" v-for="(role, index) in roleInList" :key="role.name + index">
                             <checkbox :label="role.name" :value="role"></checkbox>
                         </div>
                     </checkboxGroup>
@@ -29,7 +29,7 @@
                 </div>
                 <div v-else class="row">
                     <checkboxGroup v-model="roleOutArr">
-                        <div class="col-xs-3" v-for="role in roleOutList" :key="role.name">
+                        <div class="col-xs-3" v-for="(role, index) in roleOutList" :key="role.name + index">
                             <checkbox :label="role.name" :value="role"></checkbox>
                         </div>
                     </checkboxGroup>
@@ -71,7 +71,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(file, index) in displayFiles" :key="index"
+                            <tr v-for="(file, index) in displayFiles" :key="'m' + index"
                                 :class="{'tr-choose': index === activeDocIndex}"
                                 @click="activeDocIndex = index">
                                 <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
@@ -92,7 +92,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="(file, index) in displayFiles" :key="index"
+                            <tr v-for="(file, index) in displayFiles" :key="'n' + index"
                                 :class="{'tr-choose': index === activeDocIndex}"
                                 @click="activeDocIndex = index">
                                 <td><a :href="file.url" class="btn-underline" target="_blank">{{file.filename}}</a></td>
@@ -104,7 +104,7 @@
                     <div class="max-hight-box">
                         <div class="row">
                             <radioGroup v-model="signRole">
-                                <div class="col-xs-3" v-for="role in signRoles" :key="role.name">
+                                <div class="col-xs-3" v-for="(role, index) in signRoles" :key="role.name + index">
                                     <radio :label="role">{{role.name}}</radio>
                                 </div>
                             </radioGroup>
@@ -116,7 +116,7 @@
             <b-modal :visible="modalShow === 10" centered title="选择需要安排报告的人员" :ok-only="true" @ok="requestReportOk()" @hidden="modalShow = 0">
                 <div class="row text-left mx-5">
                     <radioGroup v-model="reportRole">
-                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="index">
+                        <div class="col-xs-3" v-for="(role, index) in roleReportList" :key="'r' + index">
                             <radio :label="role">{{role.name}}</radio>
                         </div>
                     </radioGroup>

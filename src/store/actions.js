@@ -82,7 +82,7 @@ export default {
       businessService
         .getBusinessDetail(params)
         .then(data => {
-          resolve(data)
+          resolve(data);
           commit(types.GET_BUSINESS_DETAIL_SUCCESS, data)
         }).catch(err => {
           reject(err)
@@ -96,7 +96,7 @@ export default {
       businessService
         .getBusinessNodeDetail(params)
         .then(data => {
-          resolve(data)
+          resolve(data);
           commit(types.GET_BUSINESS_NODE_DETAIL_SUCCESS, data)
         }).catch((err) => {
           reject(err)
@@ -118,8 +118,8 @@ export default {
     businessService
       .getBusinessNodeFunction(params)
       .then(data => {
-        commit(types.GET_BUSINESS_NODE_FUNCTION_SUCCESS, data)
-        commit(types.UPDATE_USER_ROLE_ALLOCS, data.user_role_allocs)
+        commit(types.GET_BUSINESS_NODE_FUNCTION_SUCCESS, data);
+        commit(types.UPDATE_USER_ROLE_ALLOCS, data.user_role_allocs);
         commit(types.HIDE_LOADING)
       })
   },
