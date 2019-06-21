@@ -416,6 +416,19 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 获取流程下一步或上一步流程分支
+     * @param  {String}
+     * @return {Object}
+     */
+    queryWorkflowTrans(data) {
+        return xhr({
+            method: 'get',
+            url: '/workflow/trans/query',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
