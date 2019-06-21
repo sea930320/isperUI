@@ -502,16 +502,7 @@
                     list: [],
                     total: 0
                 },
-                experimentTypeOptions: [
-                    {value: "1", text: "立法类型实验"},
-                    {value: "2", text: "执法类型实验"},
-                    {value: "3", text: "诉讼与仲裁实验"},
-                    {value: "4", text: "自由类型实验"},
-                    {value: "5", text: "非诉讼与法务管理类型实验"},
-                    {value: "6", text: "法律思维类型实验"},
-                    {value: "7", text: "证据科学类型实验"},
-                    {value: "8", text: "法律实效评价类型实验"}
-                ]
+                experimentTypeOptions: []
             };
         },
         created() {
