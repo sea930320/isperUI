@@ -14,7 +14,7 @@
                     :key="index"
                 >{{roleAlloc.role.name}}({{currentRoleAllocation.no}}){{roleAlloc.sitting_status == 2 ? '' : '（未入席）'}}</b-dropdown-item>
             </b-dropdown>-->
-            <div class="chat-message">
+            <div class="chat-message" :class="{'active':this.activeSidebar}">
                 <section ref="chat" class="chatlist" v-scroll-bottom="messages">
                     <ul>
                         <template v-for="(item, index) in messages">
@@ -96,10 +96,58 @@
                     </ul>
                 </section>
             </div>
-            <div class="online-user inactive">
+            <a
+                href="javascript:void(0);"
+                class="handle-right handle-control"
+                @click="activeSidebar = !activeSidebar"
+                v-if="!activeSidebar"
+            >
+                <!-- <icon name="caret-left" scale="3"></icon> -->
+                <img src="@/assets/imgIsper/business/left1.png">
+            </a>
+            <div
+                class="online-user p-1"
+                :class="{'inactive': !this.activeSidebar, 'active': this.activeSidebar}"
+            >
+                <div class="online-user-list">
+                    <b-list-group>
+                        <b-list-group-item
+                            class="mb-1 online-user-list-item"
+                            v-for="(nodeRoleAlloc, index) in nodeRoleAllocs"
+                            :key="index"
+                        >
+                            <img
+                                :src="nodeRoleAlloc.image.avatar"
+                                :class="{'is_online':nodeRoleAlloc.is_online}"
+                            >
+                            <div class="user-info" :class="{'is_online':nodeRoleAlloc.is_online}">
+                                <div class="role-name text-left">
+                                    <div
+                                        class="online-status"
+                                        :class="{'online': nodeRoleAlloc.is_online}"
+                                    ></div>
+                                    {{nodeRoleAlloc.name}}
+                                </div>
+                                <div class="user-name text-left">姓名：{{nodeRoleAlloc.user_name}}</div>
+
+                                <b-button
+                                    class="notify"
+                                    v-if="!nodeRoleAlloc.is_online"
+                                    size="sm"
+                                    @click="notify(nodeRoleAlloc)"
+                                >邀请</b-button>
+                            </div>
+                        </b-list-group-item>
+                    </b-list-group>
+                </div>
+
                 <div class="online-user-handle">
-                    <a href="javascript:void(0);">
-                        <icon name="caret-right" size="xs"></icon>
+                    <a
+                        class="handle-left handle-control"
+                        href="javascript:void(0);"
+                        @click="activeSidebar = !activeSidebar"
+                    >
+                        <icon name="caret-right" scale="3"></icon>
                     </a>
                 </div>
             </div>
@@ -111,6 +159,8 @@
 import * as actionCmd from "@/components/business/common/actionCmds";
 import emoji from "@/components/business/common/emoji";
 import { mapState } from "vuex";
+import _ from "lodash";
+
 const handleCmds = [
     actionCmd.ACTION_ROLE_MEET,
     actionCmd.ACTION_DOC_SHOW,
@@ -124,6 +174,11 @@ const handleCmds = [
 export default {
     name: "AnimationChat",
     components: {},
+    sockets: {
+        onlineAllocs(data) {
+            this.onlineAllocs = data.allocs;
+        }
+    },
     data() {
         return {
             emoji: emoji,
@@ -134,7 +189,9 @@ export default {
                 opt: {}
             },
             // 查看签字文件详情
-            signedDocDetail: null
+            signedDocDetail: null,
+            activeSidebar: false,
+            onlineAllocs: []
         };
     },
     computed: {
@@ -142,8 +199,28 @@ export default {
             userRoleAllocs: state => state.meta.info.user_role_allocs,
             currentRoleAllocation: state => state.meta.currentRoleAllocation,
             messages: state => state.meta.messages,
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            roleAllocs: state => state.meta.info.role_allocs,
+            node_id: state => state.meta.info.node_id
         }),
+        nodeRoleAllocs() {
+            let nodeRoleAllocs = _.filter(this.roleAllocs, {
+                node_id: this.node_id
+            });
+            nodeRoleAllocs = _.map(nodeRoleAllocs, nodeRoleAlloc => {
+                if (
+                    _.some(this.onlineAllocs, onlineAlloc => {
+                        return onlineAlloc.alloc_id == nodeRoleAlloc.id;
+                    })
+                ) {
+                    nodeRoleAlloc.is_online = true;
+                } else {
+                    nodeRoleAlloc.is_online = false;
+                }
+                return nodeRoleAlloc;
+            });
+            return nodeRoleAllocs;
+        },
         statusCmdArr() {
             return [
                 "action_trans",
@@ -177,7 +254,21 @@ export default {
             el.innerHTML = binding.value.replace(/\r?\n|\r/g, "<br/>");
         }
     },
-    mounted() {},
+    watch: {
+        currentRoleAllocation: {
+            handler: function(val) {
+                this.$socket.emit("userIsOnline", { alloc_id: val.alloc_id });
+            },
+            deep: true
+        }
+    },
+    mounted() {
+        if (this.currentRoleAllocation.alloc_id) {
+            this.$socket.emit("userIsOnline", {
+                alloc_id: this.currentRoleAllocation.alloc_id
+            });
+        }
+    },
     methods: {
         selectRoleAllocHandle(role_alloc) {
             this.$store.dispatch("setCurrentRoleAllocation", role_alloc);
@@ -288,6 +379,11 @@ export default {
                 );
             });
             return con;
+        },
+        notify(roleAlloc) {
+            // businessService.sendMessage(roleAlloc).then(() => {
+            //     this.$toasted.success("发送成功");
+            // });
         }
     }
 };
@@ -303,6 +399,9 @@ export default {
             padding: 10px 20px;
             overflow-y: auto;
             overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+
             ul,
             ol {
                 padding: 0px;
@@ -406,32 +505,101 @@ export default {
                 }
             }
         }
+        .chatlist::-webkit-scrollbar {
+            width: 0em;
+        }
+    }
+    .chat-message.active {
+        width: 380px;
+        transition: all 0.5s linear;
     }
     .progress-chat-hd {
         position: relative;
     }
     .online-user {
-        background: #dde7f9;
-        height: 645px;
+        background: rgb(221, 231, 249);
+        box-shadow: -10px 0px 10px 1px #a6c3f9;
+        height: 648px;
         width: 300px;
         position: absolute;
         top: 0px;
         right: 0px;
         .online-user-handle {
             position: absolute;
-            left: 0px;
-            top: 320px;
+            left: -5px;
+            top: 300px;
+        }
+        .user-name {
+            font-size: 14px;
         }
     }
-    .inactive {
+    .online-user.inactive {
         visibility: hidden;
         opacity: 0;
         transition: visibility 0s linear 300ms, opacity 300ms;
     }
-    .active {
+    .online-user.active {
         visibility: visible;
         opacity: 1;
         transition: visibility 0s linear 0s, opacity 300ms;
+    }
+    .handle-left {
+    }
+    .handle-right {
+        position: absolute;
+        top: 300px;
+        right: -10px;
+        img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+    .handle-control {
+        color: #a6c3f9;
+    }
+    .online-user-list-item {
+        display: flex;
+        padding: 5px;
+        img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border: 2px solid #b1b1b1;
+            border-radius: 50px;
+            opacity: 0.5;
+            filter: alpha(opacity=50); /* For IE8 and earlier */
+        }
+        .user-info {
+            position: relative;
+            width: 100%;
+            color: #a29b9b;
+        }
+        .is_online {
+            color: black;
+        }
+        img.is_online {
+            opacity: 1;
+            filter: alpha(opacity=100); /* For IE8 and earlier */
+        }
+        .role-name {
+            display: flex;
+        }
+        .online-status {
+            width: 10px;
+            height: 10px;
+            margin-top: 8px;
+            margin-right: 8px;
+            background: #bec0c2;
+            border-radius: 10px;
+        }
+        .online-status.online {
+            background: #5dc26a;
+        }
+        .notify {
+            right: 0px;
+            bottom: 0px;
+            position: absolute;
+        }
     }
 }
 </style>

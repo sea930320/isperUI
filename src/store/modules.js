@@ -52,6 +52,7 @@ const state = {
 			nodeName: '',
 			user_role_allocs: [],
 			role_alloc_status: [],
+			role_allocs: [],
 			with_user_nodes: [],
 			leader: null,
 			isBanned: false,
@@ -151,6 +152,9 @@ const mutations = {
 		state.meta.info.name = data.name
 		state.meta.info.nodeName = data.node.name
 		state.meta.info.with_user_nodes = data.with_user_nodes
+		if (data.role_allocs) {
+			state.meta.info.role_allocs = data.role_allocs
+		}
 	},
 	[GET_BUSINESS_NODE_DETAIL_SUCCESS](state, data) {
 		state.meta.info.isBanned = data.control_status === 2
