@@ -1,7 +1,7 @@
 <template>
   <div :class="tabsClass">
     <div class="tabs-header">
-      <ul class="tabs-nav">
+      <ul class="tabs-nav mb-0">
         <li v-for="(title,index) in tabtitles"
           :class="['tab-item', {'current': index+1===currentPage}]"
           :key="index"

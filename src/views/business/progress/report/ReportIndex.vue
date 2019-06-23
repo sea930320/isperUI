@@ -215,7 +215,7 @@
         components: {
             BFormTextarea,
             BulmaAccordion,
-            BulmaAccordionItem,
+            BulmaAccordionItem
         },
         data () {
             return {
@@ -239,6 +239,9 @@
         },
         computed:{
             ...mapState(["userInfo"]),
+            metaInfo() {
+                return this.$store.state.meta.info
+            },
         },
         mounted(){},
         methods: {
