@@ -135,7 +135,7 @@
                                     v-if="!nodeRoleAlloc.is_online"
                                     size="sm"
                                     @click="notify(nodeRoleAlloc)"
-                                >Notify</b-button>
+                                >邀请</b-button>
                             </div>
                         </b-list-group-item>
                     </b-list-group>
