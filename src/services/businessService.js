@@ -42,7 +42,7 @@ class BusinessService {
             params: data
         })
     }
-    genarateBusinessReport(data){
+    genarateBusinessReport(data) {
         return xhr({
             method: 'get',
             url: '/business/report/generate',
@@ -433,6 +433,14 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/workflow/trans/query',
+            params: data
+        })
+    }
+
+    createPost(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/post/create',
             params: data
         })
     }

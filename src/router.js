@@ -195,7 +195,7 @@ const routes = [{
                 { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue')},
                 // { path: '2/:bid/:nid', name: 'edit-index', component: () => import('@/views/business/progress/edit/EditIndex.vue')},
                 { path: '4/:bid/:nid', name: 'report-index', component: () => import('@/views/business/progress/report/ReportIndex.vue')},
-                // { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue')}, // 公示
+                { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue')}, // 公示
             ]
         }, {
             path: '/moreTeammates',
