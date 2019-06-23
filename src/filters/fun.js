@@ -27,6 +27,8 @@ export function processType(val) {
     return '投票'
   } else if (val === 6) {
     return '跳转'
+  } else if (val === 7) {
+    return '公示'
   } else {
     return ''
   }
