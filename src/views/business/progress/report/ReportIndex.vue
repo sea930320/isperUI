@@ -6,7 +6,7 @@
                     <b-row slot="header">
                         <b-col lg="3" md="6" sm="12" class="align-self-center">
                             <span class="float-left">
-                                任务完成
+                                业务完成
                             </span>
                         </b-col>
                         <b-col lg="9" md="6" sm="12" class="align-self-center">
