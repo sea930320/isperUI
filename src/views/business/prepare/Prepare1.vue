@@ -90,16 +90,11 @@
                             <div class="text-left">
                                 <b-list-group>
                                     <b-list-group-item
+                                        v-for="(post, index) in businessPosts"
+                                        :key="index"
                                         class="d-flex justify-content-between align-items-center no-round no-border-x"
-                                    >Cras justo odio</b-list-group-item>
-
-                                    <b-list-group-item
-                                        class="d-flex justify-content-between align-items-center no-round no-border-x"
-                                    >Dapibus ac facilisis in</b-list-group-item>
-
-                                    <b-list-group-item
-                                        class="d-flex justify-content-between align-items-center no-round no-border-x"
-                                    >Morbi leo risus</b-list-group-item>
+                                        :to="'/business/prepare/post/' + post.id"
+                                    >{{post.name}}</b-list-group-item>
                                 </b-list-group>
                             </div>
                         </b-col>
@@ -177,10 +172,7 @@
                         <template slot="sn" slot-scope="row">{{ row.item.id }}</template>
                         <template slot="company_name" slot-scope="row">{{row.item.company_name}}</template>
                         <template slot="name" slot-scope="row">{{row.item.name}}</template>
-                        <template
-                            slot="office_type"
-                            slot-scope="row"
-                        >{{row.item.officeItem_name}}</template>
+                        <template slot="office_type" slot-scope="row">{{row.item.officeItem_name}}</template>
                         <template
                             slot="part"
                             slot-scope="row"
@@ -209,7 +201,7 @@
                 </div>
             </b-col>
         </b-row>
-        <business-start-modal ></business-start-modal>
+        <business-start-modal></business-start-modal>
     </div>
 </template>
 
@@ -231,6 +223,7 @@ export default {
         return {
             groups: [],
             officeKinds: [],
+            businessPosts: [],
             selOfficeKind: null,
             activeItemId: null,
             // 查询参数
@@ -369,7 +362,9 @@ export default {
                             let companyIndex = this.groups[
                                 groupIndex
                             ].companies.findIndex(company => {
-                                return company.id === this.queryParam.company_id;
+                                return (
+                                    company.id === this.queryParam.company_id
+                                );
                             }, this);
                             let groupId = this.queryParam.group_id;
                             setTimeout(() => {
@@ -411,7 +406,10 @@ export default {
                 });
         },
         queryProjectList() {
-            if ( this.queryParam.by_method === "office" && this.queryParam.office_id === null ) {
+            if (
+                this.queryParam.by_method === "office" &&
+                this.queryParam.office_id === null
+            ) {
                 this.projects = {
                     list: [],
                     total: 0
@@ -425,6 +423,7 @@ export default {
                 ...this.queryDebounceParam
             })
                 .then(data => {
+                    this.businessPosts = data.business_posts;
                     this.projects.list = data.results;
                     this.projects.total = data.paging.count;
                     this.$emit("data-ready");

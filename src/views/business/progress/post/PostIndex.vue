@@ -45,13 +45,30 @@ export default {
         };
     },
     created() {
-        this.$nextTick(() => {});
+        this.$nextTick(() => {
+            this.init();
+        });
     },
     computed: {
         ...mapState(["userInfo"])
     },
     mounted() {},
     methods: {
+        init() {
+            this.run();
+            BusinessService.getPost({
+                business_id: this.$route.params.bid,
+                node_id: this.$route.params.nid
+            })
+                .then(data => {
+                    this.post_name = data.name;
+                    this.post_content = data.content;
+                    this.$emit("data-ready");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
+        },
         savePost() {
             if (this.post_name.trim() == "" || this.post_content.trim() == "") {
                 return;

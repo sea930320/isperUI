@@ -181,6 +181,11 @@ const routes = [{
                     name: 'business-prepare-by-keyword',
                     component: () => import('@/views/business/prepare/Prepare1.vue')
                 },
+                {
+                    path: 'post/:id',
+                    name: 'business-post',
+                    component: () => import('@/views/business/prepare/Post.vue')
+                }
             ]
         }, {
             path: 'list/progress',

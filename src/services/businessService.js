@@ -444,6 +444,22 @@ class BusinessService {
             params: data
         })
     }
+
+    postDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/post/detail',
+            params: data
+        })
+    }
+
+    getPost(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/post',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
