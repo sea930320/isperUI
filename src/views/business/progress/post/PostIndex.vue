@@ -25,7 +25,16 @@
             <b-button size="sm" class="styledBtn" variant="outline-primary" @click="savePost()">
                 <icon name="save"></icon>&nbsp;保存
             </b-button>
+
+            <b-button
+                v-if="currentRoleAllocation.can_terminate"
+                size="sm"
+                class="styledBtn"
+                variant="outline-primary"
+                @click="commitEnd = true"
+            >结束并走向</b-button>
         </div>
+        <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
     </div>
 </template>
 
@@ -35,13 +44,15 @@ import BusinessService from "@/services/businessService";
 import { mapState } from "vuex";
 import { VueEditor } from "vue2-editor";
 import BusinessPostUpload from "@/components/upload/BusinessPostUpload";
+import endNodeHandle from "@/components/business/modal/endNodeHandle";
 
 export default {
-    components: { Loading, VueEditor, BusinessPostUpload },
+    components: { Loading, VueEditor, BusinessPostUpload, endNodeHandle },
     data() {
         return {
             post_name: "",
-            post_content: ""
+            post_content: "",
+            commitEnd: false
         };
     },
     created() {
@@ -50,7 +61,10 @@ export default {
         });
     },
     computed: {
-        ...mapState(["userInfo"])
+        ...mapState(["userInfo"]),
+        currentRoleAllocation() {
+            return this.$store.state.meta.currentRoleAllocation;
+        }
     },
     mounted() {},
     methods: {
@@ -89,6 +103,9 @@ export default {
                 .catch(() => {
                     this.$emit("data-failed");
                 });
+        },
+        endNodeCancel() {
+            this.commitEnd = false;
         }
     }
 };
