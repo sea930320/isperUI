@@ -16,7 +16,6 @@
 import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
 import businessService from "@/services/businessService";
-import _ from "lodash";
 
 export default {
     name: "prepare1",

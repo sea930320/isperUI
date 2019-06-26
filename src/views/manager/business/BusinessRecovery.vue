@@ -56,7 +56,7 @@
                 <template slot="creator" slot-scope="row">
                     {{ row.item.created_by }}
                 </template>
-                <template slot="status" slot-scope="row">
+                <template slot="status">
                     <span>已结束</span>
                 </template>
                 <template slot="control" slot-scope="row">
