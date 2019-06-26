@@ -5,7 +5,7 @@
             <b-list-group>
                 <b-list-group-item v-for="item in message"
                     :to="parseInt(item.moreTeammates) ? {name: item.link, params: { messageId: item }} : item.link" :key="item.id">
-                    {{ parseInt(item.moreTeammates) ? '需要补充参加业务的人' : item.content}}
+                    {{ parseInt(item.moreTeammates) ? item.businessInfo.title + ' : 需要补充参加业务的人' : item.content}}
                 </b-list-group-item>
             </b-list-group>
         </div>

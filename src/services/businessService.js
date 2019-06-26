@@ -160,17 +160,6 @@ class BusinessService {
     }
 
     /**
-     * 业务
-     */
-    getBusinessResult(data) {
-        return xhr({
-            method: 'get',
-            url: '/business/result',
-            params: data
-        })
-    }
-
-    /**
      * 查询未读留言
      * @param data 参数
      * @param data.from_user_id 发送者id

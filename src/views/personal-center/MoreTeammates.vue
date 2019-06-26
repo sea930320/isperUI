@@ -3,8 +3,19 @@
         <loading v-if="isRunning"></loading>
         <PersonalCenterTab activeTab="3"/>
         <div class="cardDiv" v-if="$route.params.messageId && formData.length !== 0">
-            <h3 class="my-5 container">该 业 务 需 要 下 面 的 参 与 人 员</h3>
-            <div class="row m-4" v-for="(item, index) in $route.params.messageId.content" :key="`${index}`">
+            <b-card class="mx-4">
+                <b-card-title>该 业 务 需 要 下 面 的 参 与 人 员</b-card-title>
+                <b-card-text>
+                    业务名 : {{$route.params.messageId.businessInfo.title}}&emsp; 启动人 : {{$route.params.messageId.businessInfo.created_by}}
+                </b-card-text>
+                <b-card-text class="small text-muted">{{$route.params.messageId.businessInfo.created_time}}</b-card-text>
+            </b-card>
+            <div class="row text-left mt-5 mx-auto w-80">
+                <h5 class="col-2 align-self-md-end">身&emsp;份</h5>
+                <h5 class="col-10" style="max-width: 100%;">对&emsp;应&emsp;用&emsp;户</h5>
+                <hr style="width: 98%;">
+            </div>
+            <div class="row m-4 text-left mx-auto w-80" v-for="(item, index) in $route.params.messageId.content" :key="`${index}`">
                 <h5 class="col-2 align-self-md-end">{{ item.role_name === null ? '无职务' : item.role_name }}</h5>
                 <vue-tags-input
                         class="col-10"

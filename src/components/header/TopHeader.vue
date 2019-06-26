@@ -27,6 +27,7 @@
                         >
                             <icon name="users"></icon>
                             &nbsp;&nbsp; {{userInfo.username}}-{{userInfo.manager_info.group_name && (userInfo.manager_info.group_name)}}{{userInfo.manager_info.company_name && ('/' + userInfo.manager_info.company_name)}}{{userInfo.manager_info.part_name && ('/' + userInfo.manager_info.part_name)}}({{userInfo.role_name}})
+                            <b-badge variant="primary" pill v-if="message.length > 0" class="counter" style="position: absolute; top: 31px;">{{ message.length}}</b-badge>
                         </template>
                         <template slot="button-content" class="text-white" v-else>
                             <icon name="users"></icon>
