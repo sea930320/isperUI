@@ -786,6 +786,7 @@
                         this.savedBit = true;
                     }
                     if (this.is_edit === 0) {
+                        this.savedBit = true;
                         this.queryProjectCreate();
                     }
                 }

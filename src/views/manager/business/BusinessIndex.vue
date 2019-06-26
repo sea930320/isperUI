@@ -23,12 +23,6 @@
         },
         computed: {
             ...mapState(["userInfo"]),
-            activeTab1:() => {
-                alert('activeTab1');
-            },
-            activeTab2:() => {
-                alert('activeTab2');
-            }
         },
         data() {
             return {
@@ -38,7 +32,7 @@
         },
         watch:{
             selected(value) {
-                if (value ==1){
+                if (value === 1){
                     this.$emit('refreshBRecovery');
                 } else {
                     this.$emit('refreshBManager');

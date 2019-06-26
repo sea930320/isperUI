@@ -201,6 +201,7 @@ const routes = [{
                 // { path: '2/:bid/:nid', name: 'edit-index', component: () => import('@/views/business/progress/edit/EditIndex.vue')},
                 { path: '4/:bid/:nid', name: 'report-index', component: () => import('@/views/business/progress/report/ReportIndex.vue')},
                 { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue')}, // 公示
+                { path: '8/:bid/:nid', name: 'vote-index', component: () => import('@/views/business/progress/vote/VoteIndex.vue')},
             ]
         }, {
             path: '/moreTeammates',
