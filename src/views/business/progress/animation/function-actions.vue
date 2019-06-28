@@ -162,7 +162,7 @@
                 // 选择签字的角色
                 signRole: null,
                 reportRole: null,
-                uploadUrl: '/api/experiment/docs/create',
+                uploadUrl: '/api/business/docs/create',
                 docSubmitParam: {},
                 activeDocIndex: 0
             }

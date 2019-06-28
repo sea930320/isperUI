@@ -178,17 +178,17 @@ export default {
                         });
                     }
                     // this.WebimConnInit(data.huanxin_id);
-                    // if (data.user_role_allocs.length === 0) {
-                    //     this.loadFlowChart(data.entire_graph);
-                    //     this.$store.dispatch("geBusinessNodeDocs", {
-                    //         business_id: this.metaInfo.businessID,
-                    //         node_id: this.metaInfo.nodeID
-                    //         // role_alloc_id: data.without_node_user_role_alloc_id
-                    //     });
-                    //     this.$router.push({ name: "wait" });
-                    //     this.loaderShow = false;
-                    //     return;
-                    // }
+                    if (data.user_role_allocs.length === 0) {
+                        this.loadFlowChart(data.entire_graph);
+                        this.getBusinessNodeDocs({
+                            business_id: this.metaInfo.businessID,
+                            node_id: this.metaInfo.nodeID
+                            // role_alloc_id: data.without_node_user_role_alloc_id
+                        });
+                        this.$router.push({ name: "wait" });
+                        this.loaderShow = false;
+                        return;
+                    }
                     this.metaInfo.roleAllocID =
                         data.user_role_allocs &&
                         data.user_role_allocs.length > 0

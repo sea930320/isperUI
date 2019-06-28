@@ -197,11 +197,12 @@ const routes = [{
             path: 'progress',
             component: () => import('@/views/business/progress/ProgressIndex.vue'),
             children: [
-                { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue')},
+                { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') },
                 // { path: '2/:bid/:nid', name: 'edit-index', component: () => import('@/views/business/progress/edit/EditIndex.vue')},
-                { path: '4/:bid/:nid', name: 'report-index', component: () => import('@/views/business/progress/report/ReportIndex.vue')},
-                { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue')}, // 公示
-                { path: '8/:bid/:nid', name: 'vote-index', component: () => import('@/views/business/progress/vote/VoteIndex.vue')},
+                { path: '4/:bid/:nid', name: 'report', component: () => import('@/views/business/progress/report/ReportIndex.vue') },
+                { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue') }, // 公示
+                { path: '8/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/vote/VoteIndex.vue') },
+                { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') }
             ]
         }, {
             path: '/moreTeammates',

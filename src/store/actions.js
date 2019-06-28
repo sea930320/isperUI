@@ -132,6 +132,15 @@ export default {
         commit(types.GET_BUSINESS_NODE_DOCS_SUCCESS, data)
       })
   },
+  getExperienceList({
+    commit
+  }, params) {
+    businessService
+      .getExperienceList(params)
+      .then(data => {
+        commit(types.GET_BUSINESS_EXPERIENCE_SUCCESS, data)
+      })
+  }
   // queryVoteStatus({
   //   commit
   // }, params) {
@@ -151,13 +160,4 @@ export default {
   //       commit(types.GET_BUSINESS_PROJECT_TIPS_SUCCESS, data)
   //     })
   // },
-  // getExperienceList({
-  //   commit
-  // }, params) {
-  //   businessService
-  //     .getExperienceList(params)
-  //     .then(data => {
-  //       commit(types.GET_BUSINESS_EXPERIENCE_SUCCESS, data)
-  //     })
-  // }
 }

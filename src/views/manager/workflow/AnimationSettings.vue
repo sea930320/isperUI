@@ -4,7 +4,7 @@
         <b-row class="cardDiv px-0">
             <!-- <b-col md="3" sm="12">
                 <workflow-module :flowName="workflow.name" :flowXml="workflow.xml"></workflow-module>
-            </b-col> -->
+            </b-col>-->
             <b-col md="4" sm="12">
                 <div class style="height: 460px; border: 1px solid #eaeaea; overflow: auto">
                     <b-table
@@ -52,7 +52,7 @@
                             <tr>
                                 <th class="text-center field-role-alloc-type">身份类型</th>
                                 <th class="text-center field-role-alloc-name">身份名称</th>
-                                <th class="text-center field-role-allo-action">配置动作</th>
+                                <th class="text-center field-role-allo-action">位置</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup" v-if="isAnimation">

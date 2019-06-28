@@ -449,6 +449,32 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 获取实验列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getExperienceList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/experience/list',
+            params: data
+        })
+    }
+
+    /**
+     * 提交实验心得
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    postBusinessExperience(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/experience/save',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
