@@ -366,7 +366,7 @@ export default {
         width: 6%;
     }
     .field-user_id {
-        width: 15%;
+        width: 10%;
     }
     .field-user_name {
         width: 12%;
@@ -381,7 +381,7 @@ export default {
         width: 15%;
     }
     .field-login_time {
-        width: 18%;
+        width: 23%;
     }
     .field-login_ip {
         width: 10%;

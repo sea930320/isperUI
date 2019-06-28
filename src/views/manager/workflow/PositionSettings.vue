@@ -51,8 +51,18 @@
                                 <td>{{item.role_type}}</td>
                                 <td>{{item.role_name}}</td>
                                 <td>
-                                    <a href="javascript:;" class="btn-link" @click="setImage(item)">
-                                        <icon name="portrait"></icon>
+                                    <a
+                                        href="javascript:;"
+                                        class="btn-link position-set"
+                                        @click="setImage(item)"
+                                    >
+                                        <template v-if="item.image">
+                                            <img :src="item.image.file" class="position-img">
+                                            <span
+                                                class="position-name"
+                                            >{{item.image.name}}({{item.image.gender == 1 ? '男':'女'}})</span>
+                                        </template>
+                                        <icon v-else name="portrait"></icon>
                                     </a>
                                 </td>
                                 <td>
@@ -253,6 +263,21 @@ export default {
     select {
         height: 25px;
         border: 1px solid #b8bbc5;
+    }
+    .position-img {
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+        border-radius: 12.5px;
+        border: 2px solid #03a9f4;
+    }
+    .position-name {
+        cursor: pointer;
+        font-size: 12px;
+        color: black;
+    }
+    .position-set:hover {
+        text-decoration: none;
     }
 }
 </style>

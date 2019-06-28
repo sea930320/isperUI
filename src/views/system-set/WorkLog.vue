@@ -163,17 +163,17 @@ export default {
                     class: "text-center field-company"
                 },
                 role: {
-                    label: "登录角色",
+                    label: "操作角色",
                     sortable: false,
                     class: "text-center field-role"
                 },
                 log_at: {
-                    label: "登录时间",
+                    label: "操作时间",
                     sortable: false,
                     class: "text-center field-log_at"
                 },
                 ip: {
-                    label: "登录IP",
+                    label: "操作IP",
                     sortable: false,
                     class: "text-center field-ip"
                 },
@@ -375,10 +375,10 @@ export default {
         width: 6%;
     }
     .field-user_id {
-        width: 15%;
+        width: 9%;
     }
     .field-user_name {
-        width: 10%;
+        width: 9%;
     }
     .field-group {
         width: 10%;
@@ -390,7 +390,7 @@ export default {
         width: 10%;
     }
     .field-log_at {
-        width: 9%;
+        width: 16%;
     }
     .field-ip {
         width: 10%;

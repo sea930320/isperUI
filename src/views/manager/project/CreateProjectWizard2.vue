@@ -6,7 +6,7 @@
                 <b-row>
                     <b-col sm="4">项目名称 : {{projectData.name}} - {{project_id}}</b-col>
                     <b-col sm="4">相关流程 : {{projectData.flow_name}}</b-col>
-                    <b-col sm="4">类型 : {{projectData.type | expType}}</b-col>
+                    <b-col sm="4">类型 : {{projectData.type}}</b-col>
                 </b-row>
             </b-container>
         </b-alert>
