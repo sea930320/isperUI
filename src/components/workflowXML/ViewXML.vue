@@ -10,7 +10,7 @@
                 class="edit-btn"
                 @click="editMember"
             >编辑成员角色</a>
-            <a href="javascript:;" class="quit-btn" @click="quit">退出实验</a>
+            <a href="javascript:;" class="quit-btn" @click="quit">退出业务</a>
         </div>
         <div class="xml-modal" id="js-drop-zone">
             <div class="csshub-btn">

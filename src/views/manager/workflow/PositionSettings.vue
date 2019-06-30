@@ -57,7 +57,7 @@
                                         @click="setImage(item)"
                                     >
                                         <template v-if="item.image">
-                                            <img :src="item.image.file" class="position-img">
+                                            <img :src="item.image.file || item.image.avatar" class="position-img">
                                             <span
                                                 class="position-name"
                                             >{{item.image.name}}({{item.image.gender == 1 ? '男':'女'}})</span>

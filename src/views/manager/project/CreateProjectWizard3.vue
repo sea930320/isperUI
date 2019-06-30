@@ -13,7 +13,7 @@
                 </b-col>
                 <b-col sm="4">
                     类型 :
-                    {{projectData.type | expType}}
+                    {{projectData.type }}
                 </b-col>
             </b-row>
             <b-row>
@@ -43,7 +43,7 @@
                     >
                         <template slot="id" slot-scope="row">{{ row.index + 1}}</template>
                         <template slot="class" slot-scope="row">
-                            <b-form-input size="sm" type="text" v-model.trim="row.item.type"/>
+                            <b-form-input size="sm" type="text" v-model.trim="row.item.type" />
                         </template>
                         <template slot="name" slot-scope="row">{{ row.item.name}}</template>
                         <template slot="type" slot-scope="row">
@@ -148,7 +148,6 @@
                         type="submit"
                         style="width:100%"
                         variant="primary"
-                        v-b-modal.finishEdit
                         @click="goNext()"
                     >下一步</b-button>
                 </b-button-group>
@@ -522,9 +521,7 @@ export default {
                         .toLowerCase() !== "docx"
                 ) {
                     this.$toasted.error(
-                        `素材【${
-                            doc.name
-                        }】格式不是docx，不得选择模板或项目提示用途，请重新选择`
+                        `素材【${doc.name}】格式不是docx，不得选择模板或项目提示用途，请重新选择`
                     );
                     return false;
                 }
