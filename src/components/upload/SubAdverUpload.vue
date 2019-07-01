@@ -18,7 +18,7 @@
     </div>
 </template>
 <script>
-    import Upload from "./Upload";
+    import Upload from "./Upload_advertising.vue";
     export default {
         props: {
             item: {},

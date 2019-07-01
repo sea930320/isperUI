@@ -127,12 +127,6 @@ export default {
             this.flowChart.options.parttern = 2;
             this.init();
         }
-        // meta: {
-        //     handler(val) {
-        //         console.log(val);
-        //     },
-        //     deep: true
-        // }
     },
     methods: {
         ...mapActions([

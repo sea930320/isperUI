@@ -75,8 +75,8 @@ export default {
                 node_id: this.$route.params.nid
             })
                 .then(data => {
-                    this.post_name = data.name;
-                    this.post_content = data.content;
+                    this.post_name = data.name || "";
+                    this.post_content = data.content || "";
                     this.$emit("data-ready");
                 })
                 .catch(() => {

@@ -249,6 +249,7 @@ export default {
                 this.$emit("data-ready");
             });
         },
+        /* eslint-disable */
         selectNode(item, index) {
             this.nodes.map(node => {
                 node._rowVariant = "";
