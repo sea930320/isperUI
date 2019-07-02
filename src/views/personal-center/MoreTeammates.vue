@@ -12,7 +12,7 @@
             </b-card>
             <div class="row text-left mt-5 mx-auto w-80">
                 <h5 class="col-2 align-self-md-end">身&emsp;份</h5>
-                <h5 class="col-10" style="max-width: 100%;">对&emsp;应&emsp;用&emsp;户</h5>
+                <h5 class="col-10" style="max-width: 100%;">参&emsp;与&emsp;人&emsp;员</h5>
                 <hr style="width: 98%;">
             </div>
             <div class="row m-4 text-left mx-auto w-80" v-for="(item, index) in $route.params.messageId.content" :key="`${index}`">

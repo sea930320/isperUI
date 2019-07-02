@@ -187,6 +187,7 @@
             level,
             abilityTarget
         },
+        props: ['selectedTab'],
         data() {
             return {
                 columns: {
@@ -253,10 +254,6 @@
             };
         },
         created() {
-//            this.$parent.$on("refreshBManager", () => {
-//                alert('test');
-//                this.queryExperimentList();
-//            });
             this.$nextTick(() => {
                 this.queryBusinessList();
             });
@@ -297,6 +294,10 @@
                         });
                     }
                 }
+            },
+            selectedTab: function(newVal) {
+                if (newVal === 0)
+                    this.queryBusinessList();
             }
         },
         methods: {

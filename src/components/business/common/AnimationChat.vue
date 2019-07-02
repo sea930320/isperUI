@@ -26,40 +26,40 @@
                                 <!-- 申请发言 -->
                                 <div
                                     class="status-info"
-                                    v-if="item.ext.cmd == 'action_role_apply_speak_opt'"
+                                    v-if="item.ext.cmd === 'action_role_apply_speak_opt'"
                                 >
                                     {{item.ext.opt.role_name}}申请发言
                                     <br>
-                                    {{item.ext.role_name}}{{item.ext.opt.result == 1 ? '同意' : '拒绝'}}{{item.ext.opt.role_name}}进行发言
+                                    {{item.ext.role_name}}{{item.ext.opt.result === 1 ? '同意' : '拒绝'}}{{item.ext.opt.role_name}}进行发言
                                 </div>
                                 <!-- 请入 -->
                                 <div
                                     class="status-info"
-                                    v-else-if="item.ext.cmd == 'action_role_letin'"
+                                    v-else-if="item.ext.cmd === 'action_role_letin'"
                                 >{{item.ext.role_name}}（{{item.ext.username}}）请入{{item.ext.opt.data.map(role => role.role_name).join('、')}}</div>
                                 <!-- 送出 -->
                                 <div
                                     class="status-info"
-                                    v-else-if="item.ext.cmd == 'action_role_letout'"
+                                    v-else-if="item.ext.cmd === 'action_role_letout'"
                                 >{{item.ext.role_name}}（{{item.ext.username}}）{{item.data}}</div>
                                 <!-- 退出实验 -->
                                 <div
                                     class="status-info"
-                                    v-else-if="item.ext.cmd == 'action_roles_exit'"
+                                    v-else-if="item.ext.cmd === 'action_roles_exit'"
                                 >{{item.data}}</div>
                                 <div
                                     class="status-info"
-                                    v-else-if="item.ext.cmd == 'action_trans'"
+                                    v-else-if="item.ext.cmd === 'action_trans'"
                                 >{{item.ext.role_name}}（{{item.ext.username}}）{{item.msg || item.data}}</div>
                                 <div
                                     class="status-info"
                                     v-else
-                                >{{item.ext.role_name}}（{{item.ext.username}}）{{item.data}}</div>
+                                >{{item.ext.role_name}}（{{item.ext.username}}）{{item.msg || item.data}}</div>
                             </li>
                             <li
                                 class="chat-bubble chat-mine"
                                 :key="index"
-                                v-else-if="item.from == userInfo.id"
+                                v-else-if="item.from === userInfo.id"
                             >
                                 <div class="chat-user">
                                     <!-- <img :src="item.ext.avatar"> -->
@@ -288,6 +288,7 @@ export default {
         },
         // 替换表情代码
         replaceFace(msg) {
+            console.log(msg);
             if (!msg) return "";
             var self = this;
             var con = "";

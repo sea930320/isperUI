@@ -93,7 +93,7 @@ export default {
       if (this.$refs.upload.loading === 1) {
         this.$refs.upload.reset()
       }
-      this.$emit('on-cancel')
+      this.$emit('on-cancel');
       if (this.uploadFiles.length > 0) {
         this.$emit('on-uploadConfirm', this.uploadFiles)
       }

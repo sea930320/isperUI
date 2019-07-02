@@ -133,6 +133,7 @@
             },
             // 动作处理函数
             actionHandler(action) {
+                console.log(action);
                 if (!this.flashObj) {
                     this.$toast.info('flash未初始化');
                     return
@@ -147,7 +148,7 @@
                         break;
                     case ACTION_ROLE_STAND:
                         this.flashObj.roleAction(`cmd=move&rolename=${action.ext.code_position}&direct=up`);
-                        break
+                        break;
                     case ACTION_ROLE_SITDOWN:
                         this.flashObj.roleAction(`cmd=move&rolename=${action.ext.code_position}&direct=down`);
                         break;
