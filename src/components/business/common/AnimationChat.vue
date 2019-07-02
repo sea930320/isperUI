@@ -29,7 +29,7 @@
                                     v-if="item.ext.cmd === 'action_role_apply_speak_opt'"
                                 >
                                     {{item.ext.opt.role_name}}申请发言
-                                    <br>
+                                    <br />
                                     {{item.ext.role_name}}{{item.ext.opt.result === 1 ? '同意' : '拒绝'}}{{item.ext.opt.role_name}}进行发言
                                 </div>
                                 <!-- 请入 -->
@@ -63,7 +63,7 @@
                             >
                                 <div class="chat-user">
                                     <!-- <img :src="item.ext.avatar"> -->
-                                    <img :src="item.ext.avatar">
+                                    <img :src="item.ext.avatar" />
                                 </div>
                                 <div class="time">
                                     <cite>
@@ -79,7 +79,7 @@
                             <li class="chat-bubble chat-others" :key="index" v-else>
                                 <div class="chat-user">
                                     <!-- <img :src="item.ext.avatar"> -->
-                                    <img :src="item.ext.avatar">
+                                    <img :src="item.ext.avatar" />
                                 </div>
                                 <div class="time">
                                     <cite>
@@ -103,7 +103,7 @@
                 v-if="!activeSidebar"
             >
                 <!-- <icon name="caret-left" scale="3"></icon> -->
-                <img src="@/assets/imgIsper/business/left1.png">
+                <img src="@/assets/imgIsper/business/left1.png" />
             </a>
             <div
                 class="online-user p-1"
@@ -119,7 +119,7 @@
                             <img
                                 :src="nodeRoleAlloc.image.avatar"
                                 :class="{'is_online':nodeRoleAlloc.is_online}"
-                            >
+                            />
                             <div class="user-info" :class="{'is_online':nodeRoleAlloc.is_online}">
                                 <div class="role-name text-left">
                                     <div
@@ -288,25 +288,18 @@ export default {
         },
         // 替换表情代码
         replaceFace(msg) {
-            console.log(msg);
             if (!msg) return "";
             var self = this;
             var con = "";
             // 展示文件
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SHOW) {
-                return `<a href="${
-                    msg.ext.opt.url
-                }" class="btn-underline" target="_blank">${msg.data}</a>`;
+                return `<a href="${msg.ext.opt.url}" class="btn-underline" target="_blank">${msg.data}</a>`;
             }
             // 提交文件
             if (msg.ext.cmd === actionCmd.ACTION_DOC_SUBMIT) {
                 con += "提交文件 : ";
                 msg.ext.opt.data.forEach(dt => {
-                    con += `<a href="${
-                        dt.url
-                    }" class="btn-underline" target="_blank">${
-                        dt.name
-                    }</a><br>`;
+                    con += `<a href="${dt.url}" class="btn-underline" target="_blank">${dt.name}</a><br>`;
                 });
                 return con;
             }
@@ -314,9 +307,7 @@ export default {
             // 签字
             if (msg.ext.cmd === actionCmd.ACTION_ROLE_REQUEST_SIGN) {
                 if (msg.ext.opt_status) {
-                    con = `<span>要求${
-                        msg.ext.opt.role_name
-                    }签字（已完成）</span>`;
+                    con = `<span>要求${msg.ext.opt.role_name}签字（已完成）</span>`;
                 } else {
                     con = `<span>${msg.data}</span>`;
                 }
@@ -366,9 +357,7 @@ export default {
             }
 
             if (handleCmds.indexOf(msg.ext.cmd) > 0) {
-                return `<a href="javascript:;" class="btn-underline" target="_blank">${
-                    msg.data
-                }</a>`;
+                return `<a href="javascript:;" class="btn-underline" target="_blank">${msg.data}</a>`;
             }
             /* eslint-disable */
             con = msg.data.replace(/\[[^\[\]]+\]/g, function(item) {
