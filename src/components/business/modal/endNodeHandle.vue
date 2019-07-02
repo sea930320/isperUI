@@ -34,7 +34,6 @@
 <script >
 import { mapState } from "vuex";
 import Radio from "@/views/components/radio/radio";
-import checkbox from "@/views/components/checkbox/checkbox";
 import RadioGroup from "@/views/components/radio/radio-group";
 // import teamMemberModal from 'pages/common/teamMemberModal'
 import businessService from "@/services/businessService";
@@ -42,7 +41,7 @@ import projectService from "@/services/projectService";
 import { gender } from "@/filters/fun";
 import { ACTION_BUSINESS_NODE_END } from "@/components/business/common/actionCmds";
 export default {
-    components: { Radio, checkbox, RadioGroup },
+    components: { Radio, RadioGroup },
     filters: { gender },
     props: {
         isCommit: {
@@ -142,9 +141,17 @@ export default {
             this.$emit("on-cancel");
         },
         queryJumpData(projectId) {
-            console.log(projectId)
-            console.log(this.currentRoleAllocation)
-            console.log(this.metaInfo)
+            console.log(projectId);
+            console.log(this.currentRoleAllocation);
+            console.log(this.metaInfo);
+            businessService
+                .jumpStart({
+                    business_id: this.$route.params.bid,
+                    project_id: projectId,
+                    role_alloc_id: this.currentRoleAllocation.alloc_id
+                })
+                .then(data => {})
+                .catch(() => {});
             // projectService
             //     .getProjectDetail({
             //         project_id: projectId
@@ -168,10 +175,6 @@ export default {
             //         this.roleRightData(this.metaInfo.team[0].id);
             //         this.showType = 2;
             //     });
-            // businessService.jumpStart({
-            //     business_id: this.$route.params.bid,
-            //     project_id: projectId
-            // })
         }
         // 确定角色分配，并进行跳转
         // jumpOKHandle(event) {

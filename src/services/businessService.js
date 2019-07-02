@@ -475,6 +475,22 @@ class BusinessService {
             params: data
         })
     }
+
+    /**
+     * 开始实验跳转项目
+     * @param data 参数
+     * @param data.business_id 实验id
+     * @param data.project_id 要跳转的项目id
+     * @param data.data 角色配置数据
+     * @returns {{pre, visitor}|*}
+     */
+    jumpStart(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/jump/start',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
