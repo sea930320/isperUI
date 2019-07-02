@@ -9,7 +9,7 @@
                     <processActions></processActions>
                 </div>
             </div>
-            <div class="court-chat-container ml-auto">
+            <div class="court-chat-container">
                 <animation-chat></animation-chat>
                 <chatInput v-if="userInfo.identity === 5"></chatInput>
             </div>
@@ -60,7 +60,7 @@ export default {
     }
     .court-chat-container {
         height: 810px;
-        margin-left: 860px;
+        margin-left: 900px;
         width: 680px;
     }
 

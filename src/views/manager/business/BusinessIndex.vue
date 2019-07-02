@@ -2,10 +2,10 @@
     <div class="business-index" v-if="userInfo">
         <b-tabs v-if="userInfo.identity===2" v-model="selected">
             <b-tab title="业务管理">
-                <BusinessShow/>
+                <BusinessShow :selected-tab="selected"/>
             </b-tab>
             <b-tab title="恢复业务">
-                <BusinessRecovery  />
+                <BusinessRecovery :selected-tab="selected"/>
             </b-tab>
         </b-tabs>
     </div>
@@ -26,36 +26,12 @@
         },
         data() {
             return {
-                activeTabContent: 'bManager',
-                selected:0,
+                selected: 0,
             };
         },
         watch:{
-            selected(value) {
-                if (value === 1){
-                    this.$emit('refreshBRecovery');
-                } else {
-                    this.$emit('refreshBManager');
-                }
-            }
         },
         methods: {
-//            activeTab1(){
-//                if (this.activeTabContent === 'bManager'){
-//                    return
-//                } else {
-//                    this.activeTabContent = 'bManager';
-//                }
-//                this.$emit('refreshBManager');
-//            },
-//            activeTab2(){
-//                if (this.activeTabContent === 'bRecovery'){
-//                    return
-//                } else {
-//                    this.activeTabContent = 'bRecovery';
-//                }
-//                this.$emit('refreshBRecovery');
-//            }
         }
     };
 </script>

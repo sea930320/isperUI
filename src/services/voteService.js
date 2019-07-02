@@ -13,6 +13,22 @@ class VoteService {
         })
     }
 
+    saveVoteData(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/vote/saveVoteData',
+            params: data
+        })
+    }
+
+    finishVote(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/vote/finishVote',
+            params: data
+        })
+    }
+
 }
 
 export default new VoteService()

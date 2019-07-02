@@ -177,11 +177,7 @@
 
     export default {
         name: "business-recovery",
-        props:{
-            msg:{
-                type:String
-            }
-        },
+        props: ['selectedTab'],
         components: {
             Loading,
         },
@@ -256,14 +252,6 @@
             };
         },
         created() {
-//            this.$parent.$on("refreshBRecovery", () => {
-//                alert('test1');
-//                this.queryBusinessList();
-//            });
-            this.$nextTick(() => {
-                this.queryBusinessList();
-            });
-
         },
         computed: {
             ...mapState(["userInfo", "userPermission"]),
@@ -299,6 +287,10 @@
                         });
                     }
                 }
+            },
+            selectedTab: function(newVal) {
+                if (newVal === 1)
+                    this.queryBusinessList();
             }
         },
         methods: {
