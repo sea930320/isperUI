@@ -149,10 +149,10 @@
         <b-card
                 overlay
                 img-src="/media/waiting.gif"
-                img-alt="Card Image"
+                img-alt="Waiting..."
                 text-variant="white"
-                title="Please wait"
-                sub-title="you have to wait until end the current vote action time"
+                title="请耐心等待。。。"
+                sub-title="正在进行表决或者输入表决选项，请等待"
                 v-if="status === 2"
                 class="ml-auto mr-auto w-40 text-left"
         >
@@ -208,6 +208,28 @@
                 <b-button variant="success" @click="finishVote" class="mr-5">完成表决</b-button>
             </div>
         </b-card>
+        <b-card :title="resultData.title" :sub-title="resultData.description" v-if="status === 7" class="text-left">
+            <b-card-text>
+                表决模式 : {{(resultData.mode === 1) ? '择一表决' : (resultData.mode === 2) ? '多项表决' : '淘汰式表决'}}
+                &emsp;&emsp;表决方式 : {{(resultData.method === 0) ? '记名表决' : '无记名表决'}}
+                {{(resultData.mode === 3) ? '&emsp;&emsp;可以选的最大选项数 : ' + resultData.max_vote : ''}}
+            </b-card-text>
+            <b-form-group label="表 决 选 项" class="text-center">
+                <b-form-checkbox-group
+                        id="checkbox-group-2"
+                        v-model="voteSelected"
+                        :options="resultData.items"
+                        name="flavour-1"
+                        :state="state"
+                        size="2"
+                >
+                </b-form-checkbox-group>
+            </b-form-group>
+            <!-- Control buttons-->
+            <div class="text-center mt-4">
+                <b-button variant="success" @click="userVoteSave" :disabled="!state" class="mr-5">表 决 保 存</b-button>
+            </div>
+        </b-card>
     </div>
 </template>
 
@@ -234,6 +256,7 @@
                     { text: '记名表决', value: 0 },
                     { text: '无记名表决', value: 1 }
                 ],
+                voteSelected: [],
                 status: null,
                 waitMsg: "",
                 tabIndex: 1,
@@ -265,15 +288,15 @@
             },
             check_voteData() {
                 if (this.voteMode === 4)
-                    return !!!(this.voteData.voteTitle && this.voteData.voteDescription);
+                    return !(this.voteData.voteTitle && this.voteData.voteDescription);
                 else
-                    return !!!(this.voteData.voteItems.length > 1 && this.voteData.voteTitle && this.voteData.voteDescription);
+                    return !(this.voteData.voteItems.length > 1 && this.voteData.voteTitle && this.voteData.voteDescription);
             },
             check_allSetting() {
                 if (this.voteMode === null)
                     return true;
                 if (this.voteMode === 1 || this.voteMode === 2 || this.voteMode === 3)
-                    return !!!(
+                    return !(
                         this.voteData.voteItems.length > 1 &&
                         this.voteData.voteTitle &&
                         this.voteData.voteDescription &&
@@ -281,12 +304,18 @@
                         this.voteSetting.voteEndTime !== ""
                     );
                 else if (this.voteMode === 4)
-                    return !!!(
+                    return !(
                         this.voteData.voteTitle &&
                         this.voteData.voteDescription &&
                         this.voteSetting.members.length > 0 &&
                         this.voteSetting.voteEndTime !== ""
                     );
+                return false;
+            },
+            state() {
+                return (this.resultData.mode === 1) ? this.voteSelected.length === 1 :
+                    (this.resultData.mode === 2) ? this.voteSelected.length > 0 :
+                    (this.resultData.mode === 3) ? this.voteSelected.length > 0 && this.voteSelected.length <= this.resultData.max_vote : false;
             }
         },
         created() {
@@ -307,7 +336,8 @@
                     VoteService
                         .getInitVoteData({
                             'business_id': this.currentRoleAllocation.role.business,
-                            'node_id': this.metaInfo.node_id
+                            'node_id': this.metaInfo.node_id,
+                            'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
                         })
                         .then(data => {
                             this.status = data.status;
@@ -332,6 +362,10 @@
                                 this.resultData = data.data;
                             else if (data.status === 5)
                                 this.resultData = data.data;
+                            else if (data.status === 6)
+                                this.resultData = data.data;
+                            else if (data.status === 7)
+                                this.resultData = data.data;
                             this.$emit("data-ready");
                         })
                         .catch(() => {
@@ -350,7 +384,12 @@
                     })
                     .then(res => {
                         this.status = res.status;
-                        this.waitMsg = res.data;
+                        if (res.status === 2)
+                            this.waitMsg = res.data;
+                        else if (res.status === 6)
+                            this.resultData = res.data;
+                        else if (res.status === 7)
+                            this.resultData = res.data;
                         this.$emit("data-ready");
                     })
                     .catch(() => {
@@ -386,6 +425,23 @@
                     .then(res => {
                         this.status = res.status;
                         this.resultData = res.data;
+                        this.$emit("data-ready");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            userVoteSave() {
+                this.run();
+                VoteService
+                    .userVoteSave({
+                        business_id: this.currentRoleAllocation.role.business,
+                        node_id: this.metaInfo.node_id,
+                        items: JSON.stringify(this.voteSelected)
+                    })
+                    .then(res => {
+                        this.status = res.status;
+                        this.waitMsg = res.data;
                         this.$emit("data-ready");
                     })
                     .catch(() => {
