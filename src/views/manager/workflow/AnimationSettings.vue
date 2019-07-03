@@ -52,7 +52,7 @@
                             <tr>
                                 <th class="text-center field-role-alloc-type">身份类型</th>
                                 <th class="text-center field-role-alloc-name">身份名称</th>
-                                <th class="text-center field-role-allo-action">位置</th>
+                                <th class="text-center field-role-allo-action">配置动画</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup" v-if="isAnimation">
