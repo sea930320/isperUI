@@ -37,6 +37,14 @@ class VoteService {
         })
     }
 
+    userVoteItemSave(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/vote/userVoteItemSave',
+            params: data
+        })
+    }
+
 }
 
 export default new VoteService()

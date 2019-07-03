@@ -207,6 +207,9 @@
                 <b-button variant="primary" @click="nextVote" class="mr-5" :disabled="resultData.items.length < 2">下次表决</b-button>
                 <b-button variant="success" @click="finishVote" class="mr-5">完成表决</b-button>
             </div>
+            <div class="text-center mt-4" v-if="status === 5 && currentRoleAllocation.can_terminate">
+                <b-button variant="success" @click="commitEnd = true" class="mr-5">结束并走向</b-button>
+            </div>
         </b-card>
         <b-card :title="resultData.title" :sub-title="resultData.description" v-if="status === 7" class="text-left">
             <b-card-text>
@@ -230,6 +233,21 @@
                 <b-button variant="success" @click="userVoteSave" :disabled="!state" class="mr-5">表 决 保 存</b-button>
             </div>
         </b-card>
+        <b-card :title="resultData.title" :sub-title="resultData.description" v-if="status === 6" class="col-4 offset-4">
+            <b-row class="my-1 mt-4">
+                <b-col sm="4">
+                    <label for="item">表决意向 ：</label>
+                </b-col>
+                <b-col sm="8">
+                    <b-form-input id="item" type="text" v-model="newVoteItem"></b-form-input>
+                </b-col>
+            </b-row>
+            <!-- Control buttons-->
+            <div class="text-center mt-4">
+                <b-button variant="success" @click="userVoteItemSave" :disabled="newVoteItem === ''" class="mr-5">意 向 保 存</b-button>
+            </div>
+        </b-card>
+        <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
     </div>
 </template>
 
@@ -240,13 +258,15 @@
     import VueTagsInput from '@johmun/vue-tags-input';
     import { Datetime } from 'vue-datetime';
     import 'vue-datetime/dist/vue-datetime.css';
+    import endNodeHandle from "@/components/business/modal/endNodeHandle";
 
     export default {
         name: "vote-index",
         components: {
             Loading,
             VueTagsInput,
-            Datetime
+            Datetime,
+            endNodeHandle
         },
         data() {
             return {
@@ -257,6 +277,7 @@
                     { text: '无记名表决', value: 1 }
                 ],
                 voteSelected: [],
+                newVoteItem: "",
                 status: null,
                 waitMsg: "",
                 tabIndex: 1,
@@ -275,7 +296,8 @@
                     voteMaxVote: 1,
                     voteLostVote: 1
                 },
-                resultData: {}
+                resultData: {},
+                commitEnd: false,
             }
         },
         computed: {
@@ -332,45 +354,44 @@
             },
             getInitVoteData() {
                 this.run();
-                if (this.currentRoleAllocation.can_terminate)
-                    VoteService
-                        .getInitVoteData({
-                            'business_id': this.currentRoleAllocation.role.business,
-                            'node_id': this.metaInfo.node_id,
-                            'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
-                        })
-                        .then(data => {
-                            this.status = data.status;
-                            if (data.status === 1)
-                                this.node_members = data.data.node_members;
-                            else if (data.status === 2)
-                                this.waitMsg = data.data;
-                            else if (data.status === 3) {
-                                this.voteMode = null;
-                                this.voteData.voteTitle = data.data.title;  // fix
-                                this.voteData.voteDescription = data.data.description;  // fix
-                                this.voteData.voteItems = data.data.items.map(x => {return {text: x.text}});  // fix
-                                this.node_members = data.data.node_members;
-                                this.voteSetting.members = [];
-                                this.voteSetting.voteEndTime = "";
-                                this.voteSetting.voteLostVote = 1;
-                                this.voteSetting.voteMaxVote = 1;
-                                this.voteSetting.voteMethod = 0;
-                                this.startVote = true;
-                            }
-                            else if (data.status === 4)
-                                this.resultData = data.data;
-                            else if (data.status === 5)
-                                this.resultData = data.data;
-                            else if (data.status === 6)
-                                this.resultData = data.data;
-                            else if (data.status === 7)
-                                this.resultData = data.data;
-                            this.$emit("data-ready");
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
+                VoteService
+                    .getInitVoteData({
+                        'business_id': this.currentRoleAllocation.role.business,
+                        'node_id': this.metaInfo.node_id,
+                        'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
+                    })
+                    .then(data => {
+                        this.status = data.status;
+                        if (data.status === 1)
+                            this.node_members = data.data.node_members;
+                        else if (data.status === 2)
+                            this.waitMsg = data.data;
+                        else if (data.status === 3) {
+                            this.voteMode = null;
+                            this.voteData.voteTitle = data.data.title;  // fix
+                            this.voteData.voteDescription = data.data.description;  // fix
+                            this.voteData.voteItems = data.data.items.map(x => {return {text: x.text}});  // fix
+                            this.node_members = data.data.node_members;
+                            this.voteSetting.members = [];
+                            this.voteSetting.voteEndTime = "";
+                            this.voteSetting.voteLostVote = 1;
+                            this.voteSetting.voteMaxVote = 1;
+                            this.voteSetting.voteMethod = 0;
+                            this.startVote = true;
+                        }
+                        else if (data.status === 4)
+                            this.resultData = data.data;
+                        else if (data.status === 5)
+                            this.resultData = data.data;
+                        else if (data.status === 6)
+                            this.resultData = data.data;
+                        else if (data.status === 7)
+                            this.resultData = data.data;
+                        this.$emit("data-ready");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             },
             saveVoteData() {
                 this.run();
@@ -447,6 +468,26 @@
                     .catch(() => {
                         this.$emit("data-failed");
                     });
+            },
+            userVoteItemSave() {
+                this.run();
+                VoteService
+                    .userVoteItemSave({
+                        business_id: this.currentRoleAllocation.role.business,
+                        node_id: this.metaInfo.node_id,
+                        new_item: this.newVoteItem
+                    })
+                    .then(res => {
+                        this.status = res.status;
+                        this.waitMsg = res.data;
+                        this.$emit("data-ready");
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            endNodeCancel() {
+                this.commitEnd = false;
             }
         }
     }

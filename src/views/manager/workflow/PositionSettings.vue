@@ -39,7 +39,7 @@
                                 <th class="text-center field-role-alloc-type">身份类型</th>
                                 <th class="text-center field-role-alloc-name">身份名称</th>
                                 <th class="text-center field-role-alloc-image">身份形象</th>
-                                <th class="text-center field-role-alloc-action">配置动作</th>
+                                <th class="text-center field-role-alloc-action">角色站位</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup">
