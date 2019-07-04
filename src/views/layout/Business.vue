@@ -13,7 +13,7 @@
                 </b-nav-item>
             </template>
         </TopHeader>
-        <div v-bind:style="{minHeight: styleMinHeight, padding: stylePadding}">
+        <div v-bind:style="{padding: stylePadding}">
             <router-view></router-view>
         </div>
     </div>
