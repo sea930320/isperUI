@@ -95,8 +95,6 @@ export default {
                 post_content: this.post_content
             })
                 .then(() => {
-                    this.post_name = "";
-                    this.post_content = "";
                     this.$emit("data-ready");
                     this.$toasted.success("保存成功");
                 })

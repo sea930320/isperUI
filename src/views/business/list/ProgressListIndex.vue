@@ -202,7 +202,7 @@ export default {
       this.run();
       businessService
         .removeBusiness({ business_id: this.delBusiness.id })
-        .then(data => {
+        .then(() => {
           this.$emit("data-ready");
           this.deleteModal = false;
           this.queryBusinessList();

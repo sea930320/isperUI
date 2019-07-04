@@ -2,11 +2,42 @@
   <div>
     <loading v-if="isRunning"></loading>
     <div class="end-node-wrap">
-      <b-modal v-model="modalShow" centered title="结束并走向选项">
-        <div class="node-trans-modal">
+      <div v-if="!fromNest">
+        <b-modal v-model="modalShow" centered title="结束并走向选项">
+          <div class="node-trans-modal">
+            <div v-if="trans.length === 1" class="only-one">
+              <div class="modal-msg">
+                <p class="message">确定要结束本环节并进入下一环节吗？</p>
+                <p class="tip">下一步：{{trans[0].condition}}</p>
+              </div>
+            </div>
+            <div v-if="trans.length > 1" class="multi-select-container">
+              <div class="modal-msg">
+                <p class="message">请选择以下选项</p>
+                <p class="tip">只有选择正确才能进入下一环节</p>
+              </div>
+              <div class="template-modal-content">
+                <Radio-group v-model="selectedTran" vertical>
+                  <Radio
+                    v-for="(tran, index) in trans"
+                    :label="tran"
+                    :key="index"
+                  >{{index + 1}}、{{tran.condition ? tran.condition : ''}}</Radio>
+                </Radio-group>
+              </div>
+            </div>
+          </div>
+          <div slot="modal-footer" class="w-100">
+            <b-button variant="primary" class="float-center mr-2" @click="okHandler()">确定</b-button>
+            <b-button variant="secondary" class="float-center" @click="cancelOk()">取消</b-button>
+          </div>
+        </b-modal>
+      </div>
+      <div v-else>
+        <div class="node-trans-modal mt-3">
           <div v-if="trans.length === 1" class="only-one">
             <div class="modal-msg">
-              <p class="message">确定要结束本环节并进入下一环节吗？</p>
+              <p class="message pb-2" style="font-weight:800;">确定要结束本环节并进入下一环节吗？</p>
               <p class="tip">下一步：{{trans[0].condition}}</p>
             </div>
           </div>
@@ -26,11 +57,11 @@
             </div>
           </div>
         </div>
-        <div slot="modal-footer" class="w-100">
+        <div class="w-100">
           <b-button variant="primary" class="float-center mr-2" @click="okHandler()">确定</b-button>
-          <b-button variant="secondary" class="float-center" @click="cancelOk()">取消</b-button>
+          <b-button variant="secondary" class="float-center" @click="toProgressList()">退出业务</b-button>
         </div>
-      </b-modal>
+      </div>
       <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
         <div class="row">
           <b-form-select
@@ -63,6 +94,10 @@ export default {
     isCommit: {
       type: Boolean,
       default: false
+    },
+    fromNest: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -72,7 +107,8 @@ export default {
       selectedTran: null,
       jumpModalShow: false,
       jumpProject: {},
-      company_list: []
+      company_list: [],
+      targetTran: null
     };
   },
   computed: {
@@ -103,6 +139,7 @@ export default {
     init() {
       this.trans = [];
       this.selectedTran = null;
+      this.targetTran = null;
     },
     queryWorkflowTrans() {
       this.run();
@@ -141,19 +178,29 @@ export default {
       }
     },
     transHandler(tran) {
-      if (tran.process_type !== 6) {
+      this.targetTran = tran;
+      if (![6, 9].includes(tran.process_type)) {
         this.run();
-        businessService.pushMessage({
-          business_id: this.$route.params.bid,
-          node_id: this.$route.params.nid,
-          role_alloc_id: this.currentRoleAllocation.alloc_id,
-          type: "cmd",
-          msg: "结束并走向",
-          cmd: ACTION_BUSINESS_NODE_END,
-          data: JSON.stringify({ tran_id: tran.id })
-        });
+        businessService
+          .pushMessage({
+            business_id: this.$route.params.bid,
+            node_id: this.$route.params.nid,
+            role_alloc_id: this.currentRoleAllocation.alloc_id,
+            type: "cmd",
+            msg: "结束并走向",
+            cmd: ACTION_BUSINESS_NODE_END,
+            data: JSON.stringify({
+              tran_id: tran.id,
+              process_type: tran.process_type
+            })
+          })
+          .then(() => {
+            this.$emit("data-ready");
+          })
+          .catch(() => {
+            this.$emit("data-failedd");
+          });
         this.modalShow = false;
-        this.$emit("data-ready");
       } else {
         if (!tran.jump_project_id) {
           this.$toasted.error("跳转环节没有配置");
@@ -188,7 +235,9 @@ export default {
             this.$emit("data-ready");
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.$emit("data-failedd");
+        });
     },
     queryJumpData(is_group = false) {
       if (is_group && !this.jumpProject.use_to_company) {
@@ -202,16 +251,22 @@ export default {
             business_id: this.$route.params.bid,
             project_id: this.jumpProject.id,
             use_to: this.jumpProject.use_to_company,
-            role_alloc_id: this.currentRoleAllocation.alloc_id
+            role_alloc_id: this.currentRoleAllocation.alloc_id,
+            process_type: this.targetTran.process_type,
+            tran_id: this.targetTran.id
           }
         : {
             business_id: this.$route.params.bid,
             project_id: this.jumpProject.id,
-            role_alloc_id: this.currentRoleAllocation.alloc_id
+            role_alloc_id: this.currentRoleAllocation.alloc_id,
+            process_type: this.targetTran.process_type,
+            tran_id: this.targetTran.id
           };
+      this.run();
       businessService
         .jumpStart(param)
         .then(data => {
+          this.$emit("data-ready");
           if (data === "jump_team_not_configured") {
             this.waitJumpProject();
           } else {
@@ -229,13 +284,18 @@ export default {
             this.toProgress(data);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.$emit("data-failedd");
+        });
     },
     waitJumpProject() {
       this.$toasted.error("跳转的项目还没有分配好参与人员");
       this.$router.push({
         path: `/business/list/progress`
       });
+    },
+    toProgressList() {
+      this.$router.push({ path: "/business/list/progress" });
     },
     toProgress(data) {
       let type = data.node.process_type;

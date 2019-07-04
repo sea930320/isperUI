@@ -31,6 +31,8 @@ export function processType(val) {
     return '公示'
   } else if (val === 8) {
     return '表决'
+  } else if (val === 9) {
+    return '嵌套'
   } else {
     return ''
   }
