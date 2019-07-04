@@ -160,7 +160,7 @@ export default {
       });
       if (count > 1) {
         a = a && false;
-        this.$toasted.error("实验心得模块只能有一个");
+        this.$toasted.error("请输入分析与总结模块只能有一个");
       }
       return a;
     },

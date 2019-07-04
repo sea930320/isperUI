@@ -349,7 +349,6 @@ class ExperimentService {
     }
 
     /**
-     * 提交实验心得
      * @param data
      * @returns {{pre, visitor}|*}
      */

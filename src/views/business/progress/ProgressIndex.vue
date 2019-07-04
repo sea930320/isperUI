@@ -430,7 +430,6 @@ export default {
                         );
                     }
                     break;
-                // 提交实验心得
                 case actionCmd.ACTION_SUBMIT_EXPERIENCE:
                     this.$store.dispatch("sendExperience", msg);
                     break;

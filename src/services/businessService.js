@@ -464,7 +464,6 @@ class BusinessService {
     }
 
     /**
-     * 提交实验心得
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -488,6 +487,27 @@ class BusinessService {
         return xhr({
             method: 'post',
             url: '/business/jump/start',
+            params: data
+        })
+    }
+
+    removeBusiness(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/remove',
+            params: data
+        })
+    }
+
+    /**
+     * 获取实验成果详情
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    fetchResults(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/result',
             params: data
         })
     }

@@ -44,7 +44,7 @@ export const ACTION_BUSINESS_BACK = 'action_exp_back';
 export const ACTION_BUSINESS_FINISH = 'action_exp_finish';
 // 结束并走向 结束本次环节
 export const ACTION_BUSINESS_NODE_END = 'action_exp_node_end';
-// 填写实验心得
+// 填写分析与总结
 export const ACTION_SUBMIT_EXPERIENCE = 'action_submit_experience';
 // 投票
 export const ACTION_ROLE_VOTE = 'action_role_vote';
