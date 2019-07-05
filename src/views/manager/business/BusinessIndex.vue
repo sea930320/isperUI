@@ -1,6 +1,6 @@
 <template>
     <div class="business-index" v-if="userInfo">
-        <b-tabs v-if="userInfo.identity===2" v-model="selected">
+        <b-tabs v-if="[2,6,3,7].includes(userInfo.identity)" v-model="selected">
             <b-tab title="业务管理">
                 <BusinessShow :selected-tab="selected"/>
             </b-tab>

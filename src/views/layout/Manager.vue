@@ -26,7 +26,7 @@
                 >
                     <icon name="cogs" class="tabIcon"></icon>系统设置
                 </b-nav-item>
-                <b-nav-item v-if="[2,6].includes(userInfo.role)" to="/manager/business">
+                <b-nav-item v-if="[2,6,3,7].includes(userInfo.role)" to="/manager/business">
                     <icon name="list" class="tabIcon"></icon>业务管理
                 </b-nav-item>
             </template>

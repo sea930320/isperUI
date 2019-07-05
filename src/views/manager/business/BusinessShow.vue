@@ -56,8 +56,8 @@
                 <template slot="creator" slot-scope="row">
                     {{ row.item.created_by }}
                 </template>
-                <template slot="status">
-                    <span>已结束</span>
+                <template slot="status" slot-scope="row">
+                    <span>{{ row.item.status }}</span>
                 </template>
                 <template slot="control" slot-scope="row">
                     <!--<b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>-->
@@ -66,6 +66,7 @@
                             class="btn-link"
                             title="查看"
                             @click="showBusiness(row.item)"
+                            v-if="row.item.status === '已完成'"
                     >
                         <icon name="eye"></icon>
                     </a>
@@ -118,7 +119,7 @@
                         <td>{{ accessableItem.officeItem }}</td>
                         <td>{{ accessableItem.start_time ? accessableItem.start_time : " -- " }}</td>
                         <td>{{ accessableItem.created_by }}</td>
-                        <td>已完成</td>
+                        <td>{{ accessableItem.status }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -390,7 +391,7 @@
                         v.end_time,
                         v.members.join(', '),
                         v.created_by,
-                        "已完成"
+                        v.status
                     ]
                 );
             },
