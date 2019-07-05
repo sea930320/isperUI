@@ -60,7 +60,7 @@ export default {
     }
     .court-chat-container {
         height: 810px;
-        margin-left: 900px;
+        margin-left: 830px;
         width: 680px;
     }
 
@@ -103,24 +103,6 @@ export default {
     }
     .speak-container .speak-field {
         border-bottom: 1px solid #cdcdcd;
-    }
-    @media screen and (max-width: 1600px) {
-        .court-flash-container {
-            width: 900px;
-        }
-        .court-chat-container {
-            margin-left: 900px !important;
-            height: 840px !important;
-        }
-        .flash-height {
-            height: 680px;
-        }
-        .speak-container .speak-field {
-            height: 88px;
-        }
-        .court-action-wrap {
-            height: 160px;
-        }
     }
 }
 </style>
