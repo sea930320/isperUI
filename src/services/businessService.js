@@ -511,6 +511,41 @@ class BusinessService {
             params: data
         })
     }
+
+    // added by ser
+    // edit module api calls
+    createBusinessTemplate(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/template/create',
+            params: data
+        })
+    }
+
+    newBusinessTemplate(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/template/new',
+            params: data
+        })
+    }
+    
+    templateSign(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/template/sign',
+            params: data
+        })
+    }
+    // edit module api calls end
+
+    createBusinessDocTeam(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/docs/team/create',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

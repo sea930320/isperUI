@@ -1,0 +1,163 @@
+.edit-main-body {
+    position: relative;
+    padding: 4px;
+    min-height: 770px;
+    background-color: #fff;
+}
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+.clearfix {
+    *zoom: 1;
+}
+
+.edit-content-wrapper .editor-container {
+    width : 65%;
+    min-height: 600px;
+    padding: 10px;
+    position: relative;
+    float: left;
+    background-color: #fff;
+}
+.edit-content-wrapper .operate-container {
+    padding-left: 10px;
+    position: relative;
+    padding: 10px;
+    float: left;
+    min-height: 1px;
+}
+.bordered {
+    border: 1px solid #cdcdcd;
+}
+
+.editor-container .empty {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    font-size: 25px;
+    color: #777;
+}
+
+.editor-container .sign {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+    font-family: "华文行楷", "华文楷体";
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+}
+
+.edit-bottom-button-content {
+    width: 64%;
+}
+
+.operate-container .template-list-container {
+    height: 600px;
+    padding-left: 10px;
+    text-align: left;
+}
+.template-list-container .court-title {
+    font-size: 24px;
+    line-height: 2.4;
+    font-weight: normal;
+    color: #3a7de0;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.template-list-container .court-title .node {
+    font-size: 16px;
+    line-height: 1;
+    font-weight: normal;
+    color: #00c175;
+}
+
+.template-list-container .template-list-table {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+    display: block;
+    text-align: center;
+    width: 95%;
+    margin-left: 10px;
+}
+.spe-group {
+    padding: 15px 0px 0px 15px;
+}
+.spe-group a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    line-height: 1;
+}
+.spe-group .sign-container {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    line-height: 1;
+    float: left;
+}
+.spe-group a:hover {
+    color: #999;
+}
+.edit-bottom-button {
+    float: right;
+    margin-right: 10px;
+    background-color: #3a7de0;
+    color: #fff;
+}
+.edit-bottom-button:hover {
+    background-color: #0f64e2;
+}
+.modal-message {
+    padding: 10px;
+}
+.modal-message .message {
+    font-size: 20px;
+}
+.modal-message .tip {
+    font-size: 14px;
+    color: #999;
+}
+.modal-message .inp-new {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 5px;
+    border: 1px solid #a9b6c6;
+    border-radius: 2px;
+    outline: none;
+    background-color: #fff;
+}
+.max-height-box {
+    max-height: 200px;
+    overflow: auto;
+}
+
+.template-list-content {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+}
+
+.modal-body {
+    padding: 0;
+}
