@@ -511,6 +511,22 @@ class BusinessService {
             params: data
         })
     }
+
+    getOwnGUsers(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getOwnGUsers',
+            params: data
+        })
+    }
+
+    setNoneUser(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/setNoneUser',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
