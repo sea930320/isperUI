@@ -529,7 +529,7 @@ class BusinessService {
             params: data
         })
     }
-    
+
     templateSign(data) {
         return xhr({
             method: 'post',
@@ -548,6 +548,14 @@ class BusinessService {
         })
     }
 
+    getOwnGUsers(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getOwnGUsers',
+            params: data
+        })
+    }
+
     updateBusinessStepStatus(data) {
         return xhr({
             method: 'post',
@@ -555,7 +563,7 @@ class BusinessService {
             params: data
         })
     }
-    
+
     deleteBusinessDisplayFile(data) {
         return xhr({
             method: 'post',
@@ -596,6 +604,13 @@ class BusinessService {
         })
     }
 
+    setNoneUser(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/setNoneUser',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

@@ -132,9 +132,9 @@
 
                                 <b-button
                                     class="notify"
-                                    v-if="!nodeRoleAlloc.is_online"
+                                    v-if="nodeRoleAlloc.user_id === null && currentRoleAllocation.can_terminate"
                                     size="sm"
-                                    @click="notify(nodeRoleAlloc)"
+                                    @click="notify(0, nodeRoleAlloc.id)"
                                 >邀请</b-button>
                             </div>
                         </b-list-group-item>
@@ -152,10 +152,16 @@
                 </div>
             </div>
         </div>
+        <b-modal v-model="inviteShow" hide-footer centered  title="请邀请无职务参与人员">
+            <div>
+                <b-form-select v-model="selectedUser" :options="ownGUsers"></b-form-select>
+                <b-button variant="success" @click="notify(1)" class="mt-5" :disabled="selectedUser === null">确&emsp;定</b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 <script>
-// import businessService from "@/services/businessService";
+import businessService from "@/services/businessService";
 import * as actionCmd from "@/components/business/common/actionCmds";
 import emoji from "@/components/business/common/emoji";
 import { mapState } from "vuex";
@@ -188,10 +194,14 @@ export default {
                 opt_status: false,
                 opt: {}
             },
+            inviteShow: false,
+            selectedUser: null,
+            selectedId: null,
             // 查看签字文件详情
             signedDocDetail: null,
             activeSidebar: false,
-            onlineAllocs: []
+            onlineAllocs: [],
+            ownGUsers: [],
         };
     },
     computed: {
@@ -261,6 +271,11 @@ export default {
             },
             deep: true
         }
+    },
+    created() {
+        this.$nextTick(() => {
+            this.getOwnGUsers();
+        });
     },
     mounted() {
         if (this.currentRoleAllocation.alloc_id) {
@@ -370,10 +385,32 @@ export default {
             });
             return con;
         },
-        notify(roleAlloc) {
-            // businessService.sendMessage(roleAlloc).then(() => {
-            //     this.$toasted.success("发送成功");
-            // });
+        getOwnGUsers() {
+            businessService.getOwnGUsers().then(res => {
+                this.ownGUsers = res.result;
+            });
+        },
+        notify(status, id) {
+            if (status === 0) {
+                this.inviteShow = true;
+                this.selectedUser = null;
+                this.selectedId = id;
+            } else {
+                businessService.setNoneUser({
+                    role_alloc_id: this.selectedId,
+                    user_id: this.selectedUser
+                }).then(() => {
+                    this.inviteShow = false;
+                    this.$toasted.success("邀请成功");
+                    this.roleAllocs.map(item => {
+                        if (item.id === this.selectedId) {
+                            item.user_id = this.selectedUser;
+                            item.user_name = this.ownGUsers.filter(x =>x.value === this.selectedUser)[0].text;
+                        }
+                        return item
+                    });
+                });
+            }
         }
     }
 };
