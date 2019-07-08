@@ -1,7 +1,7 @@
 <template>
     <div class="display-main-box">
         <div class="content-item-center display-top-title">
-            <h2 class="mb-0">来自 *** 文件展示</h2>
+            <h2 class="mb-0">来自 {{sender_name}} 文件展示</h2>
         </div>
 
         <div class="display-table-content content-item-center">
@@ -85,7 +85,8 @@ export default {
         return {
             docs: [],
             commit_end: false,
-            end_confirm_dialog: false
+            end_confirm_dialog: false,
+            sender_name: ''
         };
     },
     computed: {
@@ -106,6 +107,12 @@ export default {
     methods: {
         init() {
             this.updateList();
+            
+            for(var i in this.metaInfo.role_alloc_status) {
+                if (this.metaInfo.role_alloc_status[i].can_terminate) {
+                    this.sender_name = this.metaInfo.role_alloc_status[i].user_name;
+                }
+            }
         },
 
         updateList() {
