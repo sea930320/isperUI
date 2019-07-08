@@ -354,12 +354,6 @@ table.vertical-center {
     width: 100%;
 }
 
-.h-100 {
-    height: 100%;
-}
-.h-92 {
-    height: 92%;
-}
 .fl {
     float: left !important;
 }
@@ -370,4 +364,17 @@ table.vertical-center {
 
 .text_blue {
     color: rgb(58, 125, 224);
+}
+
+/*  added by ser */
+.h-100 {
+    height: 100%;
+}
+.h-92 {
+    height: 92%;
+}
+.content-item-center {
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }

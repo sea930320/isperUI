@@ -539,6 +539,47 @@ class BusinessService {
     }
     // edit module api calls end
 
+    // display module api calls
+    getBusinessStepStatus(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/step/status',
+            params: data
+        })
+    }
+
+    updateBusinessStepStatus(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/step/status/update',
+            params: data
+        })
+    }
+    
+    deleteBusinessDisplayFile(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/docs/delete',
+            params: data
+        })
+    }
+
+    getBusinessDocTeamStatus(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/doc/team/status',
+            params: data
+        })
+    }
+
+    updateBusinessDocTeamStatus(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/doc/team/status/update',
+            params: data
+        })
+    }
+
     createBusinessDocTeam(data) {
         return xhr({
             method: 'post',
@@ -546,6 +587,7 @@ class BusinessService {
             params: data
         })
     }
+
 }
 
 // 实例化后导出，全局单例
