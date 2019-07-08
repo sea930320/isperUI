@@ -33,6 +33,10 @@ export function processType(val) {
     return '表决'
   } else if (val === 9) {
     return '嵌套'
+  } else if (val === 10) {
+    return '交付与签收'
+  } else if (val === 11) {
+    return '调查问卷'
   } else {
     return ''
   }

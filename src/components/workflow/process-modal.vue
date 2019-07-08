@@ -115,7 +115,7 @@ export default {
     height: 440px;
     overflow: auto;
     .module-list-item {
-      font-size: 14px;
+      font-size: 12px;
       span.float-right {
         color: #5386d2;
       }
