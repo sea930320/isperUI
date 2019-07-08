@@ -1,0 +1,50 @@
+.distribute-main-box {
+    position: relative;
+    padding: 4px;
+    min-height: 900px;
+    background-color: #fff;
+}
+
+.distribute-top-title {
+    padding-top: 3rem;
+}
+
+.distribute-top-button {
+    padding-top: 3rem;
+}
+
+.distribute-table-content {
+    padding-top: 3rem;
+}
+
+.distribute-table-inner {
+    width: 40%;
+    align-items: center;
+    justify-content: center;
+    display: block;
+    max-height: 400px;
+    min-height: 200px;
+    overflow: auto;
+    position: relative;
+}
+
+.distribute-user-content {
+    padding-top: 3rem;
+}
+.distribute-bottom-button {
+    padding-top: 2rem;
+}
+
+.modal-message {
+    padding: 10px 0;
+}
+.modal-message p {
+    text-align: center;
+}
+.modal-message .message {
+    font-size: 20px;
+}
+.modal-message .tip {
+    font-size: 14px;
+    color: #999;
+}

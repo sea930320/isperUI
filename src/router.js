@@ -202,12 +202,14 @@ const routes = [{
             component: () => import('@/views/business/progress/ProgressIndex.vue'),
             children: [
                 { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') },
-                { path: '2/:bid/:nid', name: 'edit-index', component: () => import('@/views/business/progress/edit/EditIndex.vue')},
+                { path: '2/:bid/:nid', name: 'edit', component: () => import('@/views/business/progress/edit/EditIndex.vue')},        //编辑
+                { path: '3/:bid/:nid', name: 'display', component: () => import('@/views/business/progress/display/DisplayIndex.vue')},  //展示
                 { path: '4/:bid/:nid', name: 'report', component: () => import('@/views/business/progress/report/ReportIndex.vue') },
                 { path: '5/:bid/:nid', name: 'poll', component: () => import('@/views/business/progress/poll/PollIndex.vue') },
                 { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue') }, // 公示
                 { path: '8/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/vote/VoteIndex.vue') },
                 { path: '9/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/nest/NestIndex.vue') },
+                { path: '10/:bid/:nid', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue')},  //展示
                 { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') }
             ]
         }, {
