@@ -1,13 +1,13 @@
 <template>
-    <div class="display-main-box">
-        <div class="content-item-center display-top-button">
-            <p class="mb-0">展示文件 :</p>
+    <div class="distribute-main-box">
+        <div class="content-item-center distribute-top-button">
+            <p class="mb-0">请选择交付文件 :</p>
             <b-button class="ml-3" variant="primary" @click="onUploadlocal">上传新文件...</b-button>
             <b-button class="ml-3" variant="primary" @click="onUploadother">从文件中选择...</b-button>
         </div>
         <!-- table for documents -->
-        <div class="display-table-content content-item-center">
-            <div class="display-table-inner">
+        <div class="distribute-table-content content-item-center">
+            <div class="distribute-table-inner">
                 <table class="table table-green doc-list-table">
                     <thead>
                         <tr>
@@ -52,8 +52,22 @@
             </div>
         </b-modal>
 
+        <!-- User selection -->
+        <div class="content-item-center distribute-user-content">
+            <p class="mb-0">请选择签收人 ：</p>
+            <vue-tags-input
+                v-model="tag"
+                style="width: 600px;"
+                :tags="selected_users"
+                :autocomplete-items="filteredItems"
+                :add-only-from-autocomplete="true"
+                :autocomplete-min-length="0"
+                placeholder="+"
+                @tags-changed="newTags => tags = newTags"
+            />
+        </div>
         <!-- Bottom button -->
-        <div class="display-bottom-button">
+        <div class="distribute-bottom-button">
             <b-button variant="primary" @click="onNext">下一頁</b-button>
         </div>
     </div>
@@ -62,9 +76,10 @@
 import businessService from "@/services/businessService";
 import uploadModal from "@/components/common/uploadModal";
 import * as actionCmd from "@/components/business/common/actionCmds";
+import VueTagsInput from "@johmun/vue-tags-input";
 export default {
-    name: "display_step1",
-    components: { uploadModal },
+    name: "distribute_step1",
+    components: { uploadModal, VueTagsInput },
     sockets: {
         connect() {},
 
@@ -102,7 +117,10 @@ export default {
                 total: 0
             },
             delete_file: null,
-            delete_confirm_dialog: false
+            delete_confirm_dialog: false,
+            sign_users: [],
+            tag: "",
+            selected_users: []
         };
     },
     computed: {
@@ -114,6 +132,11 @@ export default {
         },
         metaInfo() {
             return this.$store.state.meta.info;
+        },
+        filteredItems() {
+            return this.sign_users.filter(i => {
+                return i.text;
+            });
         }
     },
     watch: {},
@@ -130,6 +153,13 @@ export default {
                     this.docs.list = data.results;
                     this.docs.total = data.paging.count;
                 });
+
+            for (var v in this.metaInfo.team) {
+                this.sign_users.push({
+                    text: this.metaInfo.team[v].name,
+                    id: this.metaInfo.team[v].id
+                });
+            }
         },
 
         // upload documents
@@ -200,34 +230,40 @@ export default {
 
         onNext() {
             // set doc access
-            businessService
-                .createBusinessDocTeamStatus({
-                    business_id: this.$route.params.bid,
-                    node_id: this.$route.params.nid
-                })
-                .then(() => {
+            if (this.tags) {
+                for (var i in this.tags) {
                     businessService
-                        .updateBusinessStepStatus({
+                        .createBusinessDocTeamStatus({
                             business_id: this.$route.params.bid,
                             node_id: this.$route.params.nid,
-                            step: 11
+                            user_id: this.tags[i].id
                         })
                         .then(() => {
-                            businessService.pushMessage({
-                                business_id: this.$route.params.bid,
-                                node_id: this.$route.params.nid,
-                                role_alloc_id: this.currentRoleAllocation.alloc_id,
-                                force_txt_mode: 1,
-                                type: "txt",
-                                msg: "展示-下一頁"
-                            });
+                            businessService
+                                .updateBusinessStepStatus({
+                                    business_id: this.$route.params.bid,
+                                    node_id: this.$route.params.nid,
+                                    step: 11
+                                })
+                                .then(() => {
+                                    businessService.pushMessage({
+                                        business_id: this.$route.params.bid,
+                                        node_id: this.$route.params.nid,
+                                        role_alloc_id: this
+                                            .currentRoleAllocation.alloc_id,
+                                        force_txt_mode: 1,
+                                        type: "txt",
+                                        msg: "展示-下一頁"
+                                    });
+                                });
                         });
-                });
+                }
+            }
         }
     }
 };
 </script>
 
 <style lang='css' scoped>
-@import "./display.css";
+@import "./distribute_sign.css";
 </style>

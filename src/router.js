@@ -209,6 +209,7 @@ const routes = [{
                 { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue') }, // 公示
                 { path: '8/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/vote/VoteIndex.vue') },
                 { path: '9/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/nest/NestIndex.vue') },
+                { path: '10/:bid/:nid', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue')},  //展示
                 { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') }
             ]
         }, {
