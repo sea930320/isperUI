@@ -48,3 +48,11 @@
     font-size: 14px;
     color: #999;
 }
+.max-height-box {
+    max-height: 200px;
+    overflow: auto;
+}
+.prev-list-content {
+    padding: 10px;
+    text-align: left;
+}
