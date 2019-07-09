@@ -35,6 +35,7 @@
             >结束并走向</b-button>
         </div>
         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
+        <siderUserBar></siderUserBar>
     </div>
 </template>
 
@@ -45,9 +46,10 @@ import { mapState } from "vuex";
 import { VueEditor } from "vue2-editor";
 import BusinessPostUpload from "@/components/upload/BusinessPostUpload";
 import endNodeHandle from "@/components/business/modal/endNodeHandle";
+import siderUserBar from "@/components/business/common/SiderUserBar";
 
 export default {
-    components: { Loading, VueEditor, BusinessPostUpload, endNodeHandle },
+    components: { Loading, VueEditor, BusinessPostUpload, endNodeHandle, siderUserBar },
     data() {
         return {
             post_name: "",

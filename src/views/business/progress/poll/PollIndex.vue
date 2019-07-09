@@ -160,6 +160,7 @@
             </div>
         </b-card>
         <endNodeHandle :isCommit="commitEnd" @on-cancel="commitEnd = false"></endNodeHandle>
+        <siderUserBar></siderUserBar>
     </div>
 </template>
 <script>
@@ -169,10 +170,11 @@
     import {mapState} from "vuex";
     import { Datetime } from 'vue-datetime';
     import 'vue-datetime/dist/vue-datetime.css';
+    import siderUserBar from "@/components/business/common/SiderUserBar";
 
     export default {
         name: 'MetaPoll',
-        components: {Loading, endNodeHandle, Datetime},
+        components: {Loading, endNodeHandle, Datetime, siderUserBar},
         data() {
             return {
                 node_members: [],
