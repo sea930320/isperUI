@@ -596,6 +596,21 @@ class BusinessService {
         })
     }
 
+    getBusinessPrevDocs(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/prev/doc/get',
+            params: data
+        })
+    }
+
+    createBusinessDocFromPrev(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/doc/create/prev',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
