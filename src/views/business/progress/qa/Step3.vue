@@ -162,6 +162,7 @@ export default {
       ref.quill.clipboard.dangerouslyPasteHTML(
         ref.quill.getSelection(true).index,
         "<span class='blank_question'>" +
+          /* eslint-disable */
           "".repeat(Number(this.blank_lengths)) +
           "</span>"
       );

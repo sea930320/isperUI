@@ -14,10 +14,9 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { VueEditor } from "vue2-editor";
 
 export default {
-  components: { VueEditor },
+  components: {},
   data() {
     return {
       end_quote: ""
