@@ -260,6 +260,7 @@
         </div>
       </div>
     </b-modal>
+    <siderUserBar></siderUserBar>
   </div>
 </template>
 
@@ -270,6 +271,7 @@ import { BulmaAccordion, BulmaAccordionItem } from "vue-bulma-accordion";
 import BFormTextarea from "bootstrap-vue/src/components/form-textarea/form-textarea";
 import { openFile } from "@/utils/previewFile";
 import { docUsage } from "@/filters/fun";
+import siderUserBar from "@/components/business/common/SiderUserBar";
 import {
   ACTION_SUBMIT_EXPERIENCE,
   ACTION_BUSINESS_NODE_END
@@ -279,7 +281,8 @@ export default {
   components: {
     BFormTextarea,
     BulmaAccordion,
-    BulmaAccordionItem
+    BulmaAccordionItem,
+    siderUserBar,
   },
   filters: { docUsage },
   data() {

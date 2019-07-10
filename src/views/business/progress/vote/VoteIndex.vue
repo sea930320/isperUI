@@ -248,6 +248,7 @@
             </div>
         </b-card>
         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
+        <siderUserBar></siderUserBar>
     </div>
 </template>
 
@@ -258,6 +259,7 @@
     import VueTagsInput from '@johmun/vue-tags-input';
     import { Datetime } from 'vue-datetime';
     import 'vue-datetime/dist/vue-datetime.css';
+    import siderUserBar from "@/components/business/common/SiderUserBar";
     import endNodeHandle from "@/components/business/modal/endNodeHandle";
 
     export default {
@@ -266,7 +268,8 @@
             Loading,
             VueTagsInput,
             Datetime,
-            endNodeHandle
+            endNodeHandle,
+            siderUserBar
         },
         data() {
             return {
@@ -354,44 +357,45 @@
             },
             getInitVoteData() {
                 this.run();
-                VoteService
-                    .getInitVoteData({
-                        'business_id': this.currentRoleAllocation.role.business,
-                        'node_id': this.metaInfo.node_id,
-                        'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
-                    })
-                    .then(data => {
-                        this.status = data.status;
-                        if (data.status === 1)
-                            this.node_members = data.data.node_members;
-                        else if (data.status === 2)
-                            this.waitMsg = data.data;
-                        else if (data.status === 3) {
-                            this.voteMode = null;
-                            this.voteData.voteTitle = data.data.title;  // fix
-                            this.voteData.voteDescription = data.data.description;  // fix
-                            this.voteData.voteItems = data.data.items.map(x => {return {text: x.text}});  // fix
-                            this.node_members = data.data.node_members;
-                            this.voteSetting.members = [];
-                            this.voteSetting.voteEndTime = "";
-                            this.voteSetting.voteLostVote = 1;
-                            this.voteSetting.voteMaxVote = 1;
-                            this.voteSetting.voteMethod = 0;
-                            this.startVote = true;
-                        }
-                        else if (data.status === 4)
-                            this.resultData = data.data;
-                        else if (data.status === 5)
-                            this.resultData = data.data;
-                        else if (data.status === 6)
-                            this.resultData = data.data;
-                        else if (data.status === 7)
-                            this.resultData = data.data;
-                        this.$emit("data-ready");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
+                if (this.currentRoleAllocation.role)
+                    VoteService
+                        .getInitVoteData({
+                            'business_id': this.currentRoleAllocation.role.business,
+                            'node_id': this.metaInfo.node_id,
+                            'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
+                        })
+                        .then(data => {
+                            this.status = data.status;
+                            if (data.status === 1)
+                                this.node_members = data.data.node_members;
+                            else if (data.status === 2)
+                                this.waitMsg = data.data;
+                            else if (data.status === 3) {
+                                this.voteMode = null;
+                                this.voteData.voteTitle = data.data.title;  // fix
+                                this.voteData.voteDescription = data.data.description;  // fix
+                                this.voteData.voteItems = data.data.items.map(x => {return {text: x.text}});  // fix
+                                this.node_members = data.data.node_members;
+                                this.voteSetting.members = [];
+                                this.voteSetting.voteEndTime = "";
+                                this.voteSetting.voteLostVote = 1;
+                                this.voteSetting.voteMaxVote = 1;
+                                this.voteSetting.voteMethod = 0;
+                                this.startVote = true;
+                            }
+                            else if (data.status === 4)
+                                this.resultData = data.data;
+                            else if (data.status === 5)
+                                this.resultData = data.data;
+                            else if (data.status === 6)
+                                this.resultData = data.data;
+                            else if (data.status === 7)
+                                this.resultData = data.data;
+                            this.$emit("data-ready");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
             },
             saveVoteData() {
                 this.run();
