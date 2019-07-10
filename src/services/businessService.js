@@ -627,6 +627,30 @@ class BusinessService {
             params: data
         })
     }
+
+    getSurvey(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/survey',
+            params: data
+        })
+    }
+
+    createOrUpdateSurvey(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/createOrUpdate',
+            params: data
+        })
+    }
+
+    setSurveySelectQuestions(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/setSelectQuestions',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

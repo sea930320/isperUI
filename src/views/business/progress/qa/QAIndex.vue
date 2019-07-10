@@ -1,8 +1,8 @@
 <template>
   <div class="qa-index">
     <loading v-if="isRunning"></loading>
-    <b-card>
-      <b-tabs content-class="mt-2" class="qa-tabs">
+    <b-card v-if="currentRoleAllocation.can_terminate && step != 6">
+      <b-tabs content-class="mt-2" class="qa-tabs" v-model="tabIndex">
         <b-tab title="Description">
           <step1></step1>
         </b-tab>
@@ -25,6 +25,21 @@
           <step7></step7>
         </b-tab>
       </b-tabs>
+      <b-button
+        v-if="tabIndex!=0"
+        class="styledBtn mt-3"
+        variant="outline-primary"
+        @click.stop="prevTab()"
+      >Prev</b-button>
+      <b-button
+        v-if="tabIndex!=6"
+        class="styledBtn mt-3"
+        variant="outline-primary"
+        @click.stop="nextTab()"
+      >Next</b-button>
+    </b-card>
+    <b-card class="my-3" v-else>
+      <step6></step6>
     </b-card>
   </div>
 </template>
@@ -38,12 +53,16 @@ import Step4 from "@/views/business/progress/qa/Step4";
 import Step5 from "@/views/business/progress/qa/Step5";
 import Step6 from "@/views/business/progress/qa/Step6";
 import Step7 from "@/views/business/progress/qa/Step7";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import businessService from "@/services/businessService";
 
 export default {
   components: { Loading, Step1, Step2, Step3, Step4, Step5, Step6, Step7 },
   data() {
-    return {};
+    return {
+      tabIndex: 0,
+      step: 5
+    };
   },
   created() {
     this.$nextTick(() => {
@@ -58,7 +77,28 @@ export default {
   },
   mounted() {},
   methods: {
-    init() {}
+    ...mapActions(["setSurvey"]),
+    init() {
+      this.run();
+      businessService
+        .getSurvey({
+          business_id: this.$route.params.bid,
+          node_id: this.$route.params.nid
+        })
+        .then(data => {
+          this.setSurvey(data);
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
+    prevTab() {
+      this.tabIndex = this.tabIndex - 1;
+    },
+    nextTab() {
+      this.tabIndex = this.tabIndex + 1;
+    }
   }
 };
 </script>

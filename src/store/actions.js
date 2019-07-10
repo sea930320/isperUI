@@ -140,6 +140,11 @@ export default {
       .then(data => {
         commit(types.GET_BUSINESS_EXPERIENCE_SUCCESS, data)
       })
+  },
+  setSurvey({
+    commit
+  }, data) {
+    commit(types.SET_SURVEY, data)
   }
   // queryVoteStatus({
   //   commit

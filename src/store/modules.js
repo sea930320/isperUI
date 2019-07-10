@@ -21,7 +21,8 @@ import {
 	GET_BUSINESS_EXPERIENCE_SUCCESS,
 	QUERY_WORKFLOW_TRANS_SUCCESS,
 	GET_BUSINESS_PROJECT_TIPS_SUCCESS,
-	SET_CURRENT_ROLE_ALLOCATION
+	SET_CURRENT_ROLE_ALLOCATION,
+	SET_SURVEY
 } from './types'
 import VueCookie from 'vue-cookie'
 import {
@@ -79,7 +80,8 @@ const state = {
 		project_tips: [],
 		process_actions: [],
 		function_actions: [],
-		experiences: []
+		experiences: [],
+		survey: {}
 	},
 	messageData: []
 }
@@ -198,6 +200,9 @@ const mutations = {
 			status: 2
 		}
 		state.meta.experiences.push(ex)
+	},
+	[SET_SURVEY](state, data) {
+		state.meta.survey = data
 	},
 	refreshMsg(state) {
 		accountService
