@@ -1,5 +1,6 @@
 <template>
   <div class="qa-step6 pt-5">
+    <loading v-if="isRunning"></loading>
     <div class="w-60 mx-auto" v-if="survey">
       <div class="survey-title mb-3">{{survey.title}}</div>
       <div
@@ -36,7 +37,22 @@
       >
         <div class="question">
           {{index+1 + '.&nbsp;'}}
-          <div v-html="question.title"></div>
+          <div v-html="question.title" v-if="!runSurvey"></div>
+          <div v-else style="display: flex;">
+            <div v-for="(title, index1) in question.titleArray" :key="'question' + index + index1">
+              <b-input-group-text v-if="!title.blank_length">{{title}}</b-input-group-text>
+              <custom-input
+                v-else
+                input-height="38px"
+                :input-number="title.blank_length"
+                input-type="text"
+                input-style-type="allBorder"
+                @custom-input-change="($event) => change($event, index, index1)"
+                @custom-input-complete="($event) => complete($event, index, index1)"
+                :style="{width: title.blank_length * 30 + 'px'}"
+              ></custom-input>
+            </div>
+          </div>
         </div>
       </div>
       <hr />
@@ -51,21 +67,42 @@
           <div v-html="question.title"></div>
         </div>
         <div class="normal-question-answer ml-3 mt-2">
-          <b-form-input></b-form-input>
+          <b-form-input v-model="question.answer"></b-form-input>
         </div>
       </div>
       <hr />
       <div v-html="survey.end_quote"></div>
-      <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="print()">Print</b-button>
+      <b-button
+        v-if="!runSurvey"
+        class="styledBtn my-3"
+        variant="outline-primary"
+        @click.stop="print()"
+      >Print</b-button>
+      <b-button
+        v-else
+        class="styledBtn my-3"
+        variant="outline-primary"
+        @click.stop="submit()"
+      >Submit</b-button>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import businessService from "@/services/businessService";
+import _ from "lodash";
+import customInput from "vue-custom-inputs";
+import Loading from "@/components/loading/Loading";
 
 export default {
-  components: {},
+  components: { customInput, Loading },
+  props: {
+    runSurvey: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {};
   },
@@ -78,7 +115,21 @@ export default {
   computed: {
     ...mapState(["userInfo"]),
     survey() {
-      return this.$store.state.meta.survey;
+      let survey = this.$store.state.meta.survey;
+      if (this.runSurvey) {
+        let blank_questions = survey.blank_questions;
+        _.each(blank_questions, bq => {
+          let titleArray = bq.title.replace(/<[^>]*>?/gm, "");
+          /* eslint-disable */
+          titleArray = _.map(titleArray.split(/([]+)/), title => {
+            if (title[0] == "") {
+              return { blank_length: title.length };
+            } else return title;
+          });
+          bq.titleArray = titleArray;
+        });
+        return survey;
+      } else return survey;
     },
     currentRoleAllocation() {
       return this.$store.state.meta.currentRoleAllocation;
@@ -89,6 +140,83 @@ export default {
     init() {},
     indexToAlpah(value) {
       return String.fromCharCode(65 + value);
+    },
+    change(val, index, index1) {
+      this.survey.blank_questions[index].titleArray[index1].answer = val;
+    },
+    complete(val, index, index1) {
+      this.survey.blank_questions[index].titleArray[index1].answer = val;
+    },
+    print() {
+      window.print();
+    },
+    submit() {
+      var BreakException = {};
+      let qas = [];
+      try {
+        this.survey.blank_questions.forEach(bq => {
+          let answer = "";
+          bq.titleArray.forEach(ta => {
+            if (ta.blank_length) {
+              if (
+                !ta.answer ||
+                ta.answer.replace(" ", "").length != ta.blank_length
+              ) {
+                throw BreakException;
+              }
+              answer += ta.answer;
+            } else answer += ta;
+          });
+          qas.push({
+            id: bq.id,
+            answer: answer
+          });
+        });
+        this.survey.select_questions.forEach(sq => {
+          if (sq.select_option == 0) {
+            if (!sq.answer) {
+              throw BreakException;
+            }
+            qas.push({
+              id: sq.id,
+              answer: sq.answer
+            });
+          } else {
+            if (!sq.answers || sq.answers.length == 0) {
+              throw BreakException;
+            }
+            qas.push({
+              id: sq.id,
+              answers: sq.answers
+            });
+          }
+        });
+        this.survey.normal_questions.forEach(nq => {
+          if (!nq.answer) {
+            throw BreakException;
+          }
+          qas.push({
+            id: nq.id,
+            answer: nq.answer
+          });
+        });
+      } catch (e) {
+        this.$toasted.error("Please Fill all fields");
+        return;
+      }
+      this.run();
+      businessService
+        .surveyAnswer({
+          survey_id: this.survey.id,
+          answers: JSON.stringify(qas)
+        })
+        .then(() => {
+          this.$emit("data-ready");
+          this.$toasted.success("Success");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     }
   }
 };

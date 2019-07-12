@@ -55,6 +55,16 @@ const routes = [{
     component: () => import('@/views/system-set/advertising/AdvertisingDetail.vue')
 },
 {
+    path: '/surveys',
+    name: 'surveys',
+    component: () => import('@/views/survey/SurveyList.vue')
+},
+{
+    path: '/survey/:id',
+    name: 'survey_qa',
+    component: () => import('@/views/survey/TakeSurvey.vue')
+},
+{
     path: '/manager', // 管理员主页
     meta: {
         requiresAuth: true

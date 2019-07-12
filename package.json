@@ -43,6 +43,7 @@
     "vue-bulma-accordion": "^0.4.8",
     "vue-clipboard2": "^0.3.0",
     "vue-cookie": "^1.1.4",
+    "vue-custom-inputs": "^1.0.4",
     "vue-datetime": "^1.0.0-beta.10",
     "vue-faq-accordion": "^1.2.1",
     "vue-filepond": "^5.1.0",

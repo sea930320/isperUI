@@ -8,7 +8,6 @@
         <date-picker
           class="float-left"
           :editable="false"
-          :clearable="false"
           v-model="activeDateRange"
           range
           format="YYYY-MM-DD"
@@ -23,13 +22,14 @@
         <b-form-select size="sm" v-model="target" :options="options"></b-form-select>
       </b-col>
     </b-row>
-    <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="saveSurvey()">保存</b-button>
+    <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="publishSurvey()">保存</b-button>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import DatePicker from "vue2-datepicker";
+import businessService from "@/services/businessService";
 
 export default {
   components: {
@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      activeDateRange: [],
+      activeDateRange: [null, null],
       target: 0,
       options: [
         { value: 0, text: "All" },
@@ -53,14 +53,62 @@ export default {
   },
   computed: {
     ...mapState(["userInfo"]),
+    survey() {
+      return this.$store.state.meta.survey;
+    },
     currentRoleAllocation() {
       return this.$store.state.meta.currentRoleAllocation;
     }
   },
+  watch: {
+    survey: {
+      handler: function(val) {
+        this.activeDateRange = [val.start_time, val.end_time];
+      },
+      deep: true
+    }
+  },
   mounted() {},
   methods: {
-    init() {},
-    saveSurvey() {}
+    ...mapActions(["setSurvey"]),
+    init() {
+      this.activeDateRange = [this.survey.start_time, this.survey.end_time];
+    },
+    publishSurvey() {
+      if (
+        this.activeDateRange.length != 2 ||
+        !this.activeDateRange[0] ||
+        !this.activeDateRange[1]
+      ) {
+        this.$toasted.error("Please set activation time");
+        return;
+      }
+      let param = {
+        business_id: this.$route.params.bid,
+        node_id: this.$route.params.nid,
+        start_date: this.activeDateRange[0]
+          ? this.$moment(this.activeDateRange[0]).format("YYYY-MM-DD")
+          : "",
+        end_date: this.activeDateRange[1]
+          ? this.$moment(this.activeDateRange[1]).format("YYYY-MM-DD")
+          : "",
+        target: this.target
+      };
+      businessService.publishSurvey(param).then(() => {
+        businessService
+          .getSurvey({
+            business_id: this.$route.params.bid,
+            node_id: this.$route.params.nid
+          })
+          .then(data => {
+            this.setSurvey(data);
+            this.$emit("data-ready");
+          })
+          .catch(() => {
+            this.$emit("data-failed");
+          });
+      });
+    }
   }
 };
 </script>
