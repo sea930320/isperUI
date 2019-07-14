@@ -568,6 +568,22 @@ class WorkflowService {
       params: data
     })
   }
+
+  getSelectDecideSeetings(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/selectDecide/get_setting',
+      params: data
+    })
+  }
+
+  setSelectDecideSeetings(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/selectDecide/set_setting',
+      params: data
+    })
+  }
 }
 
 export default new WorkflowService()

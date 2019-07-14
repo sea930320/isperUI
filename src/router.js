@@ -221,6 +221,7 @@ const routes = [{
                 { path: '9/:bid/:nid', name: 'nest', component: () => import('@/views/business/progress/nest/NestIndex.vue') },
                 { path: '10/:bid/:nid', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue') },  //展示
                 { path: '11/:bid/:nid', name: 'qa', component: () => import('@/views/business/progress/qa/QAIndex.vue') },  // 调查问卷
+                { path: '12/:bid/:nid', name: 'select_decide', component: () => import('@/views/business/progress/select_decide/SelectDecideIndex.vue') },
                 { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') }
             ]
         }, {

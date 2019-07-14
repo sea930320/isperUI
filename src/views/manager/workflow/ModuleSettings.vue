@@ -14,7 +14,9 @@
                     </b-tab>
                 </b-tabs>
             </b-tab>
-            <b-tab title="判断与选择"></b-tab>
+            <b-tab title="判断与选择">
+                <select-decide-settings></select-decide-settings>
+            </b-tab>
         </b-tabs>
     </div>
 </template>
@@ -23,9 +25,10 @@ import { mapState, mapActions } from "vuex";
 import ActionSettings from "@/views/manager/workflow/ActionSettings";
 import AnimationSettings from "@/views/manager/workflow/AnimationSettings";
 import PositionSettings from "@/views/manager/workflow/PositionSettings";
+import SelectDecideSettings from "@/views/manager/workflow/SelectDecideSettings";
 export default {
     name: "module-settings",
-    components: { ActionSettings, AnimationSettings, PositionSettings },
+    components: { ActionSettings, AnimationSettings, PositionSettings, SelectDecideSettings },
     data() {
         return {};
     },
