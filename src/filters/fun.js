@@ -37,6 +37,8 @@ export function processType(val) {
     return '交付与签收'
   } else if (val === 11) {
     return '调查问卷'
+  } else if (val === 12) {
+    return '判断与选择'
   } else {
     return ''
   }
