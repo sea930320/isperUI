@@ -148,6 +148,7 @@ export default {
         });
     },
     isActivity(survey) {
+      if (survey.is_ended) return 1;
       var startDate = new Date(survey.start_time),
         endDate = new Date(survey.end_time);
       var moment = this.$moment();

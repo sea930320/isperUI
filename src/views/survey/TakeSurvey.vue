@@ -53,7 +53,7 @@
                 :key="'question' + index + index1"
               >
                 <b-input-group-text v-if="!title.blank_length">{{title}}</b-input-group-text>
-                <custom-input
+                <!-- <custom-input
                   v-else
                   input-height="38px"
                   :input-number="title.blank_length"
@@ -62,7 +62,12 @@
                   @custom-input-change="($event) => change($event, index, index1)"
                   @custom-input-complete="($event) => complete($event, index, index1)"
                   :style="{width: title.blank_length * 30 + 'px'}"
-                ></custom-input>
+                ></custom-input>-->
+                <blank-input
+                  v-else
+                  :input-length="title.blank_length"
+                  @blank-input-change="(val) => change(val, index, index1)"
+                ></blank-input>
               </div>
             </div>
           </div>
@@ -100,9 +105,10 @@ import _ from "lodash";
 import customInput from "vue-custom-inputs";
 import Loading from "@/components/loading/Loading";
 import Report from "@/views/business/progress/qa/Report";
+import BlankInput from "@/components/business/progress/BlankInput";
 
 export default {
-  components: { customInput, Loading, Report },
+  components: { customInput, Loading, Report, BlankInput },
   data() {
     return {
       survey: null
