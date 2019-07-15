@@ -97,12 +97,11 @@
 import { mapState } from "vuex";
 import businessService from "@/services/businessService";
 import _ from "lodash";
-import customInput from "vue-custom-inputs";
 import Loading from "@/components/loading/Loading";
 import BlankInput from "@/components/business/progress/BlankInput";
 
 export default {
-  components: { customInput, Loading, BlankInput },
+  components: { Loading, BlankInput },
   props: {
     runSurvey: {
       type: Boolean,

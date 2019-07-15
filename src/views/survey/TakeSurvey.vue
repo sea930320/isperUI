@@ -102,13 +102,12 @@
 <script>
 import businessService from "@/services/businessService";
 import _ from "lodash";
-import customInput from "vue-custom-inputs";
 import Loading from "@/components/loading/Loading";
 import Report from "@/views/business/progress/qa/Report";
 import BlankInput from "@/components/business/progress/BlankInput";
 
 export default {
-  components: { customInput, Loading, Report, BlankInput },
+  components: { Loading, Report, BlankInput },
   data() {
     return {
       survey: null
