@@ -230,6 +230,24 @@ const routes = [{
             component: () => import('@/views/personal-center/MoreTeammates.vue')
         }
     ]
+},
+{
+    path: '/student',
+    meta: {
+        requiresAuth: true
+    },
+    component: () => import('@/views/layout/Student.vue'),
+    children: [
+        ...personalCenterRoutes,
+        {
+            path: '',
+            redirect: 'business-watch'
+        }, {
+            path: 'business-watch',
+            name: 'student-watch',
+            component: () => import('@/views/student/watch/WatchIndex.vue')
+        }
+    ]
 }
 ];
 
