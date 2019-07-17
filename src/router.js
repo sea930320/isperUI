@@ -143,6 +143,10 @@ const routes = [{
             name: 'super-user-manage',
             component: () => import('@/views/manager/user/UMIndex.vue')
         }, {
+            path: 'course',
+            name: 'course-manage',
+            component: () => import('@/views/manager/course/CourseIndex.vue')
+        }, {
             path: 'module_manage',
             name: 'super-module-manage',
             component: () => import('@/views/manager/module_manage/ModuleIndex.vue')
