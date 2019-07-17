@@ -241,7 +241,7 @@
         <view-xml :visible="xmlModalShow" :xml="workflowXml" @on-close="xmlModalShow = false"></view-xml>
         <b-modal v-model="deleteModal" title="删除提醒" size="lg" :showPerson="true">
             <b-container fluid>
-                <div v-if="relatedProjects.length == 0" class="modal-msg">
+                <div v-if="relatedProjects.length === 0" class="modal-msg">
                     <p class="message">是否确认删除流程。</p>
                 </div>
                 <div v-else class="modal-msg">
