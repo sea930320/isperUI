@@ -8,7 +8,7 @@ class CourseService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
-    static getCourseList(data) {
+    getCourseList(data) {
         return xhr({
             method: 'get',
             url: '/course/list',
@@ -20,7 +20,7 @@ class CourseService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
-    static getCourseFullList(data) {
+    getCourseFullList(data) {
         return xhr({
             method: 'get',
             url: '/course/full_list',
@@ -32,7 +32,7 @@ class CourseService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
-    static saveNewCourse(data) {
+    saveNewCourse(data) {
         return xhr({
             method: 'post',
             url: '/course/save_new',
