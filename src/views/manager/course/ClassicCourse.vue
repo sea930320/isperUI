@@ -67,21 +67,6 @@
                         unchecked-value
                     ></b-form-checkbox>
                 </template>
-                <template slot="id" slot-scope="row">{{ row.item.id }}</template>
-                <template slot="username" slot-scope="row">
-                    <span class="text">{{row.item.username}}</span>
-                </template>
-                <template slot="name" slot-scope="row">
-                    <span class="text">{{row.item.name}}</span>
-                </template>
-                <template slot="gender" slot-scope="row">
-                    <span class="text">{{row.item.gender}}</span>
-                </template>
-                <template slot="part" slot-scope="row">{{row.item.part ? row.item.part : ''}}</template>
-                <template
-                    slot="company"
-                    slot-scope="row"
-                >{{row.item.company ? row.item.company : ''}}</template>
                 <template slot="action" slot-scope="row">
                     <b-button
                         class="styledBtn"
@@ -89,7 +74,6 @@
                         :size="template_size"
                         variant="outline-primary"
                         @click="resetOpen(row)"
-                        v-if="isActionAllowed('code_user_management', 'code_reset_password_user')"
                     >重置密码</b-button>
                 </template>
             </b-table>
@@ -103,33 +87,6 @@
                 v-model="queryParam.page"
             ></b-pagination>
         </b-row>
-        <b-modal hide-footer centered id="resetUserPassword" ref="resetUserPassword" title="重置密码">
-            <div>
-                <b-form @submit="resetPassword" class="container pt-3">
-                    <b-form-group id="input-group-11" label-for="input-2">
-                        <b-form-input
-                            v-model="reset.password"
-                            required
-                            autocomplete="new-password"
-                            type="password"
-                            placeholder="密码"
-                        ></b-form-input>
-                    </b-form-group>
-                    <b-button
-                        class="mt-3 my-4 col-5 float-left"
-                        block
-                        type="submit"
-                        variant="primary"
-                    >保 存</b-button>
-                    <b-button
-                        class="mt-3 my-4 col-5 float-right"
-                        block
-                        variant="primary"
-                        @click="()=>{this.$refs['resetUserPassword'].hide(); reset = {id: null,password:''}}"
-                    >取 消</b-button>
-                </b-form>
-            </div>
-        </b-modal>
         <b-modal hide-footer centered size="xl" id="uploadExcel" ref="uploadExcel" title="导入人员">
             <div>
                 <div class="app-container">
@@ -255,6 +212,11 @@ export default {
                     sortable: false,
                     class: "text-center field-check"
                 },
+                id: {
+                    label: "序号",
+                    sortable: false,
+                    class: "text-center field-id"
+                },
                 courseName: {
                     label: "课堂名称",
                     sortable: false,
@@ -290,6 +252,16 @@ export default {
                     sortable: false,
                     class: "text-center field-studentCount"
                 },
+                created_by: {
+                    label: "创建人",
+                    sortable: false,
+                    class: "text-center field-created_by"
+                },
+                create_time: {
+                    label: "创建时间",
+                    sortable: false,
+                    class: "text-center field-create_time"
+                },
                 action: {
                     label: "操作",
                     sortable: false,
@@ -313,7 +285,7 @@ export default {
     },
     created() {
         this.$nextTick(() => {
-            // this.queryCompanyUsers();
+            this.getCourseFullList();
             if (!Array.prototype.equals)
                 Array.prototype.equals = function(array) {
                     if (!array) return false;
@@ -343,60 +315,28 @@ export default {
     watch: {
         queryParam: {
             handler() {
-                this.queryCompanyUsers();
+                this.getCourseFullList();
             },
             deep: true
         },
         queryDebounceParam: {
             deep: true,
             handler: _.debounce(function() {
-                this.queryCompanyUsers();
+                this.getCourseFullList();
             }, 500)
         }
     },
     methods: {
-        queryCompanyUsers() {
+        getCourseFullList() {
             this.run();
-            CourseService.queryCompanyUsers({
+            CourseService.getCourseFullList({
                 ...this.queryParam,
                 ...this.queryDebounceParam
             })
                 .then(data => {
                     this.allData.list = data.results;
-                    this.allData.positions = data.positions;
                     this.allData.total = data.paging.count;
                     this.$emit("data-ready");
-                })
-                .catch(() => {
-                    this.$emit("data-failed");
-                });
-        },
-        resetOpen(row) {
-            this.reset.id = row.item.id;
-            this.reset.password = "";
-            this.$refs["resetUserPassword"].show();
-        },
-        resetPassword(evt) {
-            evt.preventDefault();
-            this.run();
-            CourseService.resetPass(this.reset)
-                .then(res => {
-                    if (res.results === "success")
-                        CourseService.queryCompanyUsers({
-                            ...this.queryParam,
-                            ...this.queryDebounceParam
-                        })
-                            .then(data => {
-                                this.allData.list = data.results;
-                                this.allData.positions = data.positions;
-                                this.allData.total = data.paging.count;
-                                this.$emit("data-ready");
-                                this.$refs["resetUserPassword"].hide();
-                            })
-                            .catch(() => {
-                                this.$emit("data-failed");
-                            });
-                    else this.$emit("data-failed");
                 })
                 .catch(() => {
                     this.$emit("data-failed");
@@ -451,13 +391,12 @@ export default {
             })
                 .then(res => {
                     if (res.results === "success")
-                        CourseService.queryCompanyUsers({
+                        CourseService.getCourseFullList({
                             ...this.queryParam,
                             ...this.queryDebounceParam
                         })
                             .then(data => {
                                 this.allData.list = data.results;
-                                this.allData.positions = data.positions;
                                 this.allData.total = data.paging.count;
                                 this.$emit("data-ready");
                                 this.$refs["uploadExcel"].hide();
@@ -476,16 +415,15 @@ export default {
         newCourseSave(evt) {
             evt.preventDefault();
             this.run();
-            CourseService.newCourseSet(this.newItem)
+            CourseService.saveNewCourse(this.newItem)
                 .then(res => {
                     if (res.results === "success")
-                        CourseService.queryCompanyUsers({
+                        CourseService.getCourseFullList({
                             ...this.queryParam,
                             ...this.queryDebounceParam
                         })
                             .then(data => {
                                 this.allData.list = data.results;
-                                this.allData.positions = data.positions;
                                 this.allData.total = data.paging.count;
                                 this.$emit("data-ready");
                                 this.$refs["newCourse"].hide();
@@ -507,13 +445,12 @@ export default {
                 })
                     .then(res => {
                         if (res.results === "success")
-                            CourseService.queryCompanyUsers({
+                            CourseService.getCourseFullList({
                                 ...this.queryParam,
                                 ...this.queryDebounceParam
                             })
                                 .then(data => {
                                     this.allData.list = data.results;
-                                    this.allData.positions = data.positions;
                                     this.allData.total = data.paging.count;
                                     this.$emit("data-ready");
                                     this.$refs["newCourse"].hide();
@@ -535,40 +472,52 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .classic-course {
     .field-check {
-        width: 3%;
+        width: 1%;
         padding-top: 11px;
         text-align: right !important;
     }
+    .field-id {
+        width: 5%;
+        text-align: left !important;
+    }
     .field-courseName {
-        width: 9%;
+        width: 20%;
         text-align: left !important;
     }
     .field-courseSeqNum {
-        width: 10%;
+        width: 4%;
         text-align: left !important;
     }
     .field-courseSemester {
-        width: 10%;
+        width: 6%;
         text-align: left !important;
     }
     .field-teacherId {
-        width: 7%;
+        width: 8%;
         text-align: left !important;
     }
     .field-courseCount {
-        width: 18%;
+        width: 3%;
         text-align: left !important;
     }
     .field-experienceTime {
-        width: 18%;
+        width: 8%;
         text-align: left !important;
     }
     .field-studentCount {
-        width: 15%;
+        width: 5%;
+        text-align: left !important;
+    }
+    .field-created_by {
+        width: 5%;
+        text-align: left !important;
+    }
+    .field-create_time {
+        width: 5%;
         text-align: left !important;
     }
     .field-action {
-        width: 10%;
+        width: 8%;
         text-align: left !important;
     }
     .el-link.el-link--default:hover {
