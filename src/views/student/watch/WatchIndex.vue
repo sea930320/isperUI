@@ -39,7 +39,12 @@
             <b-button :size="template_size" class="ml-1 styledBtn">团队</b-button>
           </div>
           <div v-else>
-            <b-button :size="template_size" class="styledBtn" variant="outline-primary">查看</b-button>
+            <b-button
+              :size="template_size"
+              class="styledBtn"
+              variant="outline-primary"
+              :to="{name: 'business-detail', params: {bid: row.item.id}}"
+            >查看</b-button>
             <b-button
               :size="template_size"
               class="ml-1 styledBtn"
@@ -86,20 +91,20 @@
 
     <b-modal v-model="teamSelectModal" hide-header size="xl">
       <div class="mt-3">
-        <b-row v-if="watchConfig.mode == 0">
+        <b-row class="my-2" v-if="watchConfig.mode == 0">
           <b-col cols="4">
             <div class="mb-1 text-left">请选择归属课堂</div>
             <b-form-select v-model="watchConfig.selected_course" :options="courses" size="md"></b-form-select>
           </b-col>
         </b-row>
-        <b-row v-else>
+        <b-row class="my-2" v-else>
           <b-col cols="4">
             <div class="mb-1 text-left">请输入课堂名称</div>
             <b-form-input style="flex:1" v-model="watchConfig.extra_course.name"></b-form-input>
           </b-col>
           <b-col cols="4">
             <div class="mb-1 text-left">请选择指导者</div>
-            <b-form-select v-model="watchConfig.extra_course.teacher" :options="courses" size="md"></b-form-select>
+            <b-form-select v-model="watchConfig.extra_course.teacher" :options="teachers" size="md"></b-form-select>
           </b-col>
         </b-row>
         <b-row class="justify-content-md-center">
@@ -260,6 +265,7 @@ export default {
         search_team: ""
       },
       courses: [],
+      teachers: [],
       selectModeModal: false,
       teamSelectModal: false,
       watchConfig: {
@@ -373,6 +379,7 @@ export default {
   created() {
     this.$nextTick(() => {
       this.getWatchCourseList();
+      this.getTeacherList();
       this.queryCompanyUserList();
       this.queryWatchBusinessList();
     });
@@ -406,7 +413,6 @@ export default {
           _.filter(users, { checked: true }),
           "id"
         );
-        console.log(this.watchConfig.new_team.users);
       },
       deep: true
     },
@@ -490,6 +496,7 @@ export default {
       if (!this.watchConfig.selected_business) {
         return;
       }
+      this.run();
       studentService
         .businessTeamList({
           ...this.team.queryParam,
@@ -501,8 +508,11 @@ export default {
         .then(data => {
           this.team.list = data.results;
           this.team.total = data.paging.count;
+          this.$emit("data-ready");
         })
-        .catch(() => {});
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     },
     getWatchCourseList() {
       studentService
@@ -512,15 +522,21 @@ export default {
         })
         .catch(() => {});
     },
+    getTeacherList() {
+      studentService
+        .teacherList()
+        .then(data => {
+          this.teachers = data.results;
+        })
+        .catch(() => {});
+    },
     watchBusiness(business) {
       if (business.is_watching) {
         this.$toasted("Already watched");
         return;
       }
-      this.watchConfig.selected_business = business;
-      this.queryBusinessTeamList();
       this.watchConfig = {
-        selected_business: null,
+        selected_business: business,
         mode: 0, // 0: ketang mode, 1: kewai mode
         selected_course: null,
         extra_course: {
@@ -535,6 +551,7 @@ export default {
           users: []
         }
       };
+      this.queryBusinessTeamList();
       this.selectModeModal = true;
     },
     courseMode() {
@@ -548,10 +565,70 @@ export default {
       this.teamSelectModal = true;
     },
     teamSelect(items) {
-      if (items.length > 0) return;
+      if (items.length == 0) return;
       this.watchConfig.selected_team = items[0];
     },
-    watchStart() {}
+    validate() {
+      if (this.watchConfig.mode == 0) {
+        if (!this.watchConfig.selected_course) {
+          this.$toasted.error("Please select Course");
+          return;
+        }
+        if (
+          this.watchConfig.team_mode == 0 &&
+          !this.watchConfig.selected_team
+        ) {
+          this.$toasted.error("Please select Team");
+          return;
+        }
+        if (this.watchConfig.team_mode == 1) {
+          if (this.watchConfig.new_team.name.trim() == "") {
+            this.$toasted.error("Please Input Team Name");
+            return;
+          } else if (this.watchConfig.new_team.users.length == 0) {
+            this.$toasted.error("Please Select at least one user");
+            return;
+          }
+        }
+      } else {
+        if (!this.watchConfig.extra_course.teacher) {
+          this.$toasted.error("Please select Teacher");
+          return;
+        }
+        if (
+          this.watchConfig.team_mode == 0 &&
+          !this.watchConfig.selected_team
+        ) {
+          this.$toasted.error("Please select Team");
+          return;
+        }
+        if (this.watchConfig.team_mode == 1) {
+          if (this.watchConfig.new_team.name.trim() == "") {
+            this.$toasted.error("Please Input Team Name");
+            return;
+          } else if (this.watchConfig.new_team.users.length == 0) {
+            this.$toasted.error("Please Select at least one user");
+            return;
+          }
+        }
+      }
+      return true;
+    },
+    watchStart() {
+      if (!this.validate()) return;
+      this.run();
+      studentService
+        .watchStart({
+          watch_config: JSON.stringify(this.watchConfig)
+        })
+        .then(() => {
+          this.queryWatchBusinessList();
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    }
   }
 };
 </script>

@@ -212,6 +212,10 @@ const routes = [{
             name: 'done-detail',
             component: () => import('@/views/business/done/Detail.vue')
         }, {
+            path: '/business/detail/:bid',
+            name: 'business-detail',
+            component: () => import('@/views/business/Detail.vue')
+        }, {
             path: 'progress',
             component: () => import('@/views/business/progress/ProgressIndex.vue'),
             children: [
