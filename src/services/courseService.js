@@ -99,6 +99,42 @@ class CourseService {
             params: data
         })
     }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getInitAttentionData(data) {
+        return xhr({
+            method: 'get',
+            url: '/course/get_init_attention_data',
+            params: data
+        })
+    }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    sendRequestData(data) {
+        return xhr({
+            method: 'post',
+            url: '/course/send_request_data',
+            params: data
+        })
+    }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    sendCancelData(data) {
+        return xhr({
+            method: 'post',
+            url: '/course/send_cancel_data',
+            params: data
+        })
+    }
 
 }
 
