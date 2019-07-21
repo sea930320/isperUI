@@ -1,5 +1,6 @@
 <template>
   <div class="qa-step5 pt-5">
+    <loading v-if="isRunning"></loading>
     <b-row class="justify-content-md-center">
       <b-col cols="2" class="text-right">
         <label>End Quotions:</label>
@@ -14,9 +15,11 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import businessService from "@/services/businessService";
+import Loading from "@/components/loading/Loading";
 
 export default {
-  components: {},
+  components: { Loading },
   data() {
     return {
       end_quote: ""
@@ -39,7 +42,7 @@ export default {
   watch: {
     survey: {
       handler: function(val) {
-        this.end_quote = val.end_quote;
+        this.end_quote = val.end_quote || "";
       },
       deep: true
     }
@@ -47,15 +50,38 @@ export default {
   mounted() {},
   methods: {
     ...mapActions(["setSurvey"]),
-    init() {},
+    init() {
+      this.end_quote = this.survey.end_quote || "";
+    },
     saveEndQuotion() {
-      let survey = {
-        ...this.survey,
-        ...{
+      if (!this.end_quote || this.end_quote.trim() == "") {
+        this.$toasted.error("Please type quotion");
+        return;
+      }
+      this.run();
+      businessService
+        .createOrUpdateSurvey({
+          business_id: this.$route.params.bid,
+          node_id: this.$route.params.nid,
           end_quote: this.end_quote
-        }
-      };
-      this.setSurvey(survey);
+        })
+        .then(() => {
+          businessService
+            .getSurvey({
+              business_id: this.$route.params.bid,
+              node_id: this.$route.params.nid
+            })
+            .then(data => {
+              this.setSurvey(data);
+              this.$emit("data-ready");
+            })
+            .catch(() => {
+              this.$emit("data-failed");
+            });
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     }
   }
 };

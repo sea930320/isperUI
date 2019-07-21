@@ -580,6 +580,62 @@ class BusinessService {
             params: data
         })
     }
+
+    setSurveyBlankQuestions(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/setBlankQuestions',
+            params: data
+        })
+    }
+
+    setSurveyNormalQuestions(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/setNormalQuestions',
+            params: data
+        })
+    }
+
+    publishSurvey(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/publish',
+            params: data
+        })
+    }
+
+    surveyAnswer(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/survey/answer',
+            params: data
+        })
+    }
+
+    surveyPublicList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/survey/public/list',
+            params: data
+        })
+    }
+
+    surveyPublicDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/survey/public/detail',
+            params: data
+        })
+    }
+
+    surveyReport(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/survey/report',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

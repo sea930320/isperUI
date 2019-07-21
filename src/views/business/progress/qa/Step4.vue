@@ -1,5 +1,6 @@
 <template>
   <div class="qa-step4 pt-5">
+    <loading v-if="isRunning"></loading>
     <div
       class="w-60 mx-auto mb-3"
       v-for="(question, index) in normal_questions"
@@ -28,14 +29,14 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import Loading from "@/components/loading/Loading";
+import businessService from "@/services/businessService";
 import { VueEditor } from "vue2-editor";
 
 export default {
-  components: { VueEditor },
+  components: { VueEditor, Loading },
   data() {
-    return {
-      normal_questions: []
-    };
+    return {};
   },
   created() {
     this.$nextTick(() => {
@@ -47,18 +48,14 @@ export default {
     survey() {
       return this.$store.state.meta.survey;
     },
+    normal_questions() {
+      return this.survey.normal_questions || [];
+    },
     currentRoleAllocation() {
       return this.$store.state.meta.currentRoleAllocation;
     }
   },
-  watch: {
-    survey: {
-      handler: function(val) {
-        this.normal_questions = val.normal_questions || [];
-      },
-      deep: true
-    }
-  },
+  watch: {},
   mounted() {},
   methods: {
     ...mapActions(["setSurvey"]),
@@ -83,17 +80,35 @@ export default {
         this.$toasted.error("Please fill all questions");
         return;
       }
-      let survey = {
-        ...this.survey,
-        ...{
-          normal_questions: this.normal_questions
-        }
-      };
-      if (survey.normal_questions.length == 0) {
+      if (this.normal_questions.length == 0) {
         this.$toasted.error("Please add at least one question");
         return;
       }
-      this.setSurvey(survey);
+      this.run();
+      businessService
+        .setSurveyNormalQuestions({
+          business_id: this.$route.params.bid,
+          node_id: this.$route.params.nid,
+          survey_id: this.survey.id,
+          normal_questions: JSON.stringify(this.normal_questions)
+        })
+        .then(() => {
+          businessService
+            .getSurvey({
+              business_id: this.$route.params.bid,
+              node_id: this.$route.params.nid
+            })
+            .then(data => {
+              this.setSurvey(data);
+              this.$emit("data-ready");
+            })
+            .catch(() => {
+              this.$emit("data-failed");
+            });
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     }
   }
 };

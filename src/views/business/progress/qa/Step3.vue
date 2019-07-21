@@ -1,5 +1,6 @@
 <template>
   <div class="qa-step3 pt-5">
+    <loading v-if="isRunning"></loading>
     <div
       class="w-60 mx-auto mb-3"
       v-for="(question, index) in blank_questions"
@@ -77,13 +78,14 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import Loading from "@/components/loading/Loading";
+import businessService from "@/services/businessService";
 import { VueEditor } from "vue2-editor";
 
 export default {
-  components: { VueEditor },
+  components: { VueEditor, Loading },
   data() {
     return {
-      blank_questions: [],
       length_input_model: false,
       length_model_index: -1,
       blank_lengths: 0
@@ -99,17 +101,14 @@ export default {
     survey() {
       return this.$store.state.meta.survey;
     },
+    blank_questions() {
+      return this.survey.blank_questions || [];
+    },
     currentRoleAllocation() {
       return this.$store.state.meta.currentRoleAllocation;
     }
   },
   watch: {
-    survey: {
-      handler: function(val) {
-        this.blank_questions = val.blank_questions || [];
-      },
-      deep: true
-    },
     length_input_model(val) {
       if (!val) {
         this.length_model_index = -1;
@@ -179,17 +178,35 @@ export default {
         this.$toasted.error("Please fill all questions");
         return;
       }
-      let survey = {
-        ...this.survey,
-        ...{
-          blank_questions: this.blank_questions
-        }
-      };
-      if (survey.blank_questions.length == 0) {
+      if (this.blank_questions.length == 0) {
         this.$toasted.error("Please add at least one question");
         return;
       }
-      this.setSurvey(survey);
+      this.run();
+      businessService
+        .setSurveyBlankQuestions({
+          business_id: this.$route.params.bid,
+          node_id: this.$route.params.nid,
+          survey_id: this.survey.id,
+          blank_questions: JSON.stringify(this.blank_questions)
+        })
+        .then(() => {
+          businessService
+            .getSurvey({
+              business_id: this.$route.params.bid,
+              node_id: this.$route.params.nid
+            })
+            .then(data => {
+              this.setSurvey(data);
+              this.$emit("data-ready");
+            })
+            .catch(() => {
+              this.$emit("data-failed");
+            });
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     }
   }
 };

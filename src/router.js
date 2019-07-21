@@ -55,6 +55,16 @@ const routes = [{
     component: () => import('@/views/system-set/advertising/AdvertisingDetail.vue')
 },
 {
+    path: '/surveys',
+    name: 'surveys',
+    component: () => import('@/views/survey/SurveyList.vue')
+},
+{
+    path: '/survey/:id',
+    name: 'survey_qa',
+    component: () => import('@/views/survey/TakeSurvey.vue')
+},
+{
     path: '/manager', // 管理员主页
     meta: {
         requiresAuth: true
@@ -202,6 +212,10 @@ const routes = [{
             name: 'done-detail',
             component: () => import('@/views/business/done/Detail.vue')
         }, {
+            path: '/business/detail/:bid',
+            name: 'business-detail',
+            component: () => import('@/views/business/Detail.vue')
+        }, {
             path: 'progress',
             component: () => import('@/views/business/progress/ProgressIndex.vue'),
             children: [
@@ -222,6 +236,24 @@ const routes = [{
             path: '/moreTeammates',
             name: 'business-moreTeammates',
             component: () => import('@/views/personal-center/MoreTeammates.vue')
+        }
+    ]
+},
+{
+    path: '/student',
+    meta: {
+        requiresAuth: true
+    },
+    component: () => import('@/views/layout/Student.vue'),
+    children: [
+        ...personalCenterRoutes,
+        {
+            path: '',
+            redirect: 'business-watch'
+        }, {
+            path: 'business-watch',
+            name: 'student-watch',
+            component: () => import('@/views/student/watch/WatchIndex.vue')
         }
     ]
 }

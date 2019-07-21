@@ -9956,6 +9956,13 @@ vue-cookie@^1.1.4:
   dependencies:
     tiny-cookie "^1.0"
 
+vue-custom-inputs@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/vue-custom-inputs/-/vue-custom-inputs-1.0.4.tgz#1ab7c752a6905e2d9413d748fe65d77c67060cb3"
+  integrity sha1-GrfHUqaQXi2UE9dI/mXXfGcGDLM=
+  dependencies:
+    vue "^2.1.0"
+
 vue-datetime@^1.0.0-beta.10:
   version "1.0.0-beta.10"
   resolved "https://registry.yarnpkg.com/vue-datetime/-/vue-datetime-1.0.0-beta.10.tgz#788a1c2deefa3e14fbf549373ec00ebde707596a"
@@ -10148,7 +10155,7 @@ vue2-transitions@^0.2.3:
   resolved "https://registry.yarnpkg.com/vue2-transitions/-/vue2-transitions-0.2.3.tgz#69c9d75b1db05f231b80980c03459d68490ba27d"
   integrity sha512-Ou5x74AOQbM8JjZV8pIssFFqavvj53QzrEEUr5QnElUYb1ZizPwaUJo0ZqmLPqjwPae7ON4SG8U2cSTI4tHKLg==
 
-vue@^2.3.3, vue@^2.5.13, vue@^2.5.16, vue@^2.5.21, vue@^2.6.6:
+vue@^2.1.0, vue@^2.3.3, vue@^2.5.13, vue@^2.5.16, vue@^2.5.21, vue@^2.6.6:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==

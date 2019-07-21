@@ -51,7 +51,7 @@ export function gender(val) {
   } else if (val === 2) {
     return '女'
   } else {
-    return ''
+    return '男'
   }
 }
 
