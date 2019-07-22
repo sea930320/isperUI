@@ -61,6 +61,32 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    myTeamList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/team/my-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    availableTeamList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/team/available-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     businessTeamDetail(data) {
         return xhr({
             method: 'get',
@@ -128,6 +154,19 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    requestAssistUpdate(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/request-assist/update',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     messageList(data) {
         return xhr({
             method: 'get',
@@ -145,6 +184,97 @@ class StudentService {
         return xhr({
             method: 'post',
             url: '/student/send-msg',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    todoList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/todo-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    todoListUpdate(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/todo-list/update',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    todoListAdd(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/todo-list/add',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    todoListRemove(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/todo-list/remove',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    teamUserList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/team/users',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    addTeamUser(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/add-user',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    removeTeamUser(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/remove-user',
             params: data
         })
     }

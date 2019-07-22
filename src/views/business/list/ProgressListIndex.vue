@@ -37,6 +37,12 @@
           >办理</b-button>
           <b-button
             :size="template_size"
+            class="styledBtn"
+            v-if="userInfo.position && userInfo.position.id && row.item.status==2"
+            :to="'/student/enter-business/' + row.item.id"
+          >课堂讨论组</b-button>
+          <b-button
+            :size="template_size"
             class="ml-1"
             variant="danger"
             @click="removeBusiness(row.item)"
@@ -87,7 +93,7 @@ export default {
         name: {
           label: "业务名称",
           sortable: false,
-          class: "text-center field-name w-20"
+          class: "text-center field-name w-15"
         },
         office_type: {
           label: "事务类型",
@@ -102,7 +108,7 @@ export default {
         creator: {
           label: "申请人",
           sortable: false,
-          class: "text-center field-creator w-15"
+          class: "text-center field-creator w-10"
         },
         status: {
           label: "状态",
@@ -112,7 +118,7 @@ export default {
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-action w-10"
+          class: "text-center field-action w-20"
         }
       },
       queryParam: {

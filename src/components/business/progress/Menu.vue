@@ -124,7 +124,7 @@
         <b-nav-item
           v-if="userInfo.position && userInfo.position.id"
           :to="'/student/enter-business/' + $route.params.bid"
-        >进入业务</b-nav-item>
+        >课堂讨论组</b-nav-item>
         <b-nav-item to="/business/list/progress">退出业务</b-nav-item>
       </template>
     </TopHeader>

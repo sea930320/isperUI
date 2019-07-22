@@ -262,6 +262,10 @@ const routes = [{
             path: 'enter-business/:bid',
             name: 'enter-business',
             component: () => import('@/views/student/watch/EnterBusiness.vue')
+        }, {
+            path: 'team-list',
+            name: 'team-list',
+            component: () => import('@/views/student/team/TeamList.vue')
         }
     ]
 }

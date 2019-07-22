@@ -5,7 +5,7 @@
         <b-nav-item v-if="[9].includes(userInfo.role)" to="/student/business-watch">
           <icon name="list" class="tabIcon"></icon>业务关注
         </b-nav-item>
-        <b-nav-item v-if="[9].includes(userInfo.role)" to="/student/team">
+        <b-nav-item v-if="[9].includes(userInfo.role)" to="/student/team-list">
           <icon name="box-open" class="tabIcon"></icon>团队管理
         </b-nav-item>
       </template>
