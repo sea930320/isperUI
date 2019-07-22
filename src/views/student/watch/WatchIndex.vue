@@ -35,8 +35,17 @@
         <template slot="status" slot-scope="row">{{row.item.status | businessStatus}}</template>
         <template slot="action" slot-scope="row">
           <div v-if="row.item.is_watching">
-            <b-button :size="template_size" class="styledBtn" variant="outline-primary">进入业务</b-button>
-            <b-button :size="template_size" class="ml-1 styledBtn">团队</b-button>
+            <b-button
+              :size="template_size"
+              class="styledBtn"
+              variant="outline-primary"
+              @click="enterBusiness(row.item)"
+            >进入业务</b-button>
+            <b-button
+              :size="template_size"
+              class="ml-1 styledBtn"
+              @click="showTeamDetail(row.item)"
+            >团队</b-button>
           </div>
           <div v-else>
             <b-button
@@ -99,7 +108,7 @@
         </b-row>
         <b-row class="my-2" v-else>
           <b-col cols="4">
-            <div class="mb-1 text-left">请输入课堂名称</div>
+            <div class="mb-1 text-left">请输入课外学习主题</div>
             <b-form-input style="flex:1" v-model="watchConfig.extra_course.name"></b-form-input>
           </b-col>
           <b-col cols="4">
@@ -207,18 +216,20 @@
         <b-button class="styledBtn float-center mr-2" @click="watchStart()">保存</b-button>
       </div>
     </b-modal>
+    <team-detail></team-detail>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
+import TeamDetail from "@/components/student/TeamDetail";
 import _ from "lodash";
 import studentService from "@/services/studentService";
 import { businessStatus, gender } from "@/filters/fun";
 
 export default {
-  components: { Loading },
+  components: { Loading, TeamDetail },
   filters: { businessStatus, gender },
   data() {
     return {
@@ -622,12 +633,22 @@ export default {
           watch_config: JSON.stringify(this.watchConfig)
         })
         .then(() => {
+          this.$toasted.success("成功");
           this.queryWatchBusinessList();
+          this.teamSelectModal = false;
           this.$emit("data-ready");
         })
         .catch(() => {
           this.$emit("data-failed");
         });
+    },
+    showTeamDetail(business) {
+      this.$emit("openStudentTeamDetailModal", {
+        id: business.id
+      });
+    },
+    enterBusiness(business) {
+      this.$router.push("/student/enter-business/" + business.id);
     }
   }
 };

@@ -254,6 +254,10 @@ const routes = [{
             path: 'business-watch',
             name: 'student-watch',
             component: () => import('@/views/student/watch/WatchIndex.vue')
+        }, {
+            path: 'enter-business/:bid',
+            name: 'enter-business',
+            component: () => import('@/views/student/watch/EnterBusiness.vue')
         }
     ]
 }

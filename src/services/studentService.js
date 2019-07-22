@@ -61,6 +61,19 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    businessTeamDetail(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/team/detail',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     teacherList(data) {
         return xhr({
             method: 'get',
@@ -82,6 +95,59 @@ class StudentService {
         })
     }
 
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    requestAssist(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/request-assist',
+            params: data
+        })
+    }
+
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    requestAssistList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/request-assist-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    messageList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/msg-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    sendMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/send-msg',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

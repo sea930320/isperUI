@@ -121,6 +121,10 @@
           v-if="metaInfo && metaInfo.process_type == 1"
           @click="showProjectDocsModal = true"
         >项目素材</b-nav-item>
+        <b-nav-item
+          v-if="userInfo.position && userInfo.position.id"
+          :to="'/student/enter-business/' + $route.params.bid"
+        >进入业务</b-nav-item>
         <b-nav-item to="/business/list/progress">退出业务</b-nav-item>
       </template>
     </TopHeader>
