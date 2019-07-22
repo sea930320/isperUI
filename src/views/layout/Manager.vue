@@ -20,7 +20,7 @@
                 <b-nav-item v-if="[1,2,3,6,7].includes(userInfo.role)" to="/manager/user/0">
                     <icon name="user-cog" class="tabIcon"></icon>用户管理
                 </b-nav-item>
-                <b-nav-item v-if="userInfo.role === 3 && userInfo.companyType_id === 7" to="/manager/course">
+                <b-nav-item v-if="userInfo.role === 3 && userInfo.companyType_name === '学校'" to="/manager/course">
                     <icon name="university" class="tabIcon"></icon>课堂管理
                 </b-nav-item>
                 <b-nav-item

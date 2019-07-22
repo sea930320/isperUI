@@ -117,7 +117,7 @@
 
     <b-modal v-model="modalShow" title="查看详情" size="lg" :showPerson="true" :hide-footer="true">
       <div class="result-detail-wrapper text-left">
-        <div class="result-detail-content" v-if="detail.type == 1">
+        <div class="result-detail-content" v-if="detail.type === 1">
           <ul>
             <li v-for="(record, index) in detail.data" :key="index">
               <div class="time text_blue">

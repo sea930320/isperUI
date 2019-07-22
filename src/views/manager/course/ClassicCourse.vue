@@ -2,7 +2,6 @@
     <div class="classic-course">
         <loading v-if="isRunning"></loading>
         <b-row class="cardDiv">
-            <!-- <b-col lg="2" md="6" sm="12" style="line-height: 32px;">单位用户管理</b-col> -->
             <b-col lg="5" md="6" sm="12">
                 <b-input-group :size="template_size">
                     <b-input-group-prepend>
@@ -44,7 +43,7 @@
                         class="styledBtn fontedBtn"
                         :size="template_size"
                         variant="outline-primary"
-                        @click="this.deleteUsers"
+                        @click="deleteCourse"
                     >删除课堂</b-button>
                 </b-button-group>
             </b-col>
@@ -70,11 +69,18 @@
                 <template slot="action" slot-scope="row">
                     <b-button
                         class="styledBtn"
-                        :key="row.item.id"
+                        :key="'a'+row.item.id"
                         :size="template_size"
                         variant="outline-primary"
-                        @click="resetOpen(row)"
-                    >重置密码</b-button>
+                        @click="editOpen(row)"
+                    >编 辑</b-button>
+                    <b-button
+                        class="styledBtn"
+                        :key="'b'+row.item.id"
+                        :size="template_size"
+                        variant="outline-primary"
+                        @click="teacherEditOpen(row)"
+                    >关联指导者</b-button>
                 </template>
             </b-table>
         </div>
@@ -87,13 +93,13 @@
                 v-model="queryParam.page"
             ></b-pagination>
         </b-row>
-        <b-modal hide-footer centered size="xl" id="uploadExcel" ref="uploadExcel" title="导入人员">
+        <b-modal hide-footer centered size="xl" id="uploadExcel" ref="uploadExcel" title="导入课堂">
             <div>
                 <div class="app-container">
                     <div class="row justify-content-between">
                         <el-link
                             style="margin-left: 20px; color: #409EFF;font-size: 18px;"
-                            href="/api/userManager/sampleUserExcel"
+                            href="/api/course/sampleCourseExcel"
                             :underline="false"
                             download
                         >导入模板下载</el-link>
@@ -122,7 +128,7 @@
                 </div>
             </div>
         </b-modal>
-        <b-modal hide-footer centered id="newCourse" ref="newCourse" title="新增用户">
+        <b-modal hide-footer centered id="newCourse" ref="newCourse" title="新建课堂">
             <div>
                 <b-form @submit="newCourseSave" class="container pt-3">
                     <b-form-group id="input-group-7" label-for="name">
@@ -167,6 +173,42 @@
                 </b-form>
             </div>
         </b-modal>
+        <b-modal hide-footer centered id="editCourse" ref="editCourse" title="编辑课堂">
+            <div>
+                <b-form @submit="editCourseSave" class="container pt-3">
+                    <b-form-group id="editCourse-8" label-for="input-2">
+                        <b-form-input v-model="editItem.courseName" required placeholder="课程名"></b-form-input>
+                    </b-form-group>
+                    <b-form-group id="editCourse-12" label-for="input-2" class="float-left w-30">
+                        <b-form-input v-model="editItem.courseSemester" required placeholder="开课学期"></b-form-input>
+                    </b-form-group>
+                    <b-form-group id="editCourse-15" label-for="input-2" class="float-left w-30" style="margin-left: 5%">
+                        <b-form-input v-model="editItem.courseCount" required placeholder="课时"></b-form-input>
+                    </b-form-group>
+                    <b-form-group id="editCourse-16" label-for="input-2" class="float-left w-30" style="margin-left: 5%">
+                        <b-form-input v-model="editItem.experienceTime" required placeholder="实验学时"></b-form-input>
+                    </b-form-group>
+                    <b-button
+                        class="mt-3 my-4 col-5 float-left"
+                        block
+                        type="submit"
+                        variant="primary"
+                    >保 存</b-button>
+                    <b-button
+                        class="mt-3 my-4 col-5 float-right"
+                        block
+                        variant="primary"
+                        @click="this.$refs['editCourse'].hide()"
+                    >取 消</b-button>
+                </b-form>
+            </div>
+        </b-modal>
+        <b-modal hide-footer centered id="teacherEditCourse" ref="teacherEditCourse" title="关联指导者">
+            <div>
+                <b-form-select v-model="selectedTeacher" :options="teacherList"></b-form-select>
+                <b-button variant="success" @click="teacherChangeSave" class="mt-5" :disabled="selectedTeacher === null">确&emsp;定</b-button>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -191,10 +233,6 @@ export default {
             tableData: [],
             tableHeader: [],
             excelDataError: false,
-            reset: {
-                id: null,
-                password: ""
-            },
             newItem: {
                 courseId: '',
                 courseName: '',
@@ -205,6 +243,13 @@ export default {
                 courseCount: '',
                 experienceTime: '',
                 studentCount: '',
+            },
+            editItem: {
+                id: null,
+                courseName: '',
+                courseSemester: '',
+                courseCount: '',
+                experienceTime: '',
             },
             columns: {
                 check: {
@@ -217,10 +262,10 @@ export default {
                     sortable: false,
                     class: "text-center field-id"
                 },
-                courseName: {
+                courseFullName: {
                     label: "课堂名称",
                     sortable: false,
-                    class: "text-center field-courseName"
+                    class: "text-center field-courseFullName"
                 },
                 courseSeqNum: {
                     label: "课序号",
@@ -278,9 +323,11 @@ export default {
             },
             allData: {
                 list: [],
-                positions: [],
                 total: 0
-            }
+            },
+            selectedId: null,
+            selectedTeacher: null,
+            teacherList: [],
         };
     },
     created() {
@@ -345,13 +392,15 @@ export default {
         handleSuccess({ results, header }) {
             if (
                 !header.equals([
-                    "姓名",
-                    "用户名",
-                    "性别",
-                    "手机号",
-                    "邮箱",
-                    "部门",
-                    "职务"
+                    "课程号",
+                    "课程名",
+                    "课序号",
+                    "开课学期",
+                    "任课老师",
+                    "工号",
+                    "课时",
+                    "实验学时",
+                    "学生人数",
                 ])
             ) {
                 this.$message.error("文件格式不符合。");
@@ -371,13 +420,15 @@ export default {
             let excelData = [];
             for (let id in this.tableData) {
                 excelData.push({
-                    name: this.tableData[id].姓名 === undefined ? this.cancelExcel('姓名') : this.tableData[id].姓名,
-                    username: this.tableData[id].用户名 === undefined ? this.cancelExcel('用户名') : this.tableData[id].用户名,
-                    gender: this.tableData[id].性别 === undefined ? this.cancelExcel('性别') : this.tableData[id].性别,
-                    phone: this.tableData[id].手机号 === undefined ? this.cancelExcel('手机号') : this.tableData[id].手机号,
-                    email: this.tableData[id].邮箱 === undefined ? this.cancelExcel('邮箱') : this.tableData[id].邮箱,
-                    part: this.tableData[id].部门 === undefined ? '' : this.tableData[id].部门,
-                    position: this.tableData[id].职务 === undefined ? '' : this.tableData[id].职务
+                    courseId: this.tableData[id].课程号 === undefined ? this.cancelExcel('课程号') : this.tableData[id].课程号,
+                    courseName: this.tableData[id].课程名 === undefined ? this.cancelExcel('课程名') : this.tableData[id].课程名,
+                    courseSeqNum: this.tableData[id].课序号 === undefined ? this.cancelExcel('课序号') : this.tableData[id].课序号,
+                    courseSemester: this.tableData[id].开课学期 === undefined ? this.cancelExcel('开课学期') : this.tableData[id].开课学期,
+                    teacherName: this.tableData[id].任课老师 === undefined ? this.cancelExcel('任课老师') : this.tableData[id].任课老师,
+                    teacherId: this.tableData[id].工号 === undefined ? this.cancelExcel('工号') : this.tableData[id].工号,
+                    courseCount: this.tableData[id].课时 === undefined ? this.cancelExcel('课时') : this.tableData[id].课时,
+                    experienceTime: this.tableData[id].实验学时 === undefined ? this.cancelExcel('实验学时') : this.tableData[id].实验学时,
+                    studentCount: this.tableData[id].学生人数 === undefined ? this.cancelExcel('学生人数') : this.tableData[id].学生人数,
                 });
             }
             if (this.excelDataError) {
@@ -437,10 +488,10 @@ export default {
                     this.$emit("data-failed");
                 });
         },
-        deleteUsers() {
-            if (confirm("您确定要删除该用户吗？")) {
+        deleteCourse() {
+            if (this.selected.length !== 0 && confirm("您确定要删除该课堂吗？")) {
                 this.run();
-                CourseService.deleteUsers({
+                CourseService.deleteCourse({
                     ids: JSON.stringify(this.selected)
                 })
                     .then(res => {
@@ -453,7 +504,6 @@ export default {
                                     this.allData.list = data.results;
                                     this.allData.total = data.paging.count;
                                     this.$emit("data-ready");
-                                    this.$refs["newCourse"].hide();
                                 })
                                 .catch(() => {
                                     this.$emit("data-failed");
@@ -464,6 +514,80 @@ export default {
                         this.$emit("data-failed");
                     });
             }
+        },
+        editOpen(row) {
+            this.$refs['editCourse'].show();
+            this.editItem={
+                id: row.item.id,
+                courseName: row.item.courseName,
+                courseSemester: row.item.courseSemester,
+                courseCount: row.item.courseCount,
+                experienceTime: row.item.experienceTime,
+            };
+        },
+        teacherEditOpen(row) {
+            this.selectedId=row.item.id;
+            this.run();
+            CourseService.getTeacherList({})
+                .then(res => {
+                    this.selectedTeacher = null;
+                    this.teacherList = res.results;
+                    this.$emit("data-ready");
+                    this.$refs['teacherEditCourse'].show();
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
+        },
+        editCourseSave(evt) {
+            evt.preventDefault();
+            this.run();
+            CourseService.saveEditCourse(this.editItem)
+                .then(res => {
+                    if (res.results === "success")
+                        CourseService.getCourseFullList({
+                            ...this.queryParam,
+                            ...this.queryDebounceParam
+                        })
+                            .then(data => {
+                                this.allData.list = data.results;
+                                this.allData.total = data.paging.count;
+                                this.$emit("data-ready");
+                                this.$refs["editCourse"].hide();
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    else this.$emit("data-failed");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
+        },
+        teacherChangeSave(evt) {
+            evt.preventDefault();
+            this.run();
+            CourseService.teacherChangeSave({id: this.selectedId, teacher: this.selectedTeacher})
+                .then(res => {
+                    if (res.results === "success")
+                        CourseService.getCourseFullList({
+                            ...this.queryParam,
+                            ...this.queryDebounceParam
+                        })
+                            .then(data => {
+                                this.allData.list = data.results;
+                                this.allData.total = data.paging.count;
+                                this.$emit("data-ready");
+                                this.$refs["teacherEditCourse"].hide();
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    else this.$emit("data-failed");
+                })
+                .catch(() => {
+                    this.$emit("data-failed");
+                });
         }
     }
 };
@@ -480,7 +604,7 @@ export default {
         width: 5%;
         text-align: left !important;
     }
-    .field-courseName {
+    .field-courseFullName {
         width: 20%;
         text-align: left !important;
     }

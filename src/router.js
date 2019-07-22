@@ -158,6 +158,10 @@ const routes = [{
             path: '/moreTeammates',
             name: 'manager-moreTeammates',
             component: () => import('@/views/personal-center/MoreTeammates.vue')
+        }, {
+            path: '/attentionCheck',
+            name: 'request-check',
+            component: () => import('@/views/personal-center/AttentionCheck.vue')
         }
     ]
 },
