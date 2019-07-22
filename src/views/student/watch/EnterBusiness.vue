@@ -255,7 +255,9 @@ export default {
           this.$emit("data-failed");
         });
     },
-    acceptRequest(request) {},
+    acceptRequest(request) {
+      console.log(request)
+    },
     rejectRequest(request) {}
   }
 };
