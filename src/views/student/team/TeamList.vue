@@ -314,7 +314,7 @@ export default {
             id: team.id,
             student_id: this.userInfo.id
           })
-          .then(data => {
+          .then(() => {
             this.$emit("data-ready");
             this.init();
           })
@@ -333,7 +333,7 @@ export default {
             id: team.id,
             student_id: user.id
           })
-          .then(data => {
+          .then(() => {
             this.$emit("data-ready");
           })
           .catch(() => {
@@ -346,7 +346,7 @@ export default {
             id: team.id,
             student_id: user.id
           })
-          .then(data => {
+          .then(() => {
             this.$emit("data-ready");
           })
           .catch(() => {
@@ -361,7 +361,7 @@ export default {
           id: team.id,
           student_id: this.userInfo.id
         })
-        .then(data => {
+        .then(() => {
           this.$emit("data-ready");
           this.init();
         })
