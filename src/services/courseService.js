@@ -116,6 +116,18 @@ class CourseService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    checkAttention(data) {
+        return xhr({
+            method: 'get',
+            url: '/course/check_attention',
+            params: data
+        })
+    }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     sendRequestData(data) {
         return xhr({
             method: 'post',

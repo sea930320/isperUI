@@ -4,7 +4,8 @@
         <div @submit.prevent="updateInfo" class="cardDiv">
             <b-list-group>
                 <b-list-group-item v-for="item in message"
-                    :to="parseInt(item.moreTeammates) ? {name: item.link, params: { messageId: item }} : item.link" :key="item.id">
+                    :to="(parseInt(item.moreTeammates) || parseInt(item.attentionCheck)) ? {name: item.link, params: { messageId: item }}
+                     : item.link" :key="item.id">
                     {{
                         parseInt(item.moreTeammates) ?
                             item.businessInfo.id+' '+item.businessInfo.title+' : 需要补充参加业务的人 启动人 : '+item.businessInfo.created_by+' 启动日期 : '+item.businessInfo.created_time

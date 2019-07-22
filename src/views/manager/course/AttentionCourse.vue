@@ -219,6 +219,7 @@
                     .sendRequestData(this.requestData)
                     .then(data => {
                         if (data.results === 'success') {
+                            this.queryDataList();
                             this.$refs['requestModal'].hide();
                             this.$emit("data-ready");
                         } else
