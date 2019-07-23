@@ -76,11 +76,25 @@
                     >编 辑</b-button>
                     <b-button
                         class="styledBtn"
+                        :key="'c'+row.item.id"
+                        :size="template_size"
+                        variant="outline-primary"
+                        @click="detailOpen(row)"
+                    >查 看</b-button>
+                    <b-button
+                        class="styledBtn"
                         :key="'b'+row.item.id"
                         :size="template_size"
                         variant="outline-primary"
                         @click="teacherEditOpen(row)"
                     >关联指导者</b-button>
+                    <b-button
+                            class="styledBtn"
+                            :key="'d'+row.item.id"
+                            :size="template_size"
+                            variant="outline-primary"
+                            @click="teamOpen(row)"
+                    >团队管理</b-button>
                 </template>
             </b-table>
         </div>
@@ -209,6 +223,114 @@
                 <b-button variant="success" @click="teacherChangeSave" class="mt-5" :disabled="selectedTeacher === null">确&emsp;定</b-button>
             </div>
         </b-modal>
+        <b-modal size="lg" hide-footer centered id="detailView" ref="detailView" title="查看详情">
+            <b-container class="modalContainer" v-if="selectedRow">
+                <b-row>
+                    <b-col lg="3" md="4" sm="4" class="text-left">
+                        序号：{{selectedRow.id}}
+                    </b-col>
+                    <b-col lg="9" md="4" sm="4" class="text-left">
+                        课堂名称：{{selectedRow.courseFullName}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col lg="3" md="4" sm="12" class="text-left">
+                        课序号：{{selectedRow.courseSeqNum}}
+                    </b-col>
+                    <b-col lg="3" md="12" sm="12" class="text-left">
+                        课时：{{selectedRow.courseCount}}
+                    </b-col>
+                    <b-col md="3" sm="12" class="text-left">
+                        开课学期：{{selectedRow.courseSemester}}
+                    </b-col>
+                    <b-col md="3" sm="12" class="text-left">
+                        学生人数：{{selectedRow.studentCount}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col md="6" sm="12" class="text-left">
+                        工号：{{selectedRow.teacherId}}
+                    </b-col>
+                    <b-col md="6" sm="12" class="text-left">
+                        实验学时：{{selectedRow.experienceTime}}
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col md="6" sm="12" class="text-left">
+                        创建人：{{selectedRow.created_by}}
+                    </b-col>
+                    <b-col md="6" sm="12" class="text-left">
+                        创建时间：{{selectedRow.create_time}}
+                    </b-col>
+                </b-row>
+                <b-row class="justify-content-center mt-5" style="font-size: 20px;">
+                    业 务 清 单
+                </b-row>
+                <b-row class="my-2">
+                    <b-col md="2" sm="12">
+                        业务序号
+                    </b-col>
+                    <b-col md="5" sm="12">
+                        业务名称
+                    </b-col>
+                    <b-col md="5" sm="12">
+                        业务单位
+                    </b-col>
+                </b-row>
+                <b-row v-for="item in selectedRow.linked_business">
+                    <b-col md="2" sm="12">
+                        {{item.id}}
+                    </b-col>
+                    <b-col md="5" sm="12">
+                        {{item.name}}
+                    </b-col>
+                    <b-col md="5" sm="12">
+                        {{item.target_company}}
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-modal>
+        <b-modal size="xl" hide-footer centered id="teamView" ref="teamView" title="团队管理">
+            <b-container class="modalContainer" v-if="selectedRow">
+                <b-row class="justify-content-center" style="font-size: 20px;">
+                    团 队 清 单
+                </b-row>
+                <b-row class="my-2">
+                    <b-col md="2" sm="12">
+                        团队序号
+                    </b-col>
+                    <b-col md="2" sm="12">
+                        团队名称
+                    </b-col>
+                    <b-col md="3" sm="12">
+                        团队领导人
+                    </b-col>
+                    <b-col md="3" sm="12">
+                        创建时间
+                    </b-col>
+                    <b-col md="2" sm="12">
+                        团队数
+                    </b-col>
+                </b-row>
+                <b-row v-for="item in selectedRow.linked_team">
+                    <b-col md="2" sm="12">
+                        {{item.id}}
+                    </b-col>
+                    <b-col md="2" sm="12">
+                        {{item.name}}
+                    </b-col>
+                    <b-col md="3" sm="12">
+                        {{item.leader}}
+                    </b-col>
+                    <b-col md="3" sm="12">
+                        {{item.create_time}}
+                    </b-col>
+                    <b-col md="2" sm="12">
+                        {{item.member_count}}
+                    </b-col>
+                </b-row>
+            </b-container>
+        </b-modal>
     </div>
 </template>
 
@@ -328,6 +450,7 @@ export default {
             selectedId: null,
             selectedTeacher: null,
             teacherList: [],
+            selectedRow: {},
         };
     },
     created() {
@@ -539,6 +662,14 @@ export default {
                     this.$emit("data-failed");
                 });
         },
+        detailOpen(row) {
+            this.$refs['detailView'].show();
+            this.selectedRow = row.item;
+        },
+        teamOpen(row) {
+            this.$refs['teamView'].show();
+            this.selectedRow = row.item;
+        },
         editCourseSave(evt) {
             evt.preventDefault();
             this.run();
@@ -641,7 +772,7 @@ export default {
         text-align: left !important;
     }
     .field-action {
-        width: 8%;
+        width: 16%;
         text-align: left !important;
     }
     .el-link.el-link--default:hover {
