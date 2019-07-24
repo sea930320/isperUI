@@ -34,6 +34,48 @@
               </div>
             </b-list-group-item>
           </b-list-group>
+
+          <b-list-group v-if="activeMenu==3" class="mt-3 todo-list">
+            <b-list-group-item class="mb-2 p-0" style="border:0; border-radisu: 3px;">
+              <b-input-group prepend="任务分配">
+                <b-input-group-append v-if="!isStudent">
+                  <b-button variant="outline-primary" @click="addTodo()">
+                    <icon name="plus" />
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-list-group-item>
+            <b-list-group-item
+              v-for="(todo, index) in todo_list"
+              :key="'todo' + index"
+              class="todo-item mb-0 p-0"
+            >
+              <b-input-group v-if="!isStudent">
+                <b-form-input v-model="todo.name" style="flex:3" @input="updateTodo(todo)"></b-form-input>
+                <b-form-select
+                  v-model="todo.student.id"
+                  :options="accepted_requests"
+                  style="flex:1"
+                ></b-form-select>
+                <b-input-group-append>
+                  <b-button
+                    variant="outline-primary"
+                    v-if="!todo.id"
+                    :disabled="todo.name.trim() == ''"
+                    @click="addTodo(todo)"
+                  >
+                    <icon name="plus" />
+                  </b-button>
+                  <b-button variant="outline-danger" v-if="todo.id" @click="removeTodo(todo)">
+                    <icon name="minus" />
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+              <template v-else>
+                <div class="borderTop">{{todo.name}}</div>
+              </template>
+            </b-list-group-item>
+          </b-list-group>
         </b-col>
         <template v-if="activeMenu == 1">
           <b-col
@@ -139,6 +181,15 @@
             <class-group-chat :business="business" :teams="teams"></class-group-chat>
           </b-col>
         </template>
+        <template v-else-if="activeMenu == 3">
+          <b-col cols="9">
+            <todo-group-chat
+              :business="business"
+              @canceled-assist="requestAssistList"
+              :todo_users="todo_users"
+            ></todo-group-chat>
+          </b-col>
+        </template>
       </b-row>
       <b-button v-if="!isStudent" size="sm" class="styledBtn" @click="$router.go(-1)">
         <icon name="arrow-left"></icon>&nbsp;返回
@@ -149,12 +200,13 @@
 <script>
 import Loading from "@/components/loading/Loading";
 import ClassGroupChat from "@/views/student/watch/ClassGroupChat";
+import TodoGroupChat from "@/views/student/watch/TodoGroupChat";
 import studentService from "@/services/studentService";
 import { businessStatus, gender } from "@/filters/fun";
 import _ from "lodash";
 
 export default {
-  components: { Loading, ClassGroupChat },
+  components: { Loading, ClassGroupChat, TodoGroupChat },
   data() {
     return {
       business_id: null,
@@ -162,7 +214,8 @@ export default {
       teams: [],
       business: {},
       assisting_users: [],
-      request_assists: []
+      request_assists: [],
+      todo_list: []
     };
   },
   filters: { businessStatus, gender },
@@ -180,15 +233,21 @@ export default {
     },
     menus() {
       if (this.isStudent) {
-        return [
+        let menus = [
           { title: "业务关注基础信息", key: 1 },
           { title: "课堂指导讨论组", key: 2 }
         ];
+        if (this.accepted_requests.length > 0) {
+          let position = this.accepted_requests[0].requestedTo.position;
+          menus.push({ title: position && position.name + "讨论组", key: 3 });
+        }
+        return menus;
       } else {
-        return [
-          { title: "业务关注基础信息", key: 1 },
-          { title: this.userInfo.position.name + "讨论组", key: 3 }
-        ];
+        let menus = [{ title: "业务关注基础信息", key: 1 }];
+        if (this.accepted_requests.length > 0) {
+          menus.push({ title: this.userInfo.position.name + "讨论组", key: 3 });
+        }
+        return menus;
       }
     },
     business_team() {
@@ -206,9 +265,70 @@ export default {
         return ra.status == 0;
       });
       return requests;
+    },
+    accepted_requests() {
+      let requests = this.request_assists
+        .filter(ra => {
+          return ra.status == 1;
+        })
+        .map(ra => {
+          ra.value = ra.requestedFrom.id;
+          ra.text = ra.requestedFrom.name || ra.requestedFrom.username;
+          return ra;
+        });
+      return requests;
+    },
+    todo_users() {
+      let users = [];
+      let flag =
+        this.userInfo.role == 5
+          ? { is_student: true, is_job_user: false }
+          : { is_student: false, is_job_user: true };
+      let userFlag =
+        this.userInfo.role == 5
+          ? { is_student: false, is_job_user: true }
+          : { is_student: true, is_job_user: false };
+      this.accepted_requests.forEach(ar => {
+        if (this.userInfo.role == 5) {
+          users.push({
+            ...ar.requestedFrom,
+            ...flag,
+            ...{
+              request_id: ar.id
+            }
+          });
+        } else if (this.userInfo.role == 9) {
+          users.push({
+            ...ar.requestedTo,
+            ...flag
+          });
+        }
+      });
+      users.push({ ...this.userInfo, ...userFlag });
+      return users;
+    },
+    rejected_requests() {
+      let requests = this.request_assists.filter(ra => {
+        return ra.status == 2;
+      });
+      return requests;
     }
   },
-  watch: {},
+  watch: {
+    activeMenu(val) {
+      if (val == 3) {
+        this.todoList();
+      }
+    },
+    accepted_requests: {
+      deep: true,
+      handler(val) {
+        if (val.length == 0) {
+          this.activeMenu = 1;
+        }
+      }
+    }
+  },
   methods: {
     init() {
       this.business_id = this.$route.params["bid"];
@@ -256,9 +376,107 @@ export default {
         });
     },
     acceptRequest(request) {
-      console.log(request)
+      this.run();
+      studentService
+        .requestAssistUpdate({
+          id: request.id,
+          status: 1
+        })
+        .then(() => {
+          this.requestAssistList();
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
     },
-    rejectRequest(request) {}
+    rejectRequest(request) {
+      this.run();
+      studentService
+        .requestAssistUpdate({
+          id: request.id,
+          status: 2
+        })
+        .then(() => {
+          this.requestAssistList();
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
+    todoList() {
+      this.run();
+      let param = {};
+      if (this.isStudent) {
+        param = {
+          business_id: this.business_id,
+          created_by_id: this.accepted_requests[0].requestedTo.id
+        };
+      } else {
+        param = { business_id: this.business_id };
+      }
+      studentService
+        .todoList(param)
+        .then(data => {
+          this.todo_list = data.results;
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
+    addTodo(todo = null) {
+      if (todo) {
+        if (todo.name.trim() == "") return;
+        this.run();
+        studentService
+          .todoListAdd({
+            business_id: this.business_id,
+            name: todo.name,
+            student_id: todo.student.id
+          })
+          .then(() => {
+            this.todoList();
+          })
+          .catch(() => {
+            this.$emit("data-failed");
+          });
+      } else {
+        this.todo_list.push({
+          id: null,
+          name: "",
+          student: {},
+          created_by: {
+            id: this.userInfo.id,
+            name: this.userInfo.name
+          }
+        });
+      }
+    },
+    updateTodo: _.debounce(todo => {
+      if (todo.name.trim() == "" || !todo.id) return;
+      studentService
+        .todoListUpdate({
+          id: todo.id,
+          name: todo.name,
+          student_id: todo.student.id
+        })
+        .then(() => {})
+        .catch(() => {});
+    }, 500),
+    removeTodo(todo) {
+      if (!todo.id) return;
+      this.run();
+      studentService
+        .todoListRemove({
+          id: todo.id
+        })
+        .then(() => {
+          this.todoList();
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    }
   }
 };
 </script>
@@ -306,6 +524,23 @@ export default {
               background: white !important;
             }
           }
+        }
+      }
+      .todo-list {
+        .input-group-prepend {
+          flex: 1;
+          .input-group-text {
+            flex: 1;
+            text-align: center;
+            background: white;
+            justify-content: center;
+          }
+        }
+        .list-group-item {
+          border: 1px solid rgb(255, 255, 255);
+        }
+        .todo-item:nth-child(n + 3) .borderTop {
+          border-top: 1px solid #ddd;
         }
       }
     }

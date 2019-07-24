@@ -1,5 +1,5 @@
 <template>
-  <b-row class="class-group-chat">
+  <b-row class="todo-group-chat">
     <b-col cols="8" class="py-4 pl-2 pr-1">
       <b-card style="height: 70%; margin-bottom: 2%;" class="text-left">
         <section ref="chat" class="chatlist" v-scroll-bottom="messages">
@@ -96,10 +96,22 @@
           <div class="team_user mb-2" :key="index">
             <icon name="user"></icon>
             <span class="ml-3 mr-4">{{user.name}}</span>
+            <a @click="cancelAssist(user)" v-if="userInfo.role==5 && user.is_student && user.id">
+              <icon name="power-off" style="cursor:pointer;"></icon>
+            </a>
           </div>
         </template>
       </div>
     </b-col>
+
+    <b-modal v-model="cancelModal" title="删除提醒" size="md" :showPerson="true">
+      <b-container fluid>Are you Sure?</b-container>
+
+      <div slot="modal-footer" class="w-100">
+        <b-button variant="danger" class="float-center mr-2" @click="confirmCancel()">确定</b-button>
+        <b-button variant="secondary" class="float-center" @click="cancelModal=false">取消</b-button>
+      </div>
+    </b-modal>
   </b-row>
 </template>
 <script>
@@ -115,7 +127,7 @@ export default {
     getStudentMessage(msg) {
       let message = msg.result;
       if (
-        message.msg_type == 0 &&
+        message.msg_type == 1 &&
         message.business_id == this.business.id &&
         _.some(message.to, { id: this.userInfo.id })
       ) {
@@ -124,7 +136,7 @@ export default {
     }
   },
   props: {
-    teams: {
+    todo_users: {
       type: Array,
       default: () => []
     },
@@ -151,7 +163,9 @@ export default {
       showSelBox: 0,
       content: "",
       search: "",
-      messages: []
+      messages: [],
+      cancelUser: null,
+      cancelModal: false
     };
   },
   filters: { businessStatus, gender },
@@ -164,17 +178,8 @@ export default {
     userInfo() {
       return this.$store.state.userInfo;
     },
-    team_users() {
-      let team_users = [];
-      this.teams.forEach(team => {
-        let users = team.members;
-        users.push(team.teacher);
-        team_users = _.unionBy(team_users, users, "id");
-      });
-      return team_users;
-    },
     filtered_users() {
-      return this.team_users.filter(user => {
+      return this.todo_users.filter(user => {
         return (
           (user.name && user.name.includes(this.search)) ||
           (user.username && user.username.includes(this.search))
@@ -198,7 +203,7 @@ export default {
       studentService
         .messageList({
           business_id: this.business.id,
-          msg_type: 0
+          msg_type: 1
         })
         .then(data => {
           this.messages = data.results;
@@ -215,7 +220,7 @@ export default {
       if (
         !this.business.id ||
         this.content === "" ||
-        this.team_users.length == 0
+        this.todo_users.length == 0
       ) {
         return;
       }
@@ -223,9 +228,9 @@ export default {
       studentService
         .sendMessage({
           business_id: this.business.id,
-          to: JSON.stringify(this.team_users),
+          to: JSON.stringify(this.todo_users),
           msg: this.content,
-          msg_type: 0
+          msg_type: 1
         })
         .then(() => {
           this.content = "";
@@ -242,13 +247,30 @@ export default {
         return '<img src="' + src + '" alt="" />';
       });
       return con;
+    },
+    cancelAssist(student) {
+      this.cancelUser = student;
+      this.cancelModal = true;
+    },
+    confirmCancel() {
+      studentService
+        .requestAssistUpdate({
+          id: this.cancelUser.request_id,
+          del_flag: 1,
+          status: 2
+        })
+        .then(data => {
+          this.$emit("canceled-assist");
+          this.cancelModal = false;
+        })
+        .catch(() => {});
     }
   }
 };
 </script>
 
 <style lang="scss">
-.class-group-chat {
+.todo-group-chat {
   height: 100%;
 
   .chatlist {

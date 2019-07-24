@@ -237,8 +237,6 @@ export default {
             this.flowChart.options.paths = data.paths;
             this.loaderShow = false;
             this.XMLModal = true;
-            console.log(this.userInfo);
-            console.log(this.meta);
           });
       }
       // 逐步显示

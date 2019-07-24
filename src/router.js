@@ -262,6 +262,32 @@ const routes = [{
             path: 'enter-business/:bid',
             name: 'enter-business',
             component: () => import('@/views/student/watch/EnterBusiness.vue')
+        }, {
+            path: 'team-list',
+            name: 'team-list',
+            component: () => import('@/views/student/team/TeamList.vue')
+        }
+    ]
+},
+{
+    path: '/instructor',
+    meta: {
+        requiresAuth: true
+    },
+    component: () => import('@/views/layout/Instructor.vue'),
+    children: [
+        ...personalCenterRoutes,
+        {
+            path: '',
+            redirect: 'student-guide'
+        }, {
+            path: 'student-guide',
+            name: 'student-guide',
+            component: () => import('@/views/instructor/student-guide/StudentGuideIndex.vue')
+        }, {
+            path: 'interest-course',
+            name: 'interest-course',
+            component: () => import('@/views/instructor/interest-course/InterestCourseIndex.vue')
         }
     ]
 }

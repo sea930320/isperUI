@@ -1,12 +1,12 @@
 <template>
-  <div class="student-container main-bg" style="height: 100%; overflow: auto">
+  <div class="instructor-container main-bg" style="height: 100%; overflow: auto">
     <TopHeader v-if="userInfo">
       <template v-slot:pageMenu>
-        <b-nav-item v-if="[9].includes(userInfo.role)" to="/student/business-watch">
-          <icon name="list" class="tabIcon"></icon>业务关注
+        <b-nav-item to="/instructor/student-guide">
+          <icon name="book-open" class="tabIcon"></icon>课堂指导
         </b-nav-item>
-        <b-nav-item v-if="[9].includes(userInfo.role)" to="/student/team-list">
-          <icon name="box-open" class="tabIcon"></icon>团队管理
+        <b-nav-item to="/instructor/interest-course">
+          <icon name="book-open" class="tabIcon"></icon>兴趣课堂
         </b-nav-item>
       </template>
     </TopHeader>
