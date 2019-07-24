@@ -32,6 +32,30 @@ class CourseService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    getOutsideCourseList(data) {
+        return xhr({
+            method: 'get',
+            url: '/course/outside_list',
+            params: data
+        })
+    }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    getHobbyCourseList(data) {
+        return xhr({
+            method: 'get',
+            url: '/course/hobby_list',
+            params: data
+        })
+    }
+    /**
+     * 获取流程列表
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     saveNewCourse(data) {
         return xhr({
             method: 'post',

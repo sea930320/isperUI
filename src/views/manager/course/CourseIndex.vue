@@ -5,10 +5,10 @@
                 <ClassicCourse/>
             </b-tab>
             <b-tab title="兴趣课堂管理">
-                <CompanyUser2/>
+                <HobbyCourse/>
             </b-tab>
             <b-tab title="课外学习管理">
-                <CompanyUser2/>
+                <OutsideCourse/>
             </b-tab>
             <b-tab title="关注管理">
                 <AttentionCourse/>
@@ -20,15 +20,17 @@
 <script>
     import {mapState} from "vuex";
     import ClassicCourse from './ClassicCourse';
-    import CompanyUser2 from './CompanyUser2';
+    import OutsideCourse from './OutsideCourse';
+    import HobbyCourse from './HobbyCourse';
     import AttentionCourse from './AttentionCourse';
 
     export default {
         name: "course-index",
         components: {
             ClassicCourse,
-            CompanyUser2,
+            HobbyCourse,
             AttentionCourse,
+            OutsideCourse,
         },
         computed: {
             ...mapState(["userInfo"])
