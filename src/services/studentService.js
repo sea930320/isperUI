@@ -278,6 +278,32 @@ class StudentService {
             params: data
         })
     }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    courseList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/teacher/course-list',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    watchingList(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/teacher/watching-list/by-course',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

@@ -178,7 +178,7 @@
         </template>
         <template v-else-if="activeMenu == 2">
           <b-col cols="9">
-            <class-group-chat :business="business" :teams="teams"></class-group-chat>
+            <class-group-chat :business="business" :teams="teams" v-if="business.id"></class-group-chat>
           </b-col>
         </template>
         <template v-else-if="activeMenu == 3">
@@ -231,6 +231,9 @@ export default {
     isStudent() {
       return [9].includes(this.userInfo.role);
     },
+    isTeacher() {
+      return [4, 8].includes(this.userInfo.role);
+    },
     menus() {
       if (this.isStudent) {
         let menus = [
@@ -242,6 +245,10 @@ export default {
           menus.push({ title: position && position.name + "讨论组", key: 3 });
         }
         return menus;
+      } else if (this.isTeacher) {
+        /* eslint-disable */
+        this.activeMenu = 2;
+        return [{ title: "课堂指导讨论组", key: 2 }];
       } else {
         let menus = [{ title: "业务关注基础信息", key: 1 }];
         if (this.accepted_requests.length > 0) {
@@ -340,7 +347,11 @@ export default {
         .then(data => {
           this.teams = data.results;
           this.business = data.business;
-          this.requestAssistList();
+          if (!this.isTeacher) {
+            this.requestAssistList();
+          } else {
+            this.$emit("data-ready");
+          }
         })
         .catch(() => {
           this.$emit("data-failed");

@@ -2,10 +2,10 @@
   <div class="instructor-container main-bg" style="height: 100%; overflow: auto">
     <TopHeader v-if="userInfo">
       <template v-slot:pageMenu>
-        <b-nav-item to="/instructor/student-guide">
+        <b-nav-item to="/instructor/student-guide" v-if="userInfo.teacher_id">
           <icon name="book-open" class="tabIcon"></icon>课堂指导
         </b-nav-item>
-        <b-nav-item to="/instructor/interest-course">
+        <b-nav-item to="/instructor/interest-course" v-if="userInfo.teacher_id">
           <icon name="book-open" class="tabIcon"></icon>兴趣课堂
         </b-nav-item>
       </template>
