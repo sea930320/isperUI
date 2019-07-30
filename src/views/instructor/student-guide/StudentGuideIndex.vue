@@ -35,7 +35,7 @@
               responsive
               small
               hover
-              :fields="columns"
+              :fields="columns1"
               head-variant
             >
               <template slot="sn" slot-scope="row">{{ row.item.id }}</template>
@@ -74,6 +74,29 @@
             </b-row>
           </div>
         </template>
+        <template v-else>
+          <div class="cardDiv">
+            <b-table :items="teamList.list" responsive small hover :fields="columns2" head-variant>
+              <template slot="sn" slot-scope="row">{{ row.item.id }}</template>
+              <template slot="name" slot-scope="row">{{row.item.name}}</template>
+              <template slot="team_leader" slot-scope="row">{{row.item.team_leader.name}}</template>
+              <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
+              <template slot="status" slot-scope="row">{{row.item.type ?"开放":"不开放"}}</template>
+              <template slot="action"></template>
+            </b-table>
+          </div>
+          <div class="cardDiv">
+            <b-row class="justify-content-center row-margin-tweak">
+              <b-pagination
+                :size="template_size"
+                :total-rows="teamList.total"
+                :per-page="queryTeamParam.size"
+                limit="5"
+                v-model="queryTeamParam.page"
+              />
+            </b-row>
+          </div>
+        </template>
       </b-col>
     </b-row>
   </div>
@@ -104,7 +127,15 @@ export default {
         page: 1,
         size: 5
       },
-      columns: {
+      teamList: {
+        list: [],
+        total: 0
+      },
+      queryTeamParam: {
+        page: 1,
+        size: 5
+      },
+      columns1: {
         sn: {
           label: "序号",
           sortable: false,
@@ -140,6 +171,38 @@ export default {
           sortable: false,
           class: "text-center w-10"
         }
+      },
+      columns2: {
+        sn: {
+          label: "序号",
+          sortable: false,
+          class: "text-center w-5"
+        },
+        name: {
+          label: "业务名称",
+          sortable: false,
+          class: "text-center w-20"
+        },
+        team_leader: {
+          label: "队长",
+          sortable: false,
+          class: "text-center w-20"
+        },
+        create_time: {
+          label: "创建时间",
+          sortable: false,
+          class: "text-center w-15"
+        },
+        status: {
+          label: "开放邀请",
+          sortable: false,
+          class: "text-center w-20"
+        },
+        action: {
+          label: "操作",
+          sortable: false,
+          class: "text-center w-10"
+        }
       }
     };
   },
@@ -149,7 +212,13 @@ export default {
     });
   },
   computed: {},
-  watch: {},
+  watch: {
+    type() {
+      if (this.courses.length > 0) {
+        this.selectCourse(this.courses[0], 0);
+      }
+    }
+  },
   methods: {
     init() {
       this.getCourseList();
@@ -174,6 +243,8 @@ export default {
       this.activeCourse = course;
       if (this.type == 0) {
         this.getWatchingList();
+      } else {
+        this.getTeamList();
       }
     },
     getWatchingList() {
@@ -188,6 +259,24 @@ export default {
         .then(data => {
           this.studentWatchingList.list = data.results;
           this.studentWatchingList.total = data.paging.count;
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
+    getTeamList() {
+      this.run();
+      studentService
+        .teamListByCourse({
+          ...this.queryTeamParam,
+          ...{
+            id: this.activeCourse.id
+          }
+        })
+        .then(data => {
+          this.teamList.list = data.results;
+          this.teamList.total = data.paging.count;
           this.$emit("data-ready");
         })
         .catch(() => {

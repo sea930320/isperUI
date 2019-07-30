@@ -304,6 +304,19 @@ class StudentService {
             params: data
         })
     }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    teamListByCourse(data) {
+        return xhr({
+            method: 'get',
+            url: '/student/teacher/team-list/by-course',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

@@ -84,7 +84,7 @@ export default {
     // 查询环节信息
     queryNodeList() {
       let param = {
-        experiment_id: this.taskId
+        business_id: this.taskId
       };
       mentorService.queryNodeList(param).then(data => {
         data.forEach(item => {
