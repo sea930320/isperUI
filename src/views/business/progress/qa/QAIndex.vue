@@ -3,25 +3,25 @@
     <loading v-if="isRunning"></loading>
     <b-card v-if="currentRoleAllocation.can_terminate && step != 6 && isActivity == -1">
       <b-tabs content-class="mt-2" class="qa-tabs" v-model="tabIndex">
-        <b-tab title="Description">
+        <b-tab title="主题和备注">
           <step1></step1>
         </b-tab>
-        <b-tab title="Selection Mode" :disabled="!step || step < 1">
+        <b-tab title="选择题" :disabled="!step || step < 1">
           <step2></step2>
         </b-tab>
-        <b-tab title="Blank Mode" :disabled="!step || step < 2">
+        <b-tab title="填空题" :disabled="!step || step < 2">
           <step3></step3>
         </b-tab>
-        <b-tab title="Normal Mode" :disabled="!step || step < 3">
+        <b-tab title="问答题" :disabled="!step || step < 3">
           <step4></step4>
         </b-tab>
-        <b-tab title="End Quotion" :disabled="!step || step < 4">
+        <b-tab title="结束语" :disabled="!step || step < 4">
           <step5></step5>
         </b-tab>
-        <b-tab title="Preview" :disabled="!step || step < 5">
+        <b-tab title="预览问卷" :disabled="!step || step < 5">
           <step6></step6>
         </b-tab>
-        <b-tab title="Target&Time" :disabled="!step || step < 5">
+        <b-tab title="发布调查" :disabled="!step || step < 5">
           <step7></step7>
         </b-tab>
       </b-tabs>
@@ -30,13 +30,13 @@
         class="styledBtn mt-3"
         variant="outline-primary"
         @click.stop="prevTab()"
-      >Prev</b-button>
+      >上一步</b-button>
       <b-button
         v-if="tabIndex!=6"
         class="styledBtn mt-3"
         variant="outline-primary"
         @click.stop="nextTab()"
-      >Next</b-button>
+      >下一步</b-button>
     </b-card>
     <b-card class="my-3" v-else-if="isActivity == 3">
       <step6 :runSurvey="true"></step6>

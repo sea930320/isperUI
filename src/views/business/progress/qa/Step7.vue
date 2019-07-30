@@ -2,7 +2,7 @@
   <div class="qa-step pt-5">
     <b-row class="justify-content-md-center mb-3">
       <b-col cols="2" class="text-right">
-        <label>Activation Time:</label>
+        <label>设置调查时间:</label>
       </b-col>
       <b-col cols="6">
         <date-picker
@@ -16,13 +16,13 @@
     </b-row>
     <b-row class="justify-content-md-center">
       <b-col cols="2" class="text-right">
-        <label>Target:</label>
+        <label>设置调查人群范围:</label>
       </b-col>
       <b-col cols="6">
         <b-form-select size="sm" v-model="target" :options="options"></b-form-select>
       </b-col>
     </b-row>
-    <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="publishSurvey()">保存</b-button>
+    <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="publishSurvey()">发布调查</b-button>
   </div>
 </template>
 
@@ -40,9 +40,9 @@ export default {
       activeDateRange: [null, null],
       target: 0,
       options: [
-        { value: 0, text: "All" },
-        { value: 1, text: "Business only" },
-        { value: 2, text: "Node only" }
+        { value: 0, text: "群众" },
+        { value: 1, text: "本业务人员" },
+        { value: 2, text: "本环节人员" }
       ]
     };
   },

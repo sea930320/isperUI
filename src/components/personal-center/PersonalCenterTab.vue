@@ -9,6 +9,16 @@
           :active="activeTab === 2"
           :to="prefixRoute + 'assistant-set'"
         >配置助理</b-nav-item>
+        <b-nav-item
+          v-if="[5].includes(userInfo.role)"
+          :active="activeTab === 4"
+          :to="prefixRoute + 'group-change'"
+        >集群变更</b-nav-item>
+        <b-nav-item
+          v-if="[5].includes(userInfo.role)"
+          :active="activeTab === 5"
+          :to="prefixRoute + 'company-change'"
+        >单位变更</b-nav-item>
         <b-nav-item :active="activeTab === 3" :to="prefixRoute + 'message-view'">
           消息管理
           <b-badge

@@ -45,6 +45,14 @@
               :to="prefixRoute + 'assistant-set'"
               v-if="[2, 3].includes(userInfo.role)"
             >配置助理</b-dropdown-item>
+            <b-dropdown-item
+              :to="prefixRoute + 'group-change'"
+              v-if="[5].includes(userInfo.role)"
+            >集群变更</b-dropdown-item>
+            <b-dropdown-item
+              :to="prefixRoute + 'company-change'"
+              v-if="[5].includes(userInfo.role)"
+            >单位变更</b-dropdown-item>
             <b-dropdown-item :to="prefixRoute + 'message-view'">
               消息管理
               <b-badge
@@ -54,14 +62,6 @@
                 class="ml-3"
               >{{message.length}}</b-badge>
             </b-dropdown-item>
-            <b-dropdown-item
-              :to="prefixRoute + 'group-change'"
-              v-if="[5].includes(userInfo.role)"
-            >集群变更</b-dropdown-item>
-            <b-dropdown-item
-              :to="prefixRoute + 'company-change'"
-              v-if="[5].includes(userInfo.role)"
-            >单位变更</b-dropdown-item>
           </b-nav-item-dropdown>
           <b-nav-item right @click="logoutHandler">
             <icon name="sign-out-alt"></icon>

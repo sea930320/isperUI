@@ -214,6 +214,38 @@ class GroupService {
             params: data
         })
     }
+
+    groupChangeRequest(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/groupChangeRequest',
+            params: data
+        })
+    }
+
+    companyChangeRequest(data) {
+        return xhr({
+            method: 'post',
+            url: '/group/companyChangeRequest',
+            params: data
+        })
+    }
+
+    groupChangeInfo(data) {
+        return xhr({
+            method: 'get',
+            url: '/group/groupChangeInfo',
+            params: data
+        })
+    }
+
+    companyChangeInfo(data) {
+        return xhr({
+            method: 'get',
+            url: '/group/companyChangeInfo',
+            params: data
+        })
+    }
 }
 
 export default new GroupService()

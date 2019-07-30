@@ -3,7 +3,7 @@
     <loading v-if="isRunning"></loading>
     <b-row class="justify-content-md-center">
       <b-col cols="2" class="text-right">
-        <label>End Quotions:</label>
+        <label>输入结束语:</label>
       </b-col>
       <b-col cols="6">
         <b-form-textarea v-model="end_quote" rows="5" max-rows="20"></b-form-textarea>

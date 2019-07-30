@@ -21,6 +21,12 @@ const personalCenterRoutes = [{
 }, {
     path: 'message-view',
     component: () => import('@/views/personal-center/MessageView.vue')
+}, {
+    path: 'group-change',
+    component: () => import('@/views/personal-center/GroupChange.vue')
+}, {
+    path: 'company-change',
+    component: () => import('@/views/personal-center/CompanyChange.vue')
 }];
 
 const systemSetRoutes = [{

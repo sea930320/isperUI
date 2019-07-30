@@ -9,12 +9,12 @@
             :pressed.sync="question.select_option == 0"
             variant="outline-primary"
             @click="question.select_option = 1 - question.select_option"
-          >Single Sel</b-button>
+          >单选</b-button>
           <b-button
             :pressed.sync="question.select_option == 1"
             variant="outline-primary"
             @click="question.select_option = 1 - question.select_option"
-          >Multi Sel</b-button>
+          >多选</b-button>
           <b-button variant="outline-danger" @click="removeQuestion(index)">
             <icon name="minus"></icon>
           </b-button>
@@ -63,12 +63,12 @@
             :pressed.sync="new_question.select_option == 0"
             variant="outline-primary"
             @click="new_question.select_option = 1 - new_question.select_option"
-          >Single Sel</b-button>
+          >单选</b-button>
           <b-button
             :pressed.sync="new_question.select_option == 1"
             variant="outline-primary"
             @click="new_question.select_option = 1 - new_question.select_option"
-          >Multi Sel</b-button>
+          >多选</b-button>
         </b-input-group-append>
       </b-input-group>
       <div class="w-60 mx-auto" v-for="(item, index1) in new_question.question_cases" :key="index1">

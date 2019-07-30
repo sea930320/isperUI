@@ -3,7 +3,7 @@
     <loading v-if="isRunning"></loading>
     <b-row class="justify-content-md-center">
       <b-col cols="2" class="text-right">
-        <label>Title:</label>
+        <label>输入主题:</label>
       </b-col>
       <b-col cols="6">
         <b-form-input size="sm" v-model="survey.title"></b-form-input>
@@ -11,7 +11,7 @@
     </b-row>
     <b-row class="mt-2 justify-content-md-center">
       <b-col cols="2" class="text-right">
-        <label>Description:</label>
+        <label>输入备注:</label>
       </b-col>
       <b-col cols="6">
         <b-form-textarea v-model="survey.description" rows="3" max-rows="6"></b-form-textarea>

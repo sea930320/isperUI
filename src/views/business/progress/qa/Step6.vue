@@ -82,13 +82,8 @@
         class="styledBtn my-3"
         variant="outline-primary"
         @click.stop="print()"
-      >Print</b-button>
-      <b-button
-        v-else
-        class="styledBtn my-3"
-        variant="outline-primary"
-        @click.stop="submit()"
-      >Submit</b-button>
+      >打印</b-button>
+      <b-button v-else class="styledBtn my-3" variant="outline-primary" @click.stop="submit()">提交</b-button>
     </div>
   </div>
 </template>
