@@ -15,7 +15,7 @@
                 </div>
                 <div class="time">
                   <cite>
-                    <i>{{item.create_time}}</i>
+                    <i>{{item.create_time}}</i>a
                     {{item.from_user.name}}（{{item.from_user.login_type==9?"学生":"指导者"}}）
                   </cite>
                 </div>

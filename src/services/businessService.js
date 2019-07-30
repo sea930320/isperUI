@@ -668,6 +668,22 @@ class BusinessService {
     }
 
     /**
+     * 发送留言
+     * @param data 参数
+     * @param data.from_user_id 发送者id
+     * @param data.content 发送内容
+     * @param data.to_user_ids 发送对象ids
+     * @param data.host_id 主题贴ID，回贴时必要
+     */
+    getGuiderList(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/getGuiderList',
+            params: data
+        })
+    }
+
+    /**
      * 获取留言的成员表
      * @param data 参数
      * @param data.business_id 实验id

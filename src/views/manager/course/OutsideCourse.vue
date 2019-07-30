@@ -77,7 +77,7 @@
                         业务单位
                     </b-col>
                 </b-row>
-                <b-row v-for="item in selectedRow.linked_business">
+                <b-row v-for="item in selectedRow.linked_business" :key="item.id">
                     <b-col md="2" sm="12">
                         {{item.id}}
                     </b-col>
@@ -112,7 +112,7 @@
                         团队数
                     </b-col>
                 </b-row>
-                <b-row v-for="item in selectedRow.linked_team">
+                <b-row v-for="item in selectedRow.linked_team" :key="item.id">
                     <b-col md="2" sm="12">
                         {{item.id}}
                     </b-col>
