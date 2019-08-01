@@ -347,10 +347,10 @@ export default {
           sortable: false,
           class: "text-center field-name"
         },
-        username: {
+        student_id: {
           label: "学号",
           sortable: false,
-          class: "text-center field-username"
+          class: "text-center field-student_id"
         },
         class_name: {
           label: "班级",

@@ -258,6 +258,19 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    removeTeam(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/remove',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     addTeamUser(data) {
         return xhr({
             method: 'post',
@@ -271,10 +284,36 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    addTeamUsers(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/add-users',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     removeTeamUser(data) {
         return xhr({
             method: 'post',
             url: '/student/team/remove-user',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    setTeamLeader(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/set-leader',
             params: data
         })
     }
@@ -317,6 +356,21 @@ class StudentService {
             params: data
         })
     }
+
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    newTeamByInstructor(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/instructor/new-team',
+            params: data
+        })
+    }
+
 }
 
 // 实例化后导出，全局单例
