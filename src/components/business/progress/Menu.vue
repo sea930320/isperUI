@@ -131,7 +131,7 @@
                 </b-nav-item>
                 <b-nav-item to="/business/list/progress">退出业务</b-nav-item>
                 <b-nav-item @click="guiderSelect()">业务指导</b-nav-item>
-                <b-nav-item to="/business/list/progress">业务咨询</b-nav-item>
+                <b-nav-item @click="askOpen()">业务咨询</b-nav-item>
             </template>
         </TopHeader>
 
@@ -139,6 +139,20 @@
             <div class="p-4">
                 <b-form-select v-model="selectedGuider" :options="guiders"></b-form-select>
                 <b-button variant="success" @click="businessGuide()" class="mt-4" :disabled="selectedGuider === null">确&emsp;定</b-button>
+            </div>
+        </b-modal>
+        <b-modal centered hide-footer id="guideChat" size="lg" ref="guideChat" title="业务指导">
+            <div class="p-4" v-if="guider.id">
+                <guider-chat
+                    :guider="guider"
+                ></guider-chat>
+            </div>
+        </b-modal>
+        <b-modal centered hide-footer id="askChat" size="xl" ref="askChat" title="业务咨询">
+            <div class="p-4" v-if="askChatRoomId">
+                <ask-chat
+                    :askChatRoomId="askChatRoomId"
+                ></ask-chat>
             </div>
         </b-modal>
 
@@ -216,6 +230,8 @@
     import myNotesModal from "@/components/business/modal/myNotesModal";
     import projectGuide from "@/components/business/progress/ProjectGuide";
     import projectDocs from "@/components/business/progress/ProjectDocs";
+    import GuiderChat from "./GuiderChat";
+    import AskChat from "./AskChat";
 
     export default {
         components: {
@@ -228,7 +244,9 @@
             resultsRefModal,
             myNotesModal,
             projectGuide,
-            projectDocs
+            projectDocs,
+            GuiderChat,
+            AskChat
         },
         data() {
             return {
@@ -244,7 +262,9 @@
                 showSecendMend: false,
                 showProjectGuideModal: false,
                 showProjectDocsModal: false,
-                guiders: []
+                guiders: [],
+                guider: {},
+                askChatRoomId: null
             };
         },
         created() {},
@@ -290,10 +310,30 @@
                 });
             },
             guiderSelect() {
-                businessService.getGuiderList({id:this.metaInfo.project.office_item_id}).then(data => {
-                    this.$refs['businessGuide'].show();
-                    this.selectedGuider = null;
-                    this.guiders = data;
+                businessService.getGuiderList({id: this.metaInfo.project.office_item_id, bid: this.$route.params.bid}).then(data => {
+                    if (data.status === 0) {
+                        this.$refs['businessGuide'].show();
+                        this.selectedGuider = null;
+                        this.guiders = data.results;
+                    } else {
+                        this.guider = data.results;
+                        this.$refs['guideChat'].show();
+                    }
+                });
+            },
+            askOpen() {
+                businessService.getChatRoomId({officeItem: this.metaInfo.project.office_item_id}).then(data => {
+                    this.askChatRoomId = data.room_id;
+                    this.$refs['askChat'].show();
+                });
+            },
+            businessGuide() {
+                businessService.setGuider({guiderId:this.selectedGuider.id, guiderRole: this.selectedGuider.role, bid:this.$route.params.bid}).then(data => {
+                    if (data.status === 1) {
+                        this.$refs['businessGuide'].hide();
+                        this.guider = data.results;
+                        this.$refs['guideChat'].show();
+                    }
                 });
             },
             // 留言面板

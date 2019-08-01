@@ -684,6 +684,22 @@ class BusinessService {
     }
 
     /**
+     * 发送留言
+     * @param data 参数
+     * @param data.from_user_id 发送者id
+     * @param data.content 发送内容
+     * @param data.to_user_ids 发送对象ids
+     * @param data.host_id 主题贴ID，回贴时必要
+     */
+    setGuider(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/setGuider',
+            params: data
+        })
+    }
+
+    /**
      * 获取留言的成员表
      * @param data 参数
      * @param data.business_id 实验id
@@ -706,6 +722,104 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/cms/msg/list-business',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getGuiderMessage(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getGuiderMessage',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getChatRooms(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getChatRooms',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    sendGuiderMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/sendGuiderMessage',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    sendAskMessage(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/sendAskMessage',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getChatRoomMessages(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/getChatRoomMessages',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getBusinessGuideList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getBusinessGuideList',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getChatRoomId(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getChatRoomId',
             params: data
         })
     }
