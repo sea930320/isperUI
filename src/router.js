@@ -285,7 +285,7 @@ const routes = [{
         ...personalCenterRoutes,
         {
             path: '',
-            redirect: 'student-guide'
+            redirect: 'business-guide'
         }, {
             path: 'student-guide',
             name: 'student-guide',
@@ -294,6 +294,18 @@ const routes = [{
             path: 'interest-course',
             name: 'interest-course',
             component: () => import('@/views/instructor/interest-course/InterestCourseIndex.vue')
+        }, {
+            path: 'business-guide',
+            name: 'business-guide',
+            component: () => import('@/views/instructor/business-guide/BusinessGuide.vue')
+        }, {
+            path: 'business-question',
+            name: 'business-question',
+            component: () => import('@/views/instructor/business-ask/BusinessAsk.vue')
+        }, {
+            path: 'business-rating',
+            name: 'business-rating',
+            component: () => import('@/views/instructor/business-rating/BusinessRating.vue')
         }
     ]
 }

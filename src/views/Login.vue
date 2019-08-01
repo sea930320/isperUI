@@ -187,7 +187,7 @@ export default {
       } else if (data.role == 9) {
         this.$router.push("/student/business-watch");
       } else if ([4, 8].includes(data.role)) {
-        this.$router.push("/instructor/student-guide");
+        this.$router.push("/instructor/business-guide");
       }
     },
     getQrcode() {
