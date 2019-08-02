@@ -602,7 +602,11 @@ export default {
           }
         }
       } else {
-        if (!this.watchConfig.extra_course.teacher) {
+        if (!this.watchConfig.extra_course.name && this.watchConfig.extra_course.teacher) {
+          this.$toasted.error("Please input Course Name");
+          return;
+        }
+        if (this.watchConfig.extra_course.name && !this.watchConfig.extra_course.teacher) {
           this.$toasted.error("Please select Teacher");
           return;
         }

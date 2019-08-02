@@ -5,7 +5,7 @@
       <b-col lg="3" md="3" sm="12" v-if="[0,1].includes(type)">
         <div class="cardDiv course-selector p-0" style="background:#c7dbff">
           <b-list-group class="d-inline-flex m-0 p-0 w-100">
-            <b-list-group-item class="course-name mb-1">课堂名称</b-list-group-item>
+            <b-list-group-item class="course-name mb-1">课堂名称与课外学习</b-list-group-item>
             <template v-for="(course, index) in courses">
               <b-list-group-item
                 class="course-item"
@@ -61,6 +61,7 @@
                   class="styledBtn"
                   variant="outline-primary"
                   v-if="row.item.business.status==9"
+                  @click="evaluate(row.item)"
                 >评论</b-button>
                 <b-button
                   class="styledBtn"
@@ -273,18 +274,20 @@
       </b-row>
       <b-button size="sm" class="styledBtn float-center mt-3" @click="addNewTeam()">保存</b-button>
     </b-modal>
+    <evaluate-modal @success="getWatchingList"></evaluate-modal>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
 import studentService from "@/services/studentService";
 import Loading from "@/components/loading/Loading";
+import EvaluateModal from "./EvaluateModal";
 import { businessStatus, gender } from "@/filters/fun";
 import _ from "lodash";
 
 export default {
   mixins: [],
-  components: { Loading },
+  components: { Loading, EvaluateModal },
   filters: { businessStatus, gender },
   data() {
     return {
@@ -719,6 +722,9 @@ export default {
         .catch(() => {
           this.$emit("data-failed");
         });
+    },
+    evaluate(stwb) {
+      this.$emit("openEvaluateModal", stwb);
     }
   }
 };

@@ -371,6 +371,18 @@ class StudentService {
         })
     }
 
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
+    teamEvalByInstructor(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/instructor/team-eval',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例
