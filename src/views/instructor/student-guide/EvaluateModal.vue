@@ -115,7 +115,6 @@ export default {
         this.visible = false;
         return;
       }
-      console.log(stwb);
       this.visible = true;
       this.stwb = _.clone(stwb, true);
       this.teamEval = this.stwb.teamEval;
