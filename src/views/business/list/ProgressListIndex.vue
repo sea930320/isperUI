@@ -62,7 +62,7 @@
     </b-row>
 
     <b-modal v-model="deleteModal" title="删除提醒" size="md" :showPerson="true">
-      <b-container fluid>Are you Sure?</b-container>
+      <b-container fluid>您确定要删除本业务吗？</b-container>
 
       <div slot="modal-footer" class="w-100">
         <b-button variant="danger" class="float-center mr-2" @click="confirmDelete()">确定</b-button>
