@@ -45,7 +45,7 @@
                     </b-table>
                 </div>
                 <a class="ml-4 text-left row" style="cursor: pointer; color: blue" @click="BusinessView">查看业务报告</a>
-                <b-card no-body class="cardDiv" v-if="selectedMember.business_id">
+                <b-card no-body class="cardDiv" v-if="selectedMember">
                     <a class="ml-2 text-left">点评内容</a>
                     <b-tabs pills card>
                         <b-tab title="针对环节点评" active>
@@ -94,7 +94,7 @@
                     </label>
                     <div class="text-left">环节点评</div>
                     <div class="border py-2 px-3 text-left w-100 row">
-                        <span class="col-12 border" v-for="node in selectedViewRow.node_evaluation">{{node.node_name + ' : ' + node.node_comment}}</span>
+                        <span class="col-12 border" v-for="(node, index) in selectedViewRow.node_evaluation" :key="'node' + index">{{node.node_name + ' : ' + node.node_comment}}</span>
                     </div>
                 </div>
             </div>
@@ -195,7 +195,7 @@
                     total: 0
                 },
                 selectedBusiness: {},
-                selectedMember: {},
+                selectedMember: null,
                 selectedViewRow: {},
                 queryParam: {
                     page: 1,
@@ -239,12 +239,13 @@
                     });
             },
             evaluationOpen(row) {
-                this.$refs['EvaluationModal'].show();
                 this.selectedBusiness = row.item;
+                this.selectedMember = null;
+                this.$refs['EvaluationModal'].show();
             },
             evaluationView(row) {
-                this.$refs['EvaluationView'].show();
                 this.selectedViewRow = row.item;
+                this.$refs['EvaluationView'].show();
             },
             memberSelected(items) {
                 this.selectedMember = items[0];
