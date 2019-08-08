@@ -303,9 +303,9 @@ const routes = [{
             name: 'business-question',
             component: () => import('@/views/instructor/business-ask/BusinessAsk.vue')
         }, {
-            path: 'business-rating',
-            name: 'business-rating',
-            component: () => import('@/views/instructor/business-rating/BusinessRating.vue')
+            path: 'business-evaluation',
+            name: 'business-evaluation',
+            component: () => import('@/views/instructor/business-rating/BusinessEvaluation.vue')
         }
     ]
 }

@@ -802,6 +802,20 @@ class BusinessService {
      * @param data.user_id 用户id
      * page/size
      */
+    evaluationSave(data) {
+        return xhr({
+            method: 'post',
+            url: '/business/evaluationSave',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
     getBusinessGuideList(data) {
         return xhr({
             method: 'get',
@@ -820,6 +834,20 @@ class BusinessService {
         return xhr({
             method: 'get',
             url: '/business/getChatRoomId',
+            params: data
+        })
+    }
+
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * @param data.user_id 用户id
+     * page/size
+     */
+    getInitBusinessEvaluation(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/getInitBusinessEvaluation',
             params: data
         })
     }
