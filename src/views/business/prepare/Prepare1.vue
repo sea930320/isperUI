@@ -242,32 +242,32 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center w-5"
+                    class: "text-right w-5"
                 },
                 company_name: {
                     label: "项目创建单位",
                     sortable: false,
-                    class: "text-center w-25"
+                    class: "text-left w-25"
                 },
                 name: {
                     label: "项目名称",
                     sortable: false,
-                    class: "text-center w-25"
+                    class: "text-left w-25"
                 },
                 office_type: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center w-25"
+                    class: "text-left w-25"
                 },
                 part: {
                     label: "部门",
                     sortable: false,
-                    class: "text-center w-15"
+                    class: "text-left w-15"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center w-5"
+                    class: "text-left w-5"
                 }
             },
             projects: {

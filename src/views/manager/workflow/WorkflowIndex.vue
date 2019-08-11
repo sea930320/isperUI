@@ -617,7 +617,7 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-left field-sn"
                 },
                 share: {
                     label: "",
@@ -627,17 +627,17 @@ export default {
                 name: {
                     label: "流程名",
                     sortable: false,
-                    class: "text-center field-name"
+                    class: "text-left field-name"
                 },
                 creator: {
                     label: "创建者",
                     sortable: false,
-                    class: "text-center field-creator"
+                    class: "text-left field-creator"
                 },
                 create_time: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-center field-create_time"
+                    class: "text-right field-create_time"
                 },
                 rend_ani_1: {
                     label: "渲染动画1",
@@ -652,12 +652,12 @@ export default {
                 experiment_type_label: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center field-experiment_type_label"
+                    class: "text-left field-experiment_type_label"
                 },
                 experiment_task_label: {
                     label: "流程标签",
                     sortable: false,
-                    class: "text-center field-experiment_task_label"
+                    class: "text-left field-experiment_task_label"
                 },
                 status: {
                     label: "状态",

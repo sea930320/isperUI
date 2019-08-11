@@ -231,32 +231,32 @@ export default {
         id: {
           label: "序号",
           sortable: false,
-          class: "text-center field-id"
+          class: "text-right field-id"
         },
         courseName: {
           label: "课堂名称",
           sortable: false,
-          class: "text-center field-courseName"
+          class: "text-left field-courseName"
         },
         created_by: {
           label: "创建人",
           sortable: false,
-          class: "text-center field-created_by"
+          class: "text-left field-created_by"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-center field-create_time"
+          class: "text-right field-create_time"
         },
         teacherName: {
           label: "关联课程",
           sortable: false,
-          class: "text-center field-teacherName"
+          class: "text-left field-teacherName"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-action"
+          class: "text-left field-action"
         }
       },
       queryParam: {

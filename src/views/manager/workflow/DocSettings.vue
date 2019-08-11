@@ -16,7 +16,7 @@
               class="styledBtn"
               @click.stop="uploadData"
             >
-              <icon name="upload"/>&nbsp;上传素材
+              <icon name="upload" />&nbsp;上传素材
             </b-button>
             <b-button
               size="sm"
@@ -24,7 +24,7 @@
               class="styledBtn"
               @click.stop="uploadDocs"
             >
-              <icon name="upload"/>&nbsp;导入操作指南
+              <icon name="upload" />&nbsp;导入操作指南
             </b-button>
           </b-button-group>
         </div>
@@ -46,7 +46,7 @@
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>
             <template slot="name" slot-scope="row">{{row.item.name}}</template>
             <template slot="type" slot-scope="row">
-              <b-form-input size="sm" type="text" v-model.trim="row.item.type"/>
+              <b-form-input size="sm" type="text" v-model.trim="row.item.type" />
             </template>
             <template slot="usage" slot-scope="row">
               <b-form-select
@@ -62,13 +62,13 @@
                 href="javascript:void(0);"
                 @click="previewFile(row.item.file)"
               >
-                <icon name="tv"/>
+                <icon name="tv" />
               </a>
               <a class="btn-link mx-1" :href="row.item.file" target="_blank">
-                <icon name="download"/>
+                <icon name="download" />
               </a>
               <a class="btn-link mx-1" href="javascript:;" @click="deleteDocClick(row.item)">
-                <icon name="trash"/>
+                <icon name="trash" />
               </a>
             </template>
           </b-table>
@@ -411,10 +411,10 @@ export default {
     },
     // 验证数据是否正确和完整
     validateSaveData() {
-      if (this.flowDocs.length === 0) {
-        this.$toasted.error("请上传素材");
-        return false;
-      }
+      // if (this.flowDocs.length === 0) {
+      //   this.$toasted.error("请上传素材");
+      //   return false;
+      // }
       return this.flowDocs.every(doc => {
         if (doc.type === "") {
           this.$toasted.error(`请填写素材${doc.name}的类型`);
@@ -432,9 +432,7 @@ export default {
             "docx"
         ) {
           this.$toasted.error(
-            `素材【${
-              doc.name
-            }】格式不是docx，不得选择操作指南或模板用途，请重新选择`
+            `素材【${doc.name}】格式不是docx，不得选择操作指南或模板用途，请重新选择`
           );
           return false;
         }
@@ -459,7 +457,10 @@ export default {
         });
 
         workflowService
-          .updateWorkflowDoc({ docs: JSON.stringify(data) })
+          .updateWorkflowDoc({
+            docs: JSON.stringify(data),
+            flow_id: this.flowId
+          })
           .then(data => {
             this.setFlowStep(data.step);
             this.$toasted.success("保存成功");

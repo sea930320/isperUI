@@ -380,37 +380,37 @@ export default {
                 check: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-ccheck"
+                    class: "text-left field-ccheck"
                 },
                 id: {
                     label: "ID",
                     sortable: false,
-                    class: "text-center field-csn"
+                    class: "text-right field-csn"
                 },
                 name: {
                     label: "单位名称",
                     sortable: false,
-                    class: "text-center field-cname"
+                    class: "text-left field-cname"
                 },
                 type: {
                     label: "单位类别",
                     sortable: false,
-                    class: "text-center field-ccreator"
+                    class: "text-left field-ccreator"
                 },
                 creator: {
                     label: "创建人",
                     sortable: false,
-                    class: "text-center field-ccreate_time"
+                    class: "text-left field-ccreate_time"
                 },
                 create_time: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-center field-crend_ani_1"
+                    class: "text-right field-crend_ani_1"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-crend_ani_2"
+                    class: "text-left field-crend_ani_2"
                 }
             },
             cManagerColumns: {

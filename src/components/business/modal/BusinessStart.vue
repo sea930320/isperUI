@@ -118,7 +118,7 @@ export default {
                         .createBusiness(postData)
                         .then(() => {
                             this.$emit("data-ready");
-                            this.$toasted.success("创建成功。");
+                            this.$toasted.success("启动成功。");
                         })
                         .catch(() => {
                             this.$emit("data-failed");

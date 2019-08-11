@@ -3,6 +3,7 @@
     <loading v-if="isRunning"></loading>
     <div class="w-60 mx-auto" v-if="survey">
       <div class="survey-title mb-3">{{survey.title}}</div>
+      <div class="question_type">选择题</div>
       <div
         class="select-question"
         v-for="(question, index) in survey.select_questions"
@@ -29,6 +30,7 @@
         </div>
       </div>
       <hr />
+      <div class="question_type">填空题</div>
       <div
         class="blank-question text-left"
         style="margin-bottom: 1rem"
@@ -61,6 +63,7 @@
         </div>
       </div>
       <hr />
+      <div class="question_type">问答题</div>
       <div
         class="normal-question text-left"
         style="margin-bottom: 1rem"
@@ -228,6 +231,11 @@ export default {
     p {
       margin: 0px;
     }
+  }
+  .question_type {
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: bold;
   }
 }
 </style>

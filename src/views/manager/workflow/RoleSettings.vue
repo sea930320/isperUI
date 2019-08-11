@@ -309,7 +309,8 @@ export default {
       roleGroupAllocations: [],
       nodeRoleGroupAllocations: [],
       all_check: false,
-      all_can_brought: false
+      all_can_brought: false,
+      not_watch: false
     };
   },
   computed: {
@@ -348,6 +349,7 @@ export default {
       deep: true
     },
     all_check(value) {
+      if (this.not_watch) return;
       if (this.roleGroupAllocations.length == 0) return;
       this.roleGroupAllocations.forEach(rga => {
         rga.all_check = value;
@@ -356,6 +358,7 @@ export default {
       });
     },
     all_can_brought(value) {
+      if (this.not_watch) return;
       if (this.roleGroupAllocations.length == 0) return;
       this.roleGroupAllocations.forEach(rga => {
         rga.all_can_brought = value;
@@ -523,6 +526,9 @@ export default {
     roleAllocationList() {
       if (!this.activeNode) return;
       this.run();
+      this.not_watch = true;
+      this.all_check = false;
+      this.all_can_brought = false;
       let params = {
         flow_id: this.flowId,
         node_id: this.activeNode.id
@@ -592,6 +598,7 @@ export default {
             }
           );
           this.$emit("data-ready");
+          this.not_watch = false;
         })
         .catch(() => {
           this.$emit("data-failed");

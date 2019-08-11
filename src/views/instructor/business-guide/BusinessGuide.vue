@@ -42,32 +42,32 @@
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-id"
+                        class: "text-right field-id"
                     },
                     business_id: {
                         label: "业务序号",
                         sortable: false,
-                        class: "text-center field-business_id"
+                        class: "text-right field-business_id"
                     },
                     business_name: {
                         label: "业务名称",
                         sortable: false,
-                        class: "text-center field-business_name"
+                        class: "text-left field-business_name"
                     },
                     create_time: {
                         label: "创建时间",
                         sortable: false,
-                        class: "text-center field-create_time"
+                        class: "text-left field-create_time"
                     },
                     request: {
                         label: "请求指导者姓名",
                         sortable: false,
-                        class: "text-center field-request"
+                        class: "text-left field-request"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 allData: {

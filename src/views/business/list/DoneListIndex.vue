@@ -65,37 +65,37 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn w-5"
+          class: "text-right field-sn w-5"
         },
         name: {
           label: "业务名称",
           sortable: false,
-          class: "text-center field-name w-20"
+          class: "text-left field-name w-20"
         },
         office_type: {
           label: "事务类型",
           sortable: false,
-          class: "text-center field-office_type w-20"
+          class: "text-left field-office_type w-20"
         },
         create_time: {
           label: "申请时间",
           sortable: false,
-          class: "text-center field-create_time w-20"
+          class: "text-left field-create_time w-20"
         },
         creator: {
           label: "申请人",
           sortable: false,
-          class: "text-center field-creator w-15"
+          class: "text-right field-creator w-15"
         },
         status: {
           label: "状态",
           sortable: false,
-          class: "text-center field-status w-10"
+          class: "text-left field-status w-10"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-action w-10"
+          class: "text-left field-action w-10"
         }
       },
       queryParam: {

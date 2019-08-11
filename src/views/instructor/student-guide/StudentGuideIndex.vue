@@ -319,96 +319,96 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center w-5"
+          class: "text-right w-5"
         },
         name: {
           label: "业务名称",
           sortable: false,
-          class: "text-center w-20"
+          class: "text-left w-20"
         },
         company_name: {
           label: "创建单位",
           sortable: false,
-          class: "text-center w-20"
+          class: "text-left w-20"
         },
         team_name: {
           label: "参与团队",
           sortable: false,
-          class: "text-center w-10"
+          class: "text-left w-10"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-center w-15"
+          class: "text-right w-15"
         },
         status: {
           label: "业务状态",
           sortable: false,
-          class: "text-center w-20"
+          class: "text-left w-20"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center w-10"
+          class: "text-left w-10"
         }
       },
       columns2: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center w-5"
+          class: "text-right w-5"
         },
         name: {
           label: "业务名称",
           sortable: false,
-          class: "text-center w-15"
+          class: "text-left w-15"
         },
         team_leader: {
           label: "队长",
           sortable: false,
-          class: "text-center w-15"
+          class: "text-left w-15"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-center w-15"
+          class: "text-right w-15"
         },
         status: {
           label: "开放邀请",
           sortable: false,
-          class: "text-center w-20"
+          class: "text-left w-20"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center w-30"
+          class: "text-left w-30"
         }
       },
       userColumns: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-left pl-3 field-sn"
+          class: "text-right pl-3 field-sn"
         },
         name: {
           label: "姓名",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         student_id: {
           label: "学号",
           sortable: false,
-          class: "text-center field-username"
+          class: "text-right field-username"
         },
         class_name: {
           label: "班级",
           sortable: false,
-          class: "text-center field-class_name"
+          class: "text-left field-class_name"
         },
         gender: {
           label: "性别",
           sortable: false,
-          class: "text-center field-gender"
+          class: "text-left field-gender"
         }
       },
 

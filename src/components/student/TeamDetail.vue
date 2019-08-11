@@ -56,22 +56,22 @@ export default {
         name: {
           label: "姓名",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         username: {
           label: "学号",
           sortable: false,
-          class: "text-center field-username"
+          class: "text-left field-username"
         },
         class_name: {
           label: "班级",
           sortable: false,
-          class: "text-center field-class_name"
+          class: "text-left field-class_name"
         },
         gender: {
           label: "性别",
           sortable: false,
-          class: "text-center field-gender"
+          class: "text-left field-gender"
         }
       }
     };
