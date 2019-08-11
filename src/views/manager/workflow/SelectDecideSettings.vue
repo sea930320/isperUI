@@ -57,10 +57,10 @@
                         </b-row>
                         <b-row class="mt-3">
                             <b-col sm="4">
-                                <b-form-input placeholder="itemTitle" type="text" v-model="new_item.itemTitle"></b-form-input>
+                                <b-form-input placeholder="选择项" type="text" v-model="new_item.itemTitle"></b-form-input>
                             </b-col>
                             <b-col sm="7">
-                                <b-form-input placeholder="itemDescription" type="text" v-model="new_item.itemDescription"></b-form-input>
+                                <b-form-input placeholder="选择项描述介绍" type="text" v-model="new_item.itemDescription"></b-form-input>
                             </b-col>
                             <b-col sm="1">
                                 <b-button variant="primary" @click="addItem"

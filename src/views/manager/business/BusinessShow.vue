@@ -70,6 +70,14 @@
                     >
                         <icon name="eye"></icon>
                     </a>
+                    <a
+                            href="javascript:"
+                            class="btn-link disabled"
+                            title="查看"
+                            v-else
+                    >
+                        <icon name="eye"></icon>
+                    </a>
                 </template>
             </b-table>
         </div>
@@ -110,8 +118,8 @@
                     </thead>
                     <tbody>
                     <tr
-                            v-for="(accessableItem, index) in checkedItems"
-                            :key="accessableItem.id"
+                        v-for="(accessableItem, index) in checkedItems"
+                        :key="accessableItem.id"
                     >
                         <td>{{ index+1 }}</td>
                         <td>{{ accessableItem.id }}</td>
@@ -195,42 +203,42 @@
                     sn: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-5"
+                        class: "text-left field-5"
                     },
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-center field-5"
+                        class: "text-left field-5"
                     },
                     name: {
                         label: "业务名称",
                         sortable: false,
-                        class: "text-center field-25"
+                        class: "text-left field-25"
                     },
                     class: {
                         label: "事务类型",
                         sortable: false,
-                        class: "text-center field-25"
+                        class: "text-left field-25"
                     },
                     created_time: {
                         label: "启动时间",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                     creator: {
                         label: "启动人",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                     status: {
                         label: "状态",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                     control: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                 },
                 selectedBusiness:{},
