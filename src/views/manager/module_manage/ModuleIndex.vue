@@ -15,8 +15,8 @@
                             </b-card-header>
                             <b-collapse id="accordion-1" visible role="tabpanel">
                                 <b-list-group>
-                                    <b-list-group-item @click="swapComponent('Edit')">编辑</b-list-group-item>
-                                    <b-list-group-item @click="swapComponent('Publicity')">公示</b-list-group-item>
+                                    <b-list-group-item @click="changeUrl('Edit')">编辑</b-list-group-item>
+                                    <b-list-group-item @click="changeUrl('Publicity')">公示</b-list-group-item>
                                     <b-list-group-item>展示</b-list-group-item>
                                     <b-list-group-item>交付与签收</b-list-group-item>
                                     <b-list-group-item>法案制作</b-list-group-item>
@@ -74,7 +74,9 @@
             </b-col>
             <b-col cols="10">
                 <div class="cardDiv my-0">
-                    <div :is="currentComponent" :swap-component="swapComponent"></div>
+                    <div>
+                        <img v-bind:src="require('@/assets/module/' + currentUrl + '.jpg')" class="w-100"/>
+                    </div>
                 </div>
             </b-col>
         </b-row>
@@ -84,20 +86,16 @@
 <script>
     import {mapState} from "vuex";
     import Loading from "@/components/loading/Loading";
-    import Edit from "./EditIndex";
-    import Publicity from "./PublicityIndex";
     import GroupService from "@/services/groupService";
 
     export default {
         name: "super-module-manage",
         components: {
             Loading,
-            'Edit': Edit,
-            'Publicity': Publicity
         },
         data() {
             return {
-                currentComponent: 'Edit'
+                currentUrl: 'Edit'
             }
         },
         created() {
@@ -110,8 +108,8 @@
         watch: {
         },
         methods: {
-            swapComponent: function(component) {
-                this.currentComponent = component;
+            changeUrl(url) {
+                this.currentUrl = url;
             },
             getGroupList() {
                 GroupService

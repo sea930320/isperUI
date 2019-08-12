@@ -23,8 +23,8 @@
                         </template>
                         <template slot="instructors" slot-scope="row">
                             <div>
-                            <span v-for="instructor in row.item.instructors.slice(0, 5)"
-                                  :key="instructor.id">{{ instructor.name + ', ' }}</span>
+                            <span v-for="(instructor, index) in row.item.instructors.slice(0, 5)"
+                                  :key="instructor.id">{{(index === 4) ? instructor.name + ' ...' : instructor.name + ', ' }}</span>
                             </div>
                         </template>
                         <template slot="created" slot-scope="row">

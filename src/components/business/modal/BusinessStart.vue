@@ -38,7 +38,7 @@
                 :xml="project.flow.xml"
                 @on-close="xmlModalShow = false"
             ></view-xml>
-            <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="关联课程">
+            <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="办理单位">
                 <div class="row">
                     <b-form-select
                         v-model="project.use_to_company"
