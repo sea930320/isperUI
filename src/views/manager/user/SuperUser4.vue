@@ -103,37 +103,37 @@
                     student_id: {
                         label: "学号",
                         sortable: false,
-                        class: "text-center field-student_id"
+                        class: "text-right field-student_id"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     gender: {
                         label: "性别",
                         sortable: false,
-                        class: "text-center field-gender"
+                        class: "text-left field-gender"
                     },
                     class_name: {
                         label: "班级",
                         sortable: false,
-                        class: "text-center field-class_name"
+                        class: "text-left field-class_name"
                     },
                     company: {
                         label: "学校",
                         sortable: false,
-                        class: "text-center field-company"
+                        class: "text-left field-company"
                     },
                     group: {
                         label: "集群",
                         sortable: false,
-                        class: "text-center field-group"
+                        class: "text-left field-group"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryParam: {

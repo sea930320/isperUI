@@ -93,22 +93,22 @@
                     name: {
                         label: "公告名称",
                         sortable: false,
-                        class: "text-center field-50"
+                        class: "text-left field-50"
                     },
                     create_time: {
                         label: "创建时间",
                         sortable: false,
-                        class: "text-center field-20"
+                        class: "text-right field-20"
                     },
                     preview_icon: {
                         label: "预览",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                     download_icon: {
                         label: "下载",
                         sortable: false,
-                        class: "text-center field-10"
+                        class: "text-left field-10"
                     },
                 },
                 queryParam: {

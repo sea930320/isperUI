@@ -236,22 +236,22 @@ export default {
                 id: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-right field-sn"
                 },
                 name: {
                     label: "环节名称",
                     sortable: false,
-                    class: "text-center field-name"
+                    class: "text-left field-name"
                 },
                 appMode: {
                     label: "对应模块",
                     sortable: false,
-                    class: "text-center field-creator"
+                    class: "text-left field-creator"
                 },
                 look_on: {
                     label: "允许观摩",
                     sortable: false,
-                    class: "text-center field-rend_ani_1"
+                    class: "text-left field-rend_ani_1"
                 }
             },
             projectData: {},

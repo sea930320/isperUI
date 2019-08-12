@@ -103,37 +103,37 @@
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-center field-id"
+                        class: "text-right field-id"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     company: {
                         label: "所在单位",
                         sortable: false,
-                        class: "text-center field-company"
+                        class: "text-left field-company"
                     },
                     part: {
                         label: "部门",
                         sortable: false,
-                        class: "text-center field-part"
+                        class: "text-left field-part"
                     },
                     group: {
                         label: "集群",
                         sortable: false,
-                        class: "text-center field-group"
+                        class: "text-left field-group"
                     },
                     gender: {
                         label: "性别",
                         sortable: false,
-                        class: "text-center field-gender"
+                        class: "text-left field-gender"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryParam: {

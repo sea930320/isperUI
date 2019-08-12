@@ -170,59 +170,59 @@
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-id"
+                        class: "text-right field-id"
                     },
                     name: {
                         label: "人员姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     part: {
                         label: "部门名称",
                         sortable: false,
-                        class: "text-center field-part"
+                        class: "text-left field-part"
                     },
                     position: {
                         label: "职务类型",
                         sortable: false,
-                        class: "text-center field-position"
+                        class: "text-left field-position"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 noncolumns: {
                     check: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-check"
+                        class: "text-left field-check"
                     },
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-id"
+                        class: "text-right field-id"
                     },
                     name: {
                         label: "人员姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     part: {
                         label: "部门名称",
                         sortable: false,
-                        class: "text-center field-part"
+                        class: "text-left field-part"
                     },
                     position: {
                         label: "职务类型",
                         sortable: false,
-                        class: "text-center field-position"
+                        class: "text-left field-position"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
             };

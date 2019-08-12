@@ -392,22 +392,22 @@
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-sn"
+                        class: "text-right field-sn"
                     },
                     name: {
                         label: "流程名称",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     convertedData: {
                         label: "实验类型",
                         sortable: false,
-                        class: "text-center field-creator"
+                        class: "text-right field-creator"
                     },
                     rend_ani_1: {
                         label: "检查",
                         sortable: false,
-                        class: "text-center field-rend_ani_1"
+                        class: "text-left field-rend_ani_1"
                     },
                 },
                 showProjectDataArray: [],
@@ -415,12 +415,12 @@
                     name: {
                         label: "项目",
                         sortable: false,
-                        class: "field-30"
+                        class: "field-30 text-left"
                     },
                     content: {
                         label: "内容",
                         sortable: false,
-                        class: "field-70"
+                        class: "field-70 text-left"
                     },
                 },
                 showProjectData: {},

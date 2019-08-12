@@ -81,32 +81,32 @@
                     check: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-check"
+                        class: "text-left field-check"
                     },
                     username: {
                         label: "用户名",
                         sortable: false,
-                        class: "text-center field-username"
+                        class: "text-left field-username"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     phone: {
                         label: "手机号码",
                         sortable: false,
-                        class: "text-center field-phone"
+                        class: "text-right field-phone"
                     },
                     gender: {
                         label: "性别",
                         sortable: false,
-                        class: "text-center field-gender"
+                        class: "text-left field-gender"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryParam: {

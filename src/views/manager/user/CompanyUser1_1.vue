@@ -272,47 +272,47 @@ export default {
                 check: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-check"
+                    class: "text-left field-check"
                 },
                 id: {
                     label: "ID",
                     sortable: false,
-                    class: "text-center field-id"
+                    class: "text-right field-id"
                 },
                 username: {
                     label: "用户名",
                     sortable: false,
-                    class: "text-center field-username"
+                    class: "text-left field-username"
                 },
                 name: {
                     label: "姓名",
                     sortable: false,
-                    class: "text-center field-name"
+                    class: "text-left field-name"
                 },
                 gender: {
                     label: "性别",
                     sortable: false,
-                    class: "text-center field-gender"
+                    class: "text-left field-gender"
                 },
                 part: {
                     label: "部门",
                     sortable: false,
-                    class: "text-center field-part"
+                    class: "text-left field-part"
                 },
                 position: {
                     label: "职务",
                     sortable: false,
-                    class: "text-center field-position"
+                    class: "text-left field-position"
                 },
                 phone: {
                     label: "手机号码",
                     sortable: false,
-                    class: "text-center field-phone"
+                    class: "text-right field-phone"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-action"
+                    class: "text-left field-action"
                 }
             },
             queryParam: {

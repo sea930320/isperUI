@@ -192,56 +192,56 @@ export default {
                 id: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center w-10"
+                    class: "text-right w-10"
                 },
                 class: {
                     label: "素材类型",
                     sortable: false,
-                    class: "text-center w-15"
+                    class: "text-left w-15"
                 },
                 name: {
                     label: "素材名称",
                     sortable: false,
-                    class: "text-center w-35"
+                    class: "text-left w-35"
                 },
                 type: {
                     label: "用途",
                     sortable: false,
-                    class: "text-center w-15"
+                    class: "text-left w-15"
                 },
                 control: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center w-25"
+                    class: "text-left w-25"
                 }
             },
             nodeColumns: {
                 number: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-right field-sn"
                 },
                 name: {
                     label: "环节名称",
                     sortable: false,
-                    class: "text-center field-name"
+                    class: "text-left field-name"
                 }
             },
             docNodeRelatedColumns: {
                 character_class: {
                     label: "角色类型",
                     sortable: false,
-                    class: "text-center w-30"
+                    class: "text-left w-30"
                 },
                 character_name: {
                     label: "角色名称",
                     sortable: false,
-                    class: "text-center w-50"
+                    class: "text-left w-50"
                 },
                 is_use: {
                     label: "是否使用本素材",
                     sortable: false,
-                    class: "text-center w-20"
+                    class: "text-left w-20"
                 }
             },
             usageOptions: [

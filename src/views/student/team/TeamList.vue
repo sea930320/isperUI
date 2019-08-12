@@ -138,76 +138,76 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn"
+          class: "text-right field-sn"
         },
         name: {
           label: "团队名称",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         leader: {
           label: "队长",
           sortable: false,
-          class: "text-center field-creator"
+          class: "text-left field-creator"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-center field-create_time w-20"
+          class: "text-right field-create_time w-20"
         },
         type: {
           label: "开放邀请",
           sortable: false,
-          class: "text-center field-creator w-15"
+          class: "text-left field-creator w-15"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-status w-10"
+          class: "text-left field-status w-10"
         }
       },
       columns2: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn"
+          class: "text-right field-sn"
         },
         name: {
           label: "团队名称",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         leader: {
           label: "队长",
           sortable: false,
-          class: "text-center field-creator"
+          class: "text-left field-creator"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-center field-create_time w-20"
+          class: "text-right field-create_time w-20"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-status w-10"
+          class: "text-left field-status w-10"
         }
       },
       columns3: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn"
+          class: "text-right field-sn"
         },
         name: {
           label: "姓名",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         username: {
           label: "用户名",
           sortable: false,
-          class: "text-center field-creator"
+          class: "text-left field-creator"
         }
       }
     };

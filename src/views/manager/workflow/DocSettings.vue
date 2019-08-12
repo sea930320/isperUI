@@ -162,44 +162,44 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn"
+          class: "text-right field-sn"
         },
         name: {
           label: "素材名称",
           sortable: false,
-          class: "text-center field-name"
+          class: "text-left field-name"
         },
         type: {
           label: "素材类型",
           sortable: false,
-          class: "text-center field-type"
+          class: "text-left field-type"
         },
         usage: {
           label: "用途",
           sortable: false,
-          class: "text-center field-usage"
+          class: "text-left field-usage"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-center field-action"
+          class: "text-left field-action"
         }
       },
       docNodeRelatedColumns: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-rel-sn"
+          class: "text-right field-rel-sn"
         },
         name: {
           label: "素材名称",
           sortable: false,
-          class: "text-center field-rel-name"
+          class: "text-left field-rel-name"
         },
         doc_use: {
           label: "素材类型",
           sortable: false,
-          class: "text-center field-rel-doc_use"
+          class: "text-left field-rel-doc_use"
         }
       },
       usageOptions: [

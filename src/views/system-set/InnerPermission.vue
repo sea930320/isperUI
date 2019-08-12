@@ -89,22 +89,22 @@
                     name: {
                         label: "任务类角色",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     comment: {
                         label: "角色描述",
                         sortable: false,
-                        class: "text-center field-comment"
+                        class: "text-left field-comment"
                     },
                     ownPositions: {
                         label: "对应职务",
                         sortable: false,
-                        class: "text-center field-ownPositions"
+                        class: "text-left field-ownPositions"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryDebounceParam: {

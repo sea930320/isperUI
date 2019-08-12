@@ -60,22 +60,22 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-sn"
+          class: "text-right field-sn"
         },
         link_name: {
           label: "环节名称",
           sortable: false,
-          class: "text-center field-link_name"
+          class: "text-left field-link_name"
         },
         modules: {
           label: "对应的程序模块",
           sortable: false,
-          class: "text-center field-modules"
+          class: "text-left field-modules"
         },
         viewable: {
           label: "允许旁观",
           sortable: false,
-          class: "text-center field-viewable"
+          class: "text-left field-viewable"
         }
       },
       workflow: {},

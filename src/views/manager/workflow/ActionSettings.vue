@@ -48,9 +48,9 @@
           <table class="table b-table table-hover table-borderless table-sm role-allocation">
             <thead role="rowgroup">
               <tr>
-                <th class="text-center field-role-alloc-type">身份类型</th>
-                <th class="text-center field-role-alloc-name">身份名称</th>
-                <th class="text-center field-role-allo-action">
+                <th class="text-left field-role-alloc-type">身份类型</th>
+                <th class="text-left field-role-alloc-name">身份名称</th>
+                <th class="text-left field-role-allo-action">
                   <b-form-checkbox v-model="is_all_use">配置动作</b-form-checkbox>
                 </th>
               </tr>
@@ -103,24 +103,24 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-node-sn"
+          class: "text-right field-node-sn"
         },
         name: {
           label: "环节名称",
           sortable: false,
-          class: "text-center field-node-name"
+          class: "text-left field-node-name"
         },
         process_name: {
           label: "对应模块",
           sortable: false,
-          class: "text-center field-node-process_name"
+          class: "text-left field-node-process_name"
         }
       },
       actionColumns: {
         name: {
           label: "动作",
           sortable: false,
-          class: "text-center w-100"
+          class: "text-left w-100"
         }
       },
       workflow: {},

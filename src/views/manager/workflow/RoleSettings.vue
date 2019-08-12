@@ -73,17 +73,17 @@
             class="d-flex justify-content-center py-1"
             style="border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea"
           >
-            <div class="field-role-sn text-center">#</div>
-            <div class="field-role-type text-center px-1">
+            <div class="field-role-sn text-left">#</div>
+            <div class="field-role-type text-left px-1">
               <b-form-input size="sm" :value="newRole.type" @input="newRole.type = $event.trim()" />
             </div>
-            <div class="field-role-name text-center px-1">
+            <div class="field-role-name text-left px-1">
               <b-form-input size="sm" :value="newRole.name" @input="newRole.name = $event.trim()" />
             </div>
-            <div class="field-role-capacity text-center px-1">
+            <div class="field-role-capacity text-left px-1">
               <b-form-input size="sm" type="number" min="1" v-model.lazy="newRole.capacity" />
             </div>
-            <div class="field-role-job_type text-center px-1">
+            <div class="field-role-job_type text-left px-1">
               <b-form-select
                 size="sm"
                 v-model="newRole.job_type.id"
@@ -92,7 +92,7 @@
                 text-field="name"
               ></b-form-select>
             </div>
-            <div class="field-role-action text-center px-1">
+            <div class="field-role-action text-left px-1">
               <b-button size="sm" variant="link" @click="addNewRole">
                 <icon name="plus" />
               </b-button>
@@ -105,20 +105,20 @@
           <table class="table b-table table-hover table-borderless table-sm role-allocation">
             <thead role="rowgroup">
               <tr>
-                <th class="text-center field-role-assign-sn">
+                <th class="text-left field-role-assign-sn">
                   <b-form-checkbox v-model="all_check">是否使用</b-form-checkbox>
                 </th>
-                <th class="text-center field-role-assign-role_name">身份</th>
-                <th class="text-center field-role-assign-role_job_type">职务</th>
+                <th class="text-left field-role-assign-role_name">身份</th>
+                <th class="text-left field-role-assign-role_job_type">职务</th>
                 <th
                   v-if="activeNode && activeNode.is_start_node"
-                  class="text-center field-role-assign-startable"
+                  class="text-left field-role-assign-startable"
                 >可否启动业务</th>
-                <th class="text-center field-role-assign-endable">结束环节权限</th>
-                <th class="text-center field-role-assign-takeable">
+                <th class="text-left field-role-assign-endable">结束环节权限</th>
+                <th class="text-left field-role-assign-takeable">
                   <b-form-checkbox v-model="all_can_brought">是否被带入</b-form-checkbox>
                 </th>
-                <th class="text-center field-role-assign-action"></th>
+                <th class="text-left field-role-assign-action"></th>
               </tr>
             </thead>
             <tbody role="rowgroup">
@@ -244,49 +244,49 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-node-sn"
+          class: "text-right field-node-sn"
         },
         name: {
           label: "环节名称",
           sortable: false,
-          class: "text-center field-node-name"
+          class: "text-left field-node-name"
         },
         process_name: {
           label: "对应模块",
           sortable: false,
-          class: "text-center field-node-process_name"
+          class: "text-left field-node-process_name"
         }
       },
       roleColumns: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-center field-role-sn"
+          class: "text-right field-role-sn"
         },
         type: {
           label: "身份类型",
           sortable: false,
-          class: "text-center field-role-type"
+          class: "text-left field-role-type"
         },
         name: {
           label: "身份",
           sortable: false,
-          class: "text-center field-role-name"
+          class: "text-left field-role-name"
         },
         capacity: {
           label: "数量",
           sortable: false,
-          class: "text-center field-role-capacity"
+          class: "text-left field-role-capacity"
         },
         job_type: {
           label: "对应职务",
           sortable: false,
-          class: "text-center field-role-job_type"
+          class: "text-left field-role-job_type"
         },
         action: {
           label: "",
           sortable: false,
-          class: "text-center field-role-action"
+          class: "text-left field-role-action"
         }
       },
       workflow: {},

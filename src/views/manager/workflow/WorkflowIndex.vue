@@ -104,14 +104,14 @@
                     <a
                         href="javascript:;"
                         class="btn-link"
-                        v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
+                        v-if="row.item.animation1 && isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
                         title="点击查看大图"
                         @click="showBigImg(row.item.animation1)"
                     >
                         <icon name="eye"></icon>
                     </a>
                     <div
-                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow')"
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && row.item.edited"
                     >
                         <toggle-upload :item="row.item" @uploadSuccess="uploadAnimationSuccess"></toggle-upload>
                     </div>
@@ -120,14 +120,14 @@
                     <a
                         href="javascript:;"
                         class="btn-link"
-                        v-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
+                        v-if="row.item.animation2 && isActionAllowed('code_workflow_management', 'code_view_workflow') && !row.item.edited"
                         title="点击查看大图"
                         @click="showBigImg(row.item.animation2)"
                     >
                         <icon name="eye"></icon>
                     </a>
                     <div
-                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow')"
+                        v-else-if="isActionAllowed('code_workflow_management', 'code_view_workflow') && row.item.edited"
                     >
                         <toggle-upload
                             :item="row.item"
@@ -622,7 +622,7 @@ export default {
                 share: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-share"
+                    class: "text-left field-share"
                 },
                 name: {
                     label: "流程名",
@@ -642,12 +642,12 @@ export default {
                 rend_ani_1: {
                     label: "渲染动画1",
                     sortable: false,
-                    class: "text-center field-rend_ani_1"
+                    class: "text-left field-rend_ani_1"
                 },
                 rend_ani_2: {
                     label: "渲染动画2",
                     sortable: false,
-                    class: "text-center field-rend_ani_2"
+                    class: "text-left field-rend_ani_2"
                 },
                 experiment_type_label: {
                     label: "事务类型",
@@ -662,12 +662,12 @@ export default {
                 status: {
                     label: "状态",
                     sortable: false,
-                    class: "text-center field-status"
+                    class: "text-left field-status"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-action"
+                    class: "text-left field-action"
                 }
             },
             // 查询参数
@@ -934,14 +934,14 @@ export default {
                 this.$toasted.error("流程名称应不超过20字");
                 return false;
             }
-            if (!workflow.animation1) {
-                this.$toasted.error("请上传渲染动画1");
-                return false;
-            }
-            if (!workflow.animation2) {
-                this.$toasted.error("请上传渲染动画2");
-                return false;
-            }
+            // if (!workflow.animation1) {
+            //     this.$toasted.error("请上传渲染动画1");
+            //     return false;
+            // }
+            // if (!workflow.animation2) {
+            //     this.$toasted.error("请上传渲染动画2");
+            //     return false;
+            // }
             if (workflow.task_label === "") {
                 this.$toasted.error("请输入流程的实验任务标签");
                 return false;
@@ -989,8 +989,8 @@ export default {
         saveWorkflowData(workflow) {
             let data = {
                 name: workflow.name,
-                animation1: workflow.animation1.id,
-                animation2: workflow.animation2.id,
+                animation1: workflow.animation1 && workflow.animation1.id,
+                animation2: workflow.animation2 && workflow.animation2.id,
                 type_label: workflow.type_label,
                 task_label: workflow.task_label,
                 targets: workflow.name

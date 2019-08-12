@@ -200,64 +200,64 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-5"
+                    class: "text-right field-5"
                 },
                 currentShare: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-1"
+                    class: "text-left field-1"
                 },
                 is_protected: {
                     label: "",
                     sortable: false,
-                    class: "text-center field-1"
+                    class: "text-left field-1"
                 },
                 name: {
                     label: "项目名称",
                     sortable: false,
-                    class: "text-center field-20"
+                    class: "text-left field-20"
                 },
                 creator: {
                     label: "创建者",
                     sortable: false,
-                    class: "text-center field-10"
+                    class: "text-left field-10"
                 },
                 create_time: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-center field-create_time"
+                    class: "text-right field-create_time"
                 },
                 dependence: {
                     label: "相关流程",
                     sortable: false,
-                    class: "text-center field-rend_ani_1"
+                    class: "text-left field-rend_ani_1"
                 },
                 is_open: {
                     label: "开放模式",
                     sortable: false,
-                    class: "text-center field-experiment_type_label"
+                    class: "text-left field-experiment_type_label"
                 },
                 mission_type: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center field-experiment_task_label"
+                    class: "text-left field-experiment_task_label"
                 },
                 edit_control: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-action"
+                    class: "text-left field-action"
                 }
             },
             sharable_columns: {
                 name: {
                     label: "项目名称",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-left field-sn"
                 },
                 course: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-left field-sn"
                 }
             },
             xmlModalShow: false,

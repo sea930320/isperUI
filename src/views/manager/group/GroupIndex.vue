@@ -400,59 +400,59 @@
                     check: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-check"
+                        class: "text-left field-check"
                     },
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-center field-sn"
+                        class: "text-right field-sn"
                     },
                     name: {
                         label: "集群名称",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     comment: {
                         label: "集群描述",
                         sortable: false,
-                        class: "text-center field-creator"
+                        class: "text-left field-creator"
                     },
                     publish: {
                         label: "是否公开",
                         sortable: false,
-                        class: "text-center field-create_time"
+                        class: "text-right field-create_time"
                     },
                     groupManagers: {
                         label: "集群管理员",
                         sortable: false,
-                        class: "text-center field-rend_ani_1"
+                        class: "text-left field-rend_ani_1"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-rend_ani_2"
+                        class: "text-left field-rend_ani_2"
                     }
                 },
                 managerColumns: {
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-center field-sn"
+                        class: "text-right field-sn"
                     },
                     name: {
                         label: "管理员名称",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     comment: {
                         label: "备注",
                         sortable: false,
-                        class: "text-center field-creator"
+                        class: "text-left field-creator"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-rend_ani_2"
+                        class: "text-left field-rend_ani_2"
                     }
                 },
                 queryParam: {

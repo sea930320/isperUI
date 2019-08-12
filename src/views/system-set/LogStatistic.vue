@@ -50,7 +50,7 @@
             ></apexchart>
           </div>
         </b-col>
-        <b-col cols="10" v-else>
+        <b-col cols="10" v-else-if="selectedTab==1">
           <div>
             <apexchart
               ref="userChart"
@@ -96,8 +96,9 @@ export default {
     return {
       selectedTab: 0,
       tabOptions: [
-        { text: "工作日志统计", value: 0 },
-        { text: "用户统计", value: 1 }
+        { text: "操作日志统计", value: 0 },
+        { text: "活跃用户统计", value: 1 },
+        { text: "项目使用统计", value: 2 }
       ],
       queryParam: {
         range: [

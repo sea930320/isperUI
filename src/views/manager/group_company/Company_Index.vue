@@ -380,7 +380,7 @@ export default {
                 check: {
                     label: "",
                     sortable: false,
-                    class: "text-left field-ccheck"
+                    class: "text-left field-check"
                 },
                 id: {
                     label: "ID",
@@ -417,22 +417,22 @@ export default {
                 id: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-csn"
+                    class: "text-right field-csn"
                 },
                 name: {
                     label: "管理员名称",
                     sortable: false,
-                    class: "text-center field-crend_ani_3"
+                    class: "text-left field-crend_ani_3"
                 },
                 comment: {
                     label: "备注",
                     sortable: false,
-                    class: "text-center field-crend_ani_4"
+                    class: "text-left field-crend_ani_4"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-crend_ani_2"
+                    class: "text-left field-crend_ani_2"
                 }
             },
             queryParam: {

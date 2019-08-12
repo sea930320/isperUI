@@ -171,49 +171,49 @@ export default {
                 id: {
                     label: "ID",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-right field-sn"
                 },
                 name: {
                     label: "集群名称",
                     sortable: false,
-                    class: "text-center field-name"
+                    class: "text-left field-name"
                 },
                 instructors: {
                     label: "集群指导者",
                     sortable: false,
-                    class: "text-center field-creator"
+                    class: "text-left field-creator"
                 },
                 created: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-center field-create_time"
+                    class: "text-right field-create_time"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-rend_ani_2"
+                    class: "text-left field-rend_ani_2"
                 }
             },
             instructorColumns: {
                 id: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-1"
+                    class: "text-right field-1"
                 },
                 name: {
                     label: "指导者名称",
                     sortable: false,
-                    class: "text-center field-2"
+                    class: "text-left field-2"
                 },
                 instructorItems: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-center field-3"
+                    class: "text-left field-3"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-center field-4"
+                    class: "text-left field-4"
                 }
             },
             queryParam: {

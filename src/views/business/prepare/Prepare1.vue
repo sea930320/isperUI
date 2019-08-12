@@ -395,6 +395,7 @@ export default {
             this.initData();
             DictionaryService.getDicData({})
                 .then(data => {
+                    this.queryParam.group_id = this.userInfo.manager_info.group_id;
                     this.officeKinds = data.results.office;
                     if (this.officeKinds.length > 0) {
                         this.officeKindClicked(this.officeKinds[0], 0);

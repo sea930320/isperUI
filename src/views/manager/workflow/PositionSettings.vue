@@ -36,10 +36,10 @@
                     >
                         <thead role="rowgroup">
                             <tr>
-                                <th class="text-center field-role-alloc-type">身份类型</th>
-                                <th class="text-center field-role-alloc-name">身份名称</th>
-                                <th class="text-center field-role-alloc-image">身份形象</th>
-                                <th class="text-center field-role-alloc-action">角色站位</th>
+                                <th class="text-left field-role-alloc-type">身份类型</th>
+                                <th class="text-left field-role-alloc-name">身份名称</th>
+                                <th class="text-left field-role-alloc-image">身份形象</th>
+                                <th class="text-left field-role-alloc-action">角色站位</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup">
@@ -104,12 +104,12 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-node-sn"
+                    class: "text-right field-node-sn"
                 },
                 name: {
                     label: "环节名称",
                     sortable: false,
-                    class: "text-center field-node-name"
+                    class: "text-left field-node-name"
                 }
             },
             workflow: {},

@@ -102,32 +102,32 @@
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-center field-id"
+                        class: "text-right field-id"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     company: {
                         label: "所在单位",
                         sortable: false,
-                        class: "text-center field-company"
+                        class: "text-left field-company"
                     },
                     group: {
                         label: "集群",
                         sortable: false,
-                        class: "text-center field-group"
+                        class: "text-left field-group"
                     },
                     created: {
                         label: "创建时间",
                         sortable: false,
-                        class: "text-center field-created"
+                        class: "text-right field-created"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryParam: {

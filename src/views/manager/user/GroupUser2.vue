@@ -89,47 +89,47 @@
                     check: {
                         label: "",
                         sortable: false,
-                        class: "text-center field-check"
+                        class: "text-left field-check"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-center field-name"
+                        class: "text-left field-name"
                     },
                     gender: {
                         label: "性别",
                         sortable: false,
-                        class: "text-center field-gender"
+                        class: "text-left field-gender"
                     },
                     sCompany: {
                         label: "原单位",
                         sortable: false,
-                        class: "text-center field-sCompany"
+                        class: "text-left field-sCompany"
                     },
                     sGroup: {
                         label: "原集群",
                         sortable: false,
-                        class: "text-center field-sGroup"
+                        class: "text-left field-sGroup"
                     },
                     phone: {
                         label: "手机号",
                         sortable: false,
-                        class: "text-center field-phone"
+                        class: "text-right field-phone"
                     },
                     reason: {
                         label: "加入/退出理由",
                         sortable: false,
-                        class: "text-center field-reason"
+                        class: "text-left field-reason"
                     },
                     state: {
                         label: "申请加入/退出",
                         sortable: false,
-                        class: "text-center field-state"
+                        class: "text-left field-state"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-center field-action"
+                        class: "text-left field-action"
                     }
                 },
                 queryParam: {

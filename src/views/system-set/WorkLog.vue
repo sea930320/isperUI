@@ -140,42 +140,42 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-sn"
+                    class: "text-right field-sn"
                 },
                 user_id: {
                     label: "用户名",
                     sortable: false,
-                    class: "text-center field-user_id"
+                    class: "text-right field-user_id"
                 },
                 user_name: {
                     label: "姓名",
                     sortable: false,
-                    class: "text-center field-user_name"
+                    class: "text-left field-user_name"
                 },
                 group: {
                     label: "集群",
                     sortable: false,
-                    class: "text-center field-group"
+                    class: "text-left field-group"
                 },
                 company: {
                     label: "单位",
                     sortable: false,
-                    class: "text-center field-company"
+                    class: "text-left field-company"
                 },
                 role: {
                     label: "操作角色",
                     sortable: false,
-                    class: "text-center field-role"
+                    class: "text-left field-role"
                 },
                 log_at: {
                     label: "操作时间",
                     sortable: false,
-                    class: "text-center field-log_at"
+                    class: "text-right field-log_at"
                 },
                 ip: {
                     label: "操作IP",
                     sortable: false,
-                    class: "text-center field-ip"
+                    class: "text-right field-ip"
                 },
                 action: {
                     label: "操作内容",

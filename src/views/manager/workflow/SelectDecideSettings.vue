@@ -93,12 +93,12 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-center field-node-sn"
+                    class: "text-right field-node-sn"
                 },
                 name: {
                     label: "环节名称",
                     sortable: false,
-                    class: "text-center field-node-name"
+                    class: "text-left field-node-name"
                 }
             },
             workflow: {},
