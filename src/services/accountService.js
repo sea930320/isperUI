@@ -257,6 +257,18 @@ class AccountService {
   }
 
   /**
+   * Get WorkLog Statistics
+   * @return {Promise}
+   */
+  getProjectUseLogStatistic(options) {
+    return xhr({
+      method: 'get',
+      url: '/account/get/project_use_log-statistic',
+      params: options
+    })
+  }
+
+  /**
    * Get User Statistics
    * @return {Promise}
    */

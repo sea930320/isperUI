@@ -53,7 +53,10 @@
                     :value="true"
                     :unchecked-value="false"
                   >记住密码</b-form-checkbox>
-                  <b-link to="#">忘记密码?</b-link>
+                  <div class="d-flex">
+                    <b-link to="/register" class="mr-3">用户注册</b-link>
+                    <b-link to="#">忘记密码?</b-link>
+                  </div>
                 </div>
                 <b-button
                   @click="loginHandle"

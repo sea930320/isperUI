@@ -120,7 +120,7 @@
                                     label-for="password"
                                 >
                                     <b-form-input
-                                        type="text"
+                                        type="password"
                                         v-model="user.password"
                                         placeholder="请输入密码"
                                         name="password"
@@ -138,7 +138,7 @@
                                     label-for="password_confirmation"
                                 >
                                     <b-form-input
-                                        type="text"
+                                        type="password"
                                         v-model="user.passwordConfirmation"
                                         placeholder="请再次输入密码"
                                         name="password_confirmation"

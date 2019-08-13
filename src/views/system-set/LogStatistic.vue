@@ -62,6 +62,18 @@
             ></apexchart>
           </div>
         </b-col>
+        <b-col cols="6" v-if="selectedTab===2">
+          <div>
+            <apexchart
+              ref="projectUseLogChart"
+              width="100%"
+              height="400"
+              type="bar"
+              :options="projectUseLogOptions"
+              :series="projectUseLogSeries"
+            ></apexchart>
+          </div>
+        </b-col>
       </b-row>
     </div>
   </div>
@@ -69,7 +81,7 @@
 
 <script>
 import Loading from "@/components/loading/Loading";
-// import _ from "lodash";
+import _ from "lodash";
 import DatePicker from "vue2-datepicker";
 import { mapState } from "vuex";
 import groupService from "@/services/groupService";
@@ -114,13 +126,27 @@ export default {
           id: "worklog-chart"
         },
         xaxis: {
-          categories: ["流程管理", "项目管理", "系统设置", "业务管理"]
+          categories: []
         }
       },
       workLogSeries: [
         {
           name: "WorkLog Chart",
-          data: [0, 0, 0, 0]
+          data: []
+        }
+      ],
+      projectUseLogOptions: {
+        chart: {
+          id: "projectuselog-chart"
+        },
+        xaxis: {
+          categories: []
+        }
+      },
+      projectUseLogSeries: [
+        {
+          name: "Project Use Log Chart",
+          data: []
         }
       ],
       userOptions: {
@@ -232,8 +258,10 @@ export default {
     getData() {
       if (this.selectedTab == 0) {
         this.fetchWorklogStatistic();
-      } else {
+      } else if (this.selectedTab == 1) {
         this.fetchUserStatistic();
+      } else {
+        this.fetchProjectUseLogStatistic();
       }
     },
     fetchWorklogStatistic() {
@@ -256,14 +284,110 @@ export default {
       accountService
         .getWorkLogStatistic(param)
         .then(data => {
-          let seriesData = [
-            data.results.workflow,
-            data.results.project,
-            data.results.system,
-            data.results.business
-          ];
+          let seriesData = [];
+          let categories = [];
+          if (this.userInfo.role == 1) {
+            categories = [
+              "流程管理",
+              "项目管理",
+              "集群管理",
+              "用户管理",
+              "系统设置"
+            ];
+            seriesData = [
+              data.results.workflow,
+              data.results.project,
+              data.results.group,
+              data.results.user,
+              data.results.system
+            ];
+          } else if ([2, 6].includes(this.userInfo.role)) {
+            categories = [
+              "流程管理",
+              "项目管理",
+              "集群及单位管理",
+              "用户管理",
+              "系统设置",
+              "业务管理"
+            ];
+            seriesData = [
+              data.results.workflow,
+              data.results.project,
+              data.results.groupandcompany,
+              data.results.user,
+              data.results.system,
+              data.results.business
+            ];
+          } else if ([3, 7].includes(this.userInfo.role)) {
+            categories = [
+              "流程管理",
+              "项目管理",
+              "用户管理",
+              "课堂管理",
+              "系统设置",
+              "业务管理"
+            ];
+            seriesData = [
+              data.results.workflow,
+              data.results.project,
+              data.results.user,
+              data.results.course,
+              data.results.system,
+              data.results.business
+            ];
+          }
+          this.workLogOptions.xaxis.categories = categories;
           this.workLogSeries.data = seriesData;
+          this.$refs.workLogChart.updateOptions({
+            xaxis: {
+              categories
+            }
+          });
           this.$refs.workLogChart.updateSeries([
+            {
+              data: seriesData
+            }
+          ]);
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
+    fetchProjectUseLogStatistic() {
+      this.run();
+      let param = {
+        ...this.queryParam
+      };
+      delete param.range;
+      if (this.queryParam.range != "") {
+        param["start_date"] = this.queryParam.range[0]
+          ? this.$moment(this.queryParam.range[0]).format("YYYY-MM-DD")
+          : "";
+        param["end_date"] = this.queryParam.range[1]
+          ? this.$moment(this.queryParam.range[1]).format("YYYY-MM-DD")
+          : "";
+      } else {
+        param["start_date"] = "";
+        param["end_date"] = "";
+      }
+      accountService
+        .getProjectUseLogStatistic(param)
+        .then(data => {
+          let seriesData = [];
+          let categories = [];
+          _.map(data.results, project => {
+            categories.push(project.name)
+            seriesData.push(project.count)
+          });
+          this.workLogOptions.xaxis.categories = categories;
+          this.workLogSeries.data = seriesData;
+          this.$refs.projectUseLogChart.updateOptions({
+            xaxis: {
+              categories
+            }
+          });
+          this.$refs.projectUseLogChart.updateSeries([
             {
               data: seriesData
             }

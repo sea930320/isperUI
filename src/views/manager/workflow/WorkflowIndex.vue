@@ -637,17 +637,17 @@ export default {
                 create_time: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-right field-create_time"
+                    class: "text-center field-create_time"
                 },
                 rend_ani_1: {
                     label: "渲染动画1",
                     sortable: false,
-                    class: "text-left field-rend_ani_1"
+                    class: "text-center field-rend_ani_1"
                 },
                 rend_ani_2: {
                     label: "渲染动画2",
                     sortable: false,
-                    class: "text-left field-rend_ani_2"
+                    class: "text-center field-rend_ani_2"
                 },
                 experiment_type_label: {
                     label: "事务类型",
@@ -667,7 +667,7 @@ export default {
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-left field-action"
+                    class: "text-center field-action"
                 }
             },
             // 查询参数
@@ -1385,7 +1385,7 @@ export default {
     .field-sn {
         text-align: left !important;
         padding-left: 20px;
-        width: 6%;
+        width: 10%;
     }
 
     .field-share {
@@ -1425,7 +1425,7 @@ export default {
     }
 
     .field-action {
-        width: 14%;
+        width: 10%;
     }
 
     .table th,
