@@ -746,28 +746,23 @@ export default {
 <style type="text/css" lang="scss" rel="stylesheet/scss">
 .company-index {
     .field-ccheck {
-        width: 5%;
         padding-top: 11px;
         text-align: left !important;
     }
     .field-csn {
-        width: 7%;
         text-align: left !important;
     }
     .field-cname {
-        width: 20%;
         text-align: left !important;
     }
     .field-ccreator {
-        width: 7%;
         text-align: left !important;
     }
     .field-ccreate_time {
-        width: 7%;
         text-align: left !important;
     }
     .field-crend_ani_1 {
-        width: 12%;
+        width: 15%;
         text-align: left !important;
     }
     .field-crend_ani_2 {

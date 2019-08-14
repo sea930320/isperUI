@@ -30,7 +30,7 @@
               <div class="col-xs-12">组长：{{report.data.leader_name}}</div>
             </div>
           </div>
-          <Panel title="实验成果">
+          <Panel title="业务成果">
             <div class="accordion-wrapper">
               <resultCollapse :nodes="report.nodes" :status="2"></resultCollapse>
             </div>

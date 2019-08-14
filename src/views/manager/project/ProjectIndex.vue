@@ -139,8 +139,8 @@
             />
         </b-row>
         <!--//Confirm Delete Project-->
-        <b-modal id="deleteConfirmModal" title="Delete Project" @ok="deleteProject()">
-            <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p>
+        <b-modal id="deleteConfirmModal" title="删除项目" @ok="deleteProject()" ok-title="删除" cancel-title="取消">
+            <p class="my-4">您要删除"{{this.currentProjectID.name}}"这个项目吗？</p>
         </b-modal>
         <!--&lt;!&ndash;Confirm Share Project&ndash;&gt;-->
         <b-modal id="shareConfirmModal" title="Project Sharing" @ok="shareProject()">
@@ -200,7 +200,7 @@ export default {
                 sn: {
                     label: "序号",
                     sortable: false,
-                    class: "text-right field-5"
+                    class: "text-left field-5"
                 },
                 currentShare: {
                     label: "",
@@ -225,7 +225,7 @@ export default {
                 create_time: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-right field-create_time"
+                    class: "text-left field-create_time"
                 },
                 dependence: {
                     label: "相关流程",
@@ -536,7 +536,7 @@ export default {
         width: 9%;
     }
     .field-create_time {
-        width: 9%;
+        width: 13%;
     }
     .field-rend_ani_1 {
         width: 19%;
@@ -548,7 +548,7 @@ export default {
         width: 7%;
     }
     .field-experiment_task_label {
-        width: 23%;
+        width: 15%;
     }
     .field-status {
         width: 5%;

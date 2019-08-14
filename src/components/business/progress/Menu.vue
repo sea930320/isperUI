@@ -54,7 +54,7 @@
                         <template slot="body">
                             <ul>
                                 <li>
-                                    <a href="javascript:;" @click="viewBusinessResult">实验成果</a>
+                                    <a href="javascript:;" @click="viewBusinessResult">业务成果</a>
                                 </li>
                                 <li>
                                     <a href="javascript:;" @click="viewSubmittedFile">已提交文件</a>
@@ -181,7 +181,7 @@
             <b-container>
                 <div class="modal-msg">
                     <p class="message">是否确定要重新开始</p>
-                    <p class="tip">提示：如果您选择重新开始本实验，实验成果将被清空</p>
+                    <p class="tip">提示：如果您选择重新开始本实验，业务成果将被清空</p>
                 </div>
             </b-container>
             <div slot="modal-footer" class="w-100">
@@ -349,7 +349,7 @@
                         this.metaInfo.process_type === 1 &&
                         this.currentRoleAllocation.sitting_status === 1
                     ) {
-                        this.$toasted.error("角色未入席无法查看实验成果");
+                        this.$toasted.error("角色未入席无法查看业务成果");
                         return;
                     }
                 }

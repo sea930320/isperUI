@@ -1,7 +1,7 @@
 <template>
-    <b-modal v-model="visible" title="实验成果" :hide-footer="true" size="lg">
+    <b-modal v-model="visible" title="业务成果" :hide-footer="true" size="lg">
         <div class="collapse-wrapper my-notes-wrapper">
-            <p class="tip">每个环节对应的实验成果如下</p>
+            <p class="tip">每个环节对应的业务成果如下</p>
             <div class></div>
         </div>
     </b-modal>

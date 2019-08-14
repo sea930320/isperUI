@@ -104,32 +104,32 @@
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-right field-id"
+                        class: "text-center field-id"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-left field-name"
+                        class: "text-center field-name"
                     },
                     officeItem: {
                         label: "事务类型",
                         sortable: false,
-                        class: "text-left field-officeItem"
+                        class: "text-center field-officeItem"
                     },
                     group: {
                         label: "集群",
                         sortable: false,
-                        class: "text-left field-group"
+                        class: "text-center field-group"
                     },
                     created: {
                         label: "创建时间",
                         sortable: false,
-                        class: "text-right field-created"
+                        class: "text-center field-created"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-left field-action"
+                        class: "text-center field-action"
                     }
                 },
                 queryParam: {
@@ -233,27 +233,21 @@
     .super-user-index3 {
         .field-id {
             width: 10%;
-            text-align: left !important;
         }
         .field-name {
             width: 15%;
-            text-align: left !important;
         }
         .field-officeItem {
             width: 25%;
-            text-align: left !important;
         }
         .field-group {
             width: 20%;
-            text-align: left !important;
         }
         .field-created {
             width: 20%;
-            text-align: left !important;
         }
         .field-action {
             width: 10%;
-            text-align: left !important;
         }
     }
 </style>

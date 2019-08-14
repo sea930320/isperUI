@@ -128,12 +128,12 @@ export default {
                 phone: {
                     label: "手机号码",
                     sortable: false,
-                    class: "text-right field-phone"
+                    class: "text-left field-phone"
                 },
                 gender: {
                     label: "性别",
                     sortable: false,
-                    class: "text-left field-gender"
+                    class: "text-center field-gender"
                 },
                 action: {
                     label: "操作",
@@ -232,7 +232,7 @@ export default {
     .field-check {
         width: 15%;
         padding-top: 11px;
-        text-align: right !important;
+        text-align: left !important;
     }
     .field-username {
         width: 10%;

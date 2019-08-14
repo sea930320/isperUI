@@ -186,7 +186,7 @@ export default {
                 created: {
                     label: "创建时间",
                     sortable: false,
-                    class: "text-right field-create_time"
+                    class: "text-center field-create_time"
                 },
                 action: {
                     label: "操作",
@@ -439,7 +439,6 @@ export default {
         }
         .field-create_time {
             width: 15%;
-            text-align: left !important;
         }
         .field-rend_ani_2 {
             width: 10%;

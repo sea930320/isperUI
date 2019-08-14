@@ -109,12 +109,12 @@
                     gender: {
                         label: "性别",
                         sortable: false,
-                        class: "text-left field-gender"
+                        class: "text-center field-gender"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-left field-action"
+                        class: "text-center field-action"
                     }
                 },
                 queryParam: {
@@ -224,7 +224,6 @@
         }
         .field-action {
             width: 10%;
-            text-align: left !important;
         }
     }
 </style>

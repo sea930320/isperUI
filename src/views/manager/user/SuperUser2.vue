@@ -102,32 +102,32 @@
                     id: {
                         label: "ID",
                         sortable: false,
-                        class: "text-right field-id"
+                        class: "text-center field-id"
                     },
                     name: {
                         label: "姓名",
                         sortable: false,
-                        class: "text-left field-name"
+                        class: "text-center field-name"
                     },
                     company: {
                         label: "所在单位",
                         sortable: false,
-                        class: "text-left field-company"
+                        class: "text-center field-company"
                     },
                     group: {
                         label: "集群",
                         sortable: false,
-                        class: "text-left field-group"
+                        class: "text-center field-group"
                     },
                     created: {
                         label: "创建时间",
                         sortable: false,
-                        class: "text-right field-created"
+                        class: "text-center field-created"
                     },
                     action: {
                         label: "操作",
                         sortable: false,
-                        class: "text-left field-action"
+                        class: "text-center field-action"
                     }
                 },
                 queryParam: {
@@ -231,27 +231,21 @@
     .super-user-index2 {
         .field-id {
             width: 10%;
-            text-align: left !important;
         }
         .field-name {
             width: 15%;
-            text-align: left !important;
         }
         .field-company {
             width: 25%;
-            text-align: left !important;
         }
         .field-group {
             width: 20%;
-            text-align: left !important;
         }
         .field-created {
             width: 20%;
-            text-align: left !important;
         }
         .field-action {
             width: 10%;
-            text-align: left !important;
         }
     }
 </style>

@@ -164,7 +164,7 @@ export default {
         sn: {
           label: "",
           sortable: false,
-          class: "text-right field-5"
+          class: "text-left field-5"
         },
         id: {
           label: "ID",
@@ -184,7 +184,7 @@ export default {
         created_time: {
           label: "启动时间",
           sortable: false,
-          class: "text-right field-10"
+          class: "text-left field-10"
         },
         creator: {
           label: "启动人",
