@@ -148,20 +148,13 @@
       id="deleteConfirmModal"
       title="删除项目"
       @ok="deleteProject()"
-      ok-title="确认"
+      ok-title="删除"
       cancel-title="取消"
     >
-      <!-- <p class="my-4">Do you want to delete "{{this.currentProjectID.name}}" Project?</p> -->
-      <p class="my-4">您要确定删除本项目吗？</p>
+      <p class="my-4">您要删除"{{this.currentProjectID.name}}"这个项目吗？</p>
     </b-modal>
     <!--&lt;!&ndash;Confirm Share Project&ndash;&gt;-->
-    <b-modal
-      id="shareConfirmModal"
-      title="项目共享"
-      ok-title="确认"
-      cancel-title="取消"
-      @ok="shareProject()"
-    >
+    <b-modal id="shareConfirmModal" title="Project Sharing" @ok="shareProject()">
       <b-table
         :items="checkedUnsharedItems"
         responsive
@@ -176,14 +169,8 @@
       </b-table>
     </b-modal>
     <!--&lt;!&ndash;Confirm UnShare Project&ndash;&gt;-->
-    <b-modal
-      id="unshareConfirmModal"
-      title="取消项目共享"
-      ok-title="确认"
-      cancel-title="取消"
-      @ok="unshareProject()"
-    >
-      <p class="my-4">您确定要取消共享吗？</p>
+    <b-modal id="unshareConfirmModal" title="Cancel Project Sharing" @ok="unshareProject()">
+      <p class="my-4">Do you want to not share Project(s)?</p>
       <b-table
         :items="checkedSharedItems"
         responsive
@@ -224,7 +211,7 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-right field-5"
+          class: "text-left field-5"
         },
         currentShare: {
           label: "",
@@ -249,7 +236,7 @@ export default {
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time"
+          class: "text-left field-create_time"
         },
         dependence: {
           label: "相关流程",
@@ -540,56 +527,57 @@ export default {
   .field-70 {
     width: 70%;
   }
-  .field-80 {
-    width: 80%;
-  }
-  .field-90 {
-    width: 90%;
-  }
-  .field-100 {
-    width: 100%;
-  }
-  .field-sn {
-    width: 3%;
-  }
-  .field-name {
-    width: 25%;
-  }
-  .field-creator {
-    width: 9%;
-  }
-  .field-create_time {
-    width: 9%;
-  }
-  .field-rend_ani_1 {
-    width: 19%;
-  }
-  .field-rend_ani_2 {
-    width: 10%;
-  }
-  .field-experiment_type_label {
-    width: 7%;
-  }
-  .field-experiment_task_label {
-    width: 23%;
-  }
-  .field-status {
-    width: 5%;
-  }
-  .field-action {
-    width: 20%;
-  }
-  .table th,
-  .table td {
-    vertical-align: middle;
-  }
-  .modal-body {
-    .message {
-      font-size: 16px;
+    .field-80 {
+        width: 80%;
     }
-    .tip {
-      font-size: 14px;
-      color: #999;
+    .field-90 {
+        width: 90%;
+    }
+    .field-100 {
+        width: 100%;
+    }
+    .field-sn {
+        width: 3%;
+    }
+    .field-name {
+        width: 25%;
+    }
+    .field-creator {
+        width: 9%;
+    }
+    .field-create_time {
+        width: 13%;
+    }
+    .field-rend_ani_1 {
+        width: 19%;
+    }
+    .field-rend_ani_2 {
+        width: 10%;
+    }
+    .field-experiment_type_label {
+        width: 7%;
+    }
+    .field-experiment_task_label {
+        width: 15%;
+    }
+    .field-status {
+        width: 5%;
+    }
+    .field-action {
+        width: 20%;
+    }
+    .table th,
+    .table td {
+        vertical-align: middle;
+    }
+    .modal-body {
+        .message {
+            font-size: 16px;
+        }
+        .tip {
+            font-size: 14px;
+            color: #999;
+        }
     }
   }
 }

@@ -420,7 +420,7 @@
                     publish: {
                         label: "是否公开",
                         sortable: false,
-                        class: "text-right field-create_time"
+                        class: "text-center field-create_time"
                     },
                     groupManagers: {
                         label: "集群管理员",
@@ -895,15 +895,14 @@
             text-align: left !important;
         }
         .field-create_time {
-            width: 10%;
-            text-align: left !important;
+            width: 6%;
         }
         .field-rend_ani_1 {
             width: 30%;
             text-align: left !important;
         }
         .field-rend_ani_2 {
-            width: 15%;
+            width: 19%;
             text-align: left !important;
         }
     }

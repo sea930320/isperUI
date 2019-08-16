@@ -214,7 +214,7 @@
         .field-check {
             width: 3%;
             padding-top: 11px;
-            text-align: right !important;
+            text-align: left !important;
         }
         .field-name {
             width: 10%;
