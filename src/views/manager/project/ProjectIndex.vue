@@ -527,57 +527,56 @@ export default {
   .field-70 {
     width: 70%;
   }
-    .field-80 {
-        width: 80%;
+  .field-80 {
+    width: 80%;
+  }
+  .field-90 {
+    width: 90%;
+  }
+  .field-100 {
+    width: 100%;
+  }
+  .field-sn {
+    width: 3%;
+  }
+  .field-name {
+    width: 25%;
+  }
+  .field-creator {
+    width: 9%;
+  }
+  .field-create_time {
+    width: 13%;
+  }
+  .field-rend_ani_1 {
+    width: 19%;
+  }
+  .field-rend_ani_2 {
+    width: 10%;
+  }
+  .field-experiment_type_label {
+    width: 7%;
+  }
+  .field-experiment_task_label {
+    width: 15%;
+  }
+  .field-status {
+    width: 5%;
+  }
+  .field-action {
+    width: 20%;
+  }
+  .table th,
+  .table td {
+    vertical-align: middle;
+  }
+  .modal-body {
+    .message {
+      font-size: 16px;
     }
-    .field-90 {
-        width: 90%;
-    }
-    .field-100 {
-        width: 100%;
-    }
-    .field-sn {
-        width: 3%;
-    }
-    .field-name {
-        width: 25%;
-    }
-    .field-creator {
-        width: 9%;
-    }
-    .field-create_time {
-        width: 13%;
-    }
-    .field-rend_ani_1 {
-        width: 19%;
-    }
-    .field-rend_ani_2 {
-        width: 10%;
-    }
-    .field-experiment_type_label {
-        width: 7%;
-    }
-    .field-experiment_task_label {
-        width: 15%;
-    }
-    .field-status {
-        width: 5%;
-    }
-    .field-action {
-        width: 20%;
-    }
-    .table th,
-    .table td {
-        vertical-align: middle;
-    }
-    .modal-body {
-        .message {
-            font-size: 16px;
-        }
-        .tip {
-            font-size: 14px;
-            color: #999;
-        }
+    .tip {
+      font-size: 14px;
+      color: #999;
     }
   }
 }
