@@ -20,7 +20,7 @@
               class="styledBtn"
               variant="outline-primary"
               @click="setMember(row.item)"
-            >邀请队友</b-button>
+            >加入团队</b-button>
             <b-button :size="template_size" class="ml-1 styledBtn" @click="escapeTeam(row.item)">退出</b-button>
           </div>
         </template>
@@ -52,7 +52,7 @@
               class="styledBtn"
               variant="outline-primary"
               @click="setMember(row.item, true)"
-            >邀请队友</b-button>
+            >加入团队</b-button>
           </div>
         </template>
       </b-table>

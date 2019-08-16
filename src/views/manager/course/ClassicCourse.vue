@@ -220,7 +220,7 @@
             class="mt-3 my-4 col-5 float-right"
             block
             variant="primary"
-            @click="this.$refs['editCourse'].hide()"
+            @click="hideEditCourse()"
           >取 消</b-button>
         </b-form>
       </div>
@@ -384,12 +384,12 @@ export default {
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time"
+          class: "text-center field-create_time"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-left field-action"
+          class: "text-center field-action"
         }
       },
       queryParam: {
@@ -490,6 +490,9 @@ export default {
         this.tableData = results;
         this.tableHeader = header;
       }
+    },
+    hideEditCourse() {
+      this.$refs["editCourse"].hide();
     },
     cancelExcel(errText) {
       confirm("没有填写好" + errText);
@@ -740,7 +743,7 @@ export default {
     text-align: left !important;
   }
   .field-courseFullName {
-    width: 20%;
+    width: 10%;
     text-align: left !important;
   }
   .field-courseSeqNum {
@@ -772,12 +775,11 @@ export default {
     text-align: left !important;
   }
   .field-create_time {
-    width: 5%;
-    text-align: left !important;
+    width: 15%;
+    text-align: center !important;
   }
   .field-action {
     width: 16%;
-    text-align: left !important;
   }
   .el-link.el-link--default:hover {
     transform: scale(1.1) !important;
