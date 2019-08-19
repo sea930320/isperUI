@@ -21,6 +21,7 @@
               variant="outline-primary"
               @click="setMember(row.item)"
             >加入团队</b-button>
+            <!-- <b-button :size="template_size" class="ml-1 styledBtn" @click="escapeTeam(row.item)">退出</b-button> -->
             <b-button :size="template_size" class="ml-1 styledBtn" @click="escapeTeam(row.item)">退出</b-button>
           </div>
         </template>
@@ -45,6 +46,7 @@
           slot-scope="row"
         >{{row.item.team_leader && row.item.team_leader.name}}</template>
         <template slot="create_time" slot-scope="row">{{row.item.create_time}}</template>
+        <template slot="type" slot-scope="row">{{row.item.type == 0 ? "开放":"不开放"}}</template>
         <template slot="action" slot-scope="row">
           <div>
             <b-button
@@ -138,59 +140,64 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-right field-sn"
+          class: "text-center field-sn w-10"
         },
         name: {
           label: "团队名称",
           sortable: false,
-          class: "text-left field-name"
+          class: "text-left field-name w-20"
         },
         leader: {
           label: "队长",
           sortable: false,
-          class: "text-left field-creator"
+          class: "text-left field-creator w-20"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time w-20"
+          class: "text-center field-create_time w-20"
         },
         type: {
-          label: "开放邀请",
+          label: "团队模式",
           sortable: false,
           class: "text-left field-creator w-15"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-left field-status w-10"
+          class: "text-center field-status w-15"
         }
       },
       columns2: {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-right field-sn"
+          class: "text-center field-sn w-10"
         },
         name: {
           label: "团队名称",
           sortable: false,
-          class: "text-left field-name"
+          class: "text-left field-name w-20"
         },
         leader: {
           label: "队长",
           sortable: false,
-          class: "text-left field-creator"
+          class: "text-left field-creator w-20"
         },
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time w-20"
+          class: "text-center field-create_time w-20"
+        },
+        type: {
+          label: "团队模式",
+          sortable: false,
+          class: "text-left field-creator w-15"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-left field-status w-10"
+          class: "text-center field-status w-15"
         }
       },
       columns3: {

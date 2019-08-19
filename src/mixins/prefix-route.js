@@ -13,8 +13,10 @@ export default {
                 return "/instructor/";
             } else if ([6, 7, 8].includes(role)) {
                 return "/assistant/";
-            } else {
+            } else if ([5].includes(role)){
                 return "/business/";
+            } else {
+                return "/student/";
             }
         }
     },

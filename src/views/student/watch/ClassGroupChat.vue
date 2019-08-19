@@ -168,7 +168,9 @@ export default {
       let team_users = [];
       this.teams.forEach(team => {
         let users = team.members;
-        users.push(team.teacher);
+        team.teachers.forEach(teacher => {
+          users.push(teacher);
+        });
         team_users = _.unionBy(team_users, users, "id");
       });
       return team_users;

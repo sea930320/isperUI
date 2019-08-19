@@ -25,8 +25,12 @@
                                 courseName: '',
                                 courseSeqNum: '',
                                 courseSemester: '',
-                                teacherName: '',
-                                teacherId: '',
+                                teacherName1: '',
+                                teacherId1: '',
+                                teacherName2: '',
+                                teacherId2: '',
+                                teacherName3: '',
+                                teacherId3: '',
                                 courseCount: '',
                                 experienceTime: '',
                                 studentCount: '',
@@ -149,25 +153,37 @@
       <div>
         <b-form @submit="newCourseSave" class="container pt-3">
           <b-form-group id="input-group-7" label-for="name">
-            <b-form-input v-model="newItem.courseId" required placeholder="课程号"></b-form-input>
+            <b-form-input v-model="newItem.courseId" required placeholder="课程号 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-8" label-for="input-2">
-            <b-form-input v-model="newItem.courseName" required placeholder="课程名"></b-form-input>
+            <b-form-input v-model="newItem.courseName" required placeholder="课程名 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-10" label-for="input-2" class="float-left w-40">
-            <b-form-input v-model="newItem.courseSeqNum" required placeholder="课序号"></b-form-input>
+            <b-form-input v-model="newItem.courseSeqNum" required placeholder="课序号 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-12" label-for="input-2" class="float-right w-40">
-            <b-form-input v-model="newItem.courseSemester" required placeholder="开课学期"></b-form-input>
+            <b-form-input v-model="newItem.courseSemester" required placeholder="开课学期 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-13" label-for="input-2" class="float-left w-40">
-            <b-form-input v-model="newItem.teacherName" required placeholder="任课老师"></b-form-input>
+            <b-form-input v-model="newItem.teacherName1" required placeholder="任课老师1 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-14" label-for="input-2" class="float-right w-40">
-            <b-form-input v-model="newItem.teacherId" required placeholder="工号"></b-form-input>
+            <b-form-input v-model="newItem.teacherId1" required placeholder="工号1 *"></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-13" label-for="input-2" class="float-left w-40">
+            <b-form-input v-model="newItem.teacherName2" placeholder="任课老师2"></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-14" label-for="input-2" class="float-right w-40">
+            <b-form-input v-model="newItem.teacherId2" placeholder="工号2"></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-13" label-for="input-2" class="float-left w-40">
+            <b-form-input v-model="newItem.teacherName3" placeholder="任课老师3"></b-form-input>
+          </b-form-group>
+          <b-form-group id="input-group-14" label-for="input-2" class="float-right w-40">
+            <b-form-input v-model="newItem.teacherId3" placeholder="工号3"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-15" label-for="input-2" class="float-left w-30">
-            <b-form-input v-model="newItem.courseCount" required placeholder="课时"></b-form-input>
+            <b-form-input v-model="newItem.courseCount" required placeholder="课时 *"></b-form-input>
           </b-form-group>
           <b-form-group
             id="input-group-16"
@@ -227,12 +243,13 @@
     </b-modal>
     <b-modal hide-footer centered id="teacherEditCourse" ref="teacherEditCourse" title="关联指导者">
       <div>
-        <b-form-select v-model="selectedTeacher" :options="teacherList"></b-form-select>
+        <b-form-select class="mb-1" v-model="selectedTeacher1" :options="teacherList"></b-form-select>
+        <b-form-select class="mb-1" v-model="selectedTeacher2" :options="teacherList"></b-form-select>
+        <b-form-select v-model="selectedTeacher3" :options="teacherList"></b-form-select>
         <b-button
-          variant="success"
+          variant="primary"
           @click="teacherChangeSave"
           class="mt-5"
-          :disabled="selectedTeacher === null"
         >确&emsp;定</b-button>
       </div>
     </b-modal>
@@ -248,10 +265,15 @@
           <b-col md="3" sm="12" class="text-left">开课学期：{{selectedRow.courseSemester}}</b-col>
           <b-col md="3" sm="12" class="text-left">学生人数：{{selectedRow.studentCount}}</b-col>
         </b-row>
-        <b-row>
-          <b-col md="6" sm="12" class="text-left">工号：{{selectedRow.teacherId}}</b-col>
-          <b-col md="6" sm="12" class="text-left">实验学时：{{selectedRow.experienceTime}}</b-col>
-        </b-row>
+        <div style="border: 1px solid #3a7de0;" class="my-3">
+          <b-row
+            v-for="(teacher, index) in selectedRow.teachers"
+            :key="'detailview_teacher_' + index"
+          >
+            <b-col md="6" sm="12" class="text-left">工号：{{teacher.teacher_id}}</b-col>
+            <b-col md="6" sm="12" class="text-left">任课老师: {{teacher.name}}</b-col>
+          </b-row>
+        </div>
         <b-row>
           <b-col md="6" sm="12" class="text-left">创建人：{{selectedRow.created_by}}</b-col>
           <b-col md="6" sm="12" class="text-left">创建时间：{{selectedRow.create_time}}</b-col>
@@ -298,6 +320,7 @@ import CourseService from "@/services/courseService";
 import UploadExcelComponent from "@/components/UploadExcel/index.vue";
 import _ from "lodash";
 import BRow from "bootstrap-vue/src/components/layout/row";
+import utils from "@/utils/util";
 
 export default {
   name: "classic-course",
@@ -317,8 +340,12 @@ export default {
         courseName: "",
         courseSeqNum: "",
         courseSemester: "",
-        teacherName: "",
-        teacherId: "",
+        teacherName1: "",
+        teacherId1: "",
+        teacherName2: "",
+        teacherId2: "",
+        teacherName3: "",
+        teacherId3: "",
         courseCount: "",
         experienceTime: "",
         studentCount: ""
@@ -405,7 +432,9 @@ export default {
         total: 0
       },
       selectedId: null,
-      selectedTeacher: null,
+      selectedTeacher1: null,
+      selectedTeacher2: null,
+      selectedTeacher3: null,
       teacherList: [],
       selectedRow: {}
     };
@@ -459,6 +488,17 @@ export default {
       })
         .then(data => {
           this.allData.list = data.results;
+          this.allData.list = _.map(this.allData.list, item => {
+            item.teacherId = "";
+            item.teachers.forEach(element => {
+              if (item.teacherId == "") {
+                item.teacherId = element.teacher_id;
+              } else {
+                item.teacherId += ", " + element.teacher_id;
+              }
+            });
+            return item;
+          });
           this.allData.total = data.paging.count;
           this.$emit("data-ready");
         })
@@ -473,8 +513,12 @@ export default {
           "课程名",
           "课序号",
           "开课学期",
-          "任课老师",
-          "工号",
+          "任课老师1",
+          "工号1",
+          "任课老师2",
+          "工号2",
+          "任课老师3",
+          "工号3",
           "课时",
           "实验学时",
           "学生人数",
@@ -499,6 +543,12 @@ export default {
       this.excelDataError = true;
       this.$refs["uploadExcel"].hide();
     },
+    /* eslint-disable */
+    cancelExcel1(errText) {
+      confirm("正确输入教师姓名和号码");
+      this.excelDataError = true;
+      this.$refs["uploadExcel"].hide();
+    },
     excelSave() {
       let excelData = [];
       for (let id in this.tableData) {
@@ -519,14 +569,38 @@ export default {
             this.tableData[id].开课学期 === undefined
               ? this.cancelExcel("开课学期")
               : this.tableData[id].开课学期,
-          teacherName:
-            this.tableData[id].任课老师 === undefined
-              ? this.cancelExcel("任课老师")
-              : this.tableData[id].任课老师,
-          teacherId:
-            this.tableData[id].工号 === undefined
-              ? this.cancelExcel("工号")
-              : this.tableData[id].工号,
+          teacherName1:
+            this.tableData[id].任课老师1 === undefined
+              ? this.cancelExcel("任课老师1")
+              : this.tableData[id].任课老师1,
+          teacherId1:
+            this.tableData[id].工号1 === undefined
+              ? this.cancelExcel("工号1")
+              : this.tableData[id].工号1,
+          teacherName2: utils.myXOR(
+            this.tableData[id].任课老师2 === undefined,
+            this.tableData[id].工号2 === undefined
+          )
+            ? this.cancelExcel1("任课老师2, 工号2")
+            : this.tableData[id].任课老师2,
+          teacherId2: utils.myXOR(
+            this.tableData[id].任课老师2 === undefined,
+            this.tableData[id].工号2 === undefined
+          )
+            ? ""
+            : this.tableData[id].工号2,
+          teacherName3: utils.myXOR(
+            this.tableData[id].任课老师3 === undefined,
+            this.tableData[id].工号3 === undefined
+          )
+            ? this.cancelExcel1("任课老师3, 工号3")
+            : this.tableData[id].任课老师3,
+          teacherId3: utils.myXOR(
+            this.tableData[id].任课老师3 === undefined,
+            this.tableData[id].工号3 === undefined
+          )
+            ? ""
+            : this.tableData[id].工号3,
           courseCount:
             this.tableData[id].课时 === undefined
               ? this.cancelExcel("课时")
@@ -592,8 +666,47 @@ export default {
     },
     newCourseSave(evt) {
       evt.preventDefault();
+      let param = this.newItem;
+      if (
+        utils.myXOR(
+          this.newItem.teacherName2.trim() == "",
+          this.newItem.teacherId2.trim() == ""
+        ) ||
+        utils.myXOR(
+          this.newItem.teacherName3.trim() == "",
+          this.newItem.teacherId3.trim() == ""
+        )
+      ) {
+        this.$toasted.error("正确输入教师姓名和号码");
+        return;
+      }
       this.run();
-      CourseService.saveNewCourse(this.newItem)
+      let teachers = [
+        {
+          teacher_name: this.newItem.teacherName1,
+          teacher_id: this.newItem.teacherId1
+        }
+      ];
+      if (
+        this.newItem.teacherId2.trim() != "" &&
+        this.newItem.teacherName2.trim() != ""
+      ) {
+        teachers.push({
+          teacher_name: this.newItem.teacherName2,
+          teacher_id: this.newItem.teacherId2
+        });
+      }
+      if (
+        this.newItem.teacherId3.trim() != "" &&
+        this.newItem.teacherName3.trim() != ""
+      ) {
+        teachers.push({
+          teacher_name: this.newItem.teacherName3,
+          teacher_id: this.newItem.teacherId3
+        });
+      }
+      param.teachers = JSON.stringify(teachers);
+      CourseService.saveNewCourse(param)
         .then(res => {
           if (res.results === "success")
             CourseService.getCourseFullList({
@@ -657,8 +770,10 @@ export default {
       this.run();
       CourseService.getTeacherList({})
         .then(res => {
-          this.selectedTeacher = null;
           this.teacherList = res.results;
+          this.selectedTeacher1 = row.item.teachers[0] ? row.item.teachers[0].id : null;
+          this.selectedTeacher2 = row.item.teachers[1] ? row.item.teachers[1].id : null;
+          this.selectedTeacher3 = row.item.teachers[2] ? row.item.teachers[2].id : null;
           this.$emit("data-ready");
           this.$refs["teacherEditCourse"].show();
         })
@@ -704,7 +819,9 @@ export default {
       this.run();
       CourseService.teacherChangeSave({
         id: this.selectedId,
-        teacher: this.selectedTeacher
+        teacher1: this.selectedTeacher1,
+        teacher2: this.selectedTeacher2,
+        teacher3: this.selectedTeacher3
       })
         .then(res => {
           if (res.results === "success")
@@ -743,11 +860,11 @@ export default {
     text-align: left !important;
   }
   .field-courseFullName {
-    width: 10%;
+    width: 16%;
     text-align: left !important;
   }
   .field-courseSeqNum {
-    width: 4%;
+    width: 6%;
     text-align: left !important;
   }
   .field-courseSemester {
@@ -759,7 +876,7 @@ export default {
     text-align: left !important;
   }
   .field-courseCount {
-    width: 3%;
+    width: 6%;
     text-align: left !important;
   }
   .field-experienceTime {
@@ -775,11 +892,11 @@ export default {
     text-align: left !important;
   }
   .field-create_time {
-    width: 15%;
+    width: 10%;
     text-align: center !important;
   }
   .field-action {
-    width: 16%;
+    width: 20%;
   }
   .el-link.el-link--default:hover {
     transform: scale(1.1) !important;

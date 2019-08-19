@@ -76,7 +76,7 @@
     <b-modal
       v-model="selectModeModal"
       centered
-      title="Watch Business"
+      title="业务关注"
       size="lg"
       :hide-footer="true"
     >
@@ -84,13 +84,13 @@
         <b-row class="justify-content-md-center">
           <b-col>
             <div>
-              <b-button variant="primary" size="lg" class="float-center" @click="courseMode()">课堂方式</b-button>
+              <b-button variant="primary" size="lg" class="float-center" @click="courseMode()">课堂模式</b-button>
             </div>
             <div class="mt-2">(关联到老师的课堂)</div>
           </b-col>
           <b-col>
             <div>
-              <b-button variant="primary" size="lg" class="float-center" @click="extraMode()">课外方式</b-button>
+              <b-button variant="primary" size="lg" class="float-center" @click="extraMode()">课外模式</b-button>
             </div>
             <div class="mt-2">(无需关联老师的课堂)</div>
           </b-col>
@@ -164,7 +164,7 @@
               <b-form-checkbox v-model="user.all_checked">{{head.label}}</b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">
-              <b-form-checkbox v-model="row.item.checked">{{ row.index + 1 }}</b-form-checkbox>
+              <b-form-checkbox v-model="row.item.checked" style="margin-top: 5px;">{{ row.index + 1 }}</b-form-checkbox>
             </template>
             <template slot="name" slot-scope="row">{{row.item.name}}</template>
             <template slot="username" slot-scope="row">{{row.item.username}}</template>
@@ -340,7 +340,7 @@ export default {
         sn: {
           label: "序号",
           sortable: false,
-          class: "text-right pl-3 field-sn"
+          class: "text-center pl-3 field-sn"
         },
         name: {
           label: "姓名",

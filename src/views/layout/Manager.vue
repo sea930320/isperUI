@@ -8,6 +8,9 @@
                 <b-nav-item v-if="[1,2,3,6,7].includes(userInfo.role)" to="/manager/project">
                     <icon name="tags" class="tabIcon"></icon>项目管理
                 </b-nav-item>
+                <b-nav-item v-if="[2,6,3,7].includes(userInfo.role)" to="/manager/business">
+                    <icon name="list" class="tabIcon"></icon>业务管理
+                </b-nav-item>
                 <b-nav-item v-if="userInfo.role===1" to="/manager/group">
                     <icon name="users-cog" class="tabIcon"></icon>集群管理
                 </b-nav-item>
@@ -28,9 +31,6 @@
                     to="/manager/system-set"
                 >
                     <icon name="cogs" class="tabIcon"></icon>系统设置
-                </b-nav-item>
-                <b-nav-item v-if="[2,6,3,7].includes(userInfo.role)" to="/manager/business">
-                    <icon name="list" class="tabIcon"></icon>业务管理
                 </b-nav-item>
             </template>
         </TopHeader>
