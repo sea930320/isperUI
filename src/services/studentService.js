@@ -310,6 +310,19 @@ class StudentService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    inviteTeamUser(data) {
+        return xhr({
+            method: 'post',
+            url: '/student/team/invite-user',
+            params: data
+        })
+    }
+
+    /**
+     * 创建实验
+     * @param data
+     * @returns {{pre, visitor}|*}
+     */
     setTeamLeader(data) {
         return xhr({
             method: 'post',
