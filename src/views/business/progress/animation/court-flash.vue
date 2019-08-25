@@ -133,7 +133,6 @@
             },
             // 动作处理函数
             actionHandler(action) {
-                console.log(action);
                 if (!this.flashObj) {
                     this.$toast.info('flash未初始化');
                     return
