@@ -8,6 +8,39 @@ class BillService {
      * @param data
      * @returns {{pre, visitor}|*}
      */
+    getBillName(data){
+        return xhr({
+            method: 'get',
+            url: '/bill/name/list',
+            params: data
+        })
+    }
+
+    updateFullBills(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/update/full',
+            params: data
+        })
+    }
+
+    updateBillListName(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/update/billname',
+            params: data
+        })
+    }
+
+    deletePart(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/part/delete',
+            params: data
+        })
+    }
+
+
     getBillChapter(data) {
         return xhr({
             method: 'get',

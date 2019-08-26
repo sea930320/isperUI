@@ -39,6 +39,8 @@ export function processType(val) {
     return '调查问卷'
   } else if (val === 12) {
     return '判断与选择'
+  } else if (val === 14) {
+      return '法案'
   } else {
     return ''
   }
