@@ -40,6 +40,14 @@ class BillService {
         })
     }
 
+    addPart(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/part/add',
+            params: data
+        })
+    }
+
 
     getBillChapter(data) {
         return xhr({
