@@ -231,12 +231,37 @@ export default {
         id: {
           label: "序号",
           sortable: false,
-          class: "text-right field-id"
+          class: "text-center field-id pt-2"
         },
         courseName: {
           label: "课堂名称",
           sortable: false,
           class: "text-left field-courseName"
+        },
+        courseSeqNum: {
+          label: "课序号",
+          sortable: false,
+          class: "text-right field-courseSeqNum"
+        },
+        courseSemester: {
+          label: "开课学期",
+          sortable: false,
+          class: "text-left field-courseSemester"
+        },
+        teacherId: {
+          label: "工号",
+          sortable: false,
+          class: "text-right field-teacherId"
+        },
+        courseCount: {
+          label: "课时",
+          sortable: false,
+          class: "text-right field-courseCount"
+        },
+        experienceTime: {
+          label: "实验学时",
+          sortable: false,
+          class: "text-right field-experienceTime"
         },
         created_by: {
           label: "创建人",
@@ -246,17 +271,17 @@ export default {
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time"
+          class: "text-center field-create_time"
         },
-        teacherName: {
-          label: "关联课程",
+        studentCount: {
+          label: "学生人数",
           sortable: false,
-          class: "text-left field-teacherName"
+          class: "text-center field-studentCount"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-left field-action"
+          class: "text-center field-action"
         }
       },
       queryParam: {

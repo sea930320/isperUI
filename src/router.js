@@ -168,6 +168,10 @@ const routes = [{
             path: '/attentionCheck',
             name: 'request-check',
             component: () => import('@/views/personal-center/AttentionCheck.vue')
+        }, {
+            path: '/attentionCancelCheck',
+            name: 'request-cancel-check',
+            component: () => import('@/views/personal-center/AttentionCancelCheck.vue')
         }
     ]
 },

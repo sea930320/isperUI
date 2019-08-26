@@ -32,8 +32,7 @@
                                 teacherName3: '',
                                 teacherId3: '',
                                 courseCount: '',
-                                experienceTime: '',
-                                studentCount: '',
+                                experienceTime: ''
                             };
                         }"
           >新建课堂</b-button>
@@ -70,6 +69,7 @@
             unchecked-value
           ></b-form-checkbox>
         </template>
+        <template slot="studentCount" slot-scope="row">{{getStudentCount(row.item.linked_team)}}</template>
         <template slot="action" slot-scope="row">
           <b-button
             class="styledBtn"
@@ -182,19 +182,11 @@
           <b-form-group id="input-group-14" label-for="input-2" class="float-right w-40">
             <b-form-input v-model="newItem.teacherId3" placeholder="工号3"></b-form-input>
           </b-form-group>
-          <b-form-group id="input-group-15" label-for="input-2" class="float-left w-30">
+          <b-form-group id="input-group-15" label-for="input-2" class="float-left w-40">
             <b-form-input v-model="newItem.courseCount" required placeholder="课时 *"></b-form-input>
           </b-form-group>
-          <b-form-group
-            id="input-group-16"
-            label-for="input-2"
-            class="float-left w-30"
-            style="margin-left: 5%"
-          >
+          <b-form-group id="input-group-16" label-for="input-2" class="float-right w-40">
             <b-form-input v-model="newItem.experienceTime" required placeholder="实验学时"></b-form-input>
-          </b-form-group>
-          <b-form-group id="input-group-17" label-for="input-2" class="float-right w-30">
-            <b-form-input v-model="newItem.studentCount" required placeholder="学生人数"></b-form-input>
           </b-form-group>
           <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存</b-button>
           <b-button
@@ -246,69 +238,166 @@
         <b-form-select class="mb-1" v-model="selectedTeacher1" :options="teacherList"></b-form-select>
         <b-form-select class="mb-1" v-model="selectedTeacher2" :options="teacherList"></b-form-select>
         <b-form-select v-model="selectedTeacher3" :options="teacherList"></b-form-select>
-        <b-button
-          variant="primary"
-          @click="teacherChangeSave"
-          class="mt-5"
-        >确&emsp;定</b-button>
+        <b-button variant="primary" @click="teacherChangeSave" class="mt-5">确&emsp;定</b-button>
       </div>
     </b-modal>
-    <b-modal size="lg" hide-footer centered id="detailView" ref="detailView" title="查看详情">
-      <b-container class="modalContainer" v-if="selectedRow">
-        <b-row>
-          <b-col lg="3" md="4" sm="4" class="text-left">序号：{{selectedRow.id}}</b-col>
-          <b-col lg="9" md="4" sm="4" class="text-left">课堂名称：{{selectedRow.courseFullName}}</b-col>
-        </b-row>
-        <b-row>
-          <b-col lg="3" md="4" sm="12" class="text-left">课序号：{{selectedRow.courseSeqNum}}</b-col>
-          <b-col lg="3" md="12" sm="12" class="text-left">课时：{{selectedRow.courseCount}}</b-col>
-          <b-col md="3" sm="12" class="text-left">开课学期：{{selectedRow.courseSemester}}</b-col>
-          <b-col md="3" sm="12" class="text-left">学生人数：{{selectedRow.studentCount}}</b-col>
-        </b-row>
-        <div style="border: 1px solid #3a7de0;" class="my-3">
-          <b-row
-            v-for="(teacher, index) in selectedRow.teachers"
-            :key="'detailview_teacher_' + index"
-          >
-            <b-col md="6" sm="12" class="text-left">工号：{{teacher.teacher_id}}</b-col>
-            <b-col md="6" sm="12" class="text-left">任课老师: {{teacher.name}}</b-col>
-          </b-row>
-        </div>
-        <b-row>
-          <b-col md="6" sm="12" class="text-left">创建人：{{selectedRow.created_by}}</b-col>
-          <b-col md="6" sm="12" class="text-left">创建时间：{{selectedRow.create_time}}</b-col>
-        </b-row>
-        <b-row class="justify-content-center mt-5" style="font-size: 20px;">业 务 清 单</b-row>
-        <b-row class="my-2">
-          <b-col md="2" sm="12">业务序号</b-col>
-          <b-col md="5" sm="12">业务名称</b-col>
-          <b-col md="5" sm="12">业务单位</b-col>
-        </b-row>
-        <b-row v-for="(item, index) in selectedRow.linked_business" :key="index">
-          <b-col md="2" sm="12">{{item.id}}</b-col>
-          <b-col md="5" sm="12">{{item.name}}</b-col>
-          <b-col md="5" sm="12">{{item.target_company}}</b-col>
-        </b-row>
-      </b-container>
+    <b-modal size="xl" hide-footer centered id="detailView" ref="detailView" title="查看详情">
+      <div class="modalContainer" v-if="selectedRow">
+        <table class="table b-table table-borderless table-sm">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center w-5">序号</th>
+              <th class="text-center w-35">身份名称</th>
+              <th class="text-center w-10">课序号</th>
+              <th class="text-center w-10">课时</th>
+              <th class="text-center w-10">开课学期</th>
+              <th class="text-center w-10">创建人</th>
+              <th class="text-center w-20">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{selectedRow.id}}</td>
+              <td>{{selectedRow.courseFullName}}</td>
+              <td>{{selectedRow.courseSeqNum}}</td>
+              <td>{{selectedRow.courseCount}}</td>
+              <td>{{selectedRow.courseSemester}}</td>
+              <td>{{selectedRow.created_by}}</td>
+              <td>{{selectedRow.create_time}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">工号</th>
+              <th class="text-center">任课老师</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(student, index) in selectedRow.students" :key="'student' + index">
+              <td>{{student.student_id}}</td>
+              <td>{{student.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">学号</th>
+              <th class="text-center">姓名</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(teacher, index) in selectedRow.teachers" :key="'teacher' + index">
+              <td>{{teacher.teacher_id}}</td>
+              <td>{{teacher.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- <b-row class="justify-content-center mt-5" style="font-size: 20px;">业 务 清 单</b-row> -->
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">业务序号</th>
+              <th class="text-center">业务名称</th>
+              <th class="text-center">业务单位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in selectedRow.linked_business" :key="index">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.target_company}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </b-modal>
     <b-modal size="xl" hide-footer centered id="teamView" ref="teamView" title="团队管理">
-      <b-container class="modalContainer" v-if="selectedRow">
+      <div class="modalContainer" v-if="selectedRow">
         <b-row class="justify-content-center" style="font-size: 20px;">团 队 清 单</b-row>
-        <b-row class="my-2">
-          <b-col md="2" sm="12">团队序号</b-col>
-          <b-col md="2" sm="12">团队名称</b-col>
-          <b-col md="3" sm="12">团队领导人</b-col>
-          <b-col md="3" sm="12">创建时间</b-col>
-          <b-col md="2" sm="12">团队数</b-col>
-        </b-row>
-        <b-row v-for="(item, index) in selectedRow.linked_team" :key="'teamView' + index">
-          <b-col md="2" sm="12">{{item.id}}</b-col>
-          <b-col md="2" sm="12">{{item.name}}</b-col>
-          <b-col md="3" sm="12">{{item.leader}}</b-col>
-          <b-col md="3" sm="12">{{item.create_time}}</b-col>
-          <b-col md="2" sm="12">{{item.member_count}}</b-col>
-        </b-row>
-      </b-container>
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">团队序号</th>
+              <th class="text-center">团队名称</th>
+              <th class="text-center">团队领导人</th>
+              <th class="text-center">创建时间</th>
+              <th class="text-center">团队数</th>
+              <th class="text-center">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in selectedRow.linked_team" :key="'teamview' + index">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.leader}}</td>
+              <td>{{item.create_time}}</td>
+              <td>{{item.member_count}}</td>
+              <td>
+                <b-button
+                  class="styledBtn"
+                  :size="template_size"
+                  variant="outline-primary"
+                  @click="teamMemberModal(item.members)"
+                >团队成员</b-button>
+                <b-button
+                  class="styledBtn"
+                  :size="template_size"
+                  variant="outline-primary"
+                  @click="teamBusinessModal(item.businesses)"
+                >业务信息</b-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </b-modal>
+    <b-modal size="md" hide-footer centered id="teamMemberView" ref="teamMemberView" title="团队成员">
+      <div class="modalContainer" v-if="selectedRow">
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">工号</th>
+              <th class="text-center">任课老师</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(student, index) in selectedTeamMembers" :key="'student1' + index">
+              <td>{{student.student_id}}</td>
+              <td>{{student.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </b-modal>
+    <b-modal size="md" hide-footer centered id="teamBusinessView" ref="teamBusinessView" title="团队成员">
+      <div class="modalContainer" v-if="selectedRow">
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">序号</th>
+              <th class="text-center">业务名称</th>
+              <th class="text-center">申请时间</th>
+              <th class="text-center">申请人</th>
+              <th class="text-center">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(business, index) in selectedTeamBusinesses" :key="'business' + index">
+              <td>{{business.id}}</td>
+              <td>{{business.name}}</td>
+              <td>{{business.create_time}}</td>
+              <td>{{business.create_by && business.create_by.name}}</td>
+              <td>{{business.status | businessStatus}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -321,6 +410,7 @@ import UploadExcelComponent from "@/components/UploadExcel/index.vue";
 import _ from "lodash";
 import BRow from "bootstrap-vue/src/components/layout/row";
 import utils from "@/utils/util";
+import { businessStatus } from "@/filters/fun";
 
 export default {
   name: "classic-course",
@@ -329,6 +419,7 @@ export default {
     Loading,
     UploadExcelComponent
   },
+  filters: { businessStatus },
   data() {
     return {
       selected: [],
@@ -347,8 +438,7 @@ export default {
         teacherName3: "",
         teacherId3: "",
         courseCount: "",
-        experienceTime: "",
-        studentCount: ""
+        experienceTime: ""
       },
       editItem: {
         id: null,
@@ -398,11 +488,6 @@ export default {
           sortable: false,
           class: "text-right field-experienceTime"
         },
-        studentCount: {
-          label: "学生人数",
-          sortable: false,
-          class: "text-right field-studentCount"
-        },
         created_by: {
           label: "创建人",
           sortable: false,
@@ -412,6 +497,11 @@ export default {
           label: "创建时间",
           sortable: false,
           class: "text-center field-create_time"
+        },
+        studentCount: {
+          label: "学生人数",
+          sortable: false,
+          class: "text-center field-studentCount"
         },
         action: {
           label: "操作",
@@ -436,7 +526,9 @@ export default {
       selectedTeacher2: null,
       selectedTeacher3: null,
       teacherList: [],
-      selectedRow: {}
+      selectedRow: {},
+      selectedTeamMembers: [],
+      selectedTeamBusinesses: []
     };
   },
   created() {
@@ -521,7 +613,6 @@ export default {
           "工号3",
           "课时",
           "实验学时",
-          "学生人数",
           "学号",
           "姓名",
           "班级"
@@ -609,10 +700,6 @@ export default {
             this.tableData[id].实验学时 === undefined
               ? this.cancelExcel("实验学时")
               : this.tableData[id].实验学时,
-          studentCount:
-            this.tableData[id].学生人数 === undefined
-              ? this.cancelExcel("学生人数")
-              : this.tableData[id].学生人数,
           studentNo:
             this.tableData[id].学号 === undefined
               ? this.cancelExcel("学号")
@@ -771,9 +858,15 @@ export default {
       CourseService.getTeacherList({})
         .then(res => {
           this.teacherList = res.results;
-          this.selectedTeacher1 = row.item.teachers[0] ? row.item.teachers[0].id : null;
-          this.selectedTeacher2 = row.item.teachers[1] ? row.item.teachers[1].id : null;
-          this.selectedTeacher3 = row.item.teachers[2] ? row.item.teachers[2].id : null;
+          this.selectedTeacher1 = row.item.teachers[0]
+            ? row.item.teachers[0].id
+            : null;
+          this.selectedTeacher2 = row.item.teachers[1]
+            ? row.item.teachers[1].id
+            : null;
+          this.selectedTeacher3 = row.item.teachers[2]
+            ? row.item.teachers[2].id
+            : null;
           this.$emit("data-ready");
           this.$refs["teacherEditCourse"].show();
         })
@@ -784,6 +877,14 @@ export default {
     detailOpen(row) {
       this.$refs["detailView"].show();
       this.selectedRow = row.item;
+    },
+    teamMemberModal(members) {
+      this.$refs["teamMemberView"].show();
+      this.selectedTeamMembers = members;
+    },
+    teamBusinessModal(businesses) {
+      this.$refs["teamBusinessView"].show();
+      this.selectedTeamBusinesses = businesses;
     },
     teamOpen(row) {
       this.$refs["teamView"].show();
@@ -843,6 +944,13 @@ export default {
         .catch(() => {
           this.$emit("data-failed");
         });
+    },
+    getStudentCount(teams) {
+      let count = 0;
+      teams.forEach(team => {
+        count += team.member_count;
+      });
+      return count;
     }
   }
 };
@@ -881,10 +989,6 @@ export default {
   }
   .field-experienceTime {
     width: 8%;
-    text-align: left !important;
-  }
-  .field-studentCount {
-    width: 5%;
     text-align: left !important;
   }
   .field-created_by {
