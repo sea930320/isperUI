@@ -267,37 +267,40 @@
             </tr>
           </tbody>
         </table>
-
-        <table class="table b-table table-borderless table-sm mt-3">
-          <thead role="rowgroup">
-            <tr>
-              <th class="text-center">工号</th>
-              <th class="text-center">任课老师</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(student, index) in selectedRow.students" :key="'student' + index">
-              <td>{{student.student_id}}</td>
-              <td>{{student.name}}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table class="table b-table table-borderless table-sm mt-3">
-          <thead role="rowgroup">
-            <tr>
-              <th class="text-center">学号</th>
-              <th class="text-center">姓名</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(teacher, index) in selectedRow.teachers" :key="'teacher' + index">
-              <td>{{teacher.teacher_id}}</td>
-              <td>{{teacher.name}}</td>
-            </tr>
-          </tbody>
-        </table>
-
+        <b-row class="m-0 p-0">
+          <b-col class="pl-0">
+            <table class="table b-table table-borderless table-sm mt-3">
+              <thead role="rowgroup">
+                <tr>
+                  <th class="text-center">工号</th>
+                  <th class="text-center">任课老师</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(student, index) in selectedRow.students" :key="'student' + index">
+                  <td>{{student.student_id}}</td>
+                  <td>{{student.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </b-col>
+          <b-col class="pr-0">
+            <table class="table b-table table-borderless table-sm mt-3">
+              <thead role="rowgroup">
+                <tr>
+                  <th class="text-center">学号</th>
+                  <th class="text-center">姓名</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(teacher, index) in selectedRow.teachers" :key="'teacher' + index">
+                  <td>{{teacher.teacher_id}}</td>
+                  <td>{{teacher.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </b-col>
+        </b-row>
         <!-- <b-row class="justify-content-center mt-5" style="font-size: 20px;">业 务 清 单</b-row> -->
         <table class="table b-table table-borderless table-sm mt-3">
           <thead role="rowgroup">
