@@ -140,7 +140,7 @@
           <b-col md="3" sm="12">创建时间</b-col>
           <b-col md="2" sm="12">团队数</b-col>
         </b-row>
-        <b-row v-for="item in selectedRow.linked_team">
+        <b-row v-for="(item, index) in selectedRow.linked_team" :key="'teamView_team' + index">
           <b-col md="2" sm="12">{{item.id}}</b-col>
           <b-col md="2" sm="12">{{item.name}}</b-col>
           <b-col md="3" sm="12">{{item.leader}}</b-col>
