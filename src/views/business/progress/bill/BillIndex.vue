@@ -272,7 +272,7 @@
                 cancel-title="取消"
                 @hidden="addModalClear"
                 size="xl"
-                hide-footer="true"
+                hide-footer
                 ref="vuemodal"
         >
             <b-container fluid>
