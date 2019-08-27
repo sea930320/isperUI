@@ -437,7 +437,8 @@ export default {
         msg: "结束业务",
         type: "cmd",
         cmd: ACTION_BUSINESS_NODE_END,
-        data: JSON.stringify({ tran_id: 0 })
+        data: JSON.stringify({ tran_id: 0,
+          parallel: 0 })
       });
     }
   }

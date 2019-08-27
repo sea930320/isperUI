@@ -1,6 +1,6 @@
 <template>
     <div class="xml-modal-wrapper" v-show="visible">
-        <div v-if="options.parttern == 1" class="overlay-close" @click="close">
+        <div v-if="options.parttern === 1" class="overlay-close" @click="close">
             <i></i>
         </div>
         <div v-else class="overlay-box">
@@ -38,7 +38,8 @@ export default {
             default: () => {
                 return {
                     parttern: 1,
-                    currentTask: null
+                    currentTask: [],
+                    user_role_allocs: []
                 };
             }
         },
@@ -81,22 +82,34 @@ export default {
                 // 双击选中元素
                 let eventBus = self.viewer.get("eventBus");
                 eventBus.on("element.dblclick", function(e) {
-                    if (self.userRoleAllocs.length == 0) {
-                        self.$toasted.error("您不能参与该环节，请耐心等待！");
-                        return;
-                    }
-                    if (e.element.id !== self.options.currentTask) {
-                        self.$toasted.error("选择环节错误，请重新选择");
+                    if (self.options.currentTask.length === 1) {
+                        if (self.userRoleAllocs.length === 0) {
+                            self.$toasted.error("您不能参与该环节，请耐心等待！");
+                            return;
+                        }
+                        if (!self.options.currentTask.includes(e.element.id)) {
+                            self.$toasted.error("选择环节错误，请重新选择");
+                        } else {
+                            self.close();
+                        }
                     } else {
-                        self.close();
+                        if (!self.options.currentTask.includes(e.element.id)) {
+                            self.$toasted.error("选择环节错误，请重新选择");
+                        } else {
+                            if (self.options.user_role_allocs[self.options.currentTask.indexOf(e.element.id)] === 0) {
+                                self.$toasted.error("您不能参与该环节，请耐心等待！");
+                                return;
+                            }
+                            self.close(self.options.currentTask.indexOf(e.element.id));
+                        }
                     }
                 });
             }
         },
         // 关闭
-        close() {
+        close(node_seq=null) {
             this.wrapShow = false;
-            this.$emit("on-close", this.wrapShow);
+            this.$emit("on-close", node_seq);
         },
         // 退出
         quit() {

@@ -39,7 +39,7 @@
                 @on-close="xmlModalShow = false"
             ></view-xml>
             <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="办理单位">
-                <div class="row">
+                <div class="row py-3">
                     <b-form-select
                         v-model="project.use_to_company"
                         class="col-7 offset-1"
