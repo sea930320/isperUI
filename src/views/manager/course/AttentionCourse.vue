@@ -249,7 +249,7 @@ export default {
     cancelRequest() {
       this.selected = this.selected.filter(
         item =>
-          this.allData.list.filter(x => x.id === item)[0].status === "已关注"
+          ["已关注", "取消已拒绝"].includes(this.allData.list.filter(x => x.id === item)[0].status)
       );
       if (this.selected.length !== 0) {
         this.run();

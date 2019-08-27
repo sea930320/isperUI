@@ -5,8 +5,8 @@
       <b-container fluid class="student-team-modal">
         <div v-for="(team, index) in team.list" :key="index" class="my-2">
           <b-row v-if="index==0">
-            <b-col class="vertical-center">团队队长: &nbsp;{{team.leader.username}}</b-col>
-            <b-col class="vertical-center">指导者: &nbsp;{{team.teacher.username}}</b-col>
+            <b-col class="vertical-center">团队队长: &nbsp;{{team.leader && team.leader.username}}</b-col>
+            <b-col class="vertical-center">指导者: &nbsp;{{team.teacher && team.teacher.username}}</b-col>
           </b-row>
           <b-table :items="team.members" small hover :fields="columns" head-variant v-if="index==0">
             <template slot="sn" slot-scope="row">{{ row.index + 1 }}</template>

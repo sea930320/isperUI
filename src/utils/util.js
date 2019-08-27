@@ -10,6 +10,9 @@ function padding(s, le) {
 }
 
 export default {
+  myXOR(a, b) {
+    return (a || b) && !(a && b);
+  },
   getQueryStringByName: function (name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
     var r = window.location.search.substr(1).match(reg)
@@ -23,12 +26,12 @@ export default {
     return (
       "?" +
       Object.keys(json)
-      .map(function (key) {
-        return (
-          encodeURIComponent(key) + "=" + (json[key] ? encodeURIComponent(json[key]) : '')
-        );
-      })
-      .join("&")
+        .map(function (key) {
+          return (
+            encodeURIComponent(key) + "=" + (json[key] ? encodeURIComponent(json[key]) : '')
+          );
+        })
+        .join("&")
     );
   },
   formatDate: {

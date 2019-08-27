@@ -129,7 +129,7 @@
                 <span
                   v-for="(member, index) in teams[0].members"
                   :key="index"
-                >{{member.username}} &nbsp;</span>
+                >{{member.name}} &nbsp;</span>
               </div>
             </b-card>
           </b-col>

@@ -4,7 +4,7 @@
         <div @submit.prevent="updateInfo" class="cardDiv">
             <b-list-group>
                 <b-list-group-item v-for="item in message"
-                    :to="(parseInt(item.moreTeammates) || parseInt(item.attentionCheck)) ? {name: item.link, params: { messageId: item }}
+                    :to="(parseInt(item.moreTeammates) || parseInt(item.attentionCheck) || parseInt(item.attentionCancelCheck)) ? {name: item.link, params: { messageId: item }}
                      : item.link" :key="item.id">
                     {{
                         parseInt(item.moreTeammates) ?

@@ -60,6 +60,7 @@
             unchecked-value
           >{{row.item.id}}</b-form-checkbox>
         </template>
+        <template slot="studentCount" slot-scope="row">{{getStudentCount(row.item.linked_team)}}</template>
         <template slot="action" slot-scope="row">
           <b-button
             class="styledBtn"
@@ -91,29 +92,84 @@
         v-model="queryParam.page"
       ></b-pagination>
     </b-row>
-    <b-modal size="lg" hide-footer centered id="detailView" ref="detailView" title="查看详情">
-      <b-container class="modalContainer" v-if="selectedRow">
-        <b-row>
-          <b-col md="4" sm="4" class="text-left">序号：{{selectedRow.id}}</b-col>
-          <b-col md="4" sm="4" class="text-left">课堂名称：{{selectedRow.courseName}}</b-col>
+    <b-modal size="xl" hide-footer centered id="detailView" ref="detailView" title="查看详情">
+      <div class="modalContainer" v-if="selectedRow">
+        <table class="table b-table table-borderless table-sm">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center w-5">序号</th>
+              <th class="text-center w-35">身份名称</th>
+              <th class="text-center w-10">课序号</th>
+              <th class="text-center w-10">课时</th>
+              <th class="text-center w-10">开课学期</th>
+              <th class="text-center w-10">创建人</th>
+              <th class="text-center w-20">创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{selectedRow.id}}</td>
+              <td>{{selectedRow.courseFullName}}</td>
+              <td>{{selectedRow.courseSeqNum}}</td>
+              <td>{{selectedRow.courseCount}}</td>
+              <td>{{selectedRow.courseSemester}}</td>
+              <td>{{selectedRow.created_by}}</td>
+              <td>{{selectedRow.create_time}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <b-row class="m-0 p-0">
+          <b-col class="pl-0">
+            <table class="table b-table table-borderless table-sm mt-3">
+              <thead role="rowgroup">
+                <tr>
+                  <th class="text-center">工号</th>
+                  <th class="text-center">任课老师</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(student, index) in selectedRow.students" :key="'student' + index">
+                  <td>{{student.student_id}}</td>
+                  <td>{{student.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </b-col>
+          <b-col class="pr-0">
+            <table class="table b-table table-borderless table-sm mt-3">
+              <thead role="rowgroup">
+                <tr>
+                  <th class="text-center">学号</th>
+                  <th class="text-center">姓名</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(teacher, index) in selectedRow.teachers" :key="'teacher' + index">
+                  <td>{{teacher.teacher_id}}</td>
+                  <td>{{teacher.name}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </b-col>
         </b-row>
-        <b-row>
-          <b-col md="4" sm="12" class="text-left">创建人：{{selectedRow.created_by}}</b-col>
-          <b-col md="4" sm="12" class="text-left">创建时间：{{selectedRow.create_time}}</b-col>
-          <b-col md="4" sm="12" class="text-left">关联课程：{{selectedRow.teacherName}}</b-col>
-        </b-row>
-        <b-row class="justify-content-center mt-5" style="font-size: 20px;">业 务 清 单</b-row>
-        <b-row class="my-2">
-          <b-col md="2" sm="12">业务序号</b-col>
-          <b-col md="5" sm="12">业务名称</b-col>
-          <b-col md="5" sm="12">业务单位</b-col>
-        </b-row>
-        <b-row v-for="(item, index) in selectedRow.linked_business" :key="index">
-          <b-col md="2" sm="12">{{item.id}}</b-col>
-          <b-col md="5" sm="12">{{item.name}}</b-col>
-          <b-col md="5" sm="12">{{item.target_company}}</b-col>
-        </b-row>
-      </b-container>
+        <!-- <b-row class="justify-content-center mt-5" style="font-size: 20px;">业 务 清 单</b-row> -->
+        <table class="table b-table table-borderless table-sm mt-3">
+          <thead role="rowgroup">
+            <tr>
+              <th class="text-center">业务序号</th>
+              <th class="text-center">业务名称</th>
+              <th class="text-center">业务单位</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in selectedRow.linked_business" :key="index">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>
+              <td>{{item.target_company}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </b-modal>
     <b-modal size="xl" hide-footer centered id="teamView" ref="teamView" title="团队管理">
       <b-container class="modalContainer" v-if="selectedRow">
@@ -231,12 +287,37 @@ export default {
         id: {
           label: "序号",
           sortable: false,
-          class: "text-right field-id"
+          class: "text-center field-id pt-2"
         },
         courseName: {
           label: "课堂名称",
           sortable: false,
           class: "text-left field-courseName"
+        },
+        courseSeqNum: {
+          label: "课序号",
+          sortable: false,
+          class: "text-right field-courseSeqNum"
+        },
+        courseSemester: {
+          label: "开课学期",
+          sortable: false,
+          class: "text-left field-courseSemester"
+        },
+        teacherId: {
+          label: "工号",
+          sortable: false,
+          class: "text-right field-teacherId"
+        },
+        courseCount: {
+          label: "课时",
+          sortable: false,
+          class: "text-right field-courseCount"
+        },
+        experienceTime: {
+          label: "实验学时",
+          sortable: false,
+          class: "text-right field-experienceTime"
         },
         created_by: {
           label: "创建人",
@@ -246,17 +327,17 @@ export default {
         create_time: {
           label: "创建时间",
           sortable: false,
-          class: "text-right field-create_time"
+          class: "text-center field-create_time"
         },
-        teacherName: {
-          label: "关联课程",
+        studentCount: {
+          label: "学生人数",
           sortable: false,
-          class: "text-left field-teacherName"
+          class: "text-center field-studentCount"
         },
         action: {
           label: "操作",
           sortable: false,
-          class: "text-left field-action"
+          class: "text-center field-action"
         }
       },
       queryParam: {
@@ -320,6 +401,17 @@ export default {
       })
         .then(data => {
           this.allData.list = data.results;
+          this.allData.list = _.map(this.allData.list, item => {
+            item.teacherId = "";
+            item.teachers.forEach(element => {
+              if (item.teacherId == "") {
+                item.teacherId = element.teacher_id;
+              } else {
+                item.teacherId += ", " + element.teacher_id;
+              }
+            });
+            return item;
+          });
           this.allData.total = data.paging.count;
           this.$emit("data-ready");
         })
@@ -387,6 +479,13 @@ export default {
             this.$emit("data-failed");
           });
       }
+    },
+    getStudentCount(teams) {
+      let count = 0;
+      teams.forEach(team => {
+        count += team.member_count;
+      });
+      return count;
     }
   }
 };

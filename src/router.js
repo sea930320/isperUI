@@ -168,6 +168,10 @@ const routes = [{
             path: '/attentionCheck',
             name: 'request-check',
             component: () => import('@/views/personal-center/AttentionCheck.vue')
+        }, {
+            path: '/attentionCancelCheck',
+            name: 'request-cancel-check',
+            component: () => import('@/views/personal-center/AttentionCancelCheck.vue')
         }
     ]
 },
@@ -240,6 +244,7 @@ const routes = [{
                 { path: '10/:bid/:nid/:mode?', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue') },  //展示
                 { path: '11/:bid/:nid/:mode?', name: 'qa', component: () => import('@/views/business/progress/qa/QAIndex.vue') },  // 调查问卷
                 { path: '12/:bid/:nid/:mode?', name: 'select_decide', component: () => import('@/views/business/progress/select_decide/SelectDecideIndex.vue') },
+                { path: '14/:bid/:nid/:mode?', name: 'bill_operation', component: () => import('@/views/business/progress/bill/BillIndex.vue') },
                 { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') },
                 { path: 'parallel/:bid/decide', name: 'parallel', component: () => import('@/views/business/progress/parallel/ParallelIndex.vue') }
             ]
@@ -312,32 +317,14 @@ const routes = [{
 }
 ];
 
+// 流程设置跳转判断
+
 const router = new VueRouter({
     mode: 'history',
     routes: routes,
     base: process.env.BASE_URL,
     linkActiveClass: 'active'
 });
-
-// 登录中间验证，页面需要登录而没有登录的情况直接跳转登录
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (VueCookie.get(STORAGE_KEY_USER)) {
-            next()
-        } else {
-            next({
-                path: '/login',
-                query: {
-                    redirect: to.fullPath
-                }
-            })
-        }
-    } else {
-        next()
-    }
-});
-
-// 流程设置跳转判断
 const flowSetEnter = (to, from, next, page) => {
     if (to.matched.some(record => record.meta.step)) {
         if (store.state.flowStep > -1 && store.state.flowStep >= page) {
@@ -359,5 +346,23 @@ const flowSetEnter = (to, from, next, page) => {
         next()
     }
 };
+
+// 登录中间验证，页面需要登录而没有登录的情况直接跳转登录
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (VueCookie.get(STORAGE_KEY_USER)) {
+            next()
+        } else {
+            next({
+                path: '/login',
+                query: {
+                    redirect: to.fullPath
+                }
+            })
+        }
+    } else {
+        next()
+    }
+});
 
 export default router

@@ -1,7 +1,7 @@
 <template>
   <b-row class="todo-group-chat">
-    <b-col cols="8" class="py-4 pl-2 pr-1">
-      <b-card style="height: 70%; margin-bottom: 2%;" class="text-left">
+    <b-col cols="8" class="py-4 pl-2 pr-1" style="height: calc(100vh - 250px);">
+      <b-card style="height: 70%; margin-bottom: 2%;" class="text-left chatcard">
         <section ref="chat" class="chatlist" v-scroll-bottom="messages">
           <ul>
             <template v-for="(item, index) in messages">
@@ -15,11 +15,11 @@
                 </div>
                 <div class="time">
                   <cite>
-                    <i>{{item.create_time}}</i>a
-                    {{item.from_user.name}}（{{item.from_user.login_type==9?"学生":"指导者"}}）
+                    <i>{{item.create_time}}</i>
+                    {{item.from_user.name}}（{{item.from_user.login_type==9 ? "学生": (item.from_user.position ? item.from_user.position.name : "")}}）
                   </cite>
                 </div>
-                <div class="chat-text" v-html="replaceFace(item.msg)"></div>
+                <div class="chat-text" v-html="replaceFace(item)"></div>
               </li>
               <li class="chat-bubble chat-others" :key="index" v-else>
                 <div class="chat-user">
@@ -27,11 +27,11 @@
                 </div>
                 <div class="time">
                   <cite>
-                    {{item.from_user.name}}（{{item.from_user.login_type==9?"学生":"指导者"}}）
+                    {{item.from_user.name}}（{{item.from_user.login_type==9 ? "学生": (item.from_user.position ? item.from_user.position.name : "")}}）
                     <i>{{item.create_time}}</i>
                   </cite>
                 </div>
-                <div class="chat-text" v-html="replaceFace(item.msg)"></div>
+                <div class="chat-text" v-html="replaceFace(item)"></div>
               </li>
             </template>
           </ul>
@@ -56,7 +56,7 @@
           <span @click.stop="showSelBox=showSelBox==1?0:1">
             <icon name="laugh"></icon>
           </span> &nbsp;
-          <span @click.stop>
+          <span @click.stop="sendDoc">
             <icon name="image"></icon>
           </span> &nbsp;
           <span></span>
@@ -104,24 +104,28 @@
       </div>
     </b-col>
 
-    <b-modal v-model="cancelModal" title="删除提醒" size="md" :showPerson="true">
-      <b-container fluid>Are you Sure?</b-container>
+    <b-modal v-model="cancelModal" title="解除助理提醒" size="md" :showPerson="true">
+      <b-container fluid>是否确定{{cancelUser && cancelUser.name}}解除助理关系？</b-container>
 
       <div slot="modal-footer" class="w-100">
         <b-button variant="danger" class="float-center mr-2" @click="confirmCancel()">确定</b-button>
         <b-button variant="secondary" class="float-center" @click="cancelModal=false">取消</b-button>
       </div>
     </b-modal>
+    <!-- upload-modal -->
+    <upload-modal @on-uploadConfirm="docUploadConfirm"></upload-modal>
   </b-row>
 </template>
 <script>
 import emoji from "@/components/business/common/emoji";
 import studentService from "@/services/studentService";
 import { businessStatus, gender } from "@/filters/fun";
+import uploadModal from "@/components/common/uploadModal";
+
 import _ from "lodash";
 
 export default {
-  components: {},
+  components: { uploadModal },
   sockets: {
     connect() {},
     getStudentMessage(msg) {
@@ -236,10 +240,29 @@ export default {
           this.content = "";
         });
     },
+    sendDoc() {
+      this.$emit("openUploadModal", {
+        uploadUrl: "/api/student/send-doc",
+        uploadParams: {
+          business_id: this.business.id,
+          to: JSON.stringify(this.todo_users),
+          msg_type: 1
+        }
+      });
+    },
+    docUploadConfirm() {},
     // 替换表情代码
-    replaceFace(msg) {
+    replaceFace(item) {
+      let msg = item.msg
       if (!msg) return "";
       let self = this;
+      if (item.url) {
+        if (item.file_type == 2) {
+          return `<a href="${item.url}" target="_blank"> <img class="msg-img" src="${item.url}"> </a>`;
+        } else {
+          return `<a href="${item.url}" target="_blank"> ${msg} </a>`;
+        }
+      }
       /* eslint-disable */
       let con = msg.replace(/\[[^\[\]]+\]/g, function(item) {
         let index = self.emoji.code.indexOf(item);
@@ -273,13 +296,21 @@ export default {
 .todo-group-chat {
   height: 100%;
 
+  .chatcard {
+    .card-body {
+      height: 100%;
+    }
+  }
   .chatlist {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
-
+    .msg-img {
+      width: 100px !important;
+      height: auto !important;
+    }
     ul,
     ol {
       padding: 0px;

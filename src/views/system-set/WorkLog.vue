@@ -145,7 +145,7 @@ export default {
                 user_id: {
                     label: "用户名",
                     sortable: false,
-                    class: "text-right field-user_id"
+                    class: "text-left field-user_id"
                 },
                 user_name: {
                     label: "姓名",
@@ -170,7 +170,7 @@ export default {
                 log_at: {
                     label: "操作时间",
                     sortable: false,
-                    class: "text-right field-log_at"
+                    class: "text-center field-log_at"
                 },
                 ip: {
                     label: "操作IP",
@@ -372,7 +372,7 @@ export default {
     .field-sn {
         text-align: left !important;
         padding-left: 20px;
-        width: 6%;
+        width: 10%;
     }
     .field-user_id {
         width: 9%;
@@ -381,16 +381,16 @@ export default {
         width: 9%;
     }
     .field-group {
-        width: 10%;
+        width: 9%;
     }
     .field-company {
-        width: 10%;
+        width: 9%;
     }
     .field-role {
-        width: 10%;
+        width: 9%;
     }
     .field-log_at {
-        width: 16%;
+        width: 15%;
     }
     .field-ip {
         width: 10%;

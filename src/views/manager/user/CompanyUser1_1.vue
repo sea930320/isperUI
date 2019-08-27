@@ -226,7 +226,7 @@
                         class="mt-3 my-4 col-5 float-right"
                         block
                         variant="primary"
-                        @click="this.$refs['newUser'].hide()"
+                        @click="hideNewUser()"
                     >取 消</b-button>
                 </b-form>
             </div>
@@ -586,6 +586,9 @@ export default {
                         this.$emit("data-failed");
                     });
             }
+        },
+        hideNewUser() {
+            this.$refs['newUser'].hide()
         }
     }
 };
