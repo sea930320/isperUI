@@ -33,7 +33,7 @@
                                 <p class="tip">下一个环节开始以并行模式执行</p>
                             </div>
                             <div class="template-modal-content">
-                                <p class="tip" v-for="item in trans">{{item.condition}}</p>
+                                <p class="tip" v-for="(item, index) in trans" :key="'tip'+index">{{item.condition}}</p>
                             </div>
                         </div>
                     </div>
@@ -220,6 +220,8 @@
                             this.$emit("data-ready");
                             if (this.trans[0].parallel_mode === 1)
                                 this.$router.go(-1);
+                            else
+                                this.$router.go();
                         })
                         .catch(() => {
                             this.$emit("data-failed");

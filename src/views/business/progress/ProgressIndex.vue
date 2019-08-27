@@ -164,11 +164,7 @@
 
                             if (parseInt(this.$route.params.nid) !== this.metaInfo.nodeID) {
                                 this.$router.push({
-                                    path: `/business/progress/${this.metaInfo.processType}`,
-                                    params: {
-                                        eid: this.metaInfo.businessID,
-                                        nid: this.metaInfo.nodeID
-                                    }
+                                    path: `/business/progress/${this.metaInfo.processType}/${this.metaInfo.businessID}/${this.metaInfo.nodeID}`,
                                 });
                             }
                             // this.WebimConnInit(data.huanxin_id);

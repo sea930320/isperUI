@@ -2,7 +2,7 @@
     <div>
         <loading v-if="isRunning"></loading>
         <b-modal centered v-model="visible" size="lg" v-if="project">
-            <b-container fluid class="business-start-modal">
+            <b-container fluid class="business-start-modal py-4">
                 <b-row align-v="start">
                     <b-col cols="4" class="text-left text-content">
                         <label>项目创建单位 :</label>
