@@ -122,8 +122,8 @@
                     </template>
                 </b-table>
                 <b-table :items="bill_data" v-if="selected==2" selectable
-                         ref="selectableTable"
-                         select-mode="single" responsive small hover :fields="columns1" head-variant>
+                         ref="selectableTable1"
+                         select-mode="single" responsive small hover :fields="columns1" head-variant @row-selected="partSelectedFunc">
                     <template slot="sn" slot-scope="row">
                         {{ row.index + 1 }}
                     </template>
@@ -352,7 +352,7 @@
                 v-model="document_upload_modal"
                 ok-title="确定"
                 cancel-title="取消"
-                @hidden="addModalClear"
+                @hidden="uploadModalClear"
                 size="xl"
                 hide-footer="true"
                 ref="vuemodal"
@@ -360,26 +360,39 @@
             <b-container fluid>
                 <b-row>
                     <b-col sm="12">
-                        <b-table :items="bill_data" v-if="selected==2"
+                        <b-table :items="section_docs_lists"
                                  select-mode="single" responsive small hover :fields="columns_upload" head-variant>
                             <template slot="sn" slot-scope="row">
                                 {{ row.index + 1 }}
                             </template>
-                            <template slot="upload_doc_name" slot-scope="row">{{row.item.part_number}}</template>
-                            <template slot="upload_desc" slot-scope="row">{{row.item.part_title}}</template>
-                            <template slot="upload_control" slot-scope="row">{{row.item.part_content}}</template>
+                            <template slot="upload_doc_name" slot-scope="row">{{row.item.doc_name}}</template>
+                            <template slot="upload_desc" slot-scope="row">{{row.item.doc_conception}}</template>
+                            <template slot="upload_control" slot-scope="row">{{row.item.part_content}}
+                                <b-row>
+                                    <b-col sm="12">
+                                        <b-button-group class="float-center">
+                                            <b-button
+                                                    :size="template_size"
+                                                    class="styledBtn"
+                                                    variant="outline-primary"
+                                                    @click="deletePartDoc(row.item.id)"
+                                            >刪除</b-button>
+                                        </b-button-group>
+                                    </b-col>
+                                </b-row>
+                            </template>
                         </b-table>
                     </b-col>
                 </b-row>
+                <br><br>
                 <b-row>
                     <b-col sm="10">
                         <b-form-group label-cols-sm="2" label="上传文件:" label-for="uploadInputAdd1">
-                            <b-form-input id="uploadInputAdd1" v-model="upload_doc_info" ></b-form-input>
+                            <b-form-input id="uploadInputAdd1" disabled v-model="upload_doc_url" ></b-form-input>
                         </b-form-group>
                     </b-col>
                     <b-col sm="2">
-                        <business-post-upload></business-post-upload>
-
+                        <business-bill-upload @getFileURL="getFileURL"></business-bill-upload>
                     </b-col>
                 </b-row>
                 <b-row>
@@ -393,9 +406,24 @@
                                 size="sm"
                                 class="styledBtn"
                                 variant="outline-primary"
+                                @click="showPreviewPage()"
+                                id="tooltip-button-variant"
                         >
-                            <icon name="eye"></icon>浏 览</b-button></b-col>
+
+                            <icon name="eye" ></icon> 浏 览</b-button>
+                        <b-tooltip target="tooltip-button-variant" variant="danger">Can be shown Less than 15MB</b-tooltip>
+                    </b-col>
                 </b-row>
+                <br>
+                <b-row>
+                    <b-col sm="12">
+                        <b-button size="sm" class="styledBtn float-center" variant="outline-primary" @click="saveDoctoPart()">
+                            <icon name="save"></icon>&nbsp;保存
+                        </b-button>
+                    </b-col>
+                </b-row>
+                <br>
+                <VueDocPreview v-if="previewShow==1" :value="encodedURLDOCX" type="office" />
             </b-container>
         </b-modal>
     </div>
@@ -406,14 +434,15 @@
 //    import BusinessService from "@/services/businessService";
     import BillService from "@/services/billService";
     import { mapState } from "vuex";
+    import VueDocPreview from 'vue-doc-preview'
 //    import { VueEditor } from "vue2-editor";
-    import BusinessPostUpload from "@/components/upload/BusinessPostUpload";
+    import BusinessBillUpload from "@/components/upload/BusinessBillUpload";
     import endNodeHandle from "@/components/business/modal/endNodeHandle";
     import siderUserBar from "@/components/business/common/SiderUserBar";
 
     export default {
 //        components: { Loading, VueEditor, BusinessPostUpload, endNodeHandle, siderUserBar },
-        components: { Loading, BusinessPostUpload, endNodeHandle, siderUserBar },
+        components: { Loading, BusinessBillUpload, endNodeHandle, siderUserBar, VueDocPreview },
         data() {
             return {
                 selected:'1',
@@ -424,7 +453,7 @@
                 bill_name:"",
                 bill_data:[],
                 edit_modal_data:{},
-                selected_data:{},
+                selected_data:[],
                 edit_full_modal_show:false,
                 delete_modal_show:false,
                 add_new_bill:false,
@@ -441,10 +470,14 @@
                 selectedEditChapterID:0,
                 selectedEditSectionID:0,
 
-                document_upload_modal:false,
-                upload_doc_info:"",
-                doc_desc_text:"",
 
+                document_upload_modal:false,
+                section_docs_lists:[],
+                upload_doc_url:"",
+                doc_desc_text:"",
+                upload_doc_id:0,
+                previewShow:0,
+                encodedURLDOCX:"",
 
                 commitEnd: false,
                 columns: {
@@ -560,7 +593,9 @@
             // 监控查询参数，如有变化 查询列表数据
             selected: {
                 handler() {
-                    this.$refs.selectableTable.clearSelected();
+
+
+                    this.selected_data = [];
                     this.init();
                 },
                 deep: true
@@ -600,7 +635,12 @@
                     });
             },
             updatePartsModal1(part_id){
-                this.$refs.selectableTable.clearSelected();
+                if (this.selected ==1){
+                    this.$refs.selectableTable.clearSelected();
+                } else {
+                    this.$refs.selectableTable1.clearSelected();
+                }
+                this.selected_data = [];
               for (let i=0; i<this.bill_data.length;i++){
                   if (this.bill_data[i].part_id == part_id){
                       this.edit_modal_data = this.bill_data[i];
@@ -610,7 +650,12 @@
             },
             deletePartsModal1(part_id){
                 for (let i=0; i<this.bill_data.length;i++){
-                    this.$refs.selectableTable.clearSelected();
+                    if (this.selected ==1){
+                        this.$refs.selectableTable.clearSelected();
+                    } else {
+                        this.$refs.selectableTable1.clearSelected();
+                    }
+                    this.selected_data = [];
                     if (this.bill_data[i].part_id == part_id){
                         this.edit_modal_data = this.bill_data[i];
                         this.delete_modal_show = true;
@@ -645,15 +690,70 @@
             },
 
             documentUploadToPart(){
-                if (this.selected_data == {}){
-                    alert('test');
+                if ((!this.selected_data)||(this.selected_data.length === 0)){
                     this.$toasted.error("Please select part");
                 } else {
-                    this.document_upload_modal = true;
+                    BillService.getDocList({"part_id":this.selected_data.part_id})
+                        .then((data) => {
+                            this.section_docs_lists = data.doc_data;
+                            this.document_upload_modal = true;
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
                 }
-
+            },
+            deletePartDoc(doc_id){
+                BillService.deleteDoc({"doc_id":doc_id,"part_id":this.selected_data.part_id})
+                    .then(() => {
+                        BillService.getDocList({"part_id":this.selected_data.part_id})
+                            .then((data) => {
+                                this.section_docs_lists = data.doc_data;
+                                this.document_upload_modal = true;
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
             },
 
+            getFileURL(data){
+                this.upload_doc_id = data.id;
+                this.upload_doc_url = data.fileURL;
+            },
+            saveDoctoPart(){
+                if ((this.upload_doc_id == 0) || (this.upload_doc_url == "")){
+                    this.$toasted.error("请上传文件。");
+                    return false
+                }
+                BillService.uploadDoc({"doc_id":this.upload_doc_id,"doc_url":this.upload_doc_url,"doc_conception":this.doc_desc_text,"part_id":this.selected_data.part_id})
+                    .then(() => {
+                        this.upload_doc_id = 0;
+                        this.upload_doc_url = "";
+                        this.doc_desc_text = "";
+                        BillService.getDocList({"part_id":this.selected_data.part_id})
+                            .then((data) => {
+                                this.section_docs_lists = data.doc_data;
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            uploadModalClear(){
+                this.upload_doc_id = 0;
+                this.upload_doc_url = "";
+                this.doc_desc_text = "";
+                this.encodedURLDOCX = "";
+                this.previewShow = 0;
+
+            },
             deleteParts1(){
                 this.run();
                 BillService.deletePart(this.edit_modal_data)
@@ -685,17 +785,27 @@
             addNewBill(){
                 this.add_new_bill = true;
             },
+            showPreviewPage(){
+                if (this.previewShow == 0){
+                    if (this.upload_doc_url != ""){
+                        this.encodedURLDOCX = encodeURIComponent(this.upload_doc_url);
+                        this.previewShow = 1;
+                    }
+                } else {
+                    this.previewShow = 0;
+                    this.encodedURLDOCX = "";
+                }
+
+            },
 
             changeChapter(){
                 this.sectionOptions=[];
                 this.sectionSelected="";
                 this.selectedEditChapterID = 0;
-                let chapterNumberTemp = 0;
                 let sectionsListTemp = [];
                 for (let i=0;i<this.bill_data.length;i++){
                     if (this.bill_data[i].chapter_title == this.chapterSelected){
                         this.selectedEditChapterID = this.bill_data[i].chapter_id;
-                        chapterNumberTemp = this.bill_data[i].chapter_number;
                         sectionsListTemp.push(this.bill_data[i]);
                     }
                 }
@@ -755,9 +865,6 @@
                 this.chapterSelected="";
                 this.sectionSelected="";
             },
-
-
-
             endNodeCancel() {
                 this.commitEnd = false;
             },

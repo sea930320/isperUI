@@ -48,6 +48,28 @@ class BillService {
         })
     }
 
+    getDocList(data){
+        return xhr({
+            method: 'get',
+            url: '/bill/doc/list',
+            params: data
+        })
+    }
+    deleteDoc(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/doc/delete',
+            params: data
+        })
+    }
+    uploadDoc(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/doc/upload',
+            params: data
+        })
+    }
+
 
     getBillChapter(data) {
         return xhr({
