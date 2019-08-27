@@ -166,7 +166,6 @@
             </div>
         </b-container>
         <div class="create-btns">
-            <business-post-upload></business-post-upload>
             <b-button size="sm" class="styledBtn" variant="outline-primary" @click="saveBillList()">
                 <icon name="save"></icon>&nbsp;保存
             </b-button>
@@ -354,7 +353,7 @@
                 cancel-title="取消"
                 @hidden="uploadModalClear"
                 size="xl"
-                hide-footer="true"
+                hide-footer
                 ref="vuemodal"
         >
             <b-container fluid>
