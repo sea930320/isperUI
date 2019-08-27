@@ -353,7 +353,7 @@
                 cancel-title="取消"
                 @hidden="uploadModalClear"
                 size="xl"
-                hide-footer="true"
+                hide-footer
                 ref="vuemodal"
         >
             <b-container fluid>
