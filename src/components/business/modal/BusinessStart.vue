@@ -2,7 +2,7 @@
     <div>
         <loading v-if="isRunning"></loading>
         <b-modal centered v-model="visible" size="lg" v-if="project">
-            <b-container fluid class="business-start-modal">
+            <b-container fluid class="business-start-modal py-4">
                 <b-row align-v="start">
                     <b-col cols="4" class="text-left text-content">
                         <label>项目创建单位 :</label>
@@ -39,7 +39,7 @@
                 @on-close="xmlModalShow = false"
             ></view-xml>
             <b-modal centered hide-footer id="selectUse_to" ref="selectUse_to" title="办理单位">
-                <div class="row">
+                <div class="row py-3">
                     <b-form-select
                         v-model="project.use_to_company"
                         class="col-7 offset-1"

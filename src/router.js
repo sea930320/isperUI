@@ -233,19 +233,20 @@ const routes = [{
             path: 'progress',
             component: () => import('@/views/business/progress/ProgressIndex.vue'),
             children: [
-                { path: '1/:bid/:nid', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') },
-                { path: '2/:bid/:nid', name: 'edit', component: () => import('@/views/business/progress/edit/EditIndex.vue') },        //编辑
-                { path: '3/:bid/:nid', name: 'display', component: () => import('@/views/business/progress/display/DisplayIndex.vue') },  //展示
-                { path: '4/:bid/:nid', name: 'report', component: () => import('@/views/business/progress/report/ReportIndex.vue') },
-                { path: '5/:bid/:nid', name: 'poll', component: () => import('@/views/business/progress/poll/PollIndex.vue') },
-                { path: '7/:bid/:nid', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue') }, // 公示
-                { path: '8/:bid/:nid', name: 'vote', component: () => import('@/views/business/progress/vote/VoteIndex.vue') },
-                { path: '9/:bid/:nid', name: 'nest', component: () => import('@/views/business/progress/nest/NestIndex.vue') },
-                { path: '10/:bid/:nid', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue') },  //展示
-                { path: '11/:bid/:nid', name: 'qa', component: () => import('@/views/business/progress/qa/QAIndex.vue') },  // 调查问卷
-                { path: '12/:bid/:nid', name: 'select_decide', component: () => import('@/views/business/progress/select_decide/SelectDecideIndex.vue') },
-                { path: '14/:bid/:nid', name: 'bill_operation', component: () => import('@/views/business/progress/bill/BillIndex.vue') },
-                { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') }
+                { path: '1/:bid/:nid/:mode?', name: 'animation', component: () => import('@/views/business/progress/animation/AnimationIndex.vue') },
+                { path: '2/:bid/:nid/:mode?', name: 'edit', component: () => import('@/views/business/progress/edit/EditIndex.vue') },        //编辑
+                { path: '3/:bid/:nid/:mode?', name: 'display', component: () => import('@/views/business/progress/display/DisplayIndex.vue') },  //展示
+                { path: '4/:bid/:nid/:mode?', name: 'report', component: () => import('@/views/business/progress/report/ReportIndex.vue') },
+                { path: '5/:bid/:nid/:mode?', name: 'poll', component: () => import('@/views/business/progress/poll/PollIndex.vue') },
+                { path: '7/:bid/:nid/:mode?', name: 'post', component: () => import('@/views/business/progress/post/PostIndex.vue') }, // 公示
+                { path: '8/:bid/:nid/:mode?', name: 'vote', component: () => import('@/views/business/progress/vote/VoteIndex.vue') },
+                { path: '9/:bid/:nid/:mode?', name: 'nest', component: () => import('@/views/business/progress/nest/NestIndex.vue') },
+                { path: '10/:bid/:nid/:mode?', name: 'distribute_sign', component: () => import('@/views/business/progress/distribute_sign/DistributeIndex.vue') },  //展示
+                { path: '11/:bid/:nid/:mode?', name: 'qa', component: () => import('@/views/business/progress/qa/QAIndex.vue') },  // 调查问卷
+                { path: '12/:bid/:nid/:mode?', name: 'select_decide', component: () => import('@/views/business/progress/select_decide/SelectDecideIndex.vue') },
+                { path: '14/:bid/:nid/:mode?', name: 'bill_operation', component: () => import('@/views/business/progress/bill/BillIndex.vue') },
+                { path: 'wait/:bid/:nid', name: 'wait', component: () => import('@/views/business/progress/wait/WaitIndex.vue') },
+                { path: 'parallel/:bid/decide', name: 'parallel', component: () => import('@/views/business/progress/parallel/ParallelIndex.vue') }
             ]
         }, {
             path: '/moreTeammates',

@@ -11,8 +11,8 @@ import router from '../../router'
 import axios from 'axios'
 import store from '../../store/index'
 import qs from 'qs'
-const ERR_OK = 0
-const NOT_LOGIN = 10003
+const ERR_OK = 0;
+const NOT_LOGIN = 10003;
 
 axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
@@ -31,7 +31,7 @@ axios.interceptors.response.use(
   error => {
     return Promise.reject(error)
   }
-)
+);
 
 const xhr = ({
   method = 'get',
@@ -44,15 +44,15 @@ const xhr = ({
           params: params
         })
         .then(response => {
-          var data = response.data
+          var data = response.data;
           if (data.c === ERR_OK) {
             resolve(data.d)
           } else if (data.c === NOT_LOGIN) {
-            Vue.toasted.error(data.m)
-            VueCookie.delete(STORAGE_KEY_USER)
+            Vue.toasted.error(data.m);
+            VueCookie.delete(STORAGE_KEY_USER);
             store.dispatch('logout')
           } else {
-            Vue.toasted.error(data.m)
+            Vue.toasted.error(data.m);
             reject(data.m)
           }
         })
@@ -64,11 +64,11 @@ const xhr = ({
           }
         })
         .then(response => {
-          var data = response.data
+          var data = response.data;
           if (data.c === ERR_OK) {
             resolve(data.d)
           } else {
-            Vue.toasted.error(data.m)
+            Vue.toasted.error(data.m);
             reject(data.m)
           }
         })
@@ -77,6 +77,6 @@ const xhr = ({
       //
     }
   })
-}
+};
 
 export default xhr
