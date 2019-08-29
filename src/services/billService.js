@@ -62,95 +62,32 @@ class BillService {
             params: data
         })
     }
-    uploadDoc(data){
-        return xhr({
-            method: 'post',
-            url: '/bill/doc/upload',
-            params: data
-        })
-    }
-
-
-    getBillChapter(data) {
+    changePartUp(data){
         return xhr({
             method: 'get',
-            url: '/bill/chapter/list',
+            url: '/bill/part/up',
             params: data
         })
     }
 
-    saveBillChapter(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/chapter/save',
-            params: data
-        })
-    }
-
-    /**
-     * 复制项目
-     * @param data
-     * @returns {{pre, visitor}|*}
-     */
-    getBillSection(data) {
+    changePartDown(data){
         return xhr({
             method: 'get',
-            url: '/bill/section/list',
+            url: '/bill/part/down',
             params: data
         })
     }
 
-    saveBillSection(data) {
+    insertPart(data){
         return xhr({
             method: 'post',
-            url: '/bill/section/save',
+            url: '/bill/part/insert',
             params: data
         })
     }
 
-    /**
-     * 创建项目
-     * @param data
-     * @returns {{pre, visitor}|*}
-     */
-    getBillPart(data) {
-        return xhr({
-            method: 'get',
-            url: '/bill/part/list',
-            params: data
-        })
-    }
 
-    saveBillPart(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/save',
-            params: data
-        })
-    }
 
-    getBillPartDoc(data) {
-        return xhr({
-            method: 'get',
-            url: '/bill/part/doc/list',
-            params: data
-        })
-    }
-
-    saveBillPartDoc(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/doc/save',
-            params: data
-        })
-    }
-    deleteBillPartDoc(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/doc/delete',
-            params: data
-        })
-    }
 }
 
 export default new BillService()

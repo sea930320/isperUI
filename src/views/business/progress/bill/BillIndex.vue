@@ -59,7 +59,7 @@
                                 :size="template_size"
                                 class="styledBtn"
                                 variant="outline-primary"
-                                @click="handleDownload()"
+                                @click="insertNewPartModal()"
                         >插入法条</b-button>
                     </b-button-group>
                 </b-col>
@@ -144,13 +144,13 @@
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="changeArrayUp(row.item.part_id)"
+                                            @click="changeArrayUp1(row.item.part_id)"
                                     >上移</b-button>
                                     <b-button
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="changeArrayDown(row.item.part_id)"
+                                            @click="changeArrayDown1(row.item.part_id)"
                                     >下移</b-button>
                                     <b-button
                                             :size="template_size"
@@ -425,6 +425,86 @@
                 <VueDocPreview v-if="previewShow==1" :value="encodedURLDOCX" type="office" />
             </b-container>
         </b-modal>
+        <!--insert part-->
+        <b-modal
+                title="插入法案"
+                v-model="part_insert_modal_show"
+                ok-title="确定"
+                cancel-title="取消"
+                size="xl"
+                @hidden="insertModalClear"
+                hide-footer
+        >
+            <div class="modal-msg">
+                <p class="message">您能插入法案:</p>
+            </div>
+            <b-container fluid>
+                <b-form @submit.stop.prevent="insertPart">
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="章序号:" label-for="insertPart1">
+                                <b-form-input id="insertPart1" disabled v-model="selected_data.chapter_number" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="章名:" label-for="insertPart2">
+                                <b-form-input id="insertPart2" disabled v-model="selected_data.chapter_title" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="节序号:" label-for="insertPart3">
+                                <b-form-input id="insertPart3" disabled v-model="selected_data.section_number" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="节名:" label-for="insertPart4">
+                                <b-form-input id="insertPart4" disabled v-model="selected_data.section_title" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="条文序号:" label-for="insertPart5">
+                                <b-form-input id="insertPart5" disabled v-model="selected_data.part_number"></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="条文名称:" label-for="insertPart6">
+                                <b-form-input id="insertPart6" required v-model="insertPartTitle" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label="条文正文:" label-for="insertTextarea1">
+                                <b-form-textarea
+                                        required
+                                        id="insertTextarea1"
+                                        v-model="insertPartContent"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group label="制定理由:" label-for="insertTextarea2">
+                                <b-form-textarea
+                                        required
+                                        id="insertTextarea2"
+                                        v-model="insertPartReason"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-button class="float-center" type="submit" variant="primary">确 定
+                    </b-button>
+                </b-form>
+            </b-container>
+        </b-modal>
     </div>
 </template>
 
@@ -455,6 +535,7 @@
                 selected_data:[],
                 edit_full_modal_show:false,
                 delete_modal_show:false,
+                part_insert_modal_show:false,
                 add_new_bill:false,
 
                 chapterSelected:"",
@@ -477,6 +558,9 @@
                 upload_doc_id:0,
                 previewShow:0,
                 encodedURLDOCX:"",
+                insertPartTitle:"",
+                insertPartContent:"",
+                insertPartReason:"",
 
                 commitEnd: false,
                 columns: {
@@ -661,26 +745,82 @@
                     }
                 }
             },
+            insertNewPartModal(){
+                if ((!this.selected_data)||(this.selected_data.length === 0)){
+                    this.$toasted.error("Please select part");
+                } else {
+                    this.part_insert_modal_show = true;
+                }
+            },
+            insertPart(){
+                if ((!this.selected_data)||(this.selected_data.length === 0)){
+                    this.$toasted.error("Please select part");
+                } else {
+                    let insert_part_data = {};
+                    insert_part_data = this.selected_data;
+                    insert_part_data.part_title = this.insertPartTitle;
+                    insert_part_data.part_content = this.insertPartContent;
+                    insert_part_data.part_reason = this.insertPartReason;
+
+                    BillService.insertPart(insert_part_data)
+                        .then(() => {
+                            this.init();
+                            this.insertModalClear();
+                            this.part_insert_modal_show = false;
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
+            },
+            insertModalClear(){
+                this.insertPartTitle="";
+                this.insertPartContent="";
+                this.insertPartReason="";
+            },
+
+            changeArrayUp1(part_id){
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data = this.bill_data[i];
+                    }
+                }
+                BillService.changePartUp(this.edit_modal_data)
+                    .then(() => {
+                        this.init();
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+                return true
+            },
+            changeArrayDown1(part_id){
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data = this.bill_data[i];
+                    }
+                }
+                BillService.changePartDown(this.edit_modal_data)
+                    .then(() => {
+                        this.init();
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+                return true
+            },
+
             updateParts1(){
                 this.run();
                 BillService.updateFullBills(this.edit_modal_data)
                     .then(() => {
                         this.init();
-
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                     });
                 this.edit_modal_data = {};
                 return true
-            },
-            changeArrayUp1(part_id){
-//                alert(part_id)
-                return part_id
-            },
-            changeArrayDown1(part_id){
-//                alert(part_id)
-                return part_id
             },
 
             partSelectedFunc(items){
@@ -784,6 +924,7 @@
             addNewBill(){
                 this.add_new_bill = true;
             },
+
             showPreviewPage(){
                 if (this.previewShow == 0){
                     if (this.upload_doc_url != ""){
