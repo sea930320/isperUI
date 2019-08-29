@@ -28,7 +28,7 @@
                             :size="template_size"
                             class="styledBtn"
                             variant="outline-primary"
-                            @click="handleDownload()"
+                            @click="allBillPreviewModal()"
                         >法案预览</b-button>
                     </b-button-group>
                 </b-col>
@@ -179,6 +179,7 @@
         </div>
         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
         <siderUserBar></siderUserBar>
+
         <!--update confirm-->
         <b-modal
                 title="修改法案"
@@ -249,6 +250,7 @@
                 </b-row>
             </b-container>
         </b-modal>
+
         <!--delete confirm-->
         <b-modal
                 title="刪除法案"
@@ -263,6 +265,7 @@
                 <p class="message">Are you sure to delete this part?</p>
             </div>
         </b-modal>
+
         <!--add part-->
         <b-modal
                 title="增加法条"
@@ -345,6 +348,7 @@
                 </b-form>
             </b-container>
         </b-modal>
+
         <!--document upload-->
         <b-modal
                 title="文件上传"
@@ -425,6 +429,7 @@
                 <VueDocPreview v-if="previewShow==1" :value="encodedURLDOCX" type="office" />
             </b-container>
         </b-modal>
+
         <!--insert part-->
         <b-modal
                 title="插入法案"
@@ -505,22 +510,34 @@
                 </b-form>
             </b-container>
         </b-modal>
+
+        <!--preview bill-->
+        <b-modal
+                title="法案预览"
+                v-model="all_bill_preview_modal_show"
+                ok-title="确定"
+                cancel-title="取消"
+                @hidden="allBillPreviewModalClear"
+                size="xl"
+                hide-footer
+        >
+            <b-container fluid>
+                <!--<VueDocPreview :value="all_bill_preview_modalURL" type="office" />-->
+            </b-container>
+        </b-modal>
     </div>
 </template>
 
 <script>
     import Loading from "@/components/loading/Loading";
-//    import BusinessService from "@/services/businessService";
     import BillService from "@/services/billService";
     import { mapState } from "vuex";
     import VueDocPreview from 'vue-doc-preview'
-//    import { VueEditor } from "vue2-editor";
     import BusinessBillUpload from "@/components/upload/BusinessBillUpload";
     import endNodeHandle from "@/components/business/modal/endNodeHandle";
     import siderUserBar from "@/components/business/common/SiderUserBar";
 
     export default {
-//        components: { Loading, VueEditor, BusinessPostUpload, endNodeHandle, siderUserBar },
         components: { Loading, BusinessBillUpload, endNodeHandle, siderUserBar, VueDocPreview },
         data() {
             return {
@@ -561,6 +578,9 @@
                 insertPartTitle:"",
                 insertPartContent:"",
                 insertPartReason:"",
+
+                all_bill_preview_modal_show:false,
+                all_bill_preview_modalURL:"",
 
                 commitEnd: false,
                 columns: {
@@ -906,7 +926,6 @@
                 return true
             },
             saveBillList(){
-//                alert(this.$route.params.bid);
                 if (this.bill_name == ""){
                     alert('请输入法案名');
                     return false;
@@ -1008,6 +1027,18 @@
             endNodeCancel() {
                 this.commitEnd = false;
             },
+
+            allBillPreviewModal(){
+                BillService.billPreview({'business_id': this.$route.params.bid})
+                    .then(() => {
+                        this.all_bill_preview_modal_show = true;
+//                            this.all_bill_preview_modalURL = data.billURL;
+                    })
+                    .catch(() => {
+                        this.$emit("data-failed");
+                    });
+            },
+            allBillPreviewModalClear(){},
 
         }
     };

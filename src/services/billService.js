@@ -86,6 +86,22 @@ class BillService {
         })
     }
 
+    uploadDoc(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/doc/upload',
+            params: data
+        })
+    }
+
+    billPreview(data){
+        return xhr({
+            method: 'get',
+            url: '/bill/doc/preview',
+            params: data
+        })
+    }
+
 
 
 }
