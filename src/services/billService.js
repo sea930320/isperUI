@@ -62,6 +62,30 @@ class BillService {
             params: data
         })
     }
+    changePartUp(data){
+        return xhr({
+            method: 'get',
+            url: '/bill/part/up',
+            params: data
+        })
+    }
+
+    changePartDown(data){
+        return xhr({
+            method: 'get',
+            url: '/bill/part/down',
+            params: data
+        })
+    }
+
+    insertPart(data){
+        return xhr({
+            method: 'post',
+            url: '/bill/part/insert',
+            params: data
+        })
+    }
+
     uploadDoc(data){
         return xhr({
             method: 'post',
@@ -70,87 +94,16 @@ class BillService {
         })
     }
 
-
-    getBillChapter(data) {
+    billPreview(data){
         return xhr({
             method: 'get',
-            url: '/bill/chapter/list',
+            url: '/bill/doc/preview',
             params: data
         })
     }
 
-    saveBillChapter(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/chapter/save',
-            params: data
-        })
-    }
 
-    /**
-     * 复制项目
-     * @param data
-     * @returns {{pre, visitor}|*}
-     */
-    getBillSection(data) {
-        return xhr({
-            method: 'get',
-            url: '/bill/section/list',
-            params: data
-        })
-    }
 
-    saveBillSection(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/section/save',
-            params: data
-        })
-    }
-
-    /**
-     * 创建项目
-     * @param data
-     * @returns {{pre, visitor}|*}
-     */
-    getBillPart(data) {
-        return xhr({
-            method: 'get',
-            url: '/bill/part/list',
-            params: data
-        })
-    }
-
-    saveBillPart(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/save',
-            params: data
-        })
-    }
-
-    getBillPartDoc(data) {
-        return xhr({
-            method: 'get',
-            url: '/bill/part/doc/list',
-            params: data
-        })
-    }
-
-    saveBillPartDoc(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/doc/save',
-            params: data
-        })
-    }
-    deleteBillPartDoc(data) {
-        return xhr({
-            method: 'post',
-            url: '/bill/part/doc/delete',
-            params: data
-        })
-    }
 }
 
 export default new BillService()
