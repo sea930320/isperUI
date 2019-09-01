@@ -525,7 +525,69 @@
                 hide-footer
         >
             <b-container fluid>
-                <!--<VueDocPreview :value="all_bill_preview_modalURL" type="office" />-->
+                    <b-row>
+                        <b-col sm="6">
+                            <b-card-group deck>
+                                <b-card header="现 行 法 案">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="(bill_data_origin_one,index) in bill_data_origin" :key="index">
+                                            <!--{{bill_data_origin_one}}-->
+                                            {{ bill_data_origin_one.chapter_number }} . {{ bill_data_origin_one.chapter_title }} <br>
+                                            {{ bill_data_origin_one.section_number }} . {{ bill_data_origin_one.section_title }} <br>
+                                            {{ bill_data_origin_one.part_number }} . {{ bill_data_origin_one.part_title }} <br>
+                                            {{ bill_data_origin_one.part_content }}
+                                        </li>
+                                    </ul>
+                                </b-card>
+                            </b-card-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-card-group deck>
+                                <b-card header="新 法 案">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="(bill_data_one,index) in bill_data_comparison" :key="index">
+                                            <!--updated-->
+                                            <span v-if="bill_data_one.added_flag=='1'" style="color:red"> updated
+                                            <!--{{bill_data_one}}-->
+                                                {{bill_data_one.added_flag}}
+                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
+                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
+                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                                {{ bill_data_one.part_content }}
+                                            </span>
+                                            <!--inserted-->
+                                            <span v-if="bill_data_one.added_flag=='2'" style="color:blue"> inserted
+                                                <!--{{bill_data_one}}-->
+                                                {{bill_data_one.added_flag}}
+                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
+                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
+                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                                {{ bill_data_one.part_content }}
+                                            </span>
+                                            <!--deleted-->
+                                            <span v-if="bill_data_one.added_flag=='3'" style="text-decoration:line-through;color:red"> deleted
+                                                <!--{{bill_data_one}}-->
+                                                {{bill_data_one.added_flag}}
+                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
+                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
+                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                                {{ bill_data_one.part_content }}
+                                            </span>
+                                            <span v-if="bill_data_one.added_flag=='0'"> normal
+                                                <!--{{bill_data_one}}-->
+                                                {{bill_data_one.added_flag}}
+                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
+                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
+                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                                {{ bill_data_one.part_content }}
+                                            </span>
+
+                                        </li>
+                                    </ul>
+                                </b-card>
+                            </b-card-group>
+                        </b-col>
+                    </b-row>
             </b-container>
         </b-modal>
     </div>
@@ -535,7 +597,7 @@
     import Loading from "@/components/loading/Loading";
     import BillService from "@/services/billService";
     import { mapState } from "vuex";
-    import { number2chinese } from 'number2chinese';
+//    import { number2chinese } from 'number2chinese';
     import VueDocPreview from 'vue-doc-preview'
     import BusinessBillUpload from "@/components/upload/BusinessBillUpload";
     import endNodeHandle from "@/components/business/modal/endNodeHandle";
@@ -547,6 +609,19 @@
             return {
 
                 bill_data_origin:[],
+                bill_data_comparison:[],
+                comparison_fields:{
+                    sn: {
+                        label: "现 行 法 案",
+                        sortable: false,
+                        class: "text-left field-100"
+                    },
+                    data:{
+                        label: "现 行 法 案",
+                        sortable: false,
+                        class: "text-left field-100"
+                    }
+                },
 
                 edit_modal_data:{},
 
@@ -717,6 +792,12 @@
                 });
                 return true
             },
+            gadget_sort_comparison(){
+                this.bill_data_comparison.sort(function(a, b) {
+                    return a.chapter_number - b.chapter_number  ||  a.section_number - b.section_number ||  a.part_number - b.part_number ;
+                });
+                return true
+            },
             init() {
                 this.run();
                 BillService.getBillName({
@@ -727,7 +808,7 @@
                     .then(data => {
                         this.bill_name = data.bill_name;
                         this.bill_data = data.bill_data;
-                        this.bill_data_origin = data.bill_data;
+//                        this.bill_data_origin = data.bill_data;
                         var checkChapter=[];
                         this.chapterOptions = [];
                         for (let i =0;i<this.bill_data.length;i++){
@@ -1014,6 +1095,7 @@
                             added_part.part_title = this.partSelectedName;
                             added_part.part_content = this.selectedPartContent;
                             added_part.part_reason = this.selectedPartReason;
+                            added_part.added_flag = "2";
                             break
                         }
                     }
@@ -1098,6 +1180,7 @@
                                     insert_part.part_title = this.insertPartTitle;
                                     insert_part.part_content = this.insertPartContent;
                                     insert_part.part_reason = this.insertPartReason;
+                                    insert_part.added_flag = "2"; // inserted
                                     break
                                 }
                             }
@@ -1116,16 +1199,71 @@
             },
 
             allBillPreviewModal(){
-                this.all_bill_preview_modal_show = true;
-                BillService.billPreview({'business_id': this.$route.params.bid})
-                    .then(() => {
-                        this.all_bill_preview_modal_show = true;
+                BillService.getBillName({
+                    business_id: this.$route.params.bid,
+                    node_id: this.$route.params.nid,
+                    show_mode:this.selected
+                })
+                    .then(data => {
+                        this.bill_data_comparison=[];
+                    this.bill_data_origin = data.bill_data;
+                    for(let i=0; i<this.bill_data.length;i++){
+                        if (this.bill_data[i].hasOwnProperty('added_flag')){
+                            if(this.bill_data[i].added_flag == "2"){
+                                this.bill_data_comparison.push(this.bill_data[i]);
+                                continue // inserted
+                            }
+                        }
+                        for (let j=0;j<this.bill_data_origin.length;j++){
+                            if ((this.bill_data[i].chapter_id == this.bill_data_origin[j].chapter_id)&&
+                                (this.bill_data[i].chapter_number == this.bill_data_origin[j].chapter_number)&&
+                                (this.bill_data[i].chapter_title == this.bill_data_origin[j].chapter_title)&&
+                                (this.bill_data[i].chapter_content == this.bill_data_origin[j].chapter_content)&&
+                                (this.bill_data[i].section_id == this.bill_data_origin[j].section_id)&&
+                                (this.bill_data[i].section_number == this.bill_data_origin[j].section_number)&&
+                                (this.bill_data[i].section_title == this.bill_data_origin[j].section_title)&&
+                                (this.bill_data[i].section_content == this.bill_data_origin[j].section_content)&&
+                                (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
+                                (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
+                            (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
+                                this.bill_data[i].added_flag = "0"; // remained
+                                break
+                            } else {
+                                this.bill_data[i].added_flag = "1"; // updated
+                            }
+                        }
+                        this.bill_data_comparison.push(this.bill_data[i]);
+                    }
+                    for (let k=0;k<this.bill_data_origin.length;k++){
+                        let deleted_flag = false;
+                        for(let l=0; l<this.bill_data.length;l++){
+                            if (this.bill_data_origin[k].part_id == this.bill_data[l].part_id){
+                                deleted_flag = false;
+                                break
+                            } else {
+                                deleted_flag = true;
+                                continue;
+                            }
+                        }
+                        if (deleted_flag){
+                            this.bill_data_origin[k].added_flag = "3"; //deleted
+                            this.bill_data_comparison.push(this.bill_data_origin[k]);
+                        }
+                    }
+
+                    this.gadget_sort_comparison();
+                    this.all_bill_preview_modal_show = true;
+
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                     });
-            },
 
+            },
+            allBillPreviewModalClear(){
+                this.bill_data_origin = [];
+                this.bill_data_comparison = [];
+            },
 
 
 
@@ -1260,7 +1398,7 @@
             },
 
 
-            allBillPreviewModalClear(){},
+
 
         }
     };
@@ -1345,6 +1483,9 @@
         }
         .field-action {
             width: 20%;
+        }
+        .field-100{
+            width:100%;
         }
     }
 </style>
