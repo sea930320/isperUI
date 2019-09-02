@@ -234,17 +234,18 @@
                             <b-form-input id="input-horizontal3" v-model="edit_modal_data.part_title" ></b-form-input>
                         </b-form-group>
                     </b-col>
-                    <b-col sm="6">
-                        <b-form-group
-                                id="fieldset-horizontal3"
-                                label-cols-sm="4"
-                                label-cols-lg="3"
-                                label="正文:"
-                                label-for="input-horizonta4"
-                                class="text-left"
-                        >
-                            <b-form-input id="input-horizonta4" required oninvalid="this.setCustomValidity('这是必填栏')" oninput="this.setCustomValidity('')"
-                                          v-model="edit_modal_data.part_content"></b-form-input>
+                </b-row>
+                <b-row align-v="center">
+                    <b-col sm="12">
+                        <b-form-group label="正文:" label-for="textarea3">
+                            <b-form-textarea
+                                    required
+                                    id="textarea3"
+                                    v-model="edit_modal_data.part_content"
+                                    placeholder="Enter something..."
+                                    rows="6"
+                                    max-rows="12"
+                            ></b-form-textarea>
                         </b-form-group>
                     </b-col>
                 </b-row>
@@ -269,16 +270,15 @@
         <!--add part-->
         <b-modal
                 title="增加法条"
-                v-model="add_new_bill"
+                v-model="add_new_bill_modal_show"
                 ok-title="确定"
                 cancel-title="取消"
                 @hidden="addModalClear"
                 size="xl"
                 hide-footer
-                ref="vuemodal"
         >
             <b-container fluid>
-            <b-form @submit.stop.prevent="addConfirm">
+                <b-form @submit.stop.prevent="addConfirm">
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="章序号:" label-for="inputAdd1">
@@ -298,7 +298,11 @@
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" ref="sectionSelctebox" label="节序号:" label-for="inputAdd3">
-                                <b-form-select id="inputAdd3" required v-model="sectionSelected" :options="sectionOptions" @change="changeSection()"></b-form-select>
+                                <b-form-select id="inputAdd3" required v-model="sectionSelected" :options="sectionOptions" @change="changeSection()">
+                                    <template slot="first">
+                                        <option :value="null" disabled>-- Please select an option --</option>
+                                    </template>
+                                </b-form-select>
                             </b-form-group>
                         </b-col>
                         <b-col sm="6">
@@ -319,29 +323,29 @@
                             </b-form-group>
                         </b-col>
                     </b-row>
-                        <b-row>
-                            <b-col sm="12">
-                                <b-form-group label="条文正文:" label-for="textarea1">
-                                    <b-form-textarea
-                                            required
-                                            id="textarea1"
-                                            v-model="selectedPartContent"
-                                            placeholder="Enter something..."
-                                            rows="6"
-                                            max-rows="12"
-                                    ></b-form-textarea>
-                                </b-form-group>
-                                <b-form-group label="制定理由:" label-for="textarea2">
-                                    <b-form-textarea
-                                            required
-                                            id="textarea2"
-                                            v-model="selectedPartReason"
-                                            placeholder="Enter something..."
-                                            rows="6"
-                                            max-rows="12"
-                                    ></b-form-textarea>
-                                </b-form-group>
-                            </b-col>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label="条文正文:" label-for="textarea1">
+                                <b-form-textarea
+                                        required
+                                        id="textarea1"
+                                        v-model="selectedPartContent"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group label="制定理由:" label-for="textarea2">
+                                <b-form-textarea
+                                        required
+                                        id="textarea2"
+                                        v-model="selectedPartReason"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </b-col>
                     </b-row>
                     <b-button class="float-center" type="submit" variant="primary">确 定
                     </b-button>
@@ -358,7 +362,6 @@
                 @hidden="uploadModalClear"
                 size="xl"
                 hide-footer
-                ref="vuemodal"
         >
             <b-container fluid>
                 <b-row>
@@ -532,6 +535,7 @@
     import Loading from "@/components/loading/Loading";
     import BillService from "@/services/billService";
     import { mapState } from "vuex";
+    import { number2chinese } from 'number2chinese';
     import VueDocPreview from 'vue-doc-preview'
     import BusinessBillUpload from "@/components/upload/BusinessBillUpload";
     import endNodeHandle from "@/components/business/modal/endNodeHandle";
@@ -541,6 +545,11 @@
         components: { Loading, BusinessBillUpload, endNodeHandle, siderUserBar, VueDocPreview },
         data() {
             return {
+
+                bill_data_origin:[],
+
+                edit_modal_data:{},
+
                 selected:'1',
                 options: [
                     { text: '章节条模式', value: '1' },
@@ -548,12 +557,12 @@
                 ],
                 bill_name:"",
                 bill_data:[],
-                edit_modal_data:{},
+
                 selected_data:[],
                 edit_full_modal_show:false,
                 delete_modal_show:false,
                 part_insert_modal_show:false,
-                add_new_bill:false,
+                add_new_bill_modal_show:false,
 
                 chapterSelected:"",
                 chapterOptions:[],
@@ -564,8 +573,6 @@
                 selectedPartContent:"",
                 selectedPartReason:"",
                 partMin:0,
-                selectedEditChapterID:0,
-                selectedEditSectionID:0,
 
 
                 document_upload_modal:false,
@@ -696,16 +703,20 @@
             // 监控查询参数，如有变化 查询列表数据
             selected: {
                 handler() {
-
-
                     this.selected_data = [];
-                    this.init();
+//                    this.init();
                 },
                 deep: true
             },
         },
         mounted() {},
         methods: {
+            gadget_sort(){
+                this.bill_data.sort(function(a, b) {
+                    return a.chapter_number - b.chapter_number  ||  a.section_number - b.section_number ||  a.part_number - b.part_number;
+                });
+                return true
+            },
             init() {
                 this.run();
                 BillService.getBillName({
@@ -716,6 +727,7 @@
                     .then(data => {
                         this.bill_name = data.bill_name;
                         this.bill_data = data.bill_data;
+                        this.bill_data_origin = data.bill_data;
                         var checkChapter=[];
                         this.chapterOptions = [];
                         for (let i =0;i<this.bill_data.length;i++){
@@ -725,7 +737,6 @@
                                     "text":this.bill_data[i].chapter_number,
                                     "value":this.bill_data[i].chapter_title
                                 });
-                                checkChapter.push(this.bill_data[i].chapter_number);
                             }
                         }
                         this.partSelected="";
@@ -737,6 +748,7 @@
                         this.$emit("data-failed");
                     });
             },
+
             updatePartsModal1(part_id){
                 if (this.selected ==1){
                     this.$refs.selectableTable.clearSelected();
@@ -746,11 +758,38 @@
                 this.selected_data = [];
               for (let i=0; i<this.bill_data.length;i++){
                   if (this.bill_data[i].part_id == part_id){
-                      this.edit_modal_data = this.bill_data[i];
+                      this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                      this.edit_modal_data.chapter_title = this.bill_data[i].chapter_title;
+                      this.edit_modal_data.chapter_number = this.bill_data[i].chapter_number;
+                      this.edit_modal_data.section_title = this.bill_data[i].section_title;
+                      this.edit_modal_data.section_number = this.bill_data[i].section_number;
+                      this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                      this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                      this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                      this.edit_modal_data.part_reason = this.bill_data[i].part_reason;
                       this.edit_full_modal_show = true;
                   }
               }
             },
+            updateParts1(){
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].chapter_number == this.edit_modal_data.chapter_number){
+                        this.bill_data[i].chapter_title = this.edit_modal_data.chapter_title;
+                        if (this.bill_data[i].section_number == this.edit_modal_data.section_number){
+                            this.bill_data[i].section_title = this.edit_modal_data.section_title;
+                            if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
+                                this.bill_data[i].part_title = this.edit_modal_data.part_title;
+                                this.bill_data[i].part_content = this.edit_modal_data.part_content;
+                            }
+                        }
+                    }
+                }
+                this.edit_full_modal_show = true;
+                this.gadget_sort();
+                this.edit_modal_data = {};
+                return true
+            },
+
             deletePartsModal1(part_id){
                 for (let i=0; i<this.bill_data.length;i++){
                     if (this.selected ==1){
@@ -760,11 +799,259 @@
                     }
                     this.selected_data = [];
                     if (this.bill_data[i].part_id == part_id){
-                        this.edit_modal_data = this.bill_data[i];
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.chapter_title = this.bill_data[i].chapter_title;
+                        this.edit_modal_data.chapter_number = this.bill_data[i].chapter_number;
+                        this.edit_modal_data.section_title = this.bill_data[i].section_title;
+                        this.edit_modal_data.section_number = this.bill_data[i].section_number;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                        this.edit_modal_data.part_reason = this.bill_data[i].part_reason;
                         this.delete_modal_show = true;
                     }
                 }
             },
+            deleteParts1(){
+                let deleted_index = 0;
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].chapter_number == this.edit_modal_data.chapter_number){
+//                        this.bill_data[i].chapter_title = this.edit_modal_data.chapter_title;
+                        if (this.bill_data[i].section_number == this.edit_modal_data.section_number){
+//                            this.bill_data[i].section_title = this.edit_modal_data.section_title;
+                            if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
+                                deleted_index = i;
+                                break
+                            }
+                        }
+                    }
+                }
+                let deleted_chapter_part_amount = 0;
+                let deleted_section_part_amount = 0;
+                for (let j=0; j<this.bill_data.length;j++) {
+                    if (this.bill_data[j].chapter_number == this.edit_modal_data.chapter_number) {
+                        deleted_chapter_part_amount = deleted_chapter_part_amount + 1;
+                        if (this.bill_data[j].section_number == this.edit_modal_data.section_number) {
+                            deleted_section_part_amount = deleted_section_part_amount + 1;
+                        }
+                    }
+                }
+
+                if (deleted_section_part_amount < 2){
+                    for (let l=0; l<this.bill_data.length;l++){
+                        if (this.bill_data[l].chapter_number == this.edit_modal_data.chapter_number){
+                            if (parseInt(this.bill_data[l].section_number) == parseInt(this.edit_modal_data.section_number)+1){
+                                this.bill_data[l].section_number = parseInt(this.edit_modal_data.section_number);
+                            }
+                        }
+                    }
+                } else {
+                    for (let l = 0; l < this.bill_data.length; l++) {
+                        if (this.bill_data[l].chapter_number == this.edit_modal_data.chapter_number) {
+                            if (this.bill_data[l].section_number == this.edit_modal_data.section_number) {
+                                if (parseInt(this.bill_data[l].part_number) > parseInt(this.edit_modal_data.part_number)) {
+                                    this.bill_data[l].part_number = parseInt(this.bill_data[l].part_number)-1;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (deleted_chapter_part_amount < 2){
+                    for (let k = deleted_index+1; k<this.bill_data.length;k++){
+                        this.bill_data[k].chapter_number = parseInt(this.bill_data[k].chapter_number) - 1;
+                    }
+                }
+                this.bill_data.splice( deleted_index,1 );
+                this.gadget_sort();
+                this.edit_modal_data = {};
+                return true
+            },
+
+            changeArrayUp1(part_id){
+                if (this.selected ==1){
+                    this.$refs.selectableTable.clearSelected();
+                } else {
+                    this.$refs.selectableTable1.clearSelected();
+                }
+                this.selected_data = [];
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.chapter_title = this.bill_data[i].chapter_title;
+                        this.edit_modal_data.chapter_number = this.bill_data[i].chapter_number;
+                        this.edit_modal_data.section_title = this.bill_data[i].section_title;
+                        this.edit_modal_data.section_number = this.bill_data[i].section_number;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                    }
+                }
+                let index = 0;
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].chapter_number == this.edit_modal_data.chapter_number){
+                        if (this.bill_data[i].section_number == this.edit_modal_data.section_number){
+                            if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
+                                index = i;
+                                break
+                            }
+                        }
+                    }
+                }
+                if (parseInt(this.bill_data[index].part_number) == 1){
+                    this.$toasted.error("不能上移");
+                    return false;
+                }
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (this.bill_data[j].chapter_number == this.edit_modal_data.chapter_number){
+                        if (this.bill_data[j].section_number == this.edit_modal_data.section_number){
+                            if (this.bill_data[j].part_id != this.edit_modal_data.part_id){
+                                if ((parseInt(this.bill_data[j].part_number) + 1) == parseInt(this.edit_modal_data.part_number)){
+                                    this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (this.bill_data[j].chapter_number == this.edit_modal_data.chapter_number){
+                        if (this.bill_data[j].section_number == this.edit_modal_data.section_number){
+                            if (this.bill_data[j].part_id == this.edit_modal_data.part_id){
+                                this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) - 1;
+                                this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                            }
+                        }
+                    }
+                }
+                this.edit_modal_data = {};
+                this.gadget_sort();
+                return true
+            },
+            changeArrayDown1(part_id){
+                if (this.selected ==1){
+                    this.$refs.selectableTable.clearSelected();
+                } else {
+                    this.$refs.selectableTable1.clearSelected();
+                }
+                this.selected_data = [];
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.chapter_title = this.bill_data[i].chapter_title;
+                        this.edit_modal_data.chapter_number = this.bill_data[i].chapter_number;
+                        this.edit_modal_data.section_title = this.bill_data[i].section_title;
+                        this.edit_modal_data.section_number = this.bill_data[i].section_number;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                    }
+                }
+                let checkDownTmp = 0;
+                for (let j=0; j<this.bill_data.length;j++){
+                    if ( this.bill_data[j].chapter_number == this.edit_modal_data.chapter_number ){
+                        if ( this.bill_data[j].section_number == this.edit_modal_data.section_number ){
+                            if (parseInt(this.bill_data[j].part_number) > parseInt(this.edit_modal_data.part_number)){
+                                checkDownTmp = checkDownTmp + 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (checkDownTmp == 0){
+                    this.$toasted.error("不能下移");
+                    return false;
+                }
+
+                for (let k=0; k<this.bill_data.length;k++){
+                    if (this.bill_data[k].chapter_number == this.edit_modal_data.chapter_number){
+                        if (this.bill_data[k].section_number == this.edit_modal_data.section_number){
+                            if (this.bill_data[k].part_id != this.edit_modal_data.part_id){
+                                if ((parseInt(this.bill_data[k].part_number) - 1) == parseInt(this.edit_modal_data.part_number)){
+                                    this.bill_data[k].part_number = parseInt(this.edit_modal_data.part_number);
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let l=0; l<this.bill_data.length;l++){
+                    if (this.bill_data[l].chapter_number == this.edit_modal_data.chapter_number){
+                        if (this.bill_data[l].section_number == this.edit_modal_data.section_number){
+                            if (this.bill_data[l].part_id == this.edit_modal_data.part_id){
+                                this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) + 1;
+                                this.bill_data[l].part_number = parseInt(this.edit_modal_data.part_number);
+                            }
+                        }
+                    }
+                }
+                this.gadget_sort();
+                this.edit_modal_data = {};
+                return true
+            },
+
+            addNewBill(){
+                this.add_new_bill_modal_show = true;
+            },
+            addConfirm(){
+                let blankID = 0;
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (parseInt(this.bill_data[j].part_id)>blankID){
+                        blankID = parseInt(this.bill_data[j].part_id) + 1;
+                    }
+                }
+                let added_part = {};
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].chapter_title == this.chapterSelected){
+                        if (this.bill_data[i].section_title == this.sectionSelected){
+                            added_part.part_id = blankID;
+                            added_part.chapter_id = this.bill_data[i].chapter_id;
+                            added_part.chapter_number = this.bill_data[i].chapter_number;
+                            added_part.chapter_title = this.bill_data[i].chapter_id;
+                            added_part.chapter_content = this.bill_data[i].chapter_content;
+                            added_part.section_id = this.bill_data[i].section_id;
+                            added_part.section_number = this.bill_data[i].section_number;
+                            added_part.section_title = this.bill_data[i].section_title;
+                            added_part.section_content = this.bill_data[i].section_content;
+                            added_part.part_number = this.partSelected;
+                            added_part.part_title = this.partSelectedName;
+                            added_part.part_content = this.selectedPartContent;
+                            added_part.part_reason = this.selectedPartReason;
+                            break
+                        }
+                    }
+                }
+                this.bill_data.push(added_part);
+                this.gadget_sort();
+                this.add_new_bill_modal_show = false;
+                return true
+            },
+
+            changeChapter(){
+                this.sectionOptions = [];
+                this.sectionSelected = "";
+                let checkSections = [];
+                for (let i=0;i<this.bill_data.length;i++){
+                    if (this.bill_data[i].chapter_title == this.chapterSelected){
+                        if (!(checkSections.includes(this.bill_data[i].section_number))){
+                            checkSections.push(this.bill_data[i].section_number);
+                            this.sectionOptions.push({
+                                "text":this.bill_data[i].section_number,
+                                "value":this.bill_data[i].section_title
+                            });
+                        }
+                    }
+                }
+            },
+            changeSection(){
+                let partListAmount = 0;
+                for (let i=0;i<this.bill_data.length;i++){
+                    if ((this.bill_data[i].chapter_title == this.chapterSelected) &&
+                        (this.bill_data[i].section_title == this.sectionSelected)){
+                        partListAmount = partListAmount + 1;
+                    }
+                }
+                this.partMin = partListAmount + 1;
+                this.partSelected = this.partMin;
+            },
+
             insertNewPartModal(){
                 if ((!this.selected_data)||(this.selected_data.length === 0)){
                     this.$toasted.error("Please select part");
@@ -776,21 +1063,50 @@
                 if ((!this.selected_data)||(this.selected_data.length === 0)){
                     this.$toasted.error("Please select part");
                 } else {
-                    let insert_part_data = {};
-                    insert_part_data = this.selected_data;
-                    insert_part_data.part_title = this.insertPartTitle;
-                    insert_part_data.part_content = this.insertPartContent;
-                    insert_part_data.part_reason = this.insertPartReason;
+                    let blankID = 0;
+                    for (let j=0; j<this.bill_data.length;j++){
+                        if (parseInt(this.bill_data[j].part_id)>blankID){
+                            blankID = parseInt(this.bill_data[j].part_id) + 1;
+                        }
+                    }
 
-                    BillService.insertPart(insert_part_data)
-                        .then(() => {
-                            this.init();
-                            this.insertModalClear();
-                            this.part_insert_modal_show = false;
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
+                    for (let i=0; i<this.bill_data.length;i++) {
+                        if (this.bill_data[i].chapter_title == this.selected_data.chapter_title) {
+                            if (this.bill_data[i].section_title == this.selected_data.section_title) {
+                                if (parseInt(this.bill_data[i].part_number) >= parseInt(this.selected_data.part_number)) {
+                                    this.bill_data[i].part_number = parseInt(this.bill_data[i].part_number) + 1;
+                                }
+                            }
+                        }
+                    }
+
+                    let insert_part = {};
+                    for (let i=0; i<this.bill_data.length;i++){
+                        if (this.bill_data[i].chapter_title == this.selected_data.chapter_title){
+                            if (this.bill_data[i].section_title == this.selected_data.section_title){
+                                if (this.bill_data[i].part_title == this.selected_data.part_title){
+                                    insert_part.part_id = blankID;
+                                    insert_part.chapter_id = this.bill_data[i].chapter_id;
+                                    insert_part.chapter_number = this.bill_data[i].chapter_number;
+                                    insert_part.chapter_title = this.bill_data[i].chapter_id;
+                                    insert_part.chapter_content = this.bill_data[i].chapter_content;
+                                    insert_part.section_id = this.bill_data[i].section_id;
+                                    insert_part.section_number = this.bill_data[i].section_number;
+                                    insert_part.section_title = this.bill_data[i].section_title;
+                                    insert_part.section_content = this.bill_data[i].section_content;
+                                    insert_part.part_number = parseInt(this.selected_data.part_number) - 1;
+                                    insert_part.part_title = this.insertPartTitle;
+                                    insert_part.part_content = this.insertPartContent;
+                                    insert_part.part_reason = this.insertPartReason;
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    this.bill_data.push(insert_part);
+                    this.gadget_sort();
+                    this.part_insert_modal_show = false;
+                    return true
                 }
             },
             insertModalClear(){
@@ -799,49 +1115,33 @@
                 this.insertPartReason="";
             },
 
-            changeArrayUp1(part_id){
-                for (let i=0; i<this.bill_data.length;i++){
-                    if (this.bill_data[i].part_id == part_id){
-                        this.edit_modal_data = this.bill_data[i];
-                    }
-                }
-                BillService.changePartUp(this.edit_modal_data)
+            allBillPreviewModal(){
+                this.all_bill_preview_modal_show = true;
+                BillService.billPreview({'business_id': this.$route.params.bid})
                     .then(() => {
-                        this.init();
+                        this.all_bill_preview_modal_show = true;
                     })
                     .catch(() => {
                         this.$emit("data-failed");
                     });
-                return true
-            },
-            changeArrayDown1(part_id){
-                for (let i=0; i<this.bill_data.length;i++){
-                    if (this.bill_data[i].part_id == part_id){
-                        this.edit_modal_data = this.bill_data[i];
-                    }
-                }
-                BillService.changePartDown(this.edit_modal_data)
-                    .then(() => {
-                        this.init();
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-                return true
             },
 
-            updateParts1(){
-                this.run();
-                BillService.updateFullBills(this.edit_modal_data)
-                    .then(() => {
-                        this.init();
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-                this.edit_modal_data = {};
-                return true
-            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             partSelectedFunc(items){
                 this.selected_data = items[0];
@@ -913,18 +1213,7 @@
                 this.previewShow = 0;
 
             },
-            deleteParts1(){
-                this.run();
-                BillService.deletePart(this.edit_modal_data)
-                    .then(() => {
-                        this.init();
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-                this.edit_modal_data = {};
-                return true
-            },
+
             saveBillList(){
                 if (this.bill_name == ""){
                     alert('请输入法案名');
@@ -940,9 +1229,7 @@
                     return true;
                 }
             },
-            addNewBill(){
-                this.add_new_bill = true;
-            },
+
 
             showPreviewPage(){
                 if (this.previewShow == 0){
@@ -957,70 +1244,14 @@
 
             },
 
-            changeChapter(){
-                this.sectionOptions=[];
-                this.sectionSelected="";
-                this.selectedEditChapterID = 0;
-                let sectionsListTemp = [];
-                for (let i=0;i<this.bill_data.length;i++){
-                    if (this.bill_data[i].chapter_title == this.chapterSelected){
-                        this.selectedEditChapterID = this.bill_data[i].chapter_id;
-                        sectionsListTemp.push(this.bill_data[i]);
-                    }
-                }
-                let checkSections=[];
-                for (let j = 0; j<sectionsListTemp.length; j++){
-                    if (!(checkSections.includes(sectionsListTemp[j].section_number))){
-                        checkSections.push(sectionsListTemp[j].section_number);
-                        this.sectionOptions.push({
-                            "text":sectionsListTemp[j].section_number,
-                            "value":sectionsListTemp[j].section_title
-                        });
-                    }
-                }
-            },
-            changeSection(){
-                let partListTemp = [];
-                for (let i=0;i<this.bill_data.length;i++){
-                    if ((this.bill_data[i].chapter_title == this.chapterSelected) &&
-                    (this.bill_data[i].section_title == this.sectionSelected)){
-                        this.selectedEditSectionID =this.bill_data[i].section_id;
-                        partListTemp.push(this.bill_data[i]);
-                    }
-                }
-                this.partMin = partListTemp.length + 1;
-                this.partSelected = this.partMin;
-            },
-            addConfirm(){
-                let requestData = {};
-                requestData.chapter_id = this.selectedEditChapterID;
-                requestData.section_id = this.selectedEditSectionID;
-                requestData.part_number = this.partSelected;
-                requestData.part_title = this.partSelectedName;
-                requestData.part_content = this.selectedPartContent;
-                requestData.part_reason = this.selectedPartReason;
-                this.add_new_bill = false;
 
-                this.run();
-                BillService.addPart(requestData)
-                    .then(() => {
-                        this.init();
-                        this.addModalClear();
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-                return true
-            },
+
+
             addModalClear(){
-                this.selectedEditChapterID="";
-                this.selectedEditSectionID="";
                 this.partSelected="";
                 this.partSelectedName="";
                 this.selectedPartContent="";
                 this.selectedPartReason="";
-                this.sectionOptions=[];
-                this.chapterOptions=[];
                 this.chapterSelected="";
                 this.sectionSelected="";
             },
@@ -1028,16 +1259,7 @@
                 this.commitEnd = false;
             },
 
-            allBillPreviewModal(){
-                BillService.billPreview({'business_id': this.$route.params.bid})
-                    .then(() => {
-                        this.all_bill_preview_modal_show = true;
-//                            this.all_bill_preview_modalURL = data.billURL;
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
-            },
+
             allBillPreviewModalClear(){},
 
         }
