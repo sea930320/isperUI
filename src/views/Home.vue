@@ -115,6 +115,7 @@ export default {
   created() {
     this.queryAdvertisingList();
     this.querySurveyList();
+    this.queryObservableNodeList();
   },
   data() {
     return {
@@ -130,28 +131,8 @@ export default {
           category: "业务观摩",
           bgcolor: "#d75852",
           category_icon: require("@/assets/imgIsper/cat-2.png"),
-          posts: [
-            {
-              title: "2018药品管理法实验",
-              link: "/advertising/1"
-            },
-            {
-              title: "律师调解通用模拟实验3",
-              link: "#"
-            },
-            {
-              title: "省级人大常委会立法过程实验提案阶段2",
-              link: "#"
-            },
-            {
-              title: "蔡获侵权责任纠纷案民事诉讼审前实验",
-              link: "#"
-            },
-            {
-              title: "美美形体中心个体工商户设立登记的模拟实验2",
-              link: "#"
-            }
-          ]
+          all_link: "/observables",
+          posts: []
         },
         {
           category: "问卷调查",
@@ -211,6 +192,20 @@ export default {
       BusinessService.surveyPublicList({ size: 5 })
         .then(data => {
           this.notificationList[2].posts = data.surveys;
+        })
+        .catch(() => {});
+    },
+    queryObservableNodeList() {
+      BusinessService.observableNodeList({ size: 5 })
+        .then(data => {
+          this.notificationList[1].posts = [];
+          let observableNodes = data.nodes;
+          observableNodes.forEach(node => {
+            this.notificationList[1].posts.push({
+              title: node.business.name + "-" + node.node.name,
+              link: `/observable/progress/${node.node.process_type}/${node.business.id}/${node.node.id}`
+            });
+          });
         })
         .catch(() => {});
     },

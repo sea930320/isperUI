@@ -88,22 +88,22 @@ export default {
         title: {
           label: "名称",
           sortable: false,
-          class: "text-left field-20"
+          class: "text-center field-20"
         },
         active_range: {
           label: "Activitiy Date",
           sortable: false,
-          class: "text-left field-50"
+          class: "text-center field-50"
         },
         created_at: {
           label: "Created Time",
           sortable: false,
-          class: "text-right field-10"
+          class: "text-center field-10"
         },
         take_survey: {
           label: "Take Survey",
           sortable: false,
-          class: "text-left field-10"
+          class: "text-center field-10"
         }
       },
       queryParam: {

@@ -1,0 +1,54 @@
+.display-main-box {
+    position: relative;
+    padding: 4px;
+    min-height: 900px;
+    background-color: #fff;
+}
+
+.display-top-title {
+    padding-top: 3rem;
+}
+
+.display-top-button {
+    padding-top: 3rem;
+}
+
+.display-table-content {
+    padding-top: 3rem;
+}
+
+.display-table-inner {
+    width: 40%;
+    align-items: center;
+    justify-content: center;
+    display: block;
+    max-height: 400px;
+    min-height: 200px;
+    overflow: auto;
+    position: relative;
+}
+.display-bottom-button {
+    padding-top: 4rem;
+}
+
+.modal-message {
+    padding: 10px 0;
+}
+.modal-message p {
+    text-align: center;
+}
+.modal-message .message {
+    font-size: 20px;
+}
+.modal-message .tip {
+    font-size: 14px;
+    color: #999;
+}
+.max-height-box {
+    max-height: 200px;
+    overflow: auto;
+}
+.prev-list-content {
+    padding: 10px;
+    text-align: left;
+}

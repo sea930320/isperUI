@@ -852,6 +852,18 @@ class BusinessService {
         })
     }
 
+    /**
+     * 获取留言列表信息
+     * @param data 参数
+     * page/size
+     */
+    observableNodeList(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/node/observable_list',
+            params: data
+        })
+    }
 }
 
 // 实例化后导出，全局单例

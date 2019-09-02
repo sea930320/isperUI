@@ -61,6 +61,31 @@ const routes = [{
     component: () => import('@/views/system-set/advertising/AdvertisingDetail.vue')
 },
 {
+    path: '/observables',
+    name: 'observables',
+    component: () => import('@/views/observable/ObservableList.vue')
+},
+{
+    path: '/observable/progress',
+    component: () => import('@/views/observable/progress/ProgressIndex.vue'),
+    children: [
+        { path: '1/:bid/:nid/:mode?', name: 'ob-animation', component: () => import('@/views/observable/progress/animation/AnimationIndex.vue') },
+        { path: '2/:bid/:nid/:mode?', name: 'ob-edit', component: () => import('@/views/observable/progress/edit/EditIndex.vue') },        //编辑
+        { path: '3/:bid/:nid/:mode?', name: 'ob-display', component: () => import('@/views/observable/progress/display/DisplayIndex.vue') },  //展示
+        { path: '4/:bid/:nid/:mode?', name: 'ob-report', component: () => import('@/views/observable/progress/report/ReportIndex.vue') },
+        { path: '5/:bid/:nid/:mode?', name: 'ob-poll', component: () => import('@/views/observable/progress/poll/PollIndex.vue') },
+        { path: '7/:bid/:nid/:mode?', name: 'ob-post', component: () => import('@/views/observable/progress/post/PostIndex.vue') }, // 公示
+        { path: '8/:bid/:nid/:mode?', name: 'ob-vote', component: () => import('@/views/observable/progress/vote/VoteIndex.vue') },
+        { path: '9/:bid/:nid/:mode?', name: 'ob-nest', component: () => import('@/views/observable/progress/nest/NestIndex.vue') },
+        { path: '10/:bid/:nid/:mode?', name: 'ob-distribute_sign', component: () => import('@/views/observable/progress/distribute_sign/DistributeIndex.vue') },  //展示
+        { path: '11/:bid/:nid/:mode?', name: 'ob-qa', component: () => import('@/views/observable/progress/qa/QAIndex.vue') },  // 调查问卷
+        { path: '12/:bid/:nid/:mode?', name: 'ob-select_decide', component: () => import('@/views/observable/progress/select_decide/SelectDecideIndex.vue') },
+        { path: '14/:bid/:nid/:mode?', name: 'ob-bill_operation', component: () => import('@/views/observable/progress/bill/BillIndex.vue') },
+        { path: 'wait/:bid/:nid', name: 'ob-wait', component: () => import('@/views/observable/progress/wait/WaitIndex.vue') },
+        { path: 'parallel/:bid/decide', name: 'ob-parallel', component: () => import('@/views/observable/progress/parallel/ParallelIndex.vue') }
+    ]
+},
+{
     path: '/surveys',
     name: 'surveys',
     component: () => import('@/views/survey/SurveyList.vue')
