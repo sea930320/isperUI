@@ -37,14 +37,12 @@
             <b-row>
                 <b-col sm="9">
                     <b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">
-                        <b-form-group>
                             <b-form-radio-group
                                     id="radio-group-1"
                                     v-model="selected"
                                     :options="options"
                                     name="radio-options"
                             ></b-form-radio-group>
-                        </b-form-group>
                     </b-form-group>
                 </b-col>
                 <b-col sm="3">
@@ -178,6 +176,7 @@
             >结束并走向</b-button>
         </div>
         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
+        <br>
         <siderUserBar></siderUserBar>
 
         <!--update confirm-->
@@ -277,8 +276,16 @@
                 size="xl"
                 hide-footer
         >
-            <b-container fluid>
-                <b-form @submit.stop.prevent="addConfirm">
+            <b-form-group label-cols="1" label="增加模式:" label-for="radio-group-2">
+                <b-form-radio-group
+                        id="radio-group-2"
+                        v-model="add_modal_selected"
+                        :options="add_modal_options"
+                        name="add-modal-options"
+                ></b-form-radio-group>
+            </b-form-group>
+            <b-container v-if="add_modal_selected==3" fluid>
+                <b-form @submit.stop.prevent="addConfirm_part">
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="章序号:" label-for="inputAdd1">
@@ -340,6 +347,115 @@
                                         required
                                         id="textarea2"
                                         v-model="selectedPartReason"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-button class="float-center" type="submit" variant="primary">确 定
+                    </b-button>
+                </b-form>
+            </b-container>
+            <b-container v-if="add_modal_selected==2" fluid>
+                <b-form @submit.stop.prevent="addConfirm_section">
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="章序号:" label-for="inputAdd_section1">
+                                <b-form-select id="inputAdd_section1" required ref="chapterSelectBox" v-model="chapterSelected" :options="chapterOptions" @change="changeChapter()">
+                                    <template slot="first">
+                                        <option :value="null" disabled>-- Please select an option --</option>
+                                    </template>
+                                </b-form-select>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="章名:" label-for="inputAdd_section2">
+                                <b-form-input id="inputAdd_section2" required v-model="chapterSelected" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="节号:" label-for="inputAdd_section4">
+                                <b-form-input id="inputAdd_section4" required v-model="sectionSelected_section" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="第一条名称:" label-for="inputAdd_section6">
+                                <b-form-input id="inputAdd_section6" required v-model="partSelected_section" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label="条文正文:" label-for="textarea_section1">
+                                <b-form-textarea
+                                        required
+                                        id="textarea_section1"
+                                        v-model="selectedPartContent_section"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group label="制定理由:" label-for="textarea_section2">
+                                <b-form-textarea
+                                        required
+                                        id="textarea_section2"
+                                        v-model="selectedPartReason_section"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-button class="float-center" type="submit" variant="primary">确 定
+                    </b-button>
+                </b-form>
+            </b-container>
+            <b-container v-if="add_modal_selected==1" fluid>
+                <b-form @submit.stop.prevent="addConfirm_chapter">
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label-cols-sm="4" label="章名:" label-for="inputAdd_chapter2">
+                                <b-form-input id="inputAdd_chapter2" required v-model="chapterSelected_chapter" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label-cols-sm="4" label="第一节名:" label-for="inputAdd_chapter4">
+                                <b-form-input id="inputAdd_chapter4" required v-model="sectionSelected_chapter" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label-cols-sm="4" label="第一条名称:" label-for="inputAdd_chapter6">
+                                <b-form-input id="inputAdd_chapter6" required v-model="partSelected_chapter" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label="条文正文:" label-for="textarea_chapter1">
+                                <b-form-textarea
+                                        required
+                                        id="textarea_chapter1"
+                                        v-model="selectedPartContent_chapter"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group label="制定理由:" label-for="textarea_chapter2">
+                                <b-form-textarea
+                                        required
+                                        id="textarea_chapter2"
+                                        v-model="selectedPartReason_chapter"
                                         placeholder="Enter something..."
                                         rows="6"
                                         max-rows="12"
@@ -547,35 +663,31 @@
                                     <ul class="list-group">
                                         <li class="list-group-item" v-for="(bill_data_one,index) in bill_data_comparison" :key="index">
                                             <!--updated-->
-                                            <span v-if="bill_data_one.added_flag=='1'" style="color:red"> updated
+                                            <span v-if="bill_data_one.added_flag=='1'" style="color:red">
                                             <!--{{bill_data_one}}-->
-                                                {{bill_data_one.added_flag}}
                                                 {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
                                                 {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
                                                 {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
                                                 {{ bill_data_one.part_content }}
                                             </span>
                                             <!--inserted-->
-                                            <span v-if="bill_data_one.added_flag=='2'" style="color:blue"> inserted
+                                            <span v-if="bill_data_one.added_flag=='2'" style="color:blue">
                                                 <!--{{bill_data_one}}-->
-                                                {{bill_data_one.added_flag}}
                                                 {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
                                                 {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
                                                 {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
                                                 {{ bill_data_one.part_content }}
                                             </span>
                                             <!--deleted-->
-                                            <span v-if="bill_data_one.added_flag=='3'" style="text-decoration:line-through;color:red"> deleted
+                                            <span v-if="bill_data_one.added_flag=='3'" style="text-decoration:line-through;color:red">
                                                 <!--{{bill_data_one}}-->
-                                                {{bill_data_one.added_flag}}
                                                 {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
                                                 {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
                                                 {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
                                                 {{ bill_data_one.part_content }}
                                             </span>
-                                            <span v-if="bill_data_one.added_flag=='0'"> normal
+                                            <span v-if="bill_data_one.added_flag=='0'">
                                                 <!--{{bill_data_one}}-->
-                                                {{bill_data_one.added_flag}}
                                                 {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
                                                 {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
                                                 {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
@@ -589,6 +701,21 @@
                         </b-col>
                     </b-row>
             </b-container>
+        </b-modal>
+
+        <!--Save bill-->
+        <b-modal
+                title="保存法案"
+                v-model="save_modal_show"
+                ok-title="确定"
+                cancel-title="取消"
+                size="xl"
+                @cancel="save_modal_show=false"
+                @ok="saveParts1"
+        >
+            <div class="modal-msg">
+                <p class="message">Are you sure to save this bill?</p>
+            </div>
         </b-modal>
     </div>
 </template>
@@ -607,7 +734,6 @@
         components: { Loading, BusinessBillUpload, endNodeHandle, siderUserBar, VueDocPreview },
         data() {
             return {
-
                 bill_data_origin:[],
                 bill_data_comparison:[],
                 comparison_fields:{
@@ -626,9 +752,15 @@
                 edit_modal_data:{},
 
                 selected:'1',
+                add_modal_selected:'1',
                 options: [
                     { text: '章节条模式', value: '1' },
                     { text: '条模式', value: '2' },
+                ],
+                add_modal_options: [
+                    { text: '增加章', value: '1' },
+                    { text: '增加节', value: '2' },
+                    { text: '增加条', value: '3' },
                 ],
                 bill_name:"",
                 bill_data:[],
@@ -638,6 +770,8 @@
                 delete_modal_show:false,
                 part_insert_modal_show:false,
                 add_new_bill_modal_show:false,
+                save_modal_show:false,
+
 
                 chapterSelected:"",
                 chapterOptions:[],
@@ -648,6 +782,18 @@
                 selectedPartContent:"",
                 selectedPartReason:"",
                 partMin:0,
+
+                chapterSelected_chapter:"",
+                sectionSelected_chapter:"",
+                partSelected_chapter:"",
+                selectedPartContent_chapter:"",
+                selectedPartReason_chapter:"",
+                sectionSelected_section:"",
+                partSelected_section:"",
+                selectedPartContent_section:"",
+                selectedPartReason_section:"",
+
+
 
 
                 document_upload_modal:false,
@@ -786,8 +932,8 @@
         },
         mounted() {},
         methods: {
-            gadget_sort(){
-                this.bill_data.sort(function(a, b) {
+            gadget_sort(data){
+                data.sort(function(a, b) {
                     return a.chapter_number - b.chapter_number  ||  a.section_number - b.section_number ||  a.part_number - b.part_number;
                 });
                 return true
@@ -866,7 +1012,7 @@
                     }
                 }
                 this.edit_full_modal_show = true;
-                this.gadget_sort();
+                this.gadget_sort(this.bill_data);
                 this.edit_modal_data = {};
                 return true
             },
@@ -943,7 +1089,7 @@
                     }
                 }
                 this.bill_data.splice( deleted_index,1 );
-                this.gadget_sort();
+                this.gadget_sort(this.bill_data);
                 this.edit_modal_data = {};
                 return true
             },
@@ -1004,7 +1150,7 @@
                     }
                 }
                 this.edit_modal_data = {};
-                this.gadget_sort();
+                this.gadget_sort(this.bill_data);
                 return true
             },
             changeArrayDown1(part_id){
@@ -1063,7 +1209,7 @@
                         }
                     }
                 }
-                this.gadget_sort();
+                this.gadget_sort(this.bill_data);
                 this.edit_modal_data = {};
                 return true
             },
@@ -1071,7 +1217,108 @@
             addNewBill(){
                 this.add_new_bill_modal_show = true;
             },
-            addConfirm(){
+            addConfirm_chapter(){
+                let blankID_chapter = 0;
+                let blankID_section = 0;
+                let blankID_part = 0;
+                let blankNumber_chapter = 0;
+                let blankNumber_section = 1;
+                let blankNumber_part = 1;
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (parseInt(this.bill_data[j].part_id)>blankID_part){
+                        blankID_part = parseInt(this.bill_data[j].part_id);
+                    }
+                    if (parseInt(this.bill_data[j].section_id)>blankID_section){
+                        blankID_section = parseInt(this.bill_data[j].section_id);
+                    }
+                    if (parseInt(this.bill_data[j].chapter_id)>blankID_chapter){
+                        blankID_chapter = parseInt(this.bill_data[j].chapter_id);
+                    }
+                    if (parseInt(this.bill_data[j].chapter_number)>blankNumber_chapter){
+                        blankNumber_chapter = parseInt(this.bill_data[j].chapter_number);
+                    }
+
+                }
+                let added_part = {};
+                added_part.chapter_id = blankID_chapter + 1;
+                added_part.chapter_number = blankNumber_chapter + 1;
+                added_part.chapter_title = this.chapterSelected_chapter;
+                added_part.chapter_content = "";
+                added_part.section_id = blankID_section + 1;
+                added_part.section_number = blankNumber_section;
+                added_part.section_title = this.sectionSelected_chapter;
+                added_part.section_content = "";
+                added_part.part_id = blankID_part + 1;
+                added_part.part_number = blankNumber_part;
+                added_part.part_title = this.partSelected_chapter;
+                added_part.part_content = this.selectedPartContent_chapter;
+                added_part.part_reason = this.selectedPartReason_chapter;
+                added_part.added_flag = "3";
+                this.bill_data.push(added_part);
+                this.gadget_sort(this.bill_data);
+                this.chapterOptions = [];
+                var checkChapter=[];
+                for (let i =0;i<this.bill_data.length;i++){
+                    if (!(checkChapter.includes(this.bill_data[i].chapter_number))){
+                        checkChapter.push(this.bill_data[i].chapter_number);
+                        this.chapterOptions.push({
+                            "text":this.bill_data[i].chapter_number,
+                            "value":this.bill_data[i].chapter_title
+                        });
+                    }
+                }
+                this.add_new_bill_modal_show = false;
+                return true
+            },
+            addConfirm_section(){
+                let blankID_section = 0;
+                let blankID_part = 0;
+                let blankNumber_section = 0;
+                let blankNumber_part = 1;
+
+                let addedChapterNumber = 0;
+                let addedChapterID = 0;
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (parseInt(this.bill_data[j].part_id)>blankID_part){
+                        blankID_part = parseInt(this.bill_data[j].part_id);
+                    }
+                    if (parseInt(this.bill_data[j].section_id)>blankID_section){
+                        blankID_section = parseInt(this.bill_data[j].section_id);
+                    }
+
+                    if (this.bill_data[j].chapter_title == this.chapterSelected){
+                        addedChapterNumber = parseInt(this.bill_data[j].chapter_number);
+                        addedChapterID = parseInt(this.bill_data[j].chapter_id);
+                    }
+                }
+                for (let k=0; k<this.bill_data.length;k++){
+                    if (this.bill_data[k].chapter_number == addedChapterNumber){
+                        if (parseInt(this.bill_data[k].section_number)>blankNumber_section){
+                            blankNumber_section = parseInt(this.bill_data[k].section_number);
+                        }
+                    }
+                }
+                let added_part = {};
+                added_part.chapter_id = addedChapterID;
+                added_part.chapter_number = addedChapterNumber;
+                added_part.chapter_title = this.chapterSelected;
+                added_part.chapter_content = "";
+                added_part.section_id = blankID_section + 1;
+                added_part.section_number = blankNumber_section + 1;
+                added_part.section_title = this.sectionSelected_section;
+                added_part.section_content = "";
+                added_part.part_id = blankID_part + 1;
+                added_part.part_number = blankNumber_part;
+                added_part.part_title = this.partSelected_section;
+                added_part.part_content = this.selectedPartContent_section;
+                added_part.part_reason = this.selectedPartReason_section;
+                added_part.added_flag = "3";
+                this.bill_data.push(added_part);
+                this.gadget_sort(this.bill_data);
+                this.add_new_bill_modal_show = false;
+                return true
+            },
+            addConfirm_part(){
                 let blankID = 0;
                 for (let j=0; j<this.bill_data.length;j++){
                     if (parseInt(this.bill_data[j].part_id)>blankID){
@@ -1085,7 +1332,7 @@
                             added_part.part_id = blankID;
                             added_part.chapter_id = this.bill_data[i].chapter_id;
                             added_part.chapter_number = this.bill_data[i].chapter_number;
-                            added_part.chapter_title = this.bill_data[i].chapter_id;
+                            added_part.chapter_title = this.bill_data[i].chapter_title;
                             added_part.chapter_content = this.bill_data[i].chapter_content;
                             added_part.section_id = this.bill_data[i].section_id;
                             added_part.section_number = this.bill_data[i].section_number;
@@ -1101,9 +1348,26 @@
                     }
                 }
                 this.bill_data.push(added_part);
-                this.gadget_sort();
+                this.gadget_sort(this.bill_data);
                 this.add_new_bill_modal_show = false;
                 return true
+            },
+            addModalClear(){
+                this.partSelected="";
+                this.partSelectedName="";
+                this.selectedPartContent="";
+                this.selectedPartReason="";
+                this.chapterSelected="";
+                this.sectionSelected="";
+                this.chapterSelected_chapter="";
+                this.sectionSelected_chapter="";
+                this.partSelected_chapter="";
+                this.selectedPartContent_chapter="";
+                this.selectedPartReason_chapter="";
+                this.sectionSelected_section="";
+                this.partSelected_section="";
+                this.selectedPartContent_section="";
+                this.selectedPartReason_section="";
             },
 
             changeChapter(){
@@ -1142,16 +1406,13 @@
                 }
             },
             insertPart(){
-                if ((!this.selected_data)||(this.selected_data.length === 0)){
-                    this.$toasted.error("Please select part");
-                } else {
                     let blankID = 0;
                     for (let j=0; j<this.bill_data.length;j++){
                         if (parseInt(this.bill_data[j].part_id)>blankID){
                             blankID = parseInt(this.bill_data[j].part_id) + 1;
                         }
                     }
-
+                    alert(this.selected_data.chapter_title);
                     for (let i=0; i<this.bill_data.length;i++) {
                         if (this.bill_data[i].chapter_title == this.selected_data.chapter_title) {
                             if (this.bill_data[i].section_title == this.selected_data.section_title) {
@@ -1170,7 +1431,7 @@
                                     insert_part.part_id = blankID;
                                     insert_part.chapter_id = this.bill_data[i].chapter_id;
                                     insert_part.chapter_number = this.bill_data[i].chapter_number;
-                                    insert_part.chapter_title = this.bill_data[i].chapter_id;
+                                    insert_part.chapter_title = this.bill_data[i].chapter_title;
                                     insert_part.chapter_content = this.bill_data[i].chapter_content;
                                     insert_part.section_id = this.bill_data[i].section_id;
                                     insert_part.section_number = this.bill_data[i].section_number;
@@ -1187,10 +1448,10 @@
                         }
                     }
                     this.bill_data.push(insert_part);
-                    this.gadget_sort();
+
+                    this.gadget_sort(this.bill_data);
                     this.part_insert_modal_show = false;
                     return true
-                }
             },
             insertModalClear(){
                 this.insertPartTitle="";
@@ -1206,6 +1467,7 @@
                 })
                     .then(data => {
                         this.bill_data_comparison=[];
+                        this.bill_data_origin = [];
                     this.bill_data_origin = data.bill_data;
                     for(let i=0; i<this.bill_data.length;i++){
                         if (this.bill_data[i].hasOwnProperty('added_flag')){
@@ -1225,6 +1487,7 @@
                                 (this.bill_data[i].section_content == this.bill_data_origin[j].section_content)&&
                                 (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
                                 (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
+                                (this.bill_data[i].part_number == this.bill_data_origin[j].part_number)&&
                             (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
                                 this.bill_data[i].added_flag = "0"; // remained
                                 break
@@ -1265,6 +1528,87 @@
                 this.bill_data_comparison = [];
             },
 
+            documentUploadToPart(){
+                if ((!this.selected_data)||(this.selected_data.length === 0)){
+                    this.$toasted.error("Please select part");
+                    return false
+                } else {
+                    let checkArray = 0;
+                    BillService.getBillName({
+                        business_id: this.$route.params.bid,
+                        node_id: this.$route.params.nid,
+                        show_mode:this.selected
+                    })
+                        .then(data => {
+                            this.bill_data_origin = [];
+                            this.bill_data_origin = data.bill_data;
+                            for (let i=0;i<this.bill_data.length;i++){
+                                if (checkArray >0){
+                                    this.$toasted.error("You should save all list before upload doc.");
+                                    return false;
+                                }
+                                for (let j=0;j<this.bill_data_origin.length;j++){
+                                    if ((this.bill_data[i].chapter_id == this.bill_data_origin[j].chapter_id)&&
+                                        (this.bill_data[i].chapter_number == this.bill_data_origin[j].chapter_number)&&
+                                        (this.bill_data[i].chapter_title == this.bill_data_origin[j].chapter_title)&&
+                                        (this.bill_data[i].chapter_content == this.bill_data_origin[j].chapter_content)&&
+                                        (this.bill_data[i].section_id == this.bill_data_origin[j].section_id)&&
+                                        (this.bill_data[i].section_number == this.bill_data_origin[j].section_number)&&
+                                        (this.bill_data[i].section_title == this.bill_data_origin[j].section_title)&&
+                                        (this.bill_data[i].section_content == this.bill_data_origin[j].section_content)&&
+                                        (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
+                                        (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
+                                        (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
+                                        checkArray = 0;
+                                        break;
+                                    } else {
+                                        checkArray = 1;
+                                        continue;
+                                    }
+                                }
+                            }
+//                    BillService.getDocList({"part_id":this.selected_data.part_id})
+//                        .then((data) => {
+//                            this.section_docs_lists = data.doc_data;
+//                            this.document_upload_modal = true;
+//                        })
+//                        .catch(() => {
+//                            this.$emit("data-failed");
+//                        });
+                        });
+                }
+            },
+
+            saveBillList(){
+                this.save_modal_show=true;
+            },
+            saveParts1(){
+                if (this.bill_name == ""){
+                    alert('请输入法案名');
+                    return false;
+                } else {
+                    BillService.saveBill({'business_id': this.$route.params.bid, 'bill_name': this.bill_name,'bill_data':JSON.stringify(this.bill_data)})
+                        .then(() => {
+                            this.init();
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                    return true;
+                }
+            },
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1286,20 +1630,7 @@
                 return true
             },
 
-            documentUploadToPart(){
-                if ((!this.selected_data)||(this.selected_data.length === 0)){
-                    this.$toasted.error("Please select part");
-                } else {
-                    BillService.getDocList({"part_id":this.selected_data.part_id})
-                        .then((data) => {
-                            this.section_docs_lists = data.doc_data;
-                            this.document_upload_modal = true;
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
-                }
-            },
+
             deletePartDoc(doc_id){
                 BillService.deleteDoc({"doc_id":doc_id,"part_id":this.selected_data.part_id})
                     .then(() => {
@@ -1352,21 +1683,7 @@
 
             },
 
-            saveBillList(){
-                if (this.bill_name == ""){
-                    alert('请输入法案名');
-                    return false;
-                } else {
-                    BillService.updateBillListName({'business_id': this.$route.params.bid, 'bill_name': this.bill_name})
-                        .then(() => {
-                           this.init();
-                        })
-                        .catch(() => {
-                            this.$emit("data-failed");
-                        });
-                    return true;
-                }
-            },
+
 
 
             showPreviewPage(){
@@ -1385,14 +1702,7 @@
 
 
 
-            addModalClear(){
-                this.partSelected="";
-                this.partSelectedName="";
-                this.selectedPartContent="";
-                this.selectedPartReason="";
-                this.chapterSelected="";
-                this.sectionSelected="";
-            },
+
             endNodeCancel() {
                 this.commitEnd = false;
             },
