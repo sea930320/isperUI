@@ -1563,7 +1563,6 @@
                             this.bill_data_origin = [];
                             this.bill_data_origin = data.bill_data;
                             for (let i=0;i<this.bill_data.length;i++){
-
                                 for (let j=0;j<this.bill_data_origin.length;j++){
                                     if ((this.bill_data[i].chapter_id == this.bill_data_origin[j].chapter_id)&&
                                         (this.bill_data[i].chapter_number == this.bill_data_origin[j].chapter_number)&&
@@ -1573,6 +1572,7 @@
                                         (this.bill_data[i].section_number == this.bill_data_origin[j].section_number)&&
                                         (this.bill_data[i].section_title == this.bill_data_origin[j].section_title)&&
                                         (this.bill_data[i].section_content == this.bill_data_origin[j].section_content)&&
+                                        (this.bill_data[i].part_number == this.bill_data_origin[j].part_number)&&
                                         (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
                                         (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
                                         (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
@@ -1583,11 +1583,12 @@
                                         continue;
                                     }
                                 }
+                                if (checkArray >0){
+                                    this.$toasted.error("You should save all list before upload doc.");
+                                    return false;
+                                }
                             }
-                            if (checkArray >0){
-                                this.$toasted.error("You should save all list before upload doc.");
-                                return false;
-                            }
+
                             BillService.getDocList({"part_id":this.selected_data.part_id})
                                 .then((data) => {
                                     this.section_docs_lists = data.doc_data;
