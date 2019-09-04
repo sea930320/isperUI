@@ -102,6 +102,14 @@ class BillService {
         })
     }
 
+    saveBill(data){
+        return xhr({
+            method: 'post',
+            url: '/business/bill/save',
+            params: data
+        })
+    }
+
 
 
 }
