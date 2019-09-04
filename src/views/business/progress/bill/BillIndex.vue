@@ -36,14 +36,16 @@
 
             <b-row>
                 <b-col sm="9">
-                    <b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">
-                            <b-form-radio-group
-                                    id="radio-group-1"
-                                    v-model="selected"
-                                    :options="options"
-                                    name="radio-options"
-                            ></b-form-radio-group>
-                    </b-form-group>
+                    <span v-if="selected==1">章节条模式</span>
+                    <span v-if="selected==2">条模式</span>
+                    <!--<b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">-->
+                            <!--<b-form-radio-group-->
+                                    <!--id="radio-group-1"-->
+                                    <!--v-model="selected"-->
+                                    <!--:options="options"-->
+                                    <!--name="radio-options"-->
+                            <!--&gt;</b-form-radio-group>-->
+                    <!--</b-form-group>-->
                 </b-col>
                 <b-col sm="3">
                     <b-button-group class="float-center">
@@ -717,6 +719,28 @@
                 <p class="message">Are you sure to save this bill?</p>
             </div>
         </b-modal>
+
+        <!--show mode setting modal-->
+        <b-modal
+                title="法案模式"
+                v-model="setting_show_mode_modal_show"
+                ok-title="确定"
+                cancel-title="取消"
+                size="xl"
+                ok-only
+                @ok="setting_show_mode_modal_show=false"
+        >
+            <b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">
+                <b-form-radio-group
+                        id="radio-group-1"
+                        v-model="selected"
+                        :options="options"
+                        name="radio-options"
+                ></b-form-radio-group>
+            </b-form-group>
+        </b-modal>
+
+
     </div>
 </template>
 
@@ -771,6 +795,7 @@
                 part_insert_modal_show:false,
                 add_new_bill_modal_show:false,
                 save_modal_show:false,
+                setting_show_mode_modal_show:false,
 
 
                 chapterSelected:"",
@@ -797,8 +822,6 @@
                 selected_section_number:"",
                 selected_section_title:"",
                 selected_part_number:"",
-
-
 
                 document_upload_modal:false,
                 section_docs_lists:[],
@@ -950,34 +973,47 @@
             },
             init() {
                 this.run();
-                BillService.getBillName({
+                BillService.getBillNameOnly({
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                    show_mode:this.selected
-                })
-                    .then(data => {
-                        this.bill_name = data.bill_name;
-                        this.bill_data = data.bill_data;
+                }).then(data => {
+                    if (data.bill_name == ""){
+                        this.setting_show_mode_modal_show = true;
+                        this.$emit("data-ready");
+                        return
+                    }
+                    else {
+                        BillService.getBillName({
+                            business_id: this.$route.params.bid,
+                            node_id: this.$route.params.nid,
+                            show_mode:this.selected
+                        })
+                            .then(data => {
+                                this.bill_name = data.bill_name;
+                                this.bill_data = data.bill_data;
 //                        this.bill_data_origin = data.bill_data;
-                        var checkChapter=[];
-                        this.chapterOptions = [];
-                        for (let i =0;i<this.bill_data.length;i++){
-                            if (!(checkChapter.includes(this.bill_data[i].chapter_number))){
-                                checkChapter.push(this.bill_data[i].chapter_number);
-                                this.chapterOptions.push({
-                                    "text":this.bill_data[i].chapter_number,
-                                    "value":this.bill_data[i].chapter_title
-                                });
-                            }
-                        }
-                        this.partSelected="";
-                        this.partSelectedName="";
+                                var checkChapter=[];
+                                this.chapterOptions = [];
+                                for (let i =0;i<this.bill_data.length;i++){
+                                    if (!(checkChapter.includes(this.bill_data[i].chapter_number))){
+                                        checkChapter.push(this.bill_data[i].chapter_number);
+                                        this.chapterOptions.push({
+                                            "text":this.bill_data[i].chapter_number,
+                                            "value":this.bill_data[i].chapter_title
+                                        });
+                                    }
+                                }
+                                this.partSelected="";
+                                this.partSelectedName="";
 
-                        this.$emit("data-ready");``
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
+                                this.$emit("data-ready");
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    }
+                });
+
             },
 
             updatePartsModal1(part_id){
@@ -1602,14 +1638,19 @@
             },
 
             saveBillList(){
-                this.save_modal_show=true;
+                if (this.bill_name == ""){
+                    this.$toasted.error("请输入法案名称。");
+                } else {
+                    this.save_modal_show=true;
+                }
+
             },
             saveParts1(){
                 if (this.bill_name == ""){
                     alert('请输入法案名');
                     return false;
                 } else {
-                    BillService.saveBill({'business_id': this.$route.params.bid, 'bill_name': this.bill_name,'bill_data':JSON.stringify(this.bill_data)})
+                    BillService.saveBill({'business_id': this.$route.params.bid, 'bill_name': this.bill_name,'bill_data':JSON.stringify(this.bill_data),'edit_mode':this.selected})
                         .then(() => {
                             this.init();
                         })

@@ -16,6 +16,14 @@ class BillService {
         })
     }
 
+    getBillNameOnly(data){
+        return xhr({
+            method: 'get',
+            url: '/business/bill/name/only',
+            params: data
+        })
+    }
+
     updateFullBills(data){
         return xhr({
             method: 'post',
