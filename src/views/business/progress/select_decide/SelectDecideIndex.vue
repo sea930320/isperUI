@@ -23,7 +23,7 @@
                         ></b-form-checkbox-group>
                     </b-col>
                 </b-row>
-                <b-row class="text-center" v-for="item in settings.items.filter(x=>resultData.includes(x.value))">
+                <b-row class="text-center" v-for="(item, index) in settings.items.filter(x=>resultData.includes(x.value))" :key="index">
                     {{item.text}} : {{item.description}}
                 </b-row>
             </b-form>

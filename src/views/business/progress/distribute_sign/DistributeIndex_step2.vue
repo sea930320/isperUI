@@ -153,7 +153,7 @@ export default {
     // preview documents
     // not working with firefox
     previewFile(doc) {
-      openFile(doc.url, this.userInfo.id);
+      openFile(doc.doc_url, this.userInfo.id);
       //set document as read
       businessService
         .updateBusinessDocTeamStatus({

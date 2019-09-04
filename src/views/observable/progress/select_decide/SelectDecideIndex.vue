@@ -54,23 +54,16 @@
                 class="ml-auto mr-auto w-40 text-left"
         >
         </b-card>
-        <div class="text-center mt-4 col-2 offset-5" v-if="settings.status !== 2 && currentRoleAllocation.can_terminate">
-            <b-button variant="success" @click="commitEnd = true" class="w-100">结束并走向</b-button>
-        </div>
-        <endNodeHandle :isCommit="commitEnd" @on-cancel="commitEnd = false"></endNodeHandle>
-        <siderUserBar></siderUserBar>
     </div>
 </template>
 <script>
     import Loading from "@/components/loading/Loading";
-    import endNodeHandle from "@/components/business/modal/endNodeHandle";
     import selectDecideService from "@/services/selectDecideService";
     import { mapState } from "vuex";
-    import siderUserBar from "@/components/business/common/SiderUserBar";
 
     export default {
         name: 'select_decide',
-        components: {Loading, endNodeHandle, siderUserBar},
+        components: {Loading},
         data() {
             return {
                 node_members: [],
@@ -87,7 +80,7 @@
             }
         },
         computed: {
-            ...mapState(["userInfo", "meta"]),
+            ...mapState(["meta"]),
             metaInfo() {
                 return this.meta.info;
             },
@@ -112,7 +105,7 @@
                 selectDecideService
                     .getSetting({
                         'flowNode_id': this.metaInfo.node_id,
-                        'alloc_id': this.currentRoleAllocation.alloc_id
+                        'alloc_id': 'observable'
                     })
                     .then(data => {
                         this.settings = data;

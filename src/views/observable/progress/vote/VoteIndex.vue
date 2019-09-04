@@ -26,14 +26,12 @@
       <div v-if="resultData.method === 0" class="text-center">
         <b-table
           :bordered="true"
-          :items="
-                        [
-                            resultData.items.map(x=>x.text).concat('未按表决器').map((x, i)=>x + ' : ' +resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i] + '/' + resultData.members.length + ' ('
-                                        + Math.round(resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i]*100/resultData.members.length) + '%) ').reduce((obj, cur, i) => {
-                                return { ...obj, [cur]: resultData.items.map(x=>x.voted_users.join(' , ')).concat(resultData.members.filter(x=>x.voted === 0).map(x=>x.username).join(' , '))[i]};
-                            }, {})
-                        ]
-                    "
+          :items="[
+            resultData.items.map(x=>x.text).concat('未按表决器').map((x, i)=>x + ' : ' +resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i] + '/' + resultData.members.length + ' ('
+                        + Math.round(resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i]*100/resultData.members.length) + '%) ').reduce((obj, cur, i) => {
+                return { ...obj, [cur]: resultData.items.map(x=>x.voted_users.join(' , ')).concat(resultData.members.filter(x=>x.voted === 0).map(x=>x.username).join(' , '))[i]};
+            }, {})
+          ]"
           :fields="resultData.items.map(x=>x.text).concat('未按表决器').map((x, i)=>x + ' : ' +resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i] + '/' + resultData.members.length + ' ('
                                         + Math.round(resultData.items.map(x=>x.voted_users.length).concat(resultData.members.filter(x=>x.voted === 0).length)[i]*100/resultData.members.length) + '%) ')"
         ></b-table>
@@ -41,16 +39,14 @@
       <div v-if="resultData.method === 1" class="text-center">
         <b-table
           :bordered="true"
-          :items="
-                        [
-                            resultData.items.map(x=>x.text).concat('未按表决器').reduce((obj, cur, i) => {
-                                return { ...obj, [cur]:
-                                        resultData.items.map(x=>x.voted_count).concat(resultData.members.filter(x=>x.voted === 0).length)[i] + '/' + resultData.members.length + ' ('
-                                        + Math.round(resultData.items.map(x=>x.voted_count).concat(resultData.members.filter(x=>x.voted === 0).length)[i]*100/resultData.members.length) + '%) '
-                                    };
-                            }, {})
-                        ]
-                    "
+          :items="[
+            resultData.items.map(x=>x.text).concat('未按表决器').reduce((obj, cur, i) => {
+                return { ...obj, [cur]:
+                        resultData.items.map(x=>x.voted_count).concat(resultData.members.filter(x=>x.voted === 0).length)[i] + '/' + resultData.members.length + ' ('
+                        + Math.round(resultData.items.map(x=>x.voted_count).concat(resultData.members.filter(x=>x.voted === 0).length)[i]*100/resultData.members.length) + '%) '
+                    };
+            }, {})
+          ]"
           :fields="resultData.items.map(x=>x.text).concat('未按表决器')"
         ></b-table>
       </div>
@@ -92,8 +88,7 @@ export default {
       resultData: {}
     };
   },
-  computed: {
-  },
+  computed: {},
   created() {
     this.$nextTick(() => {
       this.getInitVoteData();
