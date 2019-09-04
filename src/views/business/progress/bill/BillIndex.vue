@@ -305,7 +305,7 @@
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" ref="sectionSelctebox" label="节序号:" label-for="inputAdd3">
-                                <b-form-select id="inputAdd3" required v-model="sectionSelected" :options="sectionOptions" @change="changeSection()">
+                                <b-form-select id="inputAdd3" required ref="sectionSelected" v-model="sectionSelected" :options="sectionOptions" @change="changeSection()">
                                     <template slot="first">
                                         <option :value="null" disabled>-- Please select an option --</option>
                                     </template>
@@ -567,31 +567,31 @@
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="章序号:" label-for="insertPart1">
-                                <b-form-input id="insertPart1" disabled v-model="selected_data.chapter_number" ></b-form-input>
+                                <b-form-input id="insertPart1" disabled v-model="selected_chapter_number" ></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="章名:" label-for="insertPart2">
-                                <b-form-input id="insertPart2" disabled v-model="selected_data.chapter_title" ></b-form-input>
+                                <b-form-input id="insertPart2" disabled v-model="selected_chapter_title" ></b-form-input>
                             </b-form-group>
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="节序号:" label-for="insertPart3">
-                                <b-form-input id="insertPart3" disabled v-model="selected_data.section_number" ></b-form-input>
+                                <b-form-input id="insertPart3" disabled v-model="selected_section_number" ></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="节名:" label-for="insertPart4">
-                                <b-form-input id="insertPart4" disabled v-model="selected_data.section_title" ></b-form-input>
+                                <b-form-input id="insertPart4" disabled v-model="selected_section_title" ></b-form-input>
                             </b-form-group>
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col sm="6">
                             <b-form-group label-cols-sm="4" label="条文序号:" label-for="insertPart5">
-                                <b-form-input id="insertPart5" disabled v-model="selected_data.part_number"></b-form-input>
+                                <b-form-input id="insertPart5" disabled v-model="selected_part_number"></b-form-input>
                             </b-form-group>
                         </b-col>
                         <b-col sm="6">
@@ -792,7 +792,11 @@
                 partSelected_section:"",
                 selectedPartContent_section:"",
                 selectedPartReason_section:"",
-
+                selected_chapter_number:"",
+                selected_chapter_title:"",
+                selected_section_number:"",
+                selected_section_title:"",
+                selected_part_number:"",
 
 
 
@@ -1134,6 +1138,7 @@
                             if (this.bill_data[j].part_id != this.edit_modal_data.part_id){
                                 if ((parseInt(this.bill_data[j].part_number) + 1) == parseInt(this.edit_modal_data.part_number)){
                                     this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                                    this.bill_data[j].added_flag = "1";
                                 }
                             }
                         }
@@ -1145,6 +1150,7 @@
                             if (this.bill_data[j].part_id == this.edit_modal_data.part_id){
                                 this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) - 1;
                                 this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                                this.bill_data[j].added_flag = "1";
                             }
                         }
                     }
@@ -1194,6 +1200,7 @@
                             if (this.bill_data[k].part_id != this.edit_modal_data.part_id){
                                 if ((parseInt(this.bill_data[k].part_number) - 1) == parseInt(this.edit_modal_data.part_number)){
                                     this.bill_data[k].part_number = parseInt(this.edit_modal_data.part_number);
+                                    this.bill_data[k].added_flag = "1";
                                 }
                             }
                         }
@@ -1205,6 +1212,7 @@
                             if (this.bill_data[l].part_id == this.edit_modal_data.part_id){
                                 this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) + 1;
                                 this.bill_data[l].part_number = parseInt(this.edit_modal_data.part_number);
+                                this.bill_data[l].added_flag = "1";
                             }
                         }
                     }
@@ -1402,22 +1410,29 @@
                 if ((!this.selected_data)||(this.selected_data.length === 0)){
                     this.$toasted.error("Please select part");
                 } else {
+                    this.selected_chapter_number=this.selected_data.chapter_number;
+                    this.selected_chapter_title=this.selected_data.chapter_title;
+                    this.selected_section_number=this.selected_data.section_number;
+                    this.selected_section_title=this.selected_data.section_title;
+                    this.selected_part_number=this.selected_data.part_number;
                     this.part_insert_modal_show = true;
                 }
             },
             insertPart(){
                     let blankID = 0;
+
                     for (let j=0; j<this.bill_data.length;j++){
                         if (parseInt(this.bill_data[j].part_id)>blankID){
                             blankID = parseInt(this.bill_data[j].part_id) + 1;
                         }
                     }
-                    alert(this.selected_data.chapter_title);
+
                     for (let i=0; i<this.bill_data.length;i++) {
                         if (this.bill_data[i].chapter_title == this.selected_data.chapter_title) {
                             if (this.bill_data[i].section_title == this.selected_data.section_title) {
                                 if (parseInt(this.bill_data[i].part_number) >= parseInt(this.selected_data.part_number)) {
                                     this.bill_data[i].part_number = parseInt(this.bill_data[i].part_number) + 1;
+                                    this.bill_data[i].added_flag = "1";
                                 }
                             }
                         }
@@ -1451,9 +1466,14 @@
 
                     this.gadget_sort(this.bill_data);
                     this.part_insert_modal_show = false;
-                    return true
+                return true
             },
             insertModalClear(){
+                this.selected_chapter_number="";
+                this.selected_chapter_title="";
+                this.selected_section_number="";
+                this.selected_section_title="";
+                this.selected_part_number="";
                 this.insertPartTitle="";
                 this.insertPartContent="";
                 this.insertPartReason="";
@@ -1567,14 +1587,14 @@
                                     }
                                 }
                             }
-//                    BillService.getDocList({"part_id":this.selected_data.part_id})
-//                        .then((data) => {
-//                            this.section_docs_lists = data.doc_data;
-//                            this.document_upload_modal = true;
-//                        })
-//                        .catch(() => {
-//                            this.$emit("data-failed");
-//                        });
+                        BillService.getDocList({"part_id":this.selected_data.part_id})
+                            .then((data) => {
+                                this.section_docs_lists = data.doc_data;
+                                this.document_upload_modal = true;
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
                         });
                 }
             },
