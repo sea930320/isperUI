@@ -3,7 +3,7 @@
     <loading v-if="isRunning"></loading>
     <b-row class="cardDiv px-0">
       <b-col cols="8" class="text-left">
-        <div class="report-title text-center mb-3">实验报告</div>
+        <div class="report-title text-center mb-3">业务报告</div>
         <div class="container report-info">
           <b-row>
             <b-col cols="4">任务名称：{{report.data.name}}</b-col>
