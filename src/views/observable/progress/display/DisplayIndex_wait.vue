@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cardDiv">
     <H2>请稍等</H2>
   </div>
 </template>

@@ -31,34 +31,14 @@
         </table>
       </div>
     </div>
-
-    <div class="display-bottom-button">
-      <b-button variant="primary" v-if="currentRoleAllocation.can_terminate" @click="onEnd">结束并走向</b-button>
-    </div>
-    <!-- Confirm end -->
-    <b-modal
-      v-model="end_confirm_dialog"
-      title="Confirm end"
-      ok-title="确定"
-      cancel-title="取消"
-      @cancel="end_confirm_dialog=false"
-      @ok="confirmEnd"
-    >
-      <div class="modal-message">
-        <p class="message">有些文件还没查看，您真要结束本环节吗？</p>
-      </div>
-    </b-modal>
-    <!-- end dialog -->
-    <end-node-handle :isCommit="commit_end" @on-cancel="commit_end=false"></end-node-handle>
   </div>
 </template>
 <script>
-import endNodeHandle from "@/components/business/modal/endNodeHandle";
 import businessService from "@/services/businessService";
 import { openFile } from "@/utils/previewFile";
 export default {
   name: "display_step2",
-  components: { endNodeHandle },
+  components: {},
   sockets: {
     connect() {},
     getMessage(msg) {
@@ -87,12 +67,6 @@ export default {
   computed: {
     metaInfo() {
       return this.$store.state.meta.info;
-    },
-    currentRoleAllocation() {
-      return this.$store.state.meta.currentRoleAllocation;
-    },
-    userInfo() {
-      return this.$store.state.userInfo;
     }
   },
   watch: {},
@@ -109,64 +83,19 @@ export default {
       }
     },
     updateList() {
-      if (this.currentRoleAllocation.can_terminate) {
-        businessService
-          .getBusinessDocTeamStatus({
-            business_id: this.$route.params.bid,
-            node_id: this.$route.params.nid
-          })
-          .then(data => {
-            this.docs = data;
-          });
-      } else {
-        businessService
-          .getBusinessDocTeamStatus({
-            business_id: this.$route.params.bid,
-            node_id: this.$route.params.nid,
-            user_id: this.userInfo.id
-          })
-          .then(data => {
-            this.docs = data;
-          });
-      }
+      businessService
+        .getBusinessDocTeamStatus({
+          business_id: this.$route.params.bid,
+          node_id: this.$route.params.nid
+        })
+        .then(data => {
+          this.docs = data;
+        });
     },
     // preview documents
     // not working with firefox
     previewFile(doc) {
-      openFile(doc.url, this.userInfo.id);
-      //set document as read
-      businessService
-        .updateBusinessDocTeamStatus({
-          business_id: this.$route.params.bid,
-          node_id: this.$route.params.nid,
-          business_doc_id: doc.doc_id,
-          user_id: this.userInfo.id,
-          status: 1
-        })
-        .then(() => {
-          businessService
-            .pushMessage({
-              business_id: this.$route.params.bid,
-              node_id: this.$route.params.nid,
-              role_alloc_id: this.currentRoleAllocation.alloc_id,
-              force_txt_mode: 1,
-              type: "txt",
-              msg: "展示文件: " + doc.doc_name
-            })
-            .then(() => {});
-        });
-    },
-    onEnd() {
-      for (var v in this.docs) {
-        if (!this.docs[v].status) {
-          this.end_confirm_dialog = true;
-          return;
-        }
-      }
-      this.commit_end = true;
-    },
-    confirmEnd() {
-      this.commit_end = true;
+      openFile(doc.doc_url, 1);
     }
   }
 };

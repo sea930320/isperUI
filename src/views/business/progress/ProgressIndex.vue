@@ -54,7 +54,7 @@
             },
             getMessage(msg) {
                 msg = msg.result;
-                if (msg.business !== this.metaInfo.businessID) {
+                if (msg.business != this.metaInfo.businessID) {
                     return;
                 }
                 if (this.$route.name === "wait") {
