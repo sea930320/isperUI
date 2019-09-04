@@ -248,8 +248,8 @@
                     this.run();
                     pollService
                         .getInitPollData({
-                            'business_id': this.currentRoleAllocation.role.business,
-                            'node_id': this.metaInfo.node_id,
+                            'business_id': this.$route.params.bid,
+                            'node_id': this.$route.params.nid,
                             'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
                         })
                         .then(data => {
