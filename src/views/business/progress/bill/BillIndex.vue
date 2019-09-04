@@ -1643,7 +1643,6 @@
                 } else {
                     this.save_modal_show=true;
                 }
-
             },
             saveParts1(){
                 if (this.bill_name == ""){
