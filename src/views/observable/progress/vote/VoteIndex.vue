@@ -59,19 +59,14 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import Loading from "@/components/loading/Loading";
 import VoteService from "@/services/voteService";
-import VueTagsInput from "@johmun/vue-tags-input";
-import { Datetime } from "vue-datetime";
 import "vue-datetime/dist/vue-datetime.css";
 
 export default {
   name: "vote-index",
   components: {
-    Loading,
-    VueTagsInput,
-    Datetime
+    Loading
   },
   data() {
     return {

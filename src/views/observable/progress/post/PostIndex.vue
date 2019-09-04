@@ -17,7 +17,6 @@
 <script>
 import Loading from "@/components/loading/Loading";
 import BusinessService from "@/services/businessService";
-import { mapState } from "vuex";
 
 export default {
   components: { Loading },

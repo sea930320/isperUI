@@ -53,12 +53,11 @@
 import Loading from "@/components/loading/Loading";
 import pollService from "@/services/pollService";
 import { mapState } from "vuex";
-import { Datetime } from "vue-datetime";
 import "vue-datetime/dist/vue-datetime.css";
 
 export default {
   name: "MetaPoll",
-  components: { Loading, Datetime },
+  components: { Loading },
   data() {
     return {
       node_members: [],
