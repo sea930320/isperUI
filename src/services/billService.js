@@ -24,38 +24,6 @@ class BillService {
         })
     }
 
-    updateFullBills(data){
-        return xhr({
-            method: 'post',
-            url: '/business/bill/update/full',
-            params: data
-        })
-    }
-
-    updateBillListName(data){
-        return xhr({
-            method: 'post',
-            url: '/business/bill/update/billname',
-            params: data
-        })
-    }
-
-    deletePart(data){
-        return xhr({
-            method: 'post',
-            url: '/business/bill/part/delete',
-            params: data
-        })
-    }
-
-    addPart(data){
-        return xhr({
-            method: 'post',
-            url: '/business/bill/part/add',
-            params: data
-        })
-    }
-
     getDocList(data){
         return xhr({
             method: 'get',
@@ -67,21 +35,6 @@ class BillService {
         return xhr({
             method: 'post',
             url: '/business/bill/doc/delete',
-            params: data
-        })
-    }
-    changePartUp(data){
-        return xhr({
-            method: 'get',
-            url: '/business/bill/part/up',
-            params: data
-        })
-    }
-
-    changePartDown(data){
-        return xhr({
-            method: 'get',
-            url: '/business/bill/part/down',
             params: data
         })
     }
@@ -98,14 +51,6 @@ class BillService {
         return xhr({
             method: 'post',
             url: '/business/bill/doc/upload',
-            params: data
-        })
-    }
-
-    billPreview(data){
-        return xhr({
-            method: 'get',
-            url: '/business/bill/doc/preview',
             params: data
         })
     }

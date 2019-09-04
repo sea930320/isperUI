@@ -38,14 +38,6 @@
                 <b-col sm="9">
                     <span v-if="selected==1">章节条模式</span>
                     <span v-if="selected==2">条模式</span>
-                    <!--<b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">-->
-                            <!--<b-form-radio-group-->
-                                    <!--id="radio-group-1"-->
-                                    <!--v-model="selected"-->
-                                    <!--:options="options"-->
-                                    <!--name="radio-options"-->
-                            <!--&gt;</b-form-radio-group>-->
-                    <!--</b-form-group>-->
                 </b-col>
                 <b-col sm="3">
                     <b-button-group class="float-center">
@@ -1745,9 +1737,6 @@
 
             },
 
-
-
-
             showPreviewPage(){
                 if (this.previewShow == 0){
                     if (this.upload_doc_url != ""){
@@ -1761,17 +1750,9 @@
 
             },
 
-
-
-
-
             endNodeCancel() {
                 this.commitEnd = false;
             },
-
-
-
-
         }
     };
 </script>
