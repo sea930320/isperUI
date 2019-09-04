@@ -11,7 +11,7 @@ class BillService {
     getBillName(data){
         return xhr({
             method: 'get',
-            url: '/bill/name/list',
+            url: '/business/bill/name/list',
             params: data
         })
     }
@@ -19,7 +19,7 @@ class BillService {
     updateFullBills(data){
         return xhr({
             method: 'post',
-            url: '/bill/update/full',
+            url: '/business/bill/update/full',
             params: data
         })
     }
@@ -27,7 +27,7 @@ class BillService {
     updateBillListName(data){
         return xhr({
             method: 'post',
-            url: '/bill/update/billname',
+            url: '/business/bill/update/billname',
             params: data
         })
     }
@@ -35,7 +35,7 @@ class BillService {
     deletePart(data){
         return xhr({
             method: 'post',
-            url: '/bill/part/delete',
+            url: '/business/bill/part/delete',
             params: data
         })
     }
@@ -43,7 +43,7 @@ class BillService {
     addPart(data){
         return xhr({
             method: 'post',
-            url: '/bill/part/add',
+            url: '/business/bill/part/add',
             params: data
         })
     }
@@ -51,21 +51,21 @@ class BillService {
     getDocList(data){
         return xhr({
             method: 'get',
-            url: '/bill/doc/list',
+            url: '/business/bill/doc/list',
             params: data
         })
     }
     deleteDoc(data){
         return xhr({
             method: 'post',
-            url: '/bill/doc/delete',
+            url: '/business/bill/doc/delete',
             params: data
         })
     }
     changePartUp(data){
         return xhr({
             method: 'get',
-            url: '/bill/part/up',
+            url: '/business/bill/part/up',
             params: data
         })
     }
@@ -73,7 +73,7 @@ class BillService {
     changePartDown(data){
         return xhr({
             method: 'get',
-            url: '/bill/part/down',
+            url: '/business/bill/part/down',
             params: data
         })
     }
@@ -81,7 +81,7 @@ class BillService {
     insertPart(data){
         return xhr({
             method: 'post',
-            url: '/bill/part/insert',
+            url: '/business/bill/part/insert',
             params: data
         })
     }
@@ -89,7 +89,7 @@ class BillService {
     uploadDoc(data){
         return xhr({
             method: 'post',
-            url: '/bill/doc/upload',
+            url: '/business/bill/doc/upload',
             params: data
         })
     }
@@ -97,7 +97,15 @@ class BillService {
     billPreview(data){
         return xhr({
             method: 'get',
-            url: '/bill/doc/preview',
+            url: '/business/bill/doc/preview',
+            params: data
+        })
+    }
+
+    saveBill(data){
+        return xhr({
+            method: 'post',
+            url: '/business/bill/save',
             params: data
         })
     }
