@@ -244,28 +244,30 @@
         },
         methods: {
             getInitPollData() {
-                this.run();
-                pollService
-                    .getInitPollData({
-                        'business_id': this.currentRoleAllocation.role.business,
-                        'node_id': this.metaInfo.node_id,
-                        'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
-                    })
-                    .then(data => {
-                        this.status = data.status;
-                        if (data.status === 1)
-                            this.node_members = data.data.node_members;
-                        else if (data.status === 2)
-                            this.waitMsg = data.data;
-                        else if (data.status === 3)
-                            this.resultData = data.data;
-                        else if (data.status === 4)
-                            this.resultData = data.data;
-                        this.$emit("data-ready");
-                    })
-                    .catch(() => {
-                        this.$emit("data-failed");
-                    });
+                if (this.currentRoleAllocation.role) {
+                    this.run();
+                    pollService
+                        .getInitPollData({
+                            'business_id': this.currentRoleAllocation.role.business,
+                            'node_id': this.metaInfo.node_id,
+                            'role': (this.currentRoleAllocation.can_terminate) ? 1 : 0
+                        })
+                        .then(data => {
+                            this.status = data.status;
+                            if (data.status === 1)
+                                this.node_members = data.data.node_members;
+                            else if (data.status === 2)
+                                this.waitMsg = data.data;
+                            else if (data.status === 3)
+                                this.resultData = data.data;
+                            else if (data.status === 4)
+                                this.resultData = data.data;
+                            this.$emit("data-ready");
+                        })
+                        .catch(() => {
+                            this.$emit("data-failed");
+                        });
+                }
             },
             savePollData() {
                 this.run();

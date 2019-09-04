@@ -71,6 +71,7 @@
             return {
                 flashObj: null,
                 hasFlash: false,
+                // eslint-disable-next-line
                 flashReady: flash
             }
         },
