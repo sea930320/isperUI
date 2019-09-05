@@ -550,7 +550,7 @@
                                 </b-row>
                             </template>
                         </b-table>
-                    </b-col>
+                    </b-col> 
                 </b-row>
                 <br><br>
                 <b-row>
