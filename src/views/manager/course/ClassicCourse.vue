@@ -247,7 +247,7 @@
           <thead role="rowgroup">
             <tr>
               <th class="text-center w-5">序号</th>
-              <th class="text-center w-35">身份名称</th>
+              <th class="text-center w-35">课堂名称</th>
               <th class="text-center w-10">课序号</th>
               <th class="text-center w-10">课时</th>
               <th class="text-center w-10">开课学期</th>
