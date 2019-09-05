@@ -27,10 +27,6 @@
                     {{item.text}} : {{item.description}}
                 </b-row>
             </b-form>
-            <!-- Control buttons-->
-            <div class="text-center mt-4">
-                <b-button variant="success" @click="saveResult" class="mr-5 w-100" :disabled="check_allSetting">确&emsp;定</b-button>
-            </div>
         </div>
         <b-card
                 overlay

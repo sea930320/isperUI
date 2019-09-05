@@ -109,42 +109,6 @@
                 </ul>
               </div>
             </div>
-
-            <div
-              v-if="experience.status === 1 && userInfo.identity == 5"
-              class="submit-container border my-2 p-2"
-            >
-              <div class="title">填写分析与总结（提示：每个人只有一次填写机会，请慎重填写）</div>
-              <b-form-textarea
-                id="textarea"
-                placeholder="请填写心得！"
-                rows="3"
-                max-rows="4"
-                v-model.trim="experience.content"
-              ></b-form-textarea>
-            </div>
-            <b-row>
-              <b-col sm="12" class="align-self-center">
-                <b-button
-                  v-if="experience.status === 1 && userInfo.identity == 5"
-                  class="styledBtn"
-                  variant="outline-primary"
-                  @click="handleSave()"
-                >保存</b-button>
-                <b-button
-                  v-if="experience.status === 1 && userInfo.identity == 5"
-                  class="styledBtn"
-                  variant="outline-primary"
-                  @click="submitClick()"
-                >提交心得</b-button>
-                <b-button
-                  v-if="canTerminate"
-                  class="styledBtn"
-                  variant="outline-primary"
-                  @click="endBusiness()"
-                >结束本次业务</b-button>
-              </b-col>
-            </b-row>
           </b-card-text>
         </b-card>
       </b-card-group>
@@ -260,7 +224,6 @@
         </div>
       </div>
     </b-modal>
-    <siderUserBar></siderUserBar>
   </div>
 </template>
 
@@ -271,18 +234,12 @@ import { BulmaAccordion, BulmaAccordionItem } from "vue-bulma-accordion";
 import BFormTextarea from "bootstrap-vue/src/components/form-textarea/form-textarea";
 import { openFile } from "@/utils/previewFile";
 import { docUsage } from "@/filters/fun";
-import siderUserBar from "@/components/business/common/SiderUserBar";
-import {
-  ACTION_SUBMIT_EXPERIENCE,
-  ACTION_BUSINESS_NODE_END
-} from "@/components/business/common/actionCmds";
 
 export default {
   components: {
     BFormTextarea,
     BulmaAccordion,
     BulmaAccordionItem,
-    siderUserBar,
   },
   filters: { docUsage },
   data() {
@@ -312,21 +269,9 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo,
       metaInfo: state => state.meta.info,
-      experiences: state => state.meta.experiences,
-      currentRoleAllocation: state => state.meta.currentRoleAllocation
+      experiences: state => state.meta.experiences
     }),
-    canTerminate() {
-      if (
-        this.currentRoleAllocation &&
-        this.currentRoleAllocation.can_terminate
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    }
   },
   mounted() {
     document.addEventListener("click", () => {
@@ -342,7 +287,8 @@ export default {
       businessService
         .genarateBusinessReport({
           business_id: this.$route.params.bid,
-          user_id: this.userInfo.id
+          node_id: this.$route.params.nid,
+          is_observable: 1
         })
         .then(data => {
           this.report.data = data;
@@ -387,7 +333,7 @@ export default {
       return percent;
     },
     previewFile(fileUrl) {
-      openFile(fileUrl, this.userInfo.id);
+      openFile(fileUrl, 1);
     },
     replaceContent(con) {
       return con.replace(/\r?\n|\r/g, "<br/>");
@@ -406,40 +352,8 @@ export default {
           this.$toasted.success("保存成功");
         });
     },
-    submitClick() {
-      if (this.experience.content === "") {
-        this.$toasted.error("不能提交空的请输入分析与总结");
-        return;
-      }
-      businessService
-        .pushMessage({
-          business_id: this.$route.params.bid,
-          node_id: this.$route.params.nid,
-          role_alloc_id: this.currentRoleAllocation.alloc_id,
-          type: "cmd",
-          cmd: ACTION_SUBMIT_EXPERIENCE,
-          data: JSON.stringify({ content: this.experience.content })
-        })
-        .then(data => {
-          this.experience.status = data.status;
-        });
-      this.experience.content = "";
-    },
     exportReport() {
       window.open(this.downloadUrl + "?business_id=" + this.$route.params.bid);
-    },
-    // 结束本次实验
-    endBusiness() {
-      businessService.pushMessage({
-        business_id: this.$route.params.bid,
-        node_id: this.$route.params.nid,
-        role_alloc_id: this.currentRoleAllocation.alloc_id,
-        msg: "结束业务",
-        type: "cmd",
-        cmd: ACTION_BUSINESS_NODE_END,
-        data: JSON.stringify({ tran_id: 0,
-          parallel: 0 })
-      });
     }
   }
 };
