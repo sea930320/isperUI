@@ -146,9 +146,9 @@ export default {
             Promise.all(apis)
                 .then(response => {
                     this.workflow = response[0];
-                    this.flowNodes = response[0].nodes;
+                    this.flowNodes = response[0].nodes.filter(x=>x.process.image !== null);
 
-                    this.roleAllcation = response[1];
+                    this.roleAllcation = response[1].filter(x=>x.process.image !== null);
                     if (this.roleAllcation.length > 0) {
                         this.process =
                             this.roleAllcation[0].process.type === 1
