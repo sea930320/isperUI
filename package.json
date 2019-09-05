@@ -46,7 +46,7 @@
     "vue-awesome": "^3.5.1",
     "vue-beautiful-chat": "^2.2.2",
     "vue-bulma-accordion": "^0.4.8",
-    "vue-clipboard2": "^0.3.0",
+    "vue-clipboard2": "^0.3.1",
     "vue-cookie": "^1.1.4",
     "vue-custom-inputs": "^1.0.4",
     "vue-datetime": "^1.0.0-beta.10",

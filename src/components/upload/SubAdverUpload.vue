@@ -43,11 +43,12 @@
             // 渲染动画上传成功回调
             uploadSuccess(data) {
                 var file_url = window.location.protocol + "//" + window.location.host + data.d.url;
-                this.$copyText(file_url).then(() => {
-                    this.$toasted.success('链接复制完了');
-                })
+                this.$copyText(file_url)
+                    .then(() => {
+                        this.$toasted.success("链接复制完了");
+                    })
                     .catch(() => {
-                        this.$toasted.error('链接复制失败');
+                        this.$toasted.error("链接复制失败");
                     });
             },
             // 渲染动画上传失败回调

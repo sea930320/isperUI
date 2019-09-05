@@ -550,7 +550,7 @@
                                 </b-row>
                             </template>
                         </b-table>
-                    </b-col> 
+                    </b-col>
                 </b-row>
                 <br><br>
                 <b-row>
@@ -1444,14 +1444,12 @@
                     }
                 }
                 let index = 0;
-                console.log(this.edit_modal_data);
                 for (let i=0; i<this.bill_data.length;i++){
                     if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
                         index = i;
                         break
                     }
                 }
-                console.log(index)
                 if (parseInt(this.bill_data[index].part_number) == 1){
                     this.$toasted.error("不能上移");
                     return false;
@@ -1459,7 +1457,6 @@
                 for (let j=0; j<this.bill_data.length;j++){
                     if (this.bill_data[j].part_id != this.edit_modal_data.part_id){
                         if ((parseInt(this.bill_data[j].part_number) + 1) == parseInt(this.edit_modal_data.part_number)){
-                            console.log(this.bill_data[j])
                             this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
                             this.bill_data[j].added_flag = "1";
                         }
@@ -1720,7 +1717,7 @@
             },
             insertNewPartModal(){
                 if ((!this.selected_data)||(this.selected_data.length === 0)){
-                    this.$toasted.error("Please select part");
+                    this.$toasted.error("请选择条");
                 } else {
                     this.selected_chapter_number=this.selected_data.chapter_number;
                     this.selected_chapter_title=this.selected_data.chapter_title;
@@ -1922,7 +1919,7 @@
             },
             documentUploadToPart(){
                 if ((!this.selected_data)||(this.selected_data.length === 0)){
-                    this.$toasted.error("Please select part");
+                    this.$toasted.error("请选择条");
                     return false
                 } else {
                     let checkArray = 0;
@@ -1957,7 +1954,7 @@
                                         }
                                     }
                                     if (checkArray >0){
-                                        this.$toasted.error("You should save all list before upload doc.");
+                                        this.$toasted.error("在上传文件之前请保存好法案内容");
                                         return false;
                                     }
                                 }
@@ -1977,7 +1974,7 @@
                                         }
                                     }
                                     if (checkArray >0){
-                                        this.$toasted.error("You should save all list before upload doc.");
+                                        this.$toasted.error("在上传文件之前请保存好法案内容");
                                         return false;
                                     }
                                 }
@@ -2024,7 +2021,7 @@
             },
             saveParts1(){
                 if (this.bill_name == ""){
-                    alert('请输入法案名');
+                    this.$toasted.error('请输入法案名');
                     return false;
                 } else {
                     BillService.saveBill({'business_id': this.$route.params.bid, 'bill_name': this.bill_name,'bill_data':JSON.stringify(this.bill_data),'edit_mode':this.selected})
