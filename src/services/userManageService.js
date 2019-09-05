@@ -115,6 +115,14 @@ class UserManageService {
         })
     }
 
+    deleteGroupUsers(data) {
+        return xhr({
+            method: 'post',
+            url: '/userManager/deleteGroupUsers',
+            params: data
+        })
+    }
+
     getCompanyNonReviewUsers(data) {
         return xhr({
             method: 'post',

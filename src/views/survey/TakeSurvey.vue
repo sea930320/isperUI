@@ -162,6 +162,8 @@ export default {
             bq.titleArray = titleArray;
           });
           this.survey = data;
+          this.survey.start_time = this.$moment.utc(data.start_time).local().format('YYYY-MM-DD HH:mm:ss')
+          this.survey.end_time = this.$moment.utc(data.end_time).local().format('YYYY-MM-DD HH:mm:ss')
           this.$emit("data-ready");
         })
         .catch(() => {

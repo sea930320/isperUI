@@ -378,7 +378,14 @@
         </table>
       </div>
     </b-modal>
-    <b-modal size="md" hide-footer centered id="teamBusinessView" ref="teamBusinessView" title="团队成员">
+    <b-modal
+      size="md"
+      hide-footer
+      centered
+      id="teamBusinessView"
+      ref="teamBusinessView"
+      title="团队成员"
+    >
       <div class="modalContainer" v-if="selectedRow">
         <table class="table b-table table-borderless table-sm mt-3">
           <thead role="rowgroup">
@@ -587,9 +594,11 @@ export default {
             item.teacherId = "";
             item.teachers.forEach(element => {
               if (item.teacherId == "") {
-                item.teacherId = element.teacher_id;
+                item.teacherId =
+                  element.name + "-" + element.teacher_id;
               } else {
-                item.teacherId += ", " + element.teacher_id;
+                item.teacherId +=
+                  ", " + element.name + "-" + element.teacher_id;
               }
             });
             return item;

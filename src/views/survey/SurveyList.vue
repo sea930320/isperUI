@@ -149,6 +149,8 @@ export default {
     },
     isActivity(survey) {
       if (survey.is_ended) return 1;
+      survey.start_time = this.$moment.utc(survey.start_time).local().format('YYYY-MM-DD HH:mm:ss')
+      survey.end_time = this.$moment.utc(survey.end_time).local().format('YYYY-MM-DD HH:mm:ss')
       var startDate = new Date(survey.start_time),
         endDate = new Date(survey.end_time);
       var moment = this.$moment();

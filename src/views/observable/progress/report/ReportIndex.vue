@@ -231,13 +231,11 @@
 import businessService from "@/services/businessService";
 import { mapState } from "vuex";
 import { BulmaAccordion, BulmaAccordionItem } from "vue-bulma-accordion";
-import BFormTextarea from "bootstrap-vue/src/components/form-textarea/form-textarea";
 import { openFile } from "@/utils/previewFile";
 import { docUsage } from "@/filters/fun";
 
 export default {
   components: {
-    BFormTextarea,
     BulmaAccordion,
     BulmaAccordionItem,
   },

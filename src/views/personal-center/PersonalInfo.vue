@@ -84,6 +84,24 @@
       >
         <b-form-input type="text" v-model="user.manager_info.part_name" name="part_name" disabled />
       </b-form-group>
+      <b-form-group
+        id="input-group-10"
+        label-cols="4"
+        label-cols-lg="2"
+        label="事务类型"
+        label-for="office_types"
+        v-if="[4,8 ].includes(user.role)"
+      >
+        <vue-tags-input
+          v-model="tag"
+          :tags="tags"
+          :autocomplete-items="filteredTypes"
+          :add-only-from-autocomplete="true"
+          :autocomplete-min-length="0"
+          @tags-changed="newTags => tags = newTags"
+          placeholder="添加标签"
+        />
+      </b-form-group>
       <b-button class="mr-2" type="submit" variant="primary" :disabled="!validate">修改</b-button>
       <b-button type="button" @click="resetInfo">取消</b-button>
     </b-form>
@@ -110,17 +128,25 @@
 import { mapState, mapActions } from "vuex";
 import ImageUpload from "vue-image-crop-upload";
 import accountService from "@/services/accountService";
+import GroupService from "@/services/groupService";
 import { STORAGE_KEY_USER } from "@/store/storageKey";
 import PersonalCenterTab from "@/components/personal-center/PersonalCenterTab";
 import Loading from "@/components/loading/Loading";
+import VueTagsInput from "@johmun/vue-tags-input";
 
 export default {
   name: "personal-info",
-  components: { ImageUpload, PersonalCenterTab, Loading },
+  components: { ImageUpload, PersonalCenterTab, Loading, VueTagsInput },
   data() {
     return {
+      tag: "",
+      tags: [],
+      officeTypes: [],
+      autocompleteItems: [],
       rootPath: process.env.VUE_APP_ENDPOINT,
       apiRootPath: process.env.VUE_APP_API_ENDPOINT,
+
+      editInstructor: false,
       user: {},
       avatarOption: {
         show: false,
@@ -137,6 +163,11 @@ export default {
   },
   computed: {
     ...mapState(["userInfo"]),
+    filteredTypes() {
+      return this.autocompleteItems.filter(i => {
+        return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
+      });
+    },
     validate() {
       if (!this.verificationCode && this.user.phone != this.userInfo.phone)
         return false;
@@ -154,18 +185,43 @@ export default {
   created() {
     this.$nextTick(() => {
       this.user = { ...this.userInfo };
+      this.tags = this.user.office_items.map(item => {
+        return { text: item.name };
+      });
+      this.getInstructorItemList();
     });
   },
   methods: {
     ...mapActions({
       loginAction: "login"
     }),
+    getInstructorItemList() {
+      this.run();
+      GroupService.getInstructorItemList({})
+        .then(res => {
+          this.officeTypes = res.results;
+          this.autocompleteItems = res.results.map(item => {
+            return { text: item.text };
+          });
+          this.$emit("data-ready");
+        })
+        .catch(() => {
+          this.$emit("data-failed");
+        });
+    },
     updateInfo() {
       if (!this.validate) {
         return;
       }
       this.run();
       let user = Object.assign({}, this.user);
+      if ([4, 8].includes(this.user.role)) {
+        let selectedTexts = this.tags.map(item => item.text);
+        let tagsIndexs = this.officeTypes
+          .filter(item => selectedTexts.includes(item.text))
+          .map(i => i.id);
+        user.tagsIndexs = JSON.stringify(tagsIndexs);
+      }
       user.verification_code = this.verificationCode;
       accountService
         .updateAccount(user)
