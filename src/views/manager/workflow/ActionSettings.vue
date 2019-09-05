@@ -184,7 +184,7 @@ export default {
       Promise.all(apis)
         .then(response => {
           this.workflow = response[0];
-          this.nodes = response[0].nodes;
+          this.nodes = response[0].nodes.filter(x=>x.process.image !== null);
           this.roleActionAssign = response[1];
           this.actions = this.roleActionAssign.flow_actions;
           this.nodeActionRoles = [];

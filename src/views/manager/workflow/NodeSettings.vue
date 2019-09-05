@@ -128,7 +128,7 @@ export default {
         .then(response => {
           this.flowProcess = response[0];
           this.workflow = response[1];
-          this.flowNodes = response[1].nodes;
+          this.flowNodes = response[1].nodes.filter(x=>!x.is_parallel_start_node);
           this.setFlowStep(response[1].step);
           this.$emit("data-ready");
         })
