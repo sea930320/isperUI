@@ -130,25 +130,25 @@
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="updatePartsModal1(row.item.part_id)"
+                                            @click="updatePartsModal2(row.item.part_id)"
                                     >修改</b-button>
                                     <b-button
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="changeArrayUp1(row.item.part_id)"
+                                            @click="changeArrayUp2(row.item.part_id)"
                                     >上移</b-button>
                                     <b-button
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="changeArrayDown1(row.item.part_id)"
+                                            @click="changeArrayDown2(row.item.part_id)"
                                     >下移</b-button>
                                     <b-button
                                             :size="template_size"
                                             class="styledBtn"
                                             variant="outline-primary"
-                                            @click="deletePartsModal1(row.item.part_id)"
+                                            @click="deletePartsModal2(row.item.part_id)"
                                     >刪除</b-button>
                                 </b-button-group>
                             </b-col>
@@ -770,8 +770,8 @@
                 selected:'1',
                 add_modal_selected:'1',
                 options: [
-                    { text: '章节条模式', value: '1' },
-                    { text: '条模式', value: '2' },
+                    { text: '章节条模式', value: 1 },
+                    { text: '条模式', value: 2 },
                 ],
                 add_modal_options: [
                     { text: '增加章', value: '1' },
@@ -952,9 +952,17 @@
         mounted() {},
         methods: {
             gadget_sort(data){
-                data.sort(function(a, b) {
-                    return a.chapter_number - b.chapter_number  ||  a.section_number - b.section_number ||  a.part_number - b.part_number;
-                });
+                if (this.selected == 1){
+                    data.sort(function(a, b) {
+                        return a.chapter_number - b.chapter_number  ||  a.section_number - b.section_number ||  a.part_number - b.part_number;
+                    });
+                }
+                if (this.selected == 2 ){
+                    data.sort(function(a, b) {
+                        return a.part_number - b.part_number;
+                    });
+                }
+
                 return true
             },
             gadget_sort_comparison(){
@@ -968,13 +976,14 @@
                 BillService.getBillNameOnly({
                     business_id: this.$route.params.bid,
                     node_id: this.$route.params.nid,
-                }).then(data => {
-                    if (data.bill_name == ""){
+                }).then(data1 => {
+                    if (data1.bill_name == ""){
                         this.setting_show_mode_modal_show = true;
                         this.$emit("data-ready");
                         return
                     }
                     else {
+                        this.selected = parseInt(data1.edit_mode);
                         BillService.getBillName({
                             business_id: this.$route.params.bid,
                             node_id: this.$route.params.nid,
@@ -983,21 +992,21 @@
                             .then(data => {
                                 this.bill_name = data.bill_name;
                                 this.bill_data = data.bill_data;
-//                        this.bill_data_origin = data.bill_data;
-                                var checkChapter=[];
-                                this.chapterOptions = [];
-                                for (let i =0;i<this.bill_data.length;i++){
-                                    if (!(checkChapter.includes(this.bill_data[i].chapter_number))){
-                                        checkChapter.push(this.bill_data[i].chapter_number);
-                                        this.chapterOptions.push({
-                                            "text":this.bill_data[i].chapter_number,
-                                            "value":this.bill_data[i].chapter_title
-                                        });
+                                if (this.selected == 1){
+                                    var checkChapter=[];
+                                    this.chapterOptions = [];
+                                    for (let i =0;i<this.bill_data.length;i++){
+                                        if (!(checkChapter.includes(this.bill_data[i].chapter_number))){
+                                            checkChapter.push(this.bill_data[i].chapter_number);
+                                            this.chapterOptions.push({
+                                                "text":this.bill_data[i].chapter_number,
+                                                "value":this.bill_data[i].chapter_title
+                                            });
+                                        }
                                     }
                                 }
                                 this.partSelected="";
                                 this.partSelectedName="";
-
                                 this.$emit("data-ready");
                             })
                             .catch(() => {
@@ -1009,11 +1018,7 @@
             },
 
             updatePartsModal1(part_id){
-                if (this.selected ==1){
-                    this.$refs.selectableTable.clearSelected();
-                } else {
-                    this.$refs.selectableTable1.clearSelected();
-                }
+                this.$refs.selectableTable.clearSelected();
                 this.selected_data = [];
               for (let i=0; i<this.bill_data.length;i++){
                   if (this.bill_data[i].part_id == part_id){
@@ -1030,16 +1035,40 @@
                   }
               }
             },
-            updateParts1(){
+            updatePartsModal2(part_id){
+                this.$refs.selectableTable1.clearSelected();
+                this.selected_data = [];
                 for (let i=0; i<this.bill_data.length;i++){
-                    if (this.bill_data[i].chapter_number == this.edit_modal_data.chapter_number){
-                        this.bill_data[i].chapter_title = this.edit_modal_data.chapter_title;
-                        if (this.bill_data[i].section_number == this.edit_modal_data.section_number){
-                            this.bill_data[i].section_title = this.edit_modal_data.section_title;
-                            if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
-                                this.bill_data[i].part_title = this.edit_modal_data.part_title;
-                                this.bill_data[i].part_content = this.edit_modal_data.part_content;
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                        this.edit_modal_data.part_reason = this.bill_data[i].part_reason;
+                        this.edit_full_modal_show = true;
+                    }
+                }
+            },
+            updateParts1(){
+                if (this.selected == 1){
+                    for (let i=0; i<this.bill_data.length;i++){
+                        if (this.bill_data[i].chapter_number == this.edit_modal_data.chapter_number){
+                            this.bill_data[i].chapter_title = this.edit_modal_data.chapter_title;
+                            if (this.bill_data[i].section_number == this.edit_modal_data.section_number){
+                                this.bill_data[i].section_title = this.edit_modal_data.section_title;
+                                if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
+                                    this.bill_data[i].part_title = this.edit_modal_data.part_title;
+                                    this.bill_data[i].part_content = this.edit_modal_data.part_content;
+                                }
                             }
+                        }
+                    }
+                }
+                if (this.selected == 2){
+                    for (let i=0; i<this.bill_data.length;i++) {
+                        if (this.bill_data[i].part_id == this.edit_modal_data.part_id) {
+                            this.bill_data[i].part_title = this.edit_modal_data.part_title;
+                            this.bill_data[i].part_content = this.edit_modal_data.part_content;
                         }
                     }
                 }
@@ -1050,12 +1079,8 @@
             },
 
             deletePartsModal1(part_id){
+                this.$refs.selectableTable.clearSelected();
                 for (let i=0; i<this.bill_data.length;i++){
-                    if (this.selected ==1){
-                        this.$refs.selectableTable.clearSelected();
-                    } else {
-                        this.$refs.selectableTable1.clearSelected();
-                    }
                     this.selected_data = [];
                     if (this.bill_data[i].part_id == part_id){
                         this.edit_modal_data.part_id = this.bill_data[i].part_id;
@@ -1063,6 +1088,20 @@
                         this.edit_modal_data.chapter_number = this.bill_data[i].chapter_number;
                         this.edit_modal_data.section_title = this.bill_data[i].section_title;
                         this.edit_modal_data.section_number = this.bill_data[i].section_number;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                        this.edit_modal_data.part_reason = this.bill_data[i].part_reason;
+                        this.delete_modal_show = true;
+                    }
+                }
+            },
+            deletePartsModal2(part_id){
+                this.$refs.selectableTable1.clearSelected();
+                for (let i=0; i<this.bill_data.length;i++){
+                    this.selected_data = [];
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
                         this.edit_modal_data.part_title = this.bill_data[i].part_title;
                         this.edit_modal_data.part_number = this.bill_data[i].part_number;
                         this.edit_modal_data.part_content = this.bill_data[i].part_content;
@@ -1127,11 +1166,7 @@
             },
 
             changeArrayUp1(part_id){
-                if (this.selected ==1){
-                    this.$refs.selectableTable.clearSelected();
-                } else {
-                    this.$refs.selectableTable1.clearSelected();
-                }
+                this.$refs.selectableTable.clearSelected();
                 this.selected_data = [];
                 for (let i=0; i<this.bill_data.length;i++){
                     if (this.bill_data[i].part_id == part_id){
@@ -1188,11 +1223,7 @@
                 return true
             },
             changeArrayDown1(part_id){
-                if (this.selected ==1){
-                    this.$refs.selectableTable.clearSelected();
-                } else {
-                    this.$refs.selectableTable1.clearSelected();
-                }
+                this.$refs.selectableTable.clearSelected();
                 this.selected_data = [];
                 for (let i=0; i<this.bill_data.length;i++){
                     if (this.bill_data[i].part_id == part_id){
@@ -1243,6 +1274,90 @@
                                 this.bill_data[l].added_flag = "1";
                             }
                         }
+                    }
+                }
+                this.gadget_sort(this.bill_data);
+                this.edit_modal_data = {};
+                return true
+            },
+
+            changeArrayUp2(part_id){
+                this.$refs.selectableTable1.clearSelected();
+                this.selected_data = [];
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                    }
+                }
+                let index = 0;
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
+                        index = i;
+                        break
+                    }
+                }
+                if (parseInt(this.bill_data[index].part_number) == 1){
+                    this.$toasted.error("不能上移");
+                    return false;
+                }
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (this.bill_data[j].part_id != this.edit_modal_data.part_id){
+                        if ((parseInt(this.bill_data[j].part_number) + 1) == parseInt(this.edit_modal_data.part_number)){
+                            this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                            this.bill_data[j].added_flag = "1";
+                        }
+                    }
+                }
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (this.bill_data[j].part_id == this.edit_modal_data.part_id){
+                        this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) - 1;
+                        this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
+                        this.bill_data[j].added_flag = "1";
+                    }
+                }
+                this.edit_modal_data = {};
+                this.gadget_sort(this.bill_data);
+                return true
+            },
+            changeArrayDown2(part_id){
+                this.$refs.selectableTable1.clearSelected();
+                this.selected_data = [];
+                for (let i=0; i<this.bill_data.length;i++){
+                    if (this.bill_data[i].part_id == part_id){
+                        this.edit_modal_data.part_id = this.bill_data[i].part_id;
+                        this.edit_modal_data.part_title = this.bill_data[i].part_title;
+                        this.edit_modal_data.part_number = this.bill_data[i].part_number;
+                        this.edit_modal_data.part_content = this.bill_data[i].part_content;
+                    }
+                }
+                let checkDownTmp = 0;
+                for (let j=0; j<this.bill_data.length;j++){
+                    if (parseInt(this.bill_data[j].part_number) > parseInt(this.edit_modal_data.part_number)){
+                        checkDownTmp = checkDownTmp + 1;
+                        break;
+                    }
+                }
+                if (checkDownTmp == 0){
+                    this.$toasted.error("不能下移");
+                    return false;
+                }
+
+                for (let k=0; k<this.bill_data.length;k++){
+                    if (this.bill_data[k].part_id != this.edit_modal_data.part_id){
+                        if ((parseInt(this.bill_data[k].part_number) - 1) == parseInt(this.edit_modal_data.part_number)){
+                            this.bill_data[k].part_number = parseInt(this.edit_modal_data.part_number);
+                            this.bill_data[k].added_flag = "1";
+                        }
+                    }
+                }
+                for (let l=0; l<this.bill_data.length;l++){
+                    if (this.bill_data[l].part_id == this.edit_modal_data.part_id){
+                        this.edit_modal_data.part_number = parseInt(this.edit_modal_data.part_number) + 1;
+                        this.bill_data[l].part_number = parseInt(this.edit_modal_data.part_number);
+                        this.bill_data[l].added_flag = "1";
                     }
                 }
                 this.gadget_sort(this.bill_data);
@@ -1652,37 +1767,39 @@
                 }
             },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             partSelectedFunc(items){
                 this.selected_data = items[0];
                 return true
             },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             deletePartDoc(doc_id){
