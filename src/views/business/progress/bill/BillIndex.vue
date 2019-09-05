@@ -602,7 +602,7 @@
             <div class="modal-msg">
                 <p class="message">您能插入法案:</p>
             </div>
-            <b-container fluid>
+            <b-container v-if="selected==1" fluid>
                 <b-form @submit.stop.prevent="insertPart">
                     <b-row>
                         <b-col sm="6">
@@ -656,6 +656,48 @@
                                 <b-form-textarea
                                         required
                                         id="insertTextarea2"
+                                        v-model="insertPartReason"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-button class="float-center" type="submit" variant="primary">确 定
+                    </b-button>
+                </b-form>
+            </b-container>
+            <b-container v-if="selected==2" fluid>
+                <b-form @submit.stop.prevent="insertPart">
+                    <b-row>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="条文序号:" label-for="insertPartMode5">
+                                <b-form-input id="insertPartMode5" disabled v-model="selected_part_number"></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                        <b-col sm="6">
+                            <b-form-group label-cols-sm="4" label="条文名称:" label-for="insertPartMode6">
+                                <b-form-input id="insertPartMode6" required v-model="insertPartTitle" ></b-form-input>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col sm="12">
+                            <b-form-group label="条文正文:" label-for="insertTextareaMode1">
+                                <b-form-textarea
+                                        required
+                                        id="insertTextareaMode1"
+                                        v-model="insertPartContent"
+                                        placeholder="Enter something..."
+                                        rows="6"
+                                        max-rows="12"
+                                ></b-form-textarea>
+                            </b-form-group>
+                            <b-form-group label="制定理由:" label-for="insertTextareaMode2">
+                                <b-form-textarea
+                                        required
+                                        id="insertTextareaMode2"
                                         v-model="insertPartReason"
                                         placeholder="Enter something..."
                                         rows="6"
@@ -1409,12 +1451,14 @@
                     }
                 }
                 let index = 0;
+                console.log(this.edit_modal_data);
                 for (let i=0; i<this.bill_data.length;i++){
                     if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
                         index = i;
                         break
                     }
                 }
+                console.log(index)
                 if (parseInt(this.bill_data[index].part_number) == 1){
                     this.$toasted.error("不能上移");
                     return false;
@@ -1422,6 +1466,7 @@
                 for (let j=0; j<this.bill_data.length;j++){
                     if (this.bill_data[j].part_id != this.edit_modal_data.part_id){
                         if ((parseInt(this.bill_data[j].part_number) + 1) == parseInt(this.edit_modal_data.part_number)){
+                            console.log(this.bill_data[j])
                             this.bill_data[j].part_number = parseInt(this.edit_modal_data.part_number);
                             this.bill_data[j].added_flag = "1";
                         }
@@ -1495,13 +1540,13 @@
                 let blankNumber_section = 1;
                 let blankNumber_part = 1;
                 for (let j=0; j<this.bill_data.length;j++){
-                    if (parseInt(this.bill_data[j].part_id)>blankID_part){
+                    if (parseInt(this.bill_data[j].part_id)>=blankID_part){
                         blankID_part = parseInt(this.bill_data[j].part_id);
                     }
-                    if (parseInt(this.bill_data[j].section_id)>blankID_section){
+                    if (parseInt(this.bill_data[j].section_id)>=blankID_section){
                         blankID_section = parseInt(this.bill_data[j].section_id);
                     }
-                    if (parseInt(this.bill_data[j].chapter_id)>blankID_chapter){
+                    if (parseInt(this.bill_data[j].chapter_id)>=blankID_chapter){
                         blankID_chapter = parseInt(this.bill_data[j].chapter_id);
                     }
                     if (parseInt(this.bill_data[j].chapter_number)>blankNumber_chapter){
@@ -1549,10 +1594,10 @@
                 let addedChapterNumber = 0;
                 let addedChapterID = 0;
                 for (let j=0; j<this.bill_data.length;j++){
-                    if (parseInt(this.bill_data[j].part_id)>blankID_part){
+                    if (parseInt(this.bill_data[j].part_id)>=blankID_part){
                         blankID_part = parseInt(this.bill_data[j].part_id);
                     }
-                    if (parseInt(this.bill_data[j].section_id)>blankID_section){
+                    if (parseInt(this.bill_data[j].section_id)>=blankID_section){
                         blankID_section = parseInt(this.bill_data[j].section_id);
                     }
 
@@ -1592,7 +1637,7 @@
                 if (this.selected == 1){
                     let blankID = 0;
                     for (let j=0; j<this.bill_data.length;j++){
-                        if (parseInt(this.bill_data[j].part_id)>blankID){
+                        if (parseInt(this.bill_data[j].part_id)>=blankID){
                             blankID = parseInt(this.bill_data[j].part_id) + 1;
                         }
                     }
@@ -1623,7 +1668,7 @@
                 if (this.selected == 2){
                     let blankID = 0;
                     for (let j=0; j<this.bill_data.length;j++){
-                        if (parseInt(this.bill_data[j].part_id)>blankID){
+                        if (parseInt(this.bill_data[j].part_id)>=blankID){
                             blankID = parseInt(this.bill_data[j].part_id) + 1;
                         }
                     }
@@ -1699,15 +1744,15 @@
                 }
             },
             insertPart(){
+                if(this.selected == 1) {
                     let blankID = 0;
-
-                    for (let j=0; j<this.bill_data.length;j++){
-                        if (parseInt(this.bill_data[j].part_id)>blankID){
+                    for (let j = 0; j < this.bill_data.length; j++) {
+                        if (parseInt(this.bill_data[j].part_id) >= blankID) {
                             blankID = parseInt(this.bill_data[j].part_id) + 1;
                         }
                     }
 
-                    for (let i=0; i<this.bill_data.length;i++) {
+                    for (let i = 0; i < this.bill_data.length; i++) {
                         if (this.bill_data[i].chapter_title == this.selected_data.chapter_title) {
                             if (this.bill_data[i].section_title == this.selected_data.section_title) {
                                 if (parseInt(this.bill_data[i].part_number) >= parseInt(this.selected_data.part_number)) {
@@ -1719,10 +1764,10 @@
                     }
 
                     let insert_part = {};
-                    for (let i=0; i<this.bill_data.length;i++){
-                        if (this.bill_data[i].chapter_title == this.selected_data.chapter_title){
-                            if (this.bill_data[i].section_title == this.selected_data.section_title){
-                                if (this.bill_data[i].part_title == this.selected_data.part_title){
+                    for (let i = 0; i < this.bill_data.length; i++) {
+                        if (this.bill_data[i].chapter_title == this.selected_data.chapter_title) {
+                            if (this.bill_data[i].section_title == this.selected_data.section_title) {
+                                if (this.bill_data[i].part_title == this.selected_data.part_title) {
                                     insert_part.part_id = blankID;
                                     insert_part.chapter_id = this.bill_data[i].chapter_id;
                                     insert_part.chapter_number = this.bill_data[i].chapter_number;
@@ -1743,9 +1788,38 @@
                         }
                     }
                     this.bill_data.push(insert_part);
+                }
 
-                    this.gadget_sort(this.bill_data);
-                    this.part_insert_modal_show = false;
+                if (this.selected == 2){
+                    let blankID = 0;
+                    for (let j = 0; j < this.bill_data.length; j++) {
+                        if (parseInt(this.bill_data[j].part_id) >= blankID) {
+                            blankID = parseInt(this.bill_data[j].part_id) + 1;
+                        }
+                    }
+                    for (let i = 0; i < this.bill_data.length; i++) {
+                        if (parseInt(this.bill_data[i].part_number) >= parseInt(this.selected_data.part_number)) {
+                            this.bill_data[i].part_number = parseInt(this.bill_data[i].part_number) + 1;
+                            this.bill_data[i].added_flag = "1";
+                        }
+                    }
+
+                    let insert_part = {};
+                    for (let i = 0; i < this.bill_data.length; i++) {
+                        if (this.bill_data[i].part_title == this.selected_data.part_title) {
+                            insert_part.part_id = blankID;
+                            insert_part.part_number = parseInt(this.selected_data.part_number) - 1;
+                            insert_part.part_title = this.insertPartTitle;
+                            insert_part.part_content = this.insertPartContent;
+                            insert_part.part_reason = this.insertPartReason;
+                            insert_part.added_flag = "2"; // inserted
+                            break
+                        }
+                    }
+                    this.bill_data.push(insert_part);
+                }
+                this.gadget_sort(this.bill_data);
+                this.part_insert_modal_show = false;
                 return true
             },
             insertModalClear(){
