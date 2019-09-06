@@ -3,7 +3,7 @@
     <div v-if="permission">
       <div class="content-item-center distribute-top-title">
         <h2 class="mb-0" v-if="!currentRoleAllocation.can_terminate">来自 {{sender_name}} 的交付文件</h2>
-        <h2 class="mb-0" v-else>Sign and Distribute</h2>
+        <h2 class="mb-0" v-else>接收情况</h2>
       </div>
 
       <div class="distribute-table-content content-item-center">
@@ -37,8 +37,8 @@
             <table class="table table-green doc-list-table">
             <thead>
               <tr>
-                <th style="width: 85%">Name</th>
-                <th style="width: 15%">Status</th>
+                <th style="width: 85%">接收者名称</th>
+                <th style="width: 15%">状态</th>
               </tr>
             </thead>
             <tbody>
@@ -47,9 +47,9 @@
                   {{user.user_name}}
                 </td>
                 <td>
-                  <label v-if="user.status == 'signed'">Signed</label>
-                  <label v-else-if="user.status == 'reject'">Rejected</label>
-                  <label v-else-if="user.status == 'review'">In Review</label>
+                  <label v-if="user.status == 'signed'">签收</label>
+                  <label v-else-if="user.status == 'reject'">拒接</label>
+                  <label v-else-if="user.status == 'review'">在看</label>
                 </td>
               </tr>
             </tbody>
