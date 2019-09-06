@@ -79,14 +79,16 @@
     <div class="display-bottom-button">
       <b-button variant="primary" @click="onNext">下一頁</b-button>
     </div>
+    <siderUserBar></siderUserBar>
   </div>
 </template>
 <script type="text/ecmascript-6">
 import businessService from "@/services/businessService";
 import uploadModal from "@/components/common/uploadModal";
+import siderUserBar from "@/components/business/common/SiderUserBar";
 export default {
   name: "display_step1",
-  components: { uploadModal },
+  components: { uploadModal, siderUserBar },
   sockets: {
     connect() {},
 

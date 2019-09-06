@@ -94,15 +94,17 @@
     <div class="distribute-bottom-button">
       <b-button variant="primary" @click="onNext">下一頁</b-button>
     </div>
+    <siderUserBar></siderUserBar>
   </div>
 </template>
 <script type="text/ecmascript-6">
 import businessService from "@/services/businessService";
 import uploadModal from "@/components/common/uploadModal";
 import VueTagsInput from "@johmun/vue-tags-input";
+import siderUserBar from "@/components/business/common/SiderUserBar";
 export default {
   name: "distribute_step1",
-  components: { uploadModal, VueTagsInput },
+  components: { uploadModal, VueTagsInput, siderUserBar },
   sockets: {
     connect() {},
 

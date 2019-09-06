@@ -1,7 +1,7 @@
 <template>
   <div class="display-main-box">
     <div class="content-item-center display-top-title">
-      <h2 class="mb-0">来自 {{sender_name}} 文件展示</h2>
+      <h2 class="mb-0">来自 {{sender_name}} 的交付文件</h2>
     </div>
 
     <div class="display-table-content content-item-center">
