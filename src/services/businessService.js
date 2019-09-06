@@ -509,6 +509,14 @@ class BusinessService {
         })
     }
 
+    getBusinessDocTeamStatus1(data) {
+        return xhr({
+            method: 'get',
+            url: '/business/doc/team/status1',
+            params: data
+        })
+    }
+
     createBusinessDocTeamStatus(data) {
         return xhr({
             method: 'post',
