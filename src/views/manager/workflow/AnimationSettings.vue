@@ -61,8 +61,8 @@
                                 v-for="(nodeActionRole, index) in curNodeActionRoles"
                                 :key="index"
                             >
-                                <td>{{nodeActionRole.role_type}}</td>
-                                <td>{{nodeActionRole.role_name}}</td>
+                                <td class="text-left">{{nodeActionRole.role_type}}</td>
+                                <td class="text-left">{{nodeActionRole.role_name}}</td>
                                 <td>
                                     <b-form-checkbox
                                         v-model="nodeActionRole.is_use"

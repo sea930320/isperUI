@@ -3,7 +3,7 @@
         <loading v-if="isRunning"></loading>
         <b-modal
             v-model="visible"
-            title="对应的程序模块"
+            title="配置助理"
             centered
             size="xl"
             @cancel="cancelHandler"

@@ -15,7 +15,7 @@
             </b-tab>
 <!--            <b-tab title="素 材 设 置" v-else disabled>-->
 <!--            </b-tab>-->
-            <b-tab title="跳 转 设 置" v-if="openTab">
+            <b-tab title="跳转与嵌套设置" v-if="openTab">
                 <CreateProjectWizard4 v-model="tabIndex"/>
             </b-tab>
 <!--            <b-tab title="跳 转 设 置" v-else disabled>-->

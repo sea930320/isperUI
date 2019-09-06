@@ -213,7 +213,7 @@
                         v-if="isSuperFlag && row.item.protected == 0"
                         @click="lockWorkflowClick(row.item)"
                     >
-                        <icon name="lock"></icon>
+                        <icon name="lock-open"></icon>
                     </a>
                     <a
                         class="mx-1"
@@ -221,7 +221,7 @@
                         v-if="isSuperFlag && row.item.protected == 1"
                         @click="unlockWorkflowClick(row.item)"
                     >
-                        <icon name="lock-open"></icon>
+                        <icon name="lock"></icon>
                     </a>
                 </template>
             </b-table>

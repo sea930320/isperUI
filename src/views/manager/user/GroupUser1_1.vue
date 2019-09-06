@@ -114,7 +114,6 @@ export default {
         id: null,
         password: ""
       },
-      selected: [],
       editItem: {
         id: null,
         name: "",
@@ -156,7 +155,7 @@ export default {
       },
       queryParam: {
         page: 1,
-        size: 5,
+        size: 10,
         group_id: null
       },
       queryDebounceParam: {

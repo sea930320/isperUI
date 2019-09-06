@@ -15,7 +15,7 @@
           </b-tab>
         </b-tabs>
       </b-tab>
-      <b-tab title="判断与选择">
+      <b-tab title="判断与选择" v-if="has_selectDecide_node">
         <select-decide-settings></select-decide-settings>
       </b-tab>
     </b-tabs>
@@ -44,6 +44,7 @@ export default {
     return {
       nodes: [],
       has_animation_node: false,
+      has_selectDecide_node: false,
       is_loaded: false
     };
   },
@@ -69,7 +70,10 @@ export default {
         .then(response => {
           this.nodes = response.nodes;
           this.has_animation_node = _.some(this.nodes, node => {
-            return node.process && node.process.type == 1;
+            return node.process && node.process.type === 1;
+          });
+          this.has_selectDecide_node = _.some(this.nodes, node => {
+            return node.process && node.process.type === 12;
           });
           this.is_loaded = true;
           this.$emit("data-ready");

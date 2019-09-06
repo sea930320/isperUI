@@ -144,7 +144,7 @@
                     <div v-show="!metaInfo.has_poll" class="poll-options">
                         <h3 class="poll-options-hd mt-5">投票主题 : {{resultData.title}}</h3>
                         <h5 class="poll-options-hd m-4">
-                            投票结果 : {{(resultData.share === 0)?'公开':'不公开'}}&emsp;&emsp;投票方式  : {{(resultData.share === 0)?'记名投票' : '无记名投票'}}
+                            投票结果 : {{(resultData.share === 0)?'公开':'不公开'}}&emsp;&emsp;投票方式  : {{(resultData.method === 0)?'记名投票' : '无记名投票'}}
                         </h5>
                         <div class="poll-options-btn-group">
                             <a href="javascript:" class="poll-options-btn"
@@ -279,6 +279,12 @@
                     })
                     .then(data => {
                         this.status = data.status;
+                        if (this.status === 3)
+                            this.resultData = {
+                                title: data.data.title,
+                                share: data.data.share,
+                                method: data.data.method,
+                            };
                         this.waitMsg = data.data;
                         this.$emit("data-ready");
                     })

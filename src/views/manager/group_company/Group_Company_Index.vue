@@ -43,7 +43,7 @@
                                                   @click="()=>{newInstructor = true; editInstructor = false; new_Instructor = {name:'', password:null}}">
                                             新增指导者
                                         </b-button>
-                                        <b-table :items="row.item.instructors" small hover :fields="instructorColumns"
+                                        <b-table :items="queryInstructorList" small hover :fields="instructorColumns"
                                                  class="col-10 offset-1" head-variant style="fontSize: 18px">
                                             <template slot="id" slot-scope="row">{{ row.item.id }}</template>
                                             <template slot="name" slot-scope="row">
@@ -63,6 +63,15 @@
                                                 </b-button>
                                             </template>
                                         </b-table>
+                                        <b-row class="justify-content-center row-margin-tweak">
+                                            <b-pagination
+                                                    :size="template_size"
+                                                    :total-rows="row.item.instructors.length"
+                                                    :per-page="queryParam.size"
+                                                    limit="5"
+                                                    v-model="queryParam.page"
+                                            ></b-pagination>
+                                        </b-row>
                                         <b-modal hide-footer centered  v-model="newInstructor" title="新增指导者">
                                             <div>
                                                 <b-form @submit="newInstructorSave" class="container pt-3">
@@ -218,7 +227,7 @@ export default {
             },
             queryParam: {
                 page: 1,
-                size: 15
+                size: 10
             },
             queryDebounceParam: {
                 search: ""
@@ -240,19 +249,22 @@ export default {
         ...mapState(["userInfo"]),
         filteredItems() { return this.autocompleteItems.filter(i => {
             return i.text.toLowerCase().indexOf(this.tag.toLowerCase()) !== -1;
-        })}
+        })},
+        queryInstructorList() {
+            return this.allgroup.list[0].instructors.slice(this.queryParam.size * (this.queryParam.page - 1), this.queryParam.size * this.queryParam.page)
+        },
     },
     watch: {
         queryParam: {
             handler() {
-                this.queryGroupList();
+                this.queryInstructorList();
             },
             deep: true
         },
         queryDebounceParam: {
             deep: true,
             handler: _.debounce(function () {
-                this.queryGroupList();
+                this.queryInstructorList();
             }, 500)
         },
         "new_Instructor.name": {
@@ -273,7 +285,7 @@ export default {
         queryGroupList() {
             this.run();
             GroupService
-                .getOwnGroup({id: this.userInfo.id, ...this.queryParam, ...this.queryDebounceParam})
+                .getOwnGroup({id: this.userInfo.id})
                 .then(data => {
                     data.results.forEach(item => {
                         if (item.checked === undefined) {
