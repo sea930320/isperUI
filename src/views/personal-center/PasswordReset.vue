@@ -96,7 +96,7 @@ export default {
         ...mapState(["userInfo"]),
         maskedPhone() {
             if (!this.userInfo.phone) {
-                return "You need to input valid phone number";
+                return "请先去个人信息中绑定手机号";
             }
             var x = this.userInfo.phone
                 .replace(/\D/g, "")

@@ -379,7 +379,7 @@ export default {
       Promise.all(apis)
         .then(response => {
           this.workflow = response[0];
-          this.nodes = response[0].nodes;
+          this.nodes = response[0].nodes.filter(x=>x.process !== null);
           this.setFlowStep(response[0].step);
           this.roles = response[1].roles;
           this.jobTypes = response[1].job_types;

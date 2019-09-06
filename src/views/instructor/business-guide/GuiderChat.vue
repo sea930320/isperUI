@@ -6,9 +6,9 @@
                     <ul>
                         <template v-for="(item, index) in messages">
                             <li
-                                    :key="index"
-                                    class="chat-bubble chat-mine"
-                                    v-if="item.sender !== userInfo.id"
+                                :key="index"
+                                class="chat-bubble chat-mine"
+                                v-if="item.sender !== userInfo.id"
                             >
                                 <div class="chat-user">
                                     <img src="@/assets/imgIsper/business/avatar1.png"/>
@@ -42,12 +42,12 @@
                     <ul class="p-0 m-1">
                         <li :key="index" class="emoji-item" v-for="(item, index) in emoji.img">
                             <img
-                                    :alt="emoji.code[index]"
-                                    :data="emoji.code[index]"
-                                    :src="require('@/assets/imgIsper/emoji/'+item)"
-                                    @click.stop="selectEmoji(emoji.code[index])"
-                                    height="32"
-                                    width="32"
+                                :alt="emoji.code[index]"
+                                :data="emoji.code[index]"
+                                :src="require('@/assets/imgIsper/emoji/'+item)"
+                                @click.stop="selectEmoji(emoji.code[index])"
+                                height="32"
+                                width="32"
                             />
                         </li>
                     </ul>
@@ -146,7 +146,15 @@
                 }
             });
         },
-        watch: {},
+        watch: {
+            guider: {
+                handler: function() {
+                    this.messages = [];
+                    this.init();
+                },
+                deep: true
+            }
+        },
         methods: {
             init() {
                 businessService

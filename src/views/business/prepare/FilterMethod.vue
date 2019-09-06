@@ -4,19 +4,19 @@
         <div class="cardDiv filter-method-panel p-0">
             <div class="transparent-bg">
                 <div class="filter-method d-flex justify-content-center">
-                    <div class="cardDiv mx-3">
+                    <div class="cardDiv mx-5">
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/company1.png">
                         </div>
                         <b-button variant="outline-dark" to="/business/prepare/prepare1/company">单位</b-button>
                     </div>
-                    <div class="cardDiv mx-3">
+                    <div class="cardDiv mx-5">
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/affair1.png">
                         </div>
                         <b-button variant="outline-dark" to="/business/prepare/prepare1/office">事务</b-button>
                     </div>
-                    <div class="cardDiv mx-3">
+                    <div class="cardDiv mx-5">
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/search1.png">
                         </div>
@@ -67,9 +67,10 @@ export default {
                 -ms-transform: translateX(-50%) translateY(-50%);
                 transform: translateX(-50%) translateY(-50%);
                 .cardDiv {
-                    width: 100px;
-                    height: 100px;
-                    padding-top: 50px;
+                    padding: 30px;
+                    width: 130px;
+                    height: 130px;
+                    padding-top: 65px;
                 }
                 .top-img {
                     position: absolute;

@@ -3,7 +3,7 @@
         <loading v-if="isRunning"></loading>
         <b-modal
             v-model="show"
-            title="角色形象"
+            title="身份形象"
             size="lg"
             ok-title="确定"
             cancel-title="取消"

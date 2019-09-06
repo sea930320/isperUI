@@ -1,5 +1,5 @@
 <template>
-  <modal :visible="show" title="角色形象" size="large" @on-cancel="cancelshow" @on-ok="addFiguresOk">
+  <modal :visible="show" title="身份形象" size="large" @on-cancel="cancelshow" @on-ok="addFiguresOk">
     <div class="select-container row">
       <div class="left col-xs-4">
         <input type="text" class="search-input" v-model="searchKey">
