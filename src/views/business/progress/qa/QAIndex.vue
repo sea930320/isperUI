@@ -137,6 +137,18 @@ export default {
             node_id: this.$route.params.nid
           })
           .then(data => {
+            data.start_time = data.start_time
+              ? this.$moment
+                  .utc(data.start_time)
+                  .local()
+                  .format("YYYY-MM-DD HH:mm:ss")
+              : "";
+            data.end_time = data.end_time
+              ? this.$moment
+                  .utc(data.end_time)
+                  .local()
+                  .format("YYYY-MM-DD HH:mm:ss")
+              : "";
             this.setSurvey(data);
             this.$emit("data-ready");
           })

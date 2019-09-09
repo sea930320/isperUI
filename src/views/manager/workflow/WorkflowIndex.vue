@@ -203,7 +203,7 @@
                         class="mx-1"
                         href="javascript:"
                         @click="deleteWorkflowClick(row.item)"
-                        v-if="isActionAllowed('code_workflow_management', 'code_delete_workflow') && row.item.created_by.id==userInfo.id  && row.item.created_role==userInfo.role || isSuperFlag"
+                        v-if="isActionAllowed('code_workflow_management', 'code_delete_workflow') && row.item.created_by.id==userInfo.id  && row.item.created_role==userInfo.role || isSuperFlag || row.item.new"
                     >
                         <icon name="trash"></icon>
                     </a>
@@ -213,7 +213,7 @@
                         v-if="isSuperFlag && row.item.protected == 0"
                         @click="lockWorkflowClick(row.item)"
                     >
-                        <icon name="lock"></icon>
+                        <icon name="lock-open"></icon>
                     </a>
                     <a
                         class="mx-1"
@@ -221,7 +221,7 @@
                         v-if="isSuperFlag && row.item.protected == 1"
                         @click="unlockWorkflowClick(row.item)"
                     >
-                        <icon name="lock-open"></icon>
+                        <icon name="lock"></icon>
                     </a>
                 </template>
             </b-table>
@@ -943,7 +943,7 @@ export default {
             //     return false;
             // }
             if (workflow.task_label === "") {
-                this.$toasted.error("请输入流程的实验任务标签");
+                this.$toasted.error("请输入流程标签");
                 return false;
             }
             if (workflow.task_label.length > 20) {
@@ -974,7 +974,8 @@ export default {
                 task_label: "",
                 status: 1,
                 edited: true,
-                checked: false
+                checked: false,
+                new: true,
             });
             // this.workflows.total++;
             this.newProcessAdded = false;

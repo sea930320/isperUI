@@ -422,17 +422,17 @@ export default {
                 name: {
                     label: "管理员名称",
                     sortable: false,
-                    class: "text-left field-crend_ani_3"
+                    class: "text-left"
                 },
                 comment: {
                     label: "备注",
                     sortable: false,
-                    class: "text-left field-crend_ani_4"
+                    class: "text-left"
                 },
                 action: {
                     label: "操作",
                     sortable: false,
-                    class: "text-left field-crend_ani_2"
+                    class: "text-left field-crend_ani_5"
                 }
             },
             queryParam: {
@@ -775,6 +775,10 @@ export default {
     }
     .field-crend_ani_4 {
         width: 20%;
+        text-align: left !important;
+    }
+    .field-crend_ani_5 {
+        width: 30%;
         text-align: left !important;
     }
 }

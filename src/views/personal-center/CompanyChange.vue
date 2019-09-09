@@ -5,10 +5,10 @@
     <div class="cardDiv">
       <div class="mt-4 mb-2 current-name">
         <label style="font-weight: 600">本单位:</label>
-        <span class="ml-3">{{userInfo.manager_info.company_name}}</span>
+        <span class="ml-3">{{userInfo.manager_info.company_name === 'DEFAULT-COMPANY' ? '无归属单位' : userInfo.manager_info.company_name}}</span>
       </div>
       <b-form @submit.prevent="companyChangeRequest" v-if="!lastRequest.id">
-        <b-form-group label-cols="4" label-cols-lg="2" label="集群 *" label-for="companyName">
+        <b-form-group label-cols="4" label-cols-lg="2" label="单位 *" label-for="companyName">
           <b-form-select v-model="selectedCompany" :options="companys"></b-form-select>
         </b-form-group>
         <b-form-group label-cols="4" label-cols-lg="2" label="申请理由" label-for="reason">

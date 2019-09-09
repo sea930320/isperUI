@@ -61,8 +61,8 @@
                                 v-for="(nodeActionRole, index) in curNodeActionRoles"
                                 :key="index"
                             >
-                                <td>{{nodeActionRole.role_type}}</td>
-                                <td>{{nodeActionRole.role_name}}</td>
+                                <td class="text-left">{{nodeActionRole.role_type}}</td>
+                                <td class="text-left">{{nodeActionRole.role_name}}</td>
                                 <td>
                                     <b-form-checkbox
                                         v-model="nodeActionRole.is_use"
@@ -173,7 +173,7 @@ export default {
                 .then(response => {
                     this.workflow = response[0];
                     this.roleActionAssign = response[1];
-                    this.nodes = this.roleActionAssign.nodes;
+                    this.nodes = this.roleActionAssign.nodes.filter(x=>x.process.image !== null);
                     this.isAnimation = this.nodes[0].process.type === 1;
                     if (this.isAnimation) {
                         this.processActions = this.nodes[0].process.process_actions;

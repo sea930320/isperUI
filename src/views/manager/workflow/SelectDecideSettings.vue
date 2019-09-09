@@ -27,7 +27,7 @@
                                 <label for="title">主 题 : </label>
                             </b-col>
                             <b-col sm="9">
-                                <b-form-input id="title" type="text" v-model="settings.title"></b-form-input>
+                                <b-form-input id="title" type="text" v-model="settings.title" :disabled="!editable"></b-form-input>
                             </b-col>
                         </b-row>
                         <b-row class="mt-3">
@@ -35,15 +35,16 @@
                                 <label for="description">描 述 : </label>
                             </b-col>
                             <b-col sm="9">
-                                <b-form-input id="description" type="text" v-model="settings.description"></b-form-input>
+                                <b-form-input id="description" type="text" v-model="settings.description" :disabled="!editable"></b-form-input>
                             </b-col>
                         </b-row>
                         <b-row class="mt-3 justify-content-end">
-                            <b-form-group>
+                            <b-form-group :disabled="!editable">
                                 <b-form-radio-group
                                         v-model="settings.mode"
                                         :options="mode_options"
                                         name="setting-mode"
+                                        :disabled="!editable"
                                 ></b-form-radio-group>
                             </b-form-group>
                         </b-row>
@@ -57,20 +58,20 @@
                         </b-row>
                         <b-row class="mt-3">
                             <b-col sm="4">
-                                <b-form-input placeholder="选择项" type="text" v-model="new_item.itemTitle"></b-form-input>
+                                <b-form-input placeholder="选择项" type="text" v-model="new_item.itemTitle" :disabled="!editable"></b-form-input>
                             </b-col>
                             <b-col sm="7">
-                                <b-form-input placeholder="选择项描述介绍" type="text" v-model="new_item.itemDescription"></b-form-input>
+                                <b-form-input placeholder="选择项描述介绍" type="text" v-model="new_item.itemDescription" :disabled="!editable"></b-form-input>
                             </b-col>
                             <b-col sm="1">
                                 <b-button variant="primary" @click="addItem"
-                                          :disabled="new_item.itemTitle === '' || new_item.itemDescription === ''"> + </b-button>
+                                          :disabled="new_item.itemTitle === '' || new_item.itemDescription === '' || !editable"> + </b-button>
                             </b-col>
                         </b-row>
                         <b-row class="mt-3">
-                            <b-col sm="3" class="offset-9">
+                            <b-col sm="3" class="offset-9" :disabled="!editable">
                                 <b-button variant="primary" @click="saveSettings" class="w-100"
-                                          :disabled="settings.title === '' || settings.description === '' || settings.items.length < 2">设置保存</b-button>
+                                          :disabled="settings.title === '' || settings.description === '' || settings.items.length < 2 || !editable">设置保存</b-button>
                             </b-col>
                         </b-row>
                     </div>
@@ -106,6 +107,7 @@ export default {
             process: {}, // 当前环节的程序模块
             flowNodes: [],
             roleAllcation: [],
+            editable: true,
             settings: {
                 title: '',
                 description: '',
@@ -168,6 +170,10 @@ export default {
                 .getSelectDecideSeetings({ flowNode_id: flowNode.id })
                 .then(data => {
                     this.settings = data;
+                    if (data.title !== '')
+                        this.editable = false;
+                    else
+                        this.editable = true;
                     this.$emit("data-ready");
                 });
         },
@@ -201,6 +207,7 @@ export default {
                     if (data.results === 'success') {
                         this.$toasted.success("成 功");
                         this.$emit("data-ready");
+                        this.editable = false;
                     } else {
                         this.$emit("data-failed");
                     }

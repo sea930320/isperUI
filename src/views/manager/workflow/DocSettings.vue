@@ -284,7 +284,7 @@ export default {
         .getWorkflowDetail(param)
         .then(data => {
           this.workflow = data;
-          this.flowNodes = data.nodes;
+          this.flowNodes = data.nodes.filter(x=>x.process !== null);
           this.setFlowStep(data.step);
           this.docNodeRelated = this.currentRelatedData();
           // 获取素材

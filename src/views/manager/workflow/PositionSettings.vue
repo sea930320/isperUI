@@ -39,7 +39,7 @@
                                 <th class="text-left field-role-alloc-type">身份类型</th>
                                 <th class="text-left field-role-alloc-name">身份名称</th>
                                 <th class="text-left field-role-alloc-image">身份形象</th>
-                                <th class="text-left field-role-alloc-action">角色站位</th>
+                                <th class="text-left field-role-alloc-action">身份站位</th>
                             </tr>
                         </thead>
                         <tbody role="rowgroup">
@@ -126,7 +126,7 @@ export default {
         ...mapState(["userInfo", "flowStep"]),
         flowId() {
             return this.$route.params.flow_id;
-        }
+        },
     },
     created() {
         this.$nextTick(() => {
@@ -146,9 +146,9 @@ export default {
             Promise.all(apis)
                 .then(response => {
                     this.workflow = response[0];
-                    this.flowNodes = response[0].nodes;
+                    this.flowNodes = response[0].nodes.filter(x=>x.process.image !== null);
 
-                    this.roleAllcation = response[1];
+                    this.roleAllcation = response[1].filter(x=>x.process.image !== null);
                     if (this.roleAllcation.length > 0) {
                         this.process =
                             this.roleAllcation[0].process.type === 1
@@ -198,6 +198,11 @@ export default {
             if (!this.flowId || this.flowNodes.length < 1) {
                 return;
             }
+            if(this.flowNodeRoles.filter(y=>y.position_id === role.position_id).length > 1 )
+            {
+                role.position_id = null;
+                return;
+            }
             workflowService.updateRolePosition({
                 flow_id: this.flowId,
                 node_id: this.flowNodes[this.activeNodeIndex].id,
@@ -216,6 +221,10 @@ export default {
         setRoleAllocImageConfirm(roleAlloc) {
             this.selectedAlloc.image = roleAlloc.image;
             this.selectedAlloc.image_id = roleAlloc.image.id;
+            this.roleAllcation.map(x=>x.allocation_list.map(y=>{
+                if (y.role_id === this.selectedAlloc.role_id && y.no === this.selectedAlloc.no)
+                    y.image = roleAlloc.image;
+            }));
             this.run();
             workflowService
                 .updateWorkflowRoleAllocImage(this.selectedAlloc)

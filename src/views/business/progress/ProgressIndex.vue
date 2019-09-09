@@ -322,7 +322,9 @@
                 });
             },
             onCloseXML(node_seq) {
-                if (node_seq !== null) {
+                if (typeof(node_seq) === 'object') {
+                    this.XMLModal = false;
+                } else if (node_seq !== null) {
                     this.metaInfo.nodeID = this.parallelNodes[node_seq].id;
                     this.metaInfo.processType = this.parallelNodes[node_seq].process_type;
                     this.metaInfo.roleAllocID =

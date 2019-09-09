@@ -52,7 +52,7 @@
               :size="template_size"
               class="styledBtn"
               variant="outline-primary"
-              :to="{name: 'business-detail', params: {bid: row.item.id}}"
+              @click="viewChart(row.item)"
             >查看</b-button>
             <b-button
               :size="template_size"
@@ -73,13 +73,7 @@
       ></b-pagination>
     </b-row>
 
-    <b-modal
-      v-model="selectModeModal"
-      centered
-      title="业务关注"
-      size="lg"
-      :hide-footer="true"
-    >
+    <b-modal v-model="selectModeModal" centered title="业务关注" size="lg" :hide-footer="true">
       <div class="container">
         <b-row class="justify-content-md-center">
           <b-col>
@@ -164,7 +158,10 @@
               <b-form-checkbox v-model="user.all_checked">{{head.label}}</b-form-checkbox>
             </template>
             <template slot="sn" slot-scope="row">
-              <b-form-checkbox v-model="row.item.checked" style="margin-top: 5px;">{{ row.index + 1 }}</b-form-checkbox>
+              <b-form-checkbox
+                v-model="row.item.checked"
+                style="margin-top: 5px;"
+              >{{ row.index + 1 }}</b-form-checkbox>
             </template>
             <template slot="name" slot-scope="row">{{row.item.name}}</template>
             <template slot="username" slot-scope="row">{{row.item.username}}</template>
@@ -217,6 +214,13 @@
       </div>
     </b-modal>
     <team-detail></team-detail>
+
+    <view-xml
+      :visible="XMLModal"
+      :xml="flowChart.xml"
+      :options="flowChart.options"
+      @on-close="XMLModal=false"
+    ></view-xml>
   </div>
 </template>
 
@@ -226,10 +230,12 @@ import Loading from "@/components/loading/Loading";
 import TeamDetail from "@/components/student/TeamDetail";
 import _ from "lodash";
 import studentService from "@/services/studentService";
+import businessService from "@/services/businessService";
 import { businessStatus, gender } from "@/filters/fun";
+import ViewXml from "@/components/workflowXML/ViewXML";
 
 export default {
-  components: { Loading, TeamDetail },
+  components: { Loading, TeamDetail, ViewXml },
   filters: { businessStatus, gender },
   data() {
     return {
@@ -383,6 +389,17 @@ export default {
           label: "创建时间",
           sortable: false,
           class: "text-right field-create_time"
+        }
+      },
+      XMLModal: false,
+      flowChart: {
+        xml: "",
+        options: {
+          parttern: 2,
+          currentTask: [],
+          paths: [],
+          user_role_allocs: [],
+          no_click: true
         }
       }
     };
@@ -602,11 +619,17 @@ export default {
           }
         }
       } else {
-        if (!this.watchConfig.extra_course.name && this.watchConfig.extra_course.teacher) {
+        if (
+          !this.watchConfig.extra_course.name &&
+          this.watchConfig.extra_course.teacher
+        ) {
           this.$toasted.error("Please input Course Name");
           return;
         }
-        if (this.watchConfig.extra_course.name && !this.watchConfig.extra_course.teacher) {
+        if (
+          this.watchConfig.extra_course.name &&
+          !this.watchConfig.extra_course.teacher
+        ) {
           this.$toasted.error("Please select Teacher");
           return;
         }
@@ -653,6 +676,19 @@ export default {
     },
     enterBusiness(business) {
       this.$router.push("/student/enter-business/" + business.id);
+    },
+    viewChart(business) {
+      this.run();
+      businessService
+        .getBusinessTransPath({
+          business_id: business.id
+        })
+        .then(data => {
+          this.flowChart.xml = data.xml;
+          this.flowChart.options.currentTask = data.node;
+          this.$emit("data-ready");
+          this.XMLModal = true;
+        });
     }
   }
 };

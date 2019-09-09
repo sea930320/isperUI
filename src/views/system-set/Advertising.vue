@@ -75,11 +75,11 @@
                     <!--<div class="cardDiv" style="width:100%">-->
                     <b-col sm="12">
                         <b-form-group
-                                id="fieldset-horizontal"
+                                id="fieldset-horizontal1"
                                 label-cols-sm="4"
                                 label-cols-lg="3"
                                 label="发布时间:"
-                                label-for="input-horizontal"
+                                label-for="input-horizontal1"
                         >
                             <b-form-input type="date" v-model="public_time"></b-form-input>
                         </b-form-group>
