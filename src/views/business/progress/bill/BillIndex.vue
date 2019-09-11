@@ -73,11 +73,11 @@
                     <template slot="sn" slot-scope="row">
                         {{ row.index + 1 }}
                     </template>
-                    <template slot="chapter_number" slot-scope="row">{{row.item.chapter_number}}</template>
+                    <template slot="chapter_number" slot-scope="row">第 {{convertChineseNumber(parseInt(row.item.chapter_number))}} 章</template>
                     <template slot="chapter_title" slot-scope="row">{{row.item.chapter_title}}</template>
-                    <template slot="section_number" slot-scope="row">{{row.item.section_number}}</template>
+                    <template slot="section_number" slot-scope="row">第 {{convertChineseNumber(parseInt(row.item.section_number))}} 节</template>
                     <template slot="section_title" slot-scope="row">{{row.item.section_title}}</template>
-                    <template slot="part_number" slot-scope="row">{{row.item.part_number}}</template>
+                    <template slot="part_number" slot-scope="row">第 {{convertChineseNumber(parseInt(row.item.part_number))}} 条</template>
                     <template slot="part_title" slot-scope="row">{{row.item.part_title}}</template>
                     <template slot="part_text" slot-scope="row">{{row.item.part_content}}</template>
                     <template slot="control_button" slot-scope="row">
@@ -117,9 +117,9 @@
                          ref="selectableTable1"
                          select-mode="single" responsive small hover :fields="columns1" head-variant @row-selected="partSelectedFunc">
                     <template slot="sn" slot-scope="row">
-                        {{ row.index + 1 }}
+                       {{ row.index + 1 }}
                     </template>
-                    <template slot="part_number" slot-scope="row">{{row.item.part_number}}</template>
+                    <template slot="part_number" slot-scope="row"> 第 {{convertChineseNumber(parseInt(row.item.part_number))}} 条</template>
                     <template slot="part_title" slot-scope="row">{{row.item.part_title}}</template>
                     <template slot="part_text" slot-scope="row">{{row.item.part_content}}</template>
                     <template slot="control_button" slot-scope="row">
@@ -256,7 +256,7 @@
                 @ok="deleteParts1"
         >
             <div class="modal-msg">
-                <p class="message">Are you sure to delete this part?</p>
+                <p class="message">要删除该条吗？</p>
             </div>
         </b-modal>
 
@@ -570,16 +570,16 @@
                         </b-form-group>
                     </b-col>
                     <b-col sm="2">
-                        <b-button
-                                size="sm"
-                                class="styledBtn"
-                                variant="outline-primary"
-                                @click="showPreviewPage()"
-                                id="tooltip-button-variant"
-                        >
+                        <!--<b-button-->
+                                <!--size="sm"-->
+                                <!--class="styledBtn"-->
+                                <!--variant="outline-primary"-->
+                                <!--@click="showPreviewPage()"-->
+                                <!--id="tooltip-button-variant"-->
+                        <!--&gt;-->
 
-                            <icon name="eye" ></icon> 浏 览</b-button>
-                        <b-tooltip target="tooltip-button-variant" variant="danger">Can be shown Less than 15MB</b-tooltip>
+                            <!--<icon name="eye" ></icon> 浏 览</b-button>-->
+                        <!--<b-tooltip target="tooltip-button-variant" variant="danger">Can be shown Less than 15MB</b-tooltip>-->
                     </b-col>
                 </b-row>
                 <br>
@@ -850,7 +850,7 @@
                 @ok="saveParts1"
         >
             <div class="modal-msg">
-                <p class="message">Are you sure to save this bill?</p>
+                <p class="message">要保存本法案吗？</p>
             </div>
         </b-modal>
 
@@ -1024,12 +1024,12 @@
                     part_title: {
                         label: "条名",
                         sortable: false,
-                        class: "text-left field-10"
+                        class: "text-left field-30"
                     },
                     part_text: {
                         label: "正文",
                         sortable: false,
-                        class: "text-left field-30"
+                        class: "text-left field-40"
                     },
                     control_button: {
                         label: "操作",
@@ -1084,6 +1084,9 @@
         },
         mounted() {},
         methods: {
+            convertChineseNumber(part_number){
+                return part_number.toLocaleString('zh-u-nu-hanidec' );
+            },
             previewFile(fileUrl) {
                 openFile(fileUrl, this.userInfo.id);
             },
@@ -1202,6 +1205,7 @@
                                 if (this.bill_data[i].part_id == this.edit_modal_data.part_id){
                                     this.bill_data[i].part_title = this.edit_modal_data.part_title;
                                     this.bill_data[i].part_content = this.edit_modal_data.part_content;
+                                    this.bill_data[i].added_flag = "1";
                                 }
                             }
                         }
@@ -1212,6 +1216,7 @@
                         if (this.bill_data[i].part_id == this.edit_modal_data.part_id) {
                             this.bill_data[i].part_title = this.edit_modal_data.part_title;
                             this.bill_data[i].part_content = this.edit_modal_data.part_content;
+                            this.bill_data[i].added_flag = "1";
                         }
                     }
                 }
