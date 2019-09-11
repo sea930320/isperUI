@@ -137,33 +137,11 @@
             },
             // 渲染动画上传成功回调
             uploadSuccess(data) {
-//                var file_url = window.location.protocol + "//" + window.location.host + data.d.url;
-//                this.$emit("getFileURL",{
-//                    "fileURL":file_url,
-//                    "id":data.d.id
-//                });
-            let file_url = window.location.protocol + "//" + window.location.host + data.d.url;
-//                this.$copyText(file_url).then(function (e) {
-//                    alert('Copied')
-//                    console.log(e)
-//                }, function (e) {
-//                    alert('Can not copy')
-//                    console.log(e)
-//                })
-                this.$clipboard(file_url).then(()=>{
-                   alert('copied');
-                })
-                    .catch(()=>{
-                    alert('not copied')
-                    });
-//                this.$copyText(file_url)
-//                .then(() => {
-//                this.$toasted.success("链接复制完了");
-//                })
-//                .catch(() => {
-//                this.$toasted.error("链接复制失败");
-//                });
-
+                var file_url = window.location.protocol + "//" + window.location.host + data.d.url;
+                this.$emit("getFileURL",{
+                    "fileURL":file_url,
+                    "id":data.d.id
+                });
             },
             // 渲染动画上传失败回调
             uploadFail() {

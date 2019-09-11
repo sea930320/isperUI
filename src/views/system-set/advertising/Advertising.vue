@@ -95,16 +95,26 @@
                     </b-col>
                 </b-row>
                 <b-row>
+                    <b-col lg="3"></b-col>
+                    <b-col lg="9">
+                        <div class="input-group">
+                            <b-form-input v-model="uploadedURL" disabled></b-form-input>
+                            <b-button @click="checkURL()" v-b-tooltip.hover variant="primary" title="检查链接"><icon name="eye"></icon></b-button>
+                            <b-button @click="copyURL()" v-b-tooltip.hover variant="primary" title="链接复制"><icon name="copy"></icon></b-button>
+                        </div>
+                    </b-col>
+                </b-row>
+                <br>
+                <b-row>
                     <b-col sm="4"></b-col>
                     <b-col sm="4">
-                        <sub-adver-upload></sub-adver-upload>
+                        <sub-adver-upload @getFileURL="getFileURL"></sub-adver-upload>
                     </b-col>
                     <b-col sm="4">
                         <b-button size="lg" class="styledBtn" variant="outline-primary" @click="saveDoc()"><icon name="save"></icon>&nbsp;保存</b-button>
                     </b-col>
                 </b-row>
             </b-col>
-
         </b-row>
         <br><br>
         <b-modal id="deleteConfirmModal" title="删除公告" @ok="deleteAdvertisingConfirmFunction(deleteAdvertising)">
@@ -144,6 +154,8 @@
                     list: [],
                     total: 0
                 },
+                uploadedBackupURL:"",
+                uploadedURL:"",
                 deleteAdvertising: '',
                 columns: {
                     name: {
@@ -250,6 +262,36 @@
             },
             previewFile(fileUrl) {
                 openFile(fileUrl, this.userInfo.id)
+            },
+            getFileURL(data){
+                this.uploadedURL = data.fileURL;
+                let tempURL = data.fileURL;
+                this.uploadedBackupURL = tempURL;
+            },
+            copyURL(){
+                if (this.uploadedURL.trim() == ""){
+                    this.$toasted.error('请上传文件');
+                    return
+                }
+                if (this.uploadedBackupURL == this.uploadedURL.trim()){
+                    this.$copyText(this.uploadedURL.trim())
+                        .then(() => {
+                            this.$toasted.success("链接复制完了");
+                        })
+                        .catch(() => {
+                            this.$toasted.error("链接复制失败");
+                        });
+                } else {
+                    this.$toasted.error('链接错了');
+                }
+            },
+            checkURL(){
+                if (this.uploadedURL.trim() == ""){
+                    this.$toasted.error('请上传文件');
+                    return
+                } else {
+                    window.open(this.uploadedURL.trim(), "_blank");
+                }
             },
         }
     };
