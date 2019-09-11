@@ -48,9 +48,9 @@
           <table class="table b-table table-hover table-borderless table-sm role-allocation">
             <thead role="rowgroup">
               <tr>
-                <th class="text-left field-role-alloc-type">身份类型</th>
-                <th class="text-left field-role-alloc-name">身份名称</th>
-                <th class="text-left field-role-allo-action">
+                <th class="field-role-alloc-type">身份类型</th>
+                <th class="field-role-alloc-name">身份名称</th>
+                <th class="field-role-allo-action">
                   <b-form-checkbox v-model="is_all_use">配置动作</b-form-checkbox>
                 </th>
               </tr>
@@ -142,11 +142,11 @@ export default {
       return this.$route.params.flow_id;
     },
     activeNode() {
-      if (this.nodes.length === 0 || this.nodeActiveIndex == -1) return null;
+      if (this.nodes.length === 0 || this.nodeActiveIndex === -1) return null;
       return this.nodes[this.nodeActiveIndex];
     },
     activeAction() {
-      if (this.actions.length === 0 || this.actionActiveIndex == -1)
+      if (this.actions.length === 0 || this.actionActiveIndex === -1)
         return null;
       return this.actions[this.actionActiveIndex];
     },
@@ -184,7 +184,7 @@ export default {
       Promise.all(apis)
         .then(response => {
           this.workflow = response[0];
-          this.nodes = response[0].nodes.filter(x=>x.process.image !== null);
+          this.nodes = response[0].nodes.filter(x=>x.process && x.process.image !== null);
           this.roleActionAssign = response[1];
           this.actions = this.roleActionAssign.flow_actions;
           this.nodeActionRoles = [];

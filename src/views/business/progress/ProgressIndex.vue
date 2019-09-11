@@ -189,6 +189,8 @@
                                 this.metaInfo.businessID = this.$route.params.bid;
                                 this.metaInfo.nodeID = this.$route.params.nid;
                                 let node_index = data.node.findIndex(v=>v.id.toString()===this.$route.params.nid);
+                                if (node_index === -1)
+                                    this.$router.go(-1);
                                 this.metaInfo.processType = data.node[node_index].process_type;
                                 this.metaInfo.roleAllocID = data.user_role_allocs[node_index][0].alloc_id;
                                 this.getBusinessNodeDetail({
