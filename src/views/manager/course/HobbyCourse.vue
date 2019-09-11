@@ -199,7 +199,7 @@ export default {
           class: "text-right field-courseCount"
         },
         experienceTime: {
-          label: "实验学时",
+          label: "业务学时",
           sortable: false,
           class: "text-right field-experienceTime"
         },

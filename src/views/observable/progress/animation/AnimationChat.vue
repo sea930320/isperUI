@@ -22,7 +22,7 @@
                   class="status-info"
                   v-else-if="item.ext.cmd === 'action_role_letout'"
                 >{{item.ext.role_name}}（{{item.ext.username}}）{{item.data}}</div>
-                <!-- 退出实验 -->
+                <!-- 退出业务 -->
                 <div
                   class="status-info"
                   v-else-if="item.ext.cmd === 'action_roles_exit'"

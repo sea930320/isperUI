@@ -11,6 +11,22 @@
                                 <p class="tip">下一步：{{trans[0].condition}}</p>
                             </div>
                         </div>
+                        <div v-if="trans.length > 1 && trans[0].select === 2" class="multi-select-container">
+                            <div class="modal-msg">
+                                <p class="message">请选择以下选项</p>
+                                <p class="tip">只有选择正确才能进入下一环节</p>
+                            </div>
+                            <div class="template-modal-content">
+                                <Radio-group v-model="selectedTran" vertical>
+                                    <Radio
+                                        v-for="(tran, index) in trans"
+                                        :label="tran"
+                                        :key="index"
+                                    >{{index + 1}}、{{tran.condition ? tran.condition : ''}}
+                                    </Radio>
+                                </Radio-group>
+                            </div>
+                        </div>
                         <div v-if="(trans.length > 1 && trans[0].parallel_mode === 0) || (trans.length > 1 && trans[0].parallel_mode === 1 && trans[0].select === 1)" class="multi-select-container">
                             <div class="modal-msg">
                                 <p class="message">请选择以下选项</p>
@@ -27,7 +43,7 @@
                                 </Radio-group>
                             </div>
                         </div>
-                        <div v-if="trans.length > 1 && trans[0].parallel_mode === 1 && trans[0].select === 0" class="multi-select-container">
+                        <div v-if="trans.length > 1 && trans[0].parallel_mode === 1 && (trans[0].select === 0 || trans[0].select === 3)" class="multi-select-container">
                             <div class="modal-msg">
                                 <p class="message">请选择以下选项</p>
                                 <p class="tip">下一个环节开始以并行模式执行</p>
@@ -177,7 +193,12 @@
                     });
             },
             okHandler() {
-                if ((this.trans.length > 1 && this.trans[0].parallel_mode === 0) || this.trans[0].select === 1) {
+                if (this.selectedTran && this.selectedTran.select === 2) {
+                    if (this.selectedTran.parallel_mode === 0)
+                        this.transHandler(this.selectedTran);
+                    else
+                        this.transHandler(this.selectedTran.parallel_nodes);
+                } else if ((this.trans.length > 1 && this.trans[0].parallel_mode === 0) || this.trans[0].select === 1) {
                     if (!this.selectedTran) {
                         this.$toasted.error("请选择一个分支环节");
                         return;
@@ -205,20 +226,22 @@
                             type: "cmd",
                             msg: "结束并走向",
                             cmd: ACTION_BUSINESS_NODE_END,
-                            data: (this.trans[0].parallel_mode === 1 && this.trans[0].select === 0) ? JSON.stringify({
+                            data: (tran[0] && tran[0].parallel_mode === 1 && (this.trans[0].select === 0 || this.trans[0].select === 2 || this.trans[0].select === 3)) ? JSON.stringify({
                                 trans: tran,
                                 cur_node: this.$route.params.nid,
-                                parallel: 1
+                                parallel: 1,
+                                select: this.trans[0].select
                             }) : JSON.stringify({
                                 tran_id: tran.id,
                                 process_type: tran.process_type,
                                 cur_node: this.$route.params.nid,
-                                parallel: tran.parallel_mode
+                                parallel: tran.parallel_mode,
+                                select: -1,
                             })
                         })
                         .then(() => {
                             this.$emit("data-ready");
-                            if (this.trans[0].parallel_mode === 1)
+                            if (this.trans[0].parallel_mode === 1 && !(this.trans[0].select === 2 || this.trans[0].select === 3))
                                 this.$router.go(-1);
                             else
                                 this.$router.go();

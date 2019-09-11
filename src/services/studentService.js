@@ -5,7 +5,7 @@ import xhr from './xhr/'
  */
 class StudentService {
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -18,7 +18,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -31,7 +31,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -44,7 +44,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -57,7 +57,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -70,7 +70,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -83,7 +83,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -96,7 +96,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -109,7 +109,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -123,7 +123,7 @@ class StudentService {
 
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -137,7 +137,7 @@ class StudentService {
 
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -150,7 +150,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -163,7 +163,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -176,7 +176,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -189,7 +189,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -202,7 +202,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -215,7 +215,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -228,7 +228,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -241,7 +241,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -254,7 +254,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -267,7 +267,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -280,7 +280,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -293,7 +293,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -306,7 +306,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -319,7 +319,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -332,7 +332,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -345,7 +345,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -358,7 +358,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -372,7 +372,7 @@ class StudentService {
 
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -385,7 +385,7 @@ class StudentService {
     }
 
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */

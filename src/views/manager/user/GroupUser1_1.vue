@@ -121,6 +121,7 @@ export default {
         default: 0,
         publish: 1
       },
+      selected: [],
       columns: {
         id: {
           label: "ID",

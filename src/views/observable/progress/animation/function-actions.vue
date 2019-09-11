@@ -106,7 +106,7 @@
         </div>
         <div v-else class="modal-msg">
           <p class="message">请选择要申请展示的文件？</p>
-          <p class="tip">以下是实验中提交过的所有文件，一次只能选择一个</p>
+          <p class="tip">以下是业务中提交过的所有文件，一次只能选择一个</p>
           <div class="detail max-hight-box">
             <table class="table table-gray table-striped table-hover table-border">
               <thead>

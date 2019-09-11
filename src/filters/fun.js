@@ -1,9 +1,9 @@
 // 用户身份
 export function identity(num) {
   if (num === 1) {
-    return '实验人员'
+    return '业务人员'
   } else if (num === 2) {
-    return '实验指导'
+    return '业务指导'
   } else if (num === 3) {
     return '系统管理员'
   } else if (num === 4) {
@@ -73,24 +73,24 @@ export function abilityTarget(num) {
     return
   }
 }
-// 转换实验类型
+// 转换业务类型
 export function expType(num) {
   if (num === 1) {
-    return '立法类型实验'
+    return '立法类型业务'
   } else if (num === 2) {
-    return '执法类型实验'
+    return '执法类型业务'
   } else if (num === 3) {
-    return '诉讼与仲裁实验'
+    return '诉讼与仲裁业务'
   } else if (num === 4) {
-    return '自由类型实验'
+    return '自由类型业务'
   } else if (num === 5) {
-    return '非诉讼与法务管理类型实验'
+    return '非诉讼与法务管理类型业务'
   } else if (num === 6) {
-    return '法律思维类型实验'
+    return '法律思维类型业务'
   } else if (num === 7) {
-    return '证据科学类型实验'
+    return '证据科学类型业务'
   } else if (num === 8) {
-    return '法律实效评价类型实验'
+    return '法律实效评价类型业务'
   } else {
     return
   }
@@ -199,7 +199,7 @@ export function categoryValue(value) {
   }
 }
 
-// 实验任务状态
+// 业务任务状态
 export function businessStatus(value) {
   if (value === 1) {
     return '等待中'
@@ -212,7 +212,7 @@ export function businessStatus(value) {
   }
 }
 
-// 实验任务状态
+// 业务任务状态
 export function experimentStatus(value) {
   if (value === 1) {
     return '等待中'

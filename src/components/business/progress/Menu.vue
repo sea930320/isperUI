@@ -157,7 +157,7 @@
     <send-msg-modal @on-send="sendMsgConfirm"></send-msg-modal>
     <!-- 查看留言 -->
     <receive-msg-modal @on-cancel="receiveMsgClose"></receive-msg-modal>
-    <!-- 实验成果Modal -->
+    <!-- 业务成果Modal -->
     <results-modal></results-modal>
     <!-- 已提交文件Modal -->
     <submitted-file-modal></submitted-file-modal>
@@ -178,7 +178,7 @@
       <b-container>
         <div class="modal-msg">
           <p class="message">是否确定要重新开始</p>
-          <p class="tip">提示：如果您选择重新开始本实验，业务成果将被清空</p>
+          <p class="tip">提示：如果您选择重新开始本业务，业务成果将被清空</p>
         </div>
       </b-container>
       <div slot="modal-footer" class="w-100">
@@ -387,7 +387,7 @@ export default {
         }
       });
     },
-    // 退出实验
+    // 退出业务
     quit() {
       if (this.userInfo.identity === 4) {
         // this.$router.push({ path: "/mentor/guide" });
@@ -402,7 +402,7 @@ export default {
             business_id: this.$route.params.bid,
             node_id: this.$route.params.nid,
             role_alloc_id: this.currentRoleAllocation.alloc_id,
-            msg: quitRoleAllocs + "退席并退出实验",
+            msg: quitRoleAllocs + "退席并退出业务",
             type: "cmd",
             cmd: actionCmd.ACTION_ROLES_EXIT
           });
@@ -444,7 +444,7 @@ export default {
         node_id: this.$route.params.nid,
         role_alloc_id: this.currentRoleAllocation.alloc_id,
         type: "cmd",
-        msg: "重新开始实验",
+        msg: "重新开始业务",
         cmd: actionCmd.ACTION_BUSINESS_RESTART
       });
       this.tipModalRestart = false;
@@ -455,7 +455,7 @@ export default {
         business_id: this.$route.params.bid,
         node_id: this.$route.params.nid,
         role_alloc_id: this.currentRoleAllocation.alloc_id,
-        msg: "提前结束实验",
+        msg: "提前结束业务",
         type: "cmd",
         cmd: actionCmd.ACTION_BUSINESS_FINISH
       });

@@ -69,7 +69,7 @@ class ProjectService {
     }
 
     /**
-     * 获取项目相关实验
+     * 获取项目相关业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
