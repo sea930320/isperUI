@@ -499,10 +499,10 @@ export default {
             this.updatePage(3);
         },
         validateSaveData() {
-            if (this.projectDocsAssign.docs.length === 0) {
-                this.$toasted.error("请上传素材");
-                return false;
-            }
+            // if (this.projectDocsAssign.docs.length === 0) {
+            //     this.$toasted.error("请上传素材");
+            //     return false;
+            // }
             return this.projectDocsAssign.docs.every(doc => {
                 if (doc.type === "") {
                     this.$toasted.error(`请填写素材${doc.name}的类型`);

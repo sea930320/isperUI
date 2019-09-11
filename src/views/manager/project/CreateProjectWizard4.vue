@@ -290,24 +290,22 @@ export default {
       this.currentNode.project_jump = null;
     },
     savePage() {
-      if (
-        !this.nodes
-          .filter(node => [6, 9].includes(node.process.type))
-          .some(node => node.project_jump)
-      ) {
+      let jumpNodes = this.nodes.filter(node =>
+        [6, 9].includes(node.process.type)
+      );
+
+      if (jumpNodes.length > 0 && !jumpNodes.some(node => node.project_jump)) {
         this.$toasted.error("某些跳转环节没有配置");
         return;
       }
       var jumpData = {};
-      jumpData.project_jumps = this.nodes
-        .filter(node => [6, 9].includes(node.process.type))
-        .map(node => {
-          return {
-            node_id: node.id,
-            jump_project_id: node.project_jump.id,
-            processs_type: node.process.type
-          };
-        });
+      jumpData.project_jumps = jumpNodes.map(node => {
+        return {
+          node_id: node.id,
+          jump_project_id: node.project_jump.id,
+          processs_type: node.process.type
+        };
+      });
       ProjectService.postJumpSetup({
         project_id: this.$route.params.project_id,
         data: JSON.stringify(jumpData)

@@ -20,7 +20,7 @@
                         <div class="top-img">
                             <img src="@/assets/imgIsper/business/search1.png">
                         </div>
-                        <b-button variant="outline-dark" to="{name:'business-prepare-by-keyword'}">检索</b-button>
+                        <b-button variant="outline-dark" to="/business/prepare/prepare2">检索</b-button>
                     </div>
                 </div>
             </div>

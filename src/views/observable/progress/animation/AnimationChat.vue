@@ -63,7 +63,8 @@
         v-if="!activeSidebar"
       >
         <!-- <icon name="caret-left" scale="3"></icon> -->
-        <img src="@/assets/imgIsper/business/left1.png" />
+        <!-- <img src="@/assets/imgIsper/business/left1.png" /> -->
+        <img src="/media/invite.png" />
       </a>
       <div
         class="online-user p-1"
@@ -94,7 +95,8 @@
             href="javascript:void(0);"
             @click="activeSidebar = !activeSidebar"
           >
-            <icon name="caret-right" scale="3"></icon>
+            <!-- <icon name="caret-right" scale="3"></icon> -->
+            <img src="/media/invite.png" />
           </a>
         </div>
       </div>
@@ -430,8 +432,8 @@ export default {
     right: 0px;
     .online-user-handle {
       position: absolute;
-      left: -5px;
-      top: 300px;
+      left: -30px;
+      top: 585px;
     }
     .user-name {
       font-size: 14px;
@@ -448,14 +450,20 @@ export default {
     transition: visibility 0s linear 0s, opacity 300ms;
   }
   .handle-left {
+    img {
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(3px 3px 4px #222);
+    }
   }
   .handle-right {
     position: absolute;
-    top: 300px;
-    right: -10px;
+    top: 585px;
+    right: -30px;
     img {
-      width: 20px;
-      height: 20px;
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(3px 3px 4px #222);
     }
   }
   .handle-control {

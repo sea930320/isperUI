@@ -379,7 +379,7 @@ export default {
       Promise.all(apis)
         .then(response => {
           this.workflow = response[0];
-          this.nodes = response[0].nodes.filter(x=>x.process !== null);
+          this.nodes = response[0].nodes.filter(x => x.process !== null);
           this.setFlowStep(response[0].step);
           this.roles = response[1].roles;
           this.jobTypes = response[1].job_types;
@@ -615,6 +615,7 @@ export default {
         roleAllocation.allocations.forEach(allocation => {
           if (!value) {
             this.$set(allocation, "can_start", false);
+            this.$set(allocation, "can_terminate", false);
           }
           this.$set(allocation, "can_take_in", value);
         });
@@ -624,6 +625,7 @@ export default {
       this.$set(allocation, "can_take_in", value);
       if (!value) {
         this.$set(allocation, "can_start", false);
+        this.$set(allocation, "can_terminate", false);
       }
       let isAllSelected = roleGroupAllocation.role_allocations.every(
         roleAllocation => {
@@ -770,26 +772,24 @@ export default {
     savePage() {
       let allocations = [];
       let hasStartRole = false;
+      var hasEndRole = true;
       for (let nodeIndex in this.nodeRoleGroupAllocations) {
         // let isStartNode = false;
         // if (this.nodes[nodeIndex].is_start_node) {
         //     isStartNode = true;
         // }
+        let hasEndRoleonNode = false;
         for (let typeIndex in this.nodeRoleGroupAllocations[nodeIndex]) {
           for (let roleIndex in this.nodeRoleGroupAllocations[nodeIndex][
             typeIndex
           ].role_allocations) {
-            if (
-              !this.nodeRoleGroupAllocations[nodeIndex][typeIndex]
-                .role_allocations[roleIndex].allocations
-            )
-              continue;
-            for (let index in this.nodeRoleGroupAllocations[nodeIndex][
+            let eallocations = this.nodeRoleGroupAllocations[nodeIndex][
               typeIndex
-            ].role_allocations[roleIndex].allocations) {
+            ].role_allocations[roleIndex].allocations;
+            if (!eallocations) continue;
+            for (let index in eallocations) {
               let allocation = _.pick(
-                this.nodeRoleGroupAllocations[nodeIndex][typeIndex]
-                  .role_allocations[roleIndex].allocations[index],
+                eallocations[index],
                 [
                   "id",
                   "can_take_in",
@@ -801,13 +801,26 @@ export default {
               if (allocation.can_start != 0) {
                 hasStartRole = true;
               }
+              if (
+                allocation.can_take_in == 1 &&
+                allocation.can_terminate == 1
+              ) {
+                hasEndRoleonNode = true;
+              }
               allocations.push(allocation);
             }
           }
         }
+        if (!hasEndRoleonNode) {
+          hasEndRole = false;
+        }
       }
       if (!hasStartRole) {
-        this.$toasted.error("There is no start role");
+        this.$toasted.error("没有设置启动人员");
+        return;
+      }
+      if (!hasEndRole) {
+        this.$toasted.error("没有设置结束环节的人");
         return;
       }
       let params = {
