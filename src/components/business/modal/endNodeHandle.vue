@@ -193,7 +193,6 @@
                     });
             },
             okHandler() {
-                console.log(this.selectedTran);
                 if (this.selectedTran && this.selectedTran.select === 2) {
                     if (this.selectedTran.parallel_mode === 0)
                         this.transHandler(this.selectedTran);

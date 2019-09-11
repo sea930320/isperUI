@@ -134,8 +134,7 @@
             <div class="template-list-content" v-loading="template_list_loading">
                 <div v-if="!template_list_loading && templates.length === 0">
                     <div class="modal-message">
-                        <p class="message">对不起，该角色没有配置任何模板，请切换角色试试</p>
-                        <p class="tip">请选择模板之后再编辑</p>
+                        <p class="message">该身份没有模板可用，请使用新建文件功能编辑保存后，才可使用应用模板功能</p>
                     </div>
                 </div>
                 <div v-else class="max-height-box">
@@ -171,6 +170,7 @@
 
         <!-- end dialog -->
         <end-node-handle :isCommit="commit_end" @on-cancel="commit_end=false"></end-node-handle>
+        <siderUserBar></siderUserBar>
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -181,6 +181,7 @@
     import * as actionCmd from "@/components/business/common/actionCmds";
     import upload from "@/components/upload/Upload";
     import ImageView from "@/components/imageView/ImageView";
+    import siderUserBar from "@/components/business/common/SiderUserBar";
 
     export default {
         name: "edit",
@@ -189,7 +190,8 @@
             VueEditor,
             uploadModal,
             upload,
-            ImageView
+            ImageView,
+            siderUserBar
         },
         // socket io
         // get message and update ui

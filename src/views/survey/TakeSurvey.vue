@@ -89,7 +89,7 @@
         </div>
         <hr />
         <div v-html="survey.end_quote"></div>
-        <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="submit()">Submit</b-button>
+        <b-button class="styledBtn my-3" variant="outline-primary" @click.stop="submit()">提交</b-button>
       </div>
       <b-card class="my-3" v-else-if="isActivity == 1">
         <report v-if="survey" :publicSurvey="survey" :fromPublic="true"></report>
@@ -162,6 +162,8 @@ export default {
             bq.titleArray = titleArray;
           });
           this.survey = data;
+          this.survey.start_time = this.$moment.utc(data.start_time).local().format('YYYY-MM-DD HH:mm:ss')
+          this.survey.end_time = this.$moment.utc(data.end_time).local().format('YYYY-MM-DD HH:mm:ss')
           this.$emit("data-ready");
         })
         .catch(() => {

@@ -52,7 +52,7 @@
                   <a href="javascript:;" class="new-task-btn">{{item.status | experimentStatus}}</a>
                 </td>
                 <td v-if="status == 1">
-                  <a href="javascript:;" class="new-task-btn" @click="startTaskHandler(item)">开始实验</a>
+                  <a href="javascript:;" class="new-task-btn" @click="startTaskHandler(item)">开始业务</a>
                 </td>
                 <td v-if="status == 2">
                   <router-link class="new-task-btn" :to="{name: 'doneDetail', params: {eid: item.id}}">查看</router-link>
@@ -79,10 +79,10 @@
     <!-- 删除角色Modal -->
     <modal :visible="deleteModal" title="删除提醒" @on-cancel="deleteModal=false" @on-ok="comfirmDelete">
       <div class="modal-msg">
-        <p class="message">是否确认要删除选中的实验吗?</p>
+        <p class="message">是否确认要删除选中的业务吗?</p>
       </div>
     </modal>
-    <!-- 开始实验Modal -->
+    <!-- 开始业务Modal -->
     <startAnimation :showStartModal="startModal"></startAnimation>
   </div>
 </template>
@@ -144,7 +144,7 @@ export default {
       this.params.status = this.status
       this.fetchExpList()
     },
-    // 将勾选的实验传递给父级
+    // 将勾选的业务传递给父级
     emitChecked() {
       this.$emit('on-checked', this.checkeds)
     },
@@ -169,7 +169,7 @@ export default {
     // 删除前验证
     deleteValidate() {
       if (this.checkeds.length === 0) {
-        this.$toast.warn('您未勾选任何实验任务')
+        this.$toast.warn('您未勾选任何业务任务')
         return false
       }
 
@@ -178,14 +178,14 @@ export default {
       })
 
       if (result) {
-        this.$toast.warn('有些实验已开始不能删除')
+        this.$toast.warn('有些业务已开始不能删除')
         return false
       }
 
       return this.checkeds.every(item => {
         if (item.team.leader.id !== this.userInfo.id &&
           item.created_by.id !== this.userInfo.id) {
-          this.$toast.error(`你不是${item.name}实验小组组长或者创建者无权删除`)
+          this.$toast.error(`你不是${item.name}业务小组组长或者创建者无权删除`)
         }
         return item.team.leader.id === this.userInfo.id ||
           item.created_by.id === this.userInfo.id
@@ -206,10 +206,10 @@ export default {
       })
       this.deleteModal = false
     },
-    // 开始实验处理
+    // 开始业务处理
     startTaskHandler(exp) {
       if (exp.status === 9) {
-        this.$toast.error('该实验已结束不能重新开始')
+        this.$toast.error('该业务已结束不能重新开始')
         return false
       }
 
@@ -219,7 +219,7 @@ export default {
       .then(data => {
         // console.log(data)
         if (!data.course_class) {
-          this.$toast.warn('未注册到课堂，不能进入实验')
+          this.$toast.warn('未注册到课堂，不能进入业务')
           return
         } else if (data.role_not_set) {
           this.$toast.warn(data.role_not_set)
@@ -228,7 +228,7 @@ export default {
           if (data.status === 1) {
             // 等待中
             if (this.userInfo.id !== exp.team.leader.id) {
-              this.$toast.warn('您不是该实验小组的组长，无权开始本实验')
+              this.$toast.warn('您不是该业务小组的组长，无权开始本业务')
               return
             }
             ExperimentService.startExperiment({
@@ -242,14 +242,14 @@ export default {
             this.toMeta(data)
           } else {
             // 已结束
-            this.$toast.info('该实验已结束，不能进入')
+            this.$toast.info('该业务已结束，不能进入')
           }
         }
       })
     },
     toMeta(data) {
       /* if (data.user_roles.length === 0) {
-        this.$toast.warn('您在实验所在环节没有角色，不能进入实验')
+        this.$toast.warn('您在业务所在环节没有角色，不能进入业务')
         return
       } */
       this.startModal = true
@@ -260,7 +260,7 @@ export default {
         flow_id: data.flow_id,
         process_type: data.node.process_type
       }
-      // 设定实验的参数
+      // 设定业务的参数
       // this.setExpParam(param)
       // this.$store.dispatch('setCurrentRole', data.user_roles[0])
       // this.setCurrentRole(data.user_roles[0])

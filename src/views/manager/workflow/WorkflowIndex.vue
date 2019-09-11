@@ -290,7 +290,7 @@
                                                         <th>业务名称</th>
                                                         <th>注册课堂</th>
                                                         <th>教师名称</th>
-                                                        <th>实验小组</th>
+                                                        <th>业务小组</th>
                                                         <th>完成情况</th>
                                                     </tr>
                                                 </thead>
@@ -947,7 +947,7 @@ export default {
                 return false;
             }
             if (workflow.task_label.length > 20) {
-                this.$toasted.error("实验任务标签应不超过20字");
+                this.$toasted.error("业务任务标签应不超过20字");
                 return false;
             }
             return true;

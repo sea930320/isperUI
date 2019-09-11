@@ -43,9 +43,9 @@
                         <table class="table b-table table-sm text-left">
                             <thead role="rowgroup">
                                 <tr>
-                                    <th width="13%">角色类型</th>
-                                    <th width="13%">角色名称</th>
-                                    <th width="30%">角色形象</th>
+                                    <th width="13%">身份类型</th>
+                                    <th width="13%">身份名称</th>
+                                    <th width="30%">身份形象</th>
                                     <th width="10%">是否使用</th>
                                     <th
                                         v-if="activeNode && activeNode.is_start_node"
@@ -156,7 +156,7 @@
         </b-form>
         <!-- <b-modal
             :visible="roleImageModalShow"
-            title="角色形象"
+            title="身份形象"
             class="my-modal"
             @ok="changeRoleImage"
             ok-title="确定"
@@ -526,7 +526,7 @@ export default {
                 })
                     .then(() => {
                         this.$emit("data-ready");
-                        this.$toasted.success("保存项目角色设置成功");
+                        this.$toasted.success("保存项目身份设置成功");
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -565,7 +565,7 @@ export default {
         //             role_id: this.curRoleId,
         //             image_id: item.id
         //         }).then(() => {
-        //             this.$toasted.success("更新角色形象成功");
+        //             this.$toasted.success("更新身份形象成功");
         //         });
         //     }
         // },

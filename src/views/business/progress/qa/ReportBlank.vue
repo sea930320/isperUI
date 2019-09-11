@@ -67,7 +67,7 @@ export default {
         }
       },
       currentPage: 1,
-      perPage: 2,
+      perPage: 10,
       filter: "",
       totalRows: 1
     };

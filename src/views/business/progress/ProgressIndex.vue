@@ -291,7 +291,7 @@
             initAnimationData() {
                 // 动画模块数据
                 if (this.metaInfo.processType === 1) {
-                    // 获取实验历史消息
+                    // 获取业务历史消息
                     this.getBusinessNodeMessages({
                         business_id: this.metaInfo.businessID,
                         node_id: this.metaInfo.nodeID,
@@ -316,7 +316,7 @@
                 //     });
                 // }
 
-                // 获取实验素材
+                // 获取业务素材
                 this.getBusinessNodeDocs({
                     business_id: this.metaInfo.businessID,
                     node_id: this.metaInfo.nodeID,
@@ -397,10 +397,10 @@
                     // 提前结束
                     case actionCmd.ACTION_BUSINESS_FINISH:
                         this.nodeTransHandler(
-                            "组长提前结束了本次环节，即将跳出本实验……",
+                            "组长提前结束了本次环节，即将跳出本业务……",
                             action
                         );
-                        // 结束实验清楚session
+                        // 结束业务清楚session
                         window.sessionStorage.removeItem(STORAGE_KEY_EXP_PARAM);
                         window.sessionStorage.removeItem(STORAGE_KEY_CURRENT_ROLE);
                         break;
@@ -408,7 +408,7 @@
                     case actionCmd.ACTION_BUSINESS_NODE_END:
                         if (action.opt.status === 9) {
                             this.nodeTransHandler(
-                                "主持人结束了本次实验，即将跳出本实验……",
+                                "主持人结束了本次业务，即将跳出本业务……",
                                 action
                             );
                         } else {

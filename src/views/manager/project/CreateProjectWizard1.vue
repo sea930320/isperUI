@@ -131,7 +131,7 @@
                                         label="关联课程:"
                                         label-for="input-horizontal"
                                         class="text-left">
-                                        <b-form-input id="input-horizontal8" required v-model="courseText" @focus="()=>{this.$refs['selectCourseModal'].show()}"></b-form-input>
+                                        <b-form-input id="input-horizontal8" v-model="courseText" @focus="()=>{this.$refs['selectCourseModal'].show()}"></b-form-input>
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -392,22 +392,22 @@
                     id: {
                         label: "序号",
                         sortable: false,
-                        class: "text-right field-sn"
+                        class: "text-center w-10"
                     },
                     name: {
                         label: "流程名称",
                         sortable: false,
-                        class: "text-left field-name"
+                        class: "text-center w-40"
                     },
                     convertedData: {
-                        label: "实验类型",
+                        label: "事务类型",
                         sortable: false,
-                        class: "text-right field-creator"
+                        class: "text-center w-30"
                     },
                     rend_ani_1: {
-                        label: "检查",
+                        label: "查看流程图",
                         sortable: false,
-                        class: "text-left field-rend_ani_1"
+                        class: "text-center w-20"
                     },
                 },
                 showProjectDataArray: [],
@@ -415,12 +415,12 @@
                     name: {
                         label: "项目",
                         sortable: false,
-                        class: "field-30 text-left"
+                        class: "field-30 text-center"
                     },
                     content: {
                         label: "内容",
                         sortable: false,
-                        class: "field-70 text-left"
+                        class: "field-70 text-center"
                     },
                 },
                 showProjectData: {},

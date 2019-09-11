@@ -81,7 +81,7 @@
               </div>
 
               <div class="qrcode-info mt-3 pt-3">
-                <div class="qrcode-title">下载ISPER手机APP, 随时随地参与实验</div>
+                <div class="qrcode-title">下载ISPER手机APP, 随时随地参与业务</div>
                 <b-row class="qrcodeImgBox mt-2">
                   <b-col>
                     <div class="qrcodeDesc">

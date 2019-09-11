@@ -239,7 +239,7 @@ class WorkflowService {
   }
 
   /**
-   * 获取流程相关项目实验数据
+   * 获取流程相关项目业务数据
    * @param  {String}
    * @return {Object}
    */

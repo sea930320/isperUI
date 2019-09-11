@@ -232,7 +232,7 @@ const routes = [{
                 {
                     path: 'prepare2',
                     name: 'business-prepare-by-keyword',
-                    component: () => import('@/views/business/prepare/Prepare1.vue')
+                    component: () => import('@/views/business/prepare/Prepare2.vue')
                 },
                 {
                     path: 'post/:id',

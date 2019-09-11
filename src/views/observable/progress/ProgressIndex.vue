@@ -91,7 +91,7 @@ export default {
     initAnimationData() {
       // 动画模块数据
       if (this.metaInfo.processType === 1) {
-        // 获取实验历史消息
+        // 获取业务历史消息
         this.getBusinessNodeMessages({
           business_id: this.metaInfo.businessID,
           node_id: this.metaInfo.nodeID,
@@ -99,7 +99,7 @@ export default {
         });
       }
 
-      // 获取实验素材
+      // 获取业务素材
       this.getBusinessNodeDocs({
         business_id: this.metaInfo.businessID,
         node_id: this.metaInfo.nodeID,

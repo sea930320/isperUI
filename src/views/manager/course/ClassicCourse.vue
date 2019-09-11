@@ -186,7 +186,7 @@
             <b-form-input v-model="newItem.courseCount" required placeholder="课时 *"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-16" label-for="input-2" class="float-right w-40">
-            <b-form-input v-model="newItem.experienceTime" required placeholder="实验学时"></b-form-input>
+            <b-form-input v-model="newItem.experienceTime" required placeholder="业务学时"></b-form-input>
           </b-form-group>
           <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存</b-button>
           <b-button
@@ -221,7 +221,7 @@
             class="float-left w-30"
             style="margin-left: 5%"
           >
-            <b-form-input v-model="editItem.experienceTime" required placeholder="实验学时"></b-form-input>
+            <b-form-input v-model="editItem.experienceTime" required placeholder="业务学时"></b-form-input>
           </b-form-group>
           <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存</b-button>
           <b-button
@@ -247,7 +247,7 @@
           <thead role="rowgroup">
             <tr>
               <th class="text-center w-5">序号</th>
-              <th class="text-center w-35">身份名称</th>
+              <th class="text-center w-35">课堂名称</th>
               <th class="text-center w-10">课序号</th>
               <th class="text-center w-10">课时</th>
               <th class="text-center w-10">开课学期</th>
@@ -378,7 +378,14 @@
         </table>
       </div>
     </b-modal>
-    <b-modal size="md" hide-footer centered id="teamBusinessView" ref="teamBusinessView" title="团队成员">
+    <b-modal
+      size="md"
+      hide-footer
+      centered
+      id="teamBusinessView"
+      ref="teamBusinessView"
+      title="团队成员"
+    >
       <div class="modalContainer" v-if="selectedRow">
         <table class="table b-table table-borderless table-sm mt-3">
           <thead role="rowgroup">
@@ -487,7 +494,7 @@ export default {
           class: "text-right field-courseCount"
         },
         experienceTime: {
-          label: "实验学时",
+          label: "业务学时",
           sortable: false,
           class: "text-right field-experienceTime"
         },
@@ -587,9 +594,11 @@ export default {
             item.teacherId = "";
             item.teachers.forEach(element => {
               if (item.teacherId == "") {
-                item.teacherId = element.teacher_id;
+                item.teacherId =
+                  element.name + "-" + element.teacher_id;
               } else {
-                item.teacherId += ", " + element.teacher_id;
+                item.teacherId +=
+                  ", " + element.name + "-" + element.teacher_id;
               }
             });
             return item;
@@ -615,7 +624,7 @@ export default {
           "任课老师3",
           "工号3",
           "课时",
-          "实验学时",
+          "业务学时",
           "学号",
           "姓名",
           "班级"
@@ -700,9 +709,9 @@ export default {
               ? this.cancelExcel("课时")
               : this.tableData[id].课时,
           experienceTime:
-            this.tableData[id].实验学时 === undefined
-              ? this.cancelExcel("实验学时")
-              : this.tableData[id].实验学时,
+            this.tableData[id].业务学时 === undefined
+              ? this.cancelExcel("业务学时")
+              : this.tableData[id].业务学时,
           studentNo:
             this.tableData[id].学号 === undefined
               ? this.cancelExcel("学号")

@@ -73,7 +73,7 @@
         v-model="queryParam.page"
       ></b-pagination>
     </b-row>
-    <b-modal hide-footer centered id="requestModal" ref="requestModal" title="关联指导者">
+    <b-modal hide-footer centered id="requestModal" ref="requestModal" title="签订关注许可">
       <div>
         <b-form-select v-model="requestData.targetCompany" :options="companyList"></b-form-select>
         <b-form-textarea
