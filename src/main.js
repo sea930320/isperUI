@@ -21,6 +21,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Multiselect from 'vue-multiselect'
 import accountService from "@/services/accountService";
 import VueClipboard from 'vue-clipboard2'
+import Clipboard from 'v-clipboard'
 // import Chat from 'vue-beautiful-chat'
 import VueSocketio from 'vue-socket.io-extended';
 import io from 'socket.io-client';
@@ -45,6 +46,7 @@ Vue.use(VueResource);
 Vue.use(VueCookie);
 Vue.use(BootstrapVue);
 Vue.use(ElementUI);
+Vue.use(Clipboard);
 Vue.use(VueLodash, lodash);
 Vue.use(Toasted, {
   duration: 1500
@@ -59,7 +61,7 @@ Vue.use(VueSweetalert2);
 Vue.use(VueMoment)
 Vue.use(VueApexCharts)
 Vue.component('apexchart', VueApexCharts)
-VueClipboard.config.autoSetContainer = true
+// VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard);
 // Vue.use(Chat)
 let host = 'http://' + window.location.hostname + ':4000'
