@@ -170,10 +170,13 @@ export default {
                 .getSelectDecideSeetings({ flowNode_id: flowNode.id })
                 .then(data => {
                     this.settings = data;
-                    if (data.title !== '')
-                        this.editable = false;
-                    else
-                        this.editable = true;
+                    workflowService
+                        .getRelatedBusinessCount({ flow_id: this.flowId }).then(data=>{
+                            if (data !== 0)
+                                this.editable = false;
+                            else
+                                this.editable = true;
+                        });
                     this.$emit("data-ready");
                 });
         },
@@ -207,7 +210,6 @@ export default {
                     if (data.results === 'success') {
                         this.$toasted.success("成 功");
                         this.$emit("data-ready");
-                        this.editable = false;
                     } else {
                         this.$emit("data-failed");
                     }

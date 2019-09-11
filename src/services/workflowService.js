@@ -577,6 +577,14 @@ class WorkflowService {
     })
   }
 
+  getRelatedBusinessCount(data) {
+    return xhr({
+      method: 'post',
+      url: '/workflow/selectDecide/get_related_business_count',
+      params: data
+    })
+  }
+
   setSelectDecideSeetings(data) {
     return xhr({
       method: 'post',
