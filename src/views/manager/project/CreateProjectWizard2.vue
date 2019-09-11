@@ -293,7 +293,7 @@ export default {
         ...mapState(["userInfo"]),
         activeNode() {
             if (
-                this.nodeActiveIndex == -1 ||
+                this.nodeActiveIndex === -1 ||
                 this.projectRolesAssign.project_nodes.length === 0
             )
                 return null;
