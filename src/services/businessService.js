@@ -5,7 +5,7 @@ import xhr from './xhr/'
  */
 class BusinessService {
     /**
-     * 创建实验
+     * 创建业务
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -18,7 +18,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验列表
+     * 获取业务列表
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -31,7 +31,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验详情
+     * 获取业务详情
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -51,7 +51,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验环节详情
+     * 获取业务环节详情
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -103,7 +103,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验环节所有素材
+     * 获取业务环节所有素材
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -171,7 +171,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验成果
+     * 获取业务成果
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -184,7 +184,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验展示列表
+     * 获取业务展示列表
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -197,7 +197,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验模板
+     * 获取业务模板
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -210,7 +210,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验所有环节对应笔记
+     * 获取业务所有环节对应笔记
      * @param data
      * @returns {*|{pre, visitor}}
      */
@@ -223,7 +223,7 @@ class BusinessService {
     }
 
     /**
-     * 保存实验笔记
+     * 保存业务笔记
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -273,7 +273,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验角色flash状态
+     * 获取业务角色flash状态
      * @param data
      * @returns {*|{pre, visitor}}
      */
@@ -286,7 +286,7 @@ class BusinessService {
     }
 
     /**
-     * 获取请入实验角色
+     * 获取请入业务角色
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -299,7 +299,7 @@ class BusinessService {
     }
 
     /**
-     * 获取请出实验角色
+     * 获取请出业务角色
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -312,9 +312,9 @@ class BusinessService {
     }
 
     /**
-     * 获取实验环节可以被安排报告的角色
+     * 获取业务环节可以被安排报告的角色
      * @param data 参数
-     * @param data.experiment_id 实验id
+     * @param data.experiment_id 业务id
      * @param data.node_id 环节id
      * @returns {{pre, visitor}|*}
      */
@@ -327,9 +327,9 @@ class BusinessService {
     }
 
     /**
-     * 获取实验环节中需要签字的角色
+     * 获取业务环节中需要签字的角色
      * @param data 参数
-     * @param data.experiment_id 实验id
+     * @param data.experiment_id 业务id
      * @param data.node_id 环节id
      * @param data.role_id 当前角色id
      * @returns {{pre, visitor}|*}
@@ -380,7 +380,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验列表
+     * 获取业务列表
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -405,9 +405,9 @@ class BusinessService {
     }
 
     /**
-     * 开始实验跳转项目
+     * 开始业务跳转项目
      * @param data 参数
-     * @param data.business_id 实验id
+     * @param data.business_id 业务id
      * @param data.project_id 要跳转的项目id
      * @param data.data 角色配置数据
      * @returns {{pre, visitor}|*}
@@ -429,7 +429,7 @@ class BusinessService {
     }
 
     /**
-     * 获取实验成果详情
+     * 获取业务成果详情
      * @param data
      * @returns {{pre, visitor}|*}
      */
@@ -710,7 +710,7 @@ class BusinessService {
     /**
      * 获取留言的成员表
      * @param data 参数
-     * @param data.business_id 实验id
+     * @param data.business_id 业务id
      */
     getSendMembers(data) {
         return xhr({

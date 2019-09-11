@@ -181,7 +181,7 @@
             },
             runBusiness(business) {
                 if (business.status === 9) {
-                    this.$toasted.error("该实验已结束不能重新开始");
+                    this.$toasted.error("该业务已结束不能重新开始");
                     return false;
                 }
                 if (business.status === 2) {

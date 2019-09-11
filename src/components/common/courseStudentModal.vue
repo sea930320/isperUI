@@ -36,7 +36,7 @@
         <input type="text" class="inp-edit" v-model.trim="param.c_time" />
       </div>
       <div class="col-xs-6">
-        <span class="spanItem">实验学时：</span>
+        <span class="spanItem">业务学时：</span>
         <input type="text" class="inp-edit" v-model.trim="param.c_experiment_time" />
       </div>
     </div>

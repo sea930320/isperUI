@@ -400,7 +400,7 @@
                         class: "text-left field-name"
                     },
                     convertedData: {
-                        label: "实验类型",
+                        label: "业务类型",
                         sortable: false,
                         class: "text-right field-creator"
                     },

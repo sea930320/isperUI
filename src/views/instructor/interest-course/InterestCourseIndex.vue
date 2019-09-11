@@ -214,7 +214,7 @@
             class="float-left w-30"
             style="margin-left: 5%"
           >
-            <b-form-input v-model="newItem.experienceTime" required placeholder="实验学时"></b-form-input>
+            <b-form-input v-model="newItem.experienceTime" required placeholder="业务学时"></b-form-input>
           </b-form-group>
           <b-form-group id="input-group-17" label-for="input-2" class="float-right w-30">
             <b-form-input v-model="newItem.studentCount" required placeholder="学生人数"></b-form-input>
@@ -252,7 +252,7 @@
             class="float-left w-30"
             style="margin-left: 5%"
           >
-            <b-form-input v-model="editItem.experienceTime" required placeholder="实验学时"></b-form-input>
+            <b-form-input v-model="editItem.experienceTime" required placeholder="业务学时"></b-form-input>
           </b-form-group>
           <b-button class="mt-3 my-4 col-5 float-left" block type="submit" variant="primary">保 存</b-button>
           <b-button
@@ -315,7 +315,7 @@ export default {
           class: "text-right field-courseCount"
         },
         experienceTime: {
-          label: "实验学时",
+          label: "业务学时",
           sortable: false,
           class: "text-right field-experienceTime"
         },

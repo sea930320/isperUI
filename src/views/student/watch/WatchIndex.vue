@@ -112,7 +112,7 @@
         </b-row>
         <b-row class="justify-content-md-center">
           <b-col cols="6">
-            <b-form-group label="请选择实验小组">
+            <b-form-group label="请选择业务小组">
               <b-form-radio-group v-model="watchConfig.team_mode" :options="teamModeOptions"></b-form-radio-group>
             </b-form-group>
           </b-col>

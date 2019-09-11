@@ -428,7 +428,7 @@ export default {
     exportReport() {
       window.open(this.downloadUrl + "?business_id=" + this.$route.params.bid);
     },
-    // 结束本次实验
+    // 结束本次业务
     endBusiness() {
       businessService.pushMessage({
         business_id: this.$route.params.bid,

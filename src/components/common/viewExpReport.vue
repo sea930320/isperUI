@@ -1,7 +1,7 @@
 <template>
   <modal
   :visible="visible"
-  title="实验报告"
+  title="业务报告"
   :footerHide="true"
   size="panel"
   @on-cancel="cancel">
@@ -9,7 +9,7 @@
       <div class="meta-content-wrapper clearfix">
         <div class="border report-wrapper">
           <div class="report-title blue3a tac">
-            实验报告
+            业务报告
             <span class="report-num"></span>
           </div>
           <div class="container report-info">
