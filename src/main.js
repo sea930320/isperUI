@@ -56,13 +56,13 @@ Vue.mixin(globalMixin);
 Vue.mixin(DataProcessMixin);
 Vue.use(VueFormWizard);
 Vue.use(VueSweetalert2);
-Vue.use(VueMoment)
-Vue.use(VueApexCharts)
-Vue.component('apexchart', VueApexCharts)
-VueClipboard.config.autoSetContainer = true
+Vue.use(VueMoment);
+Vue.use(VueApexCharts);
+Vue.component('apexchart', VueApexCharts);
+VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
 // Vue.use(Chat)
-let host = 'http://' + window.location.hostname + ':4000'
+let host = 'http://' + window.location.hostname + ':4000';
 // let host = 'http://39.107.122.234'
 Vue.use(VueSocketio, io(host));
 
@@ -127,4 +127,4 @@ new Vue({
       }
     },
   }
-}).$mount('#app')
+}).$mount('#app');
