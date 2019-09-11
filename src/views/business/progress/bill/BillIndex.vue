@@ -182,6 +182,7 @@
                 size="xl"
                 @cancel="edit_full_modal_show=false"
                 @ok="updateParts1"
+                no-close-on-backdrop
         >
             <div class="modal-msg">
                 <p class="message">您能修改法案:</p>
@@ -254,6 +255,7 @@
                 size="xl"
                 @cancel="delete_modal_show=false"
                 @ok="deleteParts1"
+                no-close-on-backdrop
         >
             <div class="modal-msg">
                 <p class="message">要删除该条吗？</p>
@@ -269,6 +271,7 @@
                 @hidden="addModalClear"
                 size="xl"
                 hide-footer
+                no-close-on-backdrop
         >
             <div v-if="selected==1">
                 <b-form-group label-cols="1" label="增加模式:" label-for="radio-group-2">
@@ -518,6 +521,7 @@
                 @hidden="uploadModalClear"
                 size="xl"
                 hide-footer
+                no-close-on-backdrop
         >
             <b-container fluid>
                 <b-row>
@@ -604,6 +608,7 @@
                 size="xl"
                 @hidden="insertModalClear"
                 hide-footer
+                no-close-on-backdrop
         >
             <div class="modal-msg">
                 <p class="message">您能插入法案:</p>
@@ -727,12 +732,13 @@
                 @hidden="allBillPreviewModalClear"
                 size="xl"
                 hide-footer
+                no-close-on-backdrop
         >
             <b-container fluid>
                 <b-row v-if="selected==1">
                     <b-col sm="6">
                         <b-card-group deck>
-                            <b-card header="现 行 法 案">
+                            <b-card header="修 改 前">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_origin_one,index) in bill_data_origin" :key="index">
                                         <!--{{bill_data_origin_one}}-->
@@ -747,7 +753,7 @@
                     </b-col>
                     <b-col sm="6">
                         <b-card-group deck>
-                            <b-card header="新 法 案">
+                            <b-card header="修 改 后">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_one,index) in bill_data_comparison" :key="index">
                                         <!--updated-->
@@ -791,7 +797,7 @@
                 <b-row v-if="selected==2">
                     <b-col sm="6">
                         <b-card-group deck>
-                            <b-card header="现 行 法 案">
+                            <b-card header="修 改 前">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_origin_one,index) in bill_data_origin" :key="index">
                                         <!--{{bill_data_origin_one}}-->
@@ -804,7 +810,7 @@
                     </b-col>
                     <b-col sm="6">
                         <b-card-group deck>
-                            <b-card header="新 法 案">
+                            <b-card header="修 改 后">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_one,index) in bill_data_comparison" :key="index">
                                         <!--updated-->
@@ -848,6 +854,7 @@
                 size="xl"
                 @cancel="save_modal_show=false"
                 @ok="saveParts1"
+                no-close-on-backdrop
         >
             <div class="modal-msg">
                 <p class="message">要保存本法案吗？</p>
@@ -863,6 +870,7 @@
                 size="xl"
                 ok-only
                 @ok="setting_show_mode_modal_show=false"
+
         >
             <b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">
                 <b-form-radio-group
@@ -896,12 +904,12 @@
                 bill_data_comparison:[],
                 comparison_fields:{
                     sn: {
-                        label: "现 行 法 案",
+                        label: "修 改 前",
                         sortable: false,
                         class: "text-left field-100"
                     },
                     data:{
-                        label: "现 行 法 案",
+                        label: "修 改 后",
                         sortable: false,
                         class: "text-left field-100"
                     }
