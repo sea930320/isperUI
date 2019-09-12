@@ -52,8 +52,12 @@
                             <b-col sm="4">
                                 <b-form-input type="text" v-model="item.itemTitle" disabled></b-form-input>
                             </b-col>
-                            <b-col sm="8">
+                            <b-col sm="7">
                                 <b-form-input type="text" v-model="item.itemDescription" disabled></b-form-input>
+                            </b-col>
+                            <b-col sm="1">
+                                <b-button variant="primary" @click="deleteItem(index)"
+                                    :disabled="!editable"> - </b-button>
                             </b-col>
                         </b-row>
                         <b-row class="mt-3">
@@ -172,7 +176,7 @@ export default {
                     this.settings = data;
                     workflowService
                         .getRelatedBusinessCount({ flow_id: this.flowId }).then(data=>{
-                            if (data !== 0)
+                            if (data.results !== 0)
                                 this.editable = false;
                             else
                                 this.editable = true;
@@ -201,6 +205,9 @@ export default {
                 itemTitle: '',
                 itemDescription: ''
             }
+        },
+        deleteItem(index) {
+            this.settings.items.splice(index, 1);
         },
         saveSettings() {
             this.run();
