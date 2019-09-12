@@ -52,8 +52,12 @@
                             <b-col sm="4">
                                 <b-form-input type="text" v-model="item.itemTitle" disabled></b-form-input>
                             </b-col>
-                            <b-col sm="8">
+                            <b-col sm="7">
                                 <b-form-input type="text" v-model="item.itemDescription" disabled></b-form-input>
+                            </b-col>
+                            <b-col sm="1">
+                                <b-button variant="primary" @click="deleteItem(index)"
+                                    :disabled="!editable"> - </b-button>
                             </b-col>
                         </b-row>
                         <b-row class="mt-3">
@@ -170,10 +174,13 @@ export default {
                 .getSelectDecideSeetings({ flowNode_id: flowNode.id })
                 .then(data => {
                     this.settings = data;
-                    if (data.title !== '')
-                        this.editable = false;
-                    else
-                        this.editable = true;
+                    workflowService
+                        .getRelatedBusinessCount({ flow_id: this.flowId }).then(data=>{
+                            if (data.results !== 0)
+                                this.editable = false;
+                            else
+                                this.editable = true;
+                        });
                     this.$emit("data-ready");
                 });
         },
@@ -199,6 +206,9 @@ export default {
                 itemDescription: ''
             }
         },
+        deleteItem(index) {
+            this.settings.items.splice(index, 1);
+        },
         saveSettings() {
             this.run();
             workflowService
@@ -207,7 +217,6 @@ export default {
                     if (data.results === 'success') {
                         this.$toasted.success("成 功");
                         this.$emit("data-ready");
-                        this.editable = false;
                     } else {
                         this.$emit("data-failed");
                     }
