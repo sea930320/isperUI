@@ -117,8 +117,8 @@
             </b-col>
         </b-row>
         <br><br>
-        <b-modal id="deleteConfirmModal" title="删除公告" @ok="deleteAdvertisingConfirmFunction(deleteAdvertising)">
-            <p class="my-4">是否确认删除公告</p>
+        <b-modal id="deleteConfirmModal" title="删除公告" ok-title="确定" cancel-title="取消" @ok="deleteAdvertisingConfirmFunction(deleteAdvertising)">
+            <p class="my-4">是否确认删除公告</p>l
         </b-modal>
     </div>
 </template>
