@@ -257,7 +257,7 @@ export default {
                 office_type: {
                     label: "事务类型",
                     sortable: false,
-                    class: "text-left w-25"
+                    class: "text-left w-20"
                 },
                 part: {
                     label: "部门",
@@ -265,9 +265,9 @@ export default {
                     class: "text-left w-15"
                 },
                 action: {
-                    label: "操作",
+                    label: "业务启动",
                     sortable: false,
-                    class: "text-left w-5"
+                    class: "text-center w-10"
                 }
             },
             projects: {
@@ -349,7 +349,9 @@ export default {
             this.run();
             this.initData();
             groupService
-                .fetchAllGroupDetail()
+                .fetchAllGroupDetail({
+                    'group_only': 1
+                })
                 .then(data => {
                     this.groups = data.results;
                     if (this.groups.length > 0) {

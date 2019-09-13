@@ -78,9 +78,18 @@
         <b-row class="justify-content-md-center">
           <b-col>
             <div>
-              <b-button variant="primary" size="lg" class="float-center" @click="courseMode()">课堂模式</b-button>
+              <b-button
+                variant="primary"
+                size="lg"
+                class="float-center"
+                @click="courseMode()"
+                :disabled="courses.length==0"
+              >课堂模式</b-button>
             </div>
-            <div class="mt-2">(关联到老师的课堂)</div>
+            <div class="mt-2">
+              (关联到老师的课堂)
+              <span style="font-size: 12px; color: red;" v-if="courses.length==0">您没有关联的课堂</span>
+            </div>
           </b-col>
           <b-col>
             <div>
