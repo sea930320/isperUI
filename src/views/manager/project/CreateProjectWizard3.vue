@@ -114,6 +114,7 @@
                     >
                         <template slot="character_class" slot-scope="row">{{ row.item.type}}</template>
                         <template slot="character_name" slot-scope="row">{{ row.item.role_name}}</template>
+                        <template slot="job_name" slot-scope="row">{{ row.item.job_name}}</template>
                         <template slot="is_use" slot-scope="row">
                             <b-form-checkbox
                                 v-model="row.item.is_use"
@@ -229,14 +230,19 @@ export default {
             },
             docNodeRelatedColumns: {
                 character_class: {
-                    label: "角色类型",
+                    label: "身份类型",
+                    sortable: false,
+                    class: "text-left w-20"
+                },
+                character_name: {
+                    label: "身份名称",
                     sortable: false,
                     class: "text-left w-30"
                 },
-                character_name: {
-                    label: "角色名称",
+                job_name: {
+                    label: "职务",
                     sortable: false,
-                    class: "text-left w-50"
+                    class: "text-left w-30"
                 },
                 is_use: {
                     label: "是否使用本素材",
@@ -319,6 +325,7 @@ export default {
                         role_id: project_role_alloc.role_id,
                         type: project_role_alloc.type,
                         role_name: project_role_alloc.name,
+                        job_name: project_role_alloc.job_name,
                         no: project_role_alloc.no,
                         is_use:
                             project_role_alloc.doc_ids.indexOf(

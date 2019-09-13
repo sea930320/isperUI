@@ -21,6 +21,7 @@
             <b-col md="9" sm="12">
                 <div class="p-5" style="border: 1px solid #eaeaea;">
                     <h3 class="aside-paint-title mt-4">&nbsp;&nbsp;{{process ? process.name : ''}}</h3>
+                    <span class="aside-paint-title mt-4" style="color: red" v-if="!editable">(该模块已在业务中使用，不能修改数据。)</span>
                     <div class="workflow-body col-8 offset-2 text-left" style="padding: 10px;">
                         <b-row>
                             <b-col sm="3">
