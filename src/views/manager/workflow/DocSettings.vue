@@ -284,7 +284,7 @@ export default {
         .getWorkflowDetail(param)
         .then(data => {
           this.workflow = data;
-          this.flowNodes = data.nodes.filter(x=>x.process !== null);
+          this.flowNodes = data.nodes.filter(x => x.process !== null);
           this.setFlowStep(data.step);
           this.docNodeRelated = this.currentRelatedData();
           // 获取素材
@@ -338,6 +338,16 @@ export default {
       let index = this.curDoc.node_ids.indexOf(node.id);
       if (flag) {
         if (index === -1) this.curDoc.node_ids.push(node.id);
+        if (this.curDoc.usage == 1) {
+          let isValidate = this.validateSaveData(this.curDoc, node.id);
+          if (!isValidate) {
+            index = this.curDoc.node_ids.indexOf(node.id);
+            this.curDoc.node_ids.splice(index, 1);
+            setTimeout(() => {
+              this.$set(node, "doc_use", false);
+            }, 1);
+          }
+        }
       } else {
         if (index !== -1) this.curDoc.node_ids.splice(index, 1);
       }
@@ -354,6 +364,16 @@ export default {
         if (node.doc_use) {
           if (index === -1)
             this.flowDocs[this.docActiveIndex].node_ids.push(node.id);
+          if (this.curDoc.usage == 1) {
+            let isValidate = this.validateSaveData(this.curDoc, node.id);
+            if (!isValidate) {
+              index = this.curDoc.node_ids.indexOf(node.id);
+              this.flowDocs[this.docActiveIndex].node_ids.splice(index, 1);
+              setTimeout(() => {
+                this.$set(node, "doc_use", false);
+              }, 1);
+            }
+          }
         } else {
           if (index !== -1)
             this.flowDocs[this.docActiveIndex].node_ids.splice(index, 1);
@@ -371,6 +391,9 @@ export default {
           doc.usage = null;
           return false;
         }
+      }
+      if (doc.usage == 1) {
+        this.validateSaveData(doc);
       }
     },
     previewFile(fileUrl) {
@@ -410,11 +433,39 @@ export default {
       this.$router.push({ name: "setworkflow-node" });
     },
     // 验证数据是否正确和完整
-    validateSaveData() {
+    validateSaveData(curdoc = null, cur_node_id = null) {
       // if (this.flowDocs.length === 0) {
       //   this.$toasted.error("请上传素材");
       //   return false;
       // }
+      if (curdoc) {
+        if (curdoc.usage == 1) {
+          let isExist = false;
+          curdoc.node_ids.forEach(node_id => {
+            if (isExist) return;
+            if (
+              this.flowDocs.some(otherdoc => {
+                if (otherdoc.id != curdoc.id) {
+                  if (otherdoc.usage == 1) {
+                    return otherdoc.node_ids.includes(node_id);
+                  }
+                }
+                return false;
+              })
+            ) {
+              isExist = true;
+            }
+          });
+          if (isExist) {
+            this.$toasted.error(`该环节已经设置了操作指南`);
+            if (!cur_node_id) {
+              curdoc.usage = null;
+            }
+            return false;
+          }
+        }
+        return true;
+      }
       return this.flowDocs.every(doc => {
         if (doc.type === "") {
           this.$toasted.error(`请填写素材${doc.name}的类型`);

@@ -102,6 +102,7 @@
                                         <td width="10%" class="check-padding">
                                             <b-form-checkbox
                                                 v-model="roleNodeRelated.can_terminate"
+                                                :disabled="!roleNodeRelated.can_take_in"
                                                 @change="toggleCanTerminate($event, roleNodeRelated, roleNodeRelatedGroup)"
                                             ></b-form-checkbox>
                                         </td>
@@ -414,6 +415,7 @@ export default {
             this.$set(selectedRoleNodeRelated, "can_take_in", val);
             if (!val) {
                 this.$set(selectedRoleNodeRelated, "can_start", false);
+                this.$set(selectedRoleNodeRelated, "can_terminate", false);
             }
         },
         toggleCanStart(val, selRoleNodeRelated) {

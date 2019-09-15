@@ -91,17 +91,17 @@ export default {
           class: "text-center field-20"
         },
         active_range: {
-          label: "Activitiy Date",
+          label: "调查时间",
           sortable: false,
           class: "text-center field-50"
         },
         created_at: {
-          label: "Created Time",
+          label: "创建时间",
           sortable: false,
           class: "text-center field-10"
         },
         take_survey: {
-          label: "Take Survey",
+          label: "参与调查",
           sortable: false,
           class: "text-center field-10"
         }

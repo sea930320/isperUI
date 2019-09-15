@@ -30,15 +30,13 @@
     import store from '@/store';
     import Loading from "@/components/loading/Loading";
     import prefixRoute from "@/mixins/prefix-route";
-    import VueTagsInput from '@johmun/vue-tags-input';
     import CourseService from "@/services/courseService";
 
     export default {
         name: "attention-check",
         components: {
             Loading,
-            PersonalCenterTab,
-            VueTagsInput
+            PersonalCenterTab
         },
         mixins: [prefixRoute],
         data() {

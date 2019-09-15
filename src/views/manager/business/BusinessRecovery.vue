@@ -12,7 +12,10 @@
           <b-form-input v-model.lazy="queryDebounceParam.search" placeholder="请输入内容" />
         </b-input-group>
       </b-col>
-      <b-col lg="8" md="6" sm="12" class="align-self-center">
+      <b-col lg="3" md="3" sm="12" class="text-left">
+        <b-form-checkbox class="completed_only" v-model="queryParam.completed_only">已完成</b-form-checkbox>
+      </b-col>
+      <b-col lg="5" md="3" sm="12" class="align-self-center">
         <b-button-group class="float-right">
           <b-button
             :size="template_size"
@@ -207,7 +210,8 @@ export default {
       queryParam: {
         status: "",
         page: 1,
-        size: 15
+        size: 15,
+        completed_only: false
       },
       queryDebounceParam: {
         search: ""
@@ -406,6 +410,16 @@ export default {
   .modalContainer div {
     padding: 15px 10px 0 10px;
     font-size: 15px;
+  }
+
+  .completed_only {
+    .custom-control-label {
+      line-height: 31px !important;
+    }
+    .custom-control-label::before,
+    .custom-control-label::after {
+      top: 0.45rem !important;
+    }
   }
 }
 </style>
