@@ -25,6 +25,7 @@
           </div>
         </div>
       </div>
+      <span class="icon-keyboard" style="position: fixed; left: 80%;">第一个环节不能是并行模式。</span>
       <div class="canvas" id="js-canvas"></div>
     </div>
     <div class="io-alerts">
@@ -305,6 +306,6 @@ export default {
 @import "./bpmn/css/app.css";
 .canavs-container {
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 150px);
 }
 </style>

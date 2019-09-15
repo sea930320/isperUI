@@ -1946,7 +1946,7 @@ function addProjectLogo(container) {
        'class="bjs-powered-by" ' +
        'title="Powered by bpmn.io" ' +
        'style="position: absolute; bottom: 15px; right: 15px; z-index: 100">' +
-        '<img src="data:image/png;base64,' + logoData + '">' +
+        // '<img src="data:image/png;base64,' + logoData + '">' +
     '</a>';
 
   var linkElement = domify(linkMarkup);

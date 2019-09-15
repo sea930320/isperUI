@@ -141,14 +141,14 @@ export default {
             return this.$route.params.flow_id;
         },
         activeNode() {
-            if (this.nodes.length === 0 || this.nodeActiveIndex == -1)
+            if (this.nodes.length === 0 || this.nodeActiveIndex === -1)
                 return null;
             return this.nodes[this.nodeActiveIndex];
         },
         activeAction() {
             if (
                 this.processActions.length === 0 ||
-                this.actionActiveIndex == -1
+                this.actionActiveIndex === -1
             )
                 return null;
             return this.processActions[this.actionActiveIndex];
