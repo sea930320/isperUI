@@ -36,8 +36,9 @@
 
             <b-row>
                 <b-col sm="9">
-                    <span v-if="selected==1">章节条模式</span>
-                    <span v-if="selected==2">条模式</span>
+                    <b-form-group class="m-0 mt-1 mb-3 text-center">
+                        <b-form-radio-group v-model="selected" :options="options"></b-form-radio-group>
+                    </b-form-group>
                 </b-col>
                 <b-col sm="3">
                     <b-button-group class="float-center">
@@ -742,9 +743,9 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_origin_one,index) in bill_data_origin" :key="index">
                                         <!--{{bill_data_origin_one}}-->
-                                        {{ bill_data_origin_one.chapter_number }} . {{ bill_data_origin_one.chapter_title }} <br>
-                                        {{ bill_data_origin_one.section_number }} . {{ bill_data_origin_one.section_title }} <br>
-                                        {{ bill_data_origin_one.part_number }} . {{ bill_data_origin_one.part_title }} <br>
+                                        第 {{ convertChineseNumber(parseInt(bill_data_origin_one.chapter_number)) }} 章 . {{ bill_data_origin_one.chapter_title }} <br>
+                                        第 {{ convertChineseNumber(parseInt(bill_data_origin_one.section_number)) }} 节 . {{ bill_data_origin_one.section_title }} <br>
+                                        第 {{ convertChineseNumber(parseInt(bill_data_origin_one.part_number)) }} 条 . {{ bill_data_origin_one.part_title }} <br>
                                         {{ bill_data_origin_one.part_content }}
                                     </li>
                                 </ul>
@@ -759,34 +760,34 @@
                                         <!--updated-->
                                         <span v-if="bill_data_one.added_flag=='1'" style="color:red">
                                             <!--{{bill_data_one}}-->
-                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
-                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
-                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
-                                                {{ bill_data_one.part_content }}
-                                            </span>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.chapter_number)) }} 章 . {{ bill_data_one.chapter_title  }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.section_number)) }} 节 . {{ bill_data_one.section_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
+                                            {{ bill_data_one.part_content }}
+                                        </span>
                                         <!--inserted-->
                                         <span v-if="bill_data_one.added_flag=='2'" style="color:blue">
                                                 <!--{{bill_data_one}}-->
-                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
-                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
-                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
-                                                {{ bill_data_one.part_content }}
-                                            </span>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.chapter_number)) }} 章 . {{ bill_data_one.chapter_title  }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.section_number)) }} 节 . {{ bill_data_one.section_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
+                                            {{ bill_data_one.part_content }}
+                                        </span>
                                         <!--deleted-->
                                         <span v-if="bill_data_one.added_flag=='3'" style="text-decoration:line-through;color:red">
                                                 <!--{{bill_data_one}}-->
-                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
-                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
-                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
-                                                {{ bill_data_one.part_content }}
-                                            </span>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.chapter_number)) }} 章 . {{ bill_data_one.chapter_title  }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.section_number)) }} 节 . {{ bill_data_one.section_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
+                                            {{ bill_data_one.part_content }}
+                                        </span>
                                         <span v-if="bill_data_one.added_flag=='0'">
                                                 <!--{{bill_data_one}}-->
-                                                {{ bill_data_one.chapter_number }} . {{ bill_data_one.chapter_title }} <br>
-                                                {{ bill_data_one.section_number }} . {{ bill_data_one.section_title }} <br>
-                                                {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
-                                                {{ bill_data_one.part_content }}
-                                            </span>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.chapter_number)) }} 章 . {{ bill_data_one.chapter_title  }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.section_number)) }} 节 . {{ bill_data_one.section_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
+                                            {{ bill_data_one.part_content }}
+                                        </span>
 
                                     </li>
                                 </ul>
@@ -801,7 +802,7 @@
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="(bill_data_origin_one,index) in bill_data_origin" :key="index">
                                         <!--{{bill_data_origin_one}}-->
-                                        {{ bill_data_origin_one.part_number }} . {{ bill_data_origin_one.part_title }} <br>
+                                        第 {{convertChineseNumber(parseInt(bill_data_origin_one.part_number))}} 条 . {{ bill_data_origin_one.part_title }} <br>
                                         {{ bill_data_origin_one.part_content }}
                                     </li>
                                 </ul>
@@ -816,24 +817,24 @@
                                         <!--updated-->
                                         <span v-if="bill_data_one.added_flag=='1'" style="color:red">
                                         <!--{{bill_data_one}}-->
-                                            {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
                                             {{ bill_data_one.part_content }}
                                         </span>
                                         <!--inserted-->
                                         <span v-if="bill_data_one.added_flag=='2'" style="color:blue">
                                             <!--{{bill_data_one}}-->
-                                            {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
                                             {{ bill_data_one.part_content }}
                                         </span>
                                         <!--deleted-->
                                         <span v-if="bill_data_one.added_flag=='3'" style="text-decoration:line-through;color:red">
                                             <!--{{bill_data_one}}-->
-                                            {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
                                             {{ bill_data_one.part_content }}
                                         </span>
                                         <span v-if="bill_data_one.added_flag=='0'">
                                             <!--{{bill_data_one}}-->
-                                            {{ bill_data_one.part_number }} . {{ bill_data_one.part_title }} <br>
+                                            第 {{ convertChineseNumber(parseInt(bill_data_one.part_number)) }} 条 . {{ bill_data_one.part_title }} <br>
                                             {{ bill_data_one.part_content }}
                                         </span>
                                     </li>
@@ -861,26 +862,7 @@
             </div>
         </b-modal>
 
-        <!--show mode setting modal-->
-        <b-modal
-                title="法案模式"
-                v-model="setting_show_mode_modal_show"
-                ok-title="确定"
-                cancel-title="取消"
-                size="xl"
-                ok-only
-                @ok="setting_show_mode_modal_show=false"
 
-        >
-            <b-form-group label-cols="1" label="法案模式:" label-for="input-horizontal2">
-                <b-form-radio-group
-                        id="radio-group-1"
-                        v-model="selected"
-                        :options="options"
-                        name="radio-options"
-                ></b-form-radio-group>
-            </b-form-group>
-        </b-modal>
 
 
     </div>
@@ -900,6 +882,11 @@
         components: { Loading, BusinessBillUpload, endNodeHandle, siderUserBar, VueDocPreview },
         data() {
             return {
+//                selectBillMode:0,
+//                selectBillModeOptions: [
+//                    { text: "章节条模式", value: 1 },
+//                    { text: "条模式", value: 2 }
+//                ],
                 bill_data_origin:[],
                 bill_data_comparison:[],
                 comparison_fields:{
@@ -915,7 +902,7 @@
                     }
                 },
                 edit_modal_data:{},
-                selected:'1',
+                selected:0,
                 add_modal_selected:'1',
                 options: [
                     { text: '章节条模式', value: 1 },
@@ -934,7 +921,6 @@
                 part_insert_modal_show:false,
                 add_new_bill_modal_show:false,
                 save_modal_show:false,
-                setting_show_mode_modal_show:false,
                 chapterSelected:"",
                 chapterOptions:[],
                 sectionSelected:null,
@@ -1085,7 +1071,27 @@
             selected: {
                 handler() {
                     this.selected_data = [];
-//                    this.init();
+                    BillService.getBillName({
+                        business_id: this.$route.params.bid,
+                        show_mode:this.selected
+                    }).then(data=>{
+                        if (data.bill_data.length>0){
+                            if (parseInt(data.edit_mode) != parseInt(this.selected)){
+                                this.bill_name = "";
+                                this.bill_data = [];
+                                BillService.deleteAllData({
+                                    business_id: this.$route.params.bid,
+                                })
+                                    .then(() => {
+                                        this.init();
+                                        this.$emit("data-ready");
+                                    })
+                                    .catch(() => {
+                                        this.$emit("data-failed");
+                                    });
+                            }
+                        }
+                    });
                 },
                 deep: true
             },
@@ -1134,7 +1140,6 @@
                     node_id: this.$route.params.nid,
                 }).then(data1 => {
                     if (data1.bill_name == ""){
-                        this.setting_show_mode_modal_show = true;
                         this.$emit("data-ready");
                         return
                     }
@@ -1931,95 +1936,66 @@
                 this.bill_data_comparison = [];
             },
             documentUploadToPart(){
-                if ((!this.selected_data)||(this.selected_data.length === 0)){
-                    this.$toasted.error("请选择条");
-                    return false
-                } else {
-                    let checkArray = 0;
-                    BillService.getBillName({
-                        business_id: this.$route.params.bid,
-                        node_id: this.$route.params.nid,
-                        show_mode:this.selected
-                    })
-                        .then(data => {
-                            this.bill_data_origin = [];
-                            this.bill_data_origin = data.bill_data;
-                            if (this.selected == 1){
-                                for (let i=0;i<this.bill_data.length;i++){
-                                    for (let j=0;j<this.bill_data_origin.length;j++){
-                                        if ((this.bill_data[i].chapter_id == this.bill_data_origin[j].chapter_id)&&
-                                            (this.bill_data[i].chapter_number == this.bill_data_origin[j].chapter_number)&&
-                                            (this.bill_data[i].chapter_title == this.bill_data_origin[j].chapter_title)&&
-                                            (this.bill_data[i].chapter_content == this.bill_data_origin[j].chapter_content)&&
-                                            (this.bill_data[i].section_id == this.bill_data_origin[j].section_id)&&
-                                            (this.bill_data[i].section_number == this.bill_data_origin[j].section_number)&&
-                                            (this.bill_data[i].section_title == this.bill_data_origin[j].section_title)&&
-                                            (this.bill_data[i].section_content == this.bill_data_origin[j].section_content)&&
-                                            (this.bill_data[i].part_number == this.bill_data_origin[j].part_number)&&
-                                            (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
-                                            (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
-                                            (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
-                                            checkArray = 0;
-                                            break;
-                                        } else {
-                                            checkArray = 1;
-                                            continue;
-                                        }
-                                    }
-                                    if (checkArray >0){
-                                        this.$toasted.error("在上传文件之前请保存好法案内容");
-                                        return false;
-                                    }
-                                }
-                            }
-                            if (this.selected == 2){
-                                for (let i=0;i<this.bill_data.length;i++){
-                                    for (let j=0;j<this.bill_data_origin.length;j++){
-                                        if ((this.bill_data[i].part_number == this.bill_data_origin[j].part_number)&&
-                                            (this.bill_data[i].part_content == this.bill_data_origin[j].part_content)&&
-                                            (this.bill_data[i].part_reason == this.bill_data_origin[j].part_reason)&&
-                                            (this.bill_data[i].part_title == this.bill_data_origin[j].part_title)){
-                                            checkArray = 0;
-                                            break;
-                                        } else {
-                                            checkArray = 1;
-                                            continue;
-                                        }
-                                    }
-                                    if (checkArray >0){
-                                        this.$toasted.error("在上传文件之前请保存好法案内容");
-                                        return false;
-                                    }
-                                }
-                            }
-                            BillService.getDocList({"part_id":this.selected_data.part_id,"edit_mode":this.selected})
-                                .then((data) => {
-                                    this.section_docs_lists = data.doc_data;
-                                    this.document_upload_modal = true;
-                                })
-                                .catch(() => {
-                                    this.$emit("data-failed");
-                                });
-                        });
-                }
+                BillService.getBillNameOnly({
+                    business_id: this.$route.params.bid,
+                    node_id: this.$route.params.nid,
+                }).then(data1 => {
+                    if (data1.bill_name == ""){
+                        this.$toasted.error("在上传文件之前请保存法案内容");
+                        return
+                    }
+                    else {
+                        BillService.getDocListAll({"business_id":this.$route.params.bid})
+                            .then((data) => {
+                                this.section_docs_lists = data.doc_data;
+                                this.document_upload_modal = true;
+                            })
+                            .catch(() => {
+                                this.$emit("data-failed");
+                            });
+                    }
+                });
             },
             saveDoctoPart(){
                 if ((this.upload_doc_id == 0) || (this.upload_doc_url == "")){
                     this.$toasted.error("请上传文件。");
                     return false
                 }
-                BillService.uploadDoc({"doc_id":this.upload_doc_id,"doc_url":this.upload_doc_url,"doc_conception":this.doc_desc_text,"part_id":this.selected_data.part_id,"edit_mode":this.selected})
+//                BillService.uploadDoc({"doc_id":this.upload_doc_id,"doc_url":this.upload_doc_url,"doc_conception":this.doc_desc_text,"part_id":this.selected_data.part_id,"edit_mode":this.selected})
+//                    .then(() => {
+//                        this.upload_doc_id = 0;
+//                        this.upload_doc_url = "";
+//                        this.doc_desc_text = "";
+//                        BillService.getDocList({"part_id":this.selected_data.part_id,"edit_mode":this.selected})
+//                            .then((data) => {
+//                                this.section_docs_lists = data.doc_data;
+//                            })
+//                            .catch(() => {
+//                                this.$emit("data-failed");
+//                            });
+//                    })
+//                    .catch(() => {
+//                        this.$emit("data-failed");
+//                    });
+                BillService.uploadDocBill({"doc_id":this.upload_doc_id,"doc_url":this.upload_doc_url,"doc_conception":this.doc_desc_text,"business_id":this.$route.params.bid})
                     .then(() => {
                         this.upload_doc_id = 0;
                         this.upload_doc_url = "";
                         this.doc_desc_text = "";
-                        BillService.getDocList({"part_id":this.selected_data.part_id,"edit_mode":this.selected})
+                        BillService.getDocListAll({"business_id":this.$route.params.bid})
                             .then((data) => {
                                 this.section_docs_lists = data.doc_data;
                             })
                             .catch(() => {
                                 this.$emit("data-failed");
                             });
+//                        BillService.getDocList({"part_id":this.selected_data.part_id,"edit_mode":this.selected})
+//                            .then((data) => {
+//                                this.section_docs_lists = data.doc_data;
+//                            })
+//                            .catch(() => {
+//                                this.$emit("data-failed");
+//                            });
                     })
                     .catch(() => {
                         this.$emit("data-failed");
@@ -2077,17 +2053,6 @@
                 this.doc_desc_text = "";
                 this.encodedURLDOCX = "";
                 this.previewShow = 0;
-            },
-            showPreviewPage(){
-                if (this.previewShow == 0){
-                    if (this.upload_doc_url != ""){
-                        this.encodedURLDOCX = encodeURIComponent(this.upload_doc_url);
-                        this.previewShow = 1;
-                    }
-                } else {
-                    this.previewShow = 0;
-                    this.encodedURLDOCX = "";
-                }
             },
             endNodeCancel() {
                 this.commitEnd = false;
