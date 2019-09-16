@@ -84,6 +84,13 @@ class BillService {
             params: data
         })
     }
+    getBillAll(data){
+        return xhr({
+            method: 'get',
+            url: '/business/bill/get/all',
+            params: data
+        })
+    }
 
 
 
