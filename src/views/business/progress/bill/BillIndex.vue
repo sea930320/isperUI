@@ -1147,8 +1147,6 @@
                         this.selected = parseInt(data1.edit_mode);
                         BillService.getBillName({
                             business_id: this.$route.params.bid,
-                            node_id: this.$route.params.nid,
-                            show_mode:this.selected
                         })
                             .then(data => {
                                 this.bill_name = data.bill_name;
