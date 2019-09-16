@@ -25,69 +25,149 @@
                   {{node.node_name}}
                 </h4>
                 <div slot="content" style="text-align: left;padding:20px">
-                  <p>
-                    <span v-if="node.type === 4">分析与总结：</span>
-                    <span v-else>交流记录：</span>
-                    <span v-if="node.type === 4 && node.messages.length == 0">无</span>
+                  <p v-if="node.type == 3">
+                    <span>展示内容：</span>
+                    <span v-if="node['bdts_list'].length == 0">无</span>
                     <a
                       v-else
                       href="javascript:;"
                       class="btn-link"
-                      @click="handlerDetailClick(1,node.messages)"
+                      @click="handlerDetailClick(7,node['bdts_list'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 7">
+                    <span>公示结果展示：</span>
+                    <span v-if="!node['bpost']">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(8,node['bpost'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 8">
+                    <span>表决记录：</span>
+                    <span v-if="!node['vote_data'] || node['vote_data']['items'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(9,node['vote_data'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 10">
+                    <span>交付模块：</span>
+                    <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(12,node['bdts_list'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 10">
+                    <span>签收模块：</span>
+                    <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(13,node['bdts_list'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 11">
+                    <span>问卷调查内容：</span>
+                    <span v-if="!node['bsurvey']">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(10,node['bsurvey'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 11">
+                    <span>执行记录：</span>
+                    <span v-if="!node['bsurvey'] || node['bsurvey']['answer_users'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(11,node['bsurvey'])"
+                    >详情</a>
+                  </p>
+                  <p v-if="node.type == 12">
+                    <span>判断与选择记录：</span>
+                    <span v-if="!node['decide_results'] || node['decide_results'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(14,node['decide_results'])"
+                    >详情</a>
+                  </p>
+                  <p>
+                    <span v-if="node.type === 4">分析与总结：</span>
+                    <span v-else>交流记录：</span>
+                    <span v-if="node['messages'].length == 0">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(1,node['messages'])"
                     >详情</a>
                   </p>
                   <p v-if="node.type === 5">
                     <span>投票结果：</span>
-                    <span v-if="!node.vote_status || node.vote_status.length == 0">无</span>
+                    <span v-if="!node['vote_status'] || node['vote_status'].length == 0">无</span>
                     <a
                       v-else
                       href="javascript:;"
                       class="btn-link"
-                      @click="handlerDetailClick(6, node.vote_status)"
+                      @click="handlerDetailClick(6, node['vote_status'])"
                     >详情</a>
                   </p>
                   <p>
                     <span v-if="node.type === 3">展示文件：</span>
                     <span v-else>提交文件：</span>
-                    <span v-if="node.docs && node.docs.length == 0">无</span>
+                    <span v-if="node['docs'] && node['docs'].length == 0">无</span>
                     <a
                       v-else
                       href="javascript:;"
                       class="btn-link"
-                      @click="handlerDetailClick(2, node.docs)"
+                      @click="handlerDetailClick(2, node['docs'])"
                     >详情</a>
                   </p>
                   <p>
                     自我备忘：
-                    <span v-if="node.note == null">无</span>
+                    <span v-if="node['note'] == null">无</span>
                     <a
                       v-else
                       href="javascript:;"
                       class="btn-link"
-                      @click="handlerDetailClick(3, node.note)"
+                      @click="handlerDetailClick(3, node['note'])"
                     >详情</a>
                   </p>
-                  <template v-if="status == 2">
+                  <template>
                     <p>
                       操作指南：
-                      <span v-if="node.operation_guides.length == 0">无</span>
+                      <span v-if="node['guides'].length == 0">无</span>
                       <a
                         v-else
                         href="javascript:;"
                         class="btn-link"
-                        @click="handlerDetailClick(4, node.operation_guides)"
+                        @click="handlerDetailClick(4, node['guides'])"
                       >详情</a>
                     </p>
-                    <p>
-                      项目素材：
-                      <span v-if="node.project_docs.length == 0">无</span>
-                      <a
-                        v-else
-                        href="javascript:;"
-                        class="btn-link"
-                        @click="handlerDetailClick(5, node.project_docs)"
-                      >详情</a>
-                    </p>
+                    <!-- <p>
+                        项目素材：
+                        <span v-if="node.project_docs.length == 0">无</span>
+                        <a
+                          v-else
+                          href="javascript:;"
+                          class="btn-link"
+                          @click="handlerDetailClick(5, node.project_docs)"
+                        >详情</a>
+                    </p>-->
                   </template>
                 </div>
               </BulmaAccordionItem>
@@ -151,7 +231,7 @@
     </div>
     <b-modal v-model="modalShow" title="查看详情" size="lg" :showPerson="true" :hide-footer="true">
       <div class="result-detail-wrapper text-left">
-        <div class="result-detail-content" v-if="detail.type == 1">
+        <div class="result-detail-content" v-if="detail.type === 1">
           <ul>
             <li v-for="(record, index) in detail.data" :key="index">
               <div class="time text_blue">
@@ -203,7 +283,11 @@
                   </div>
                 </td>
                 <td>
-                  <a href="javascript:void(0);" class="btn-link" @click="previewFile(file.url)">预览</a>
+                  <a
+                    href="javascript:void(0);"
+                    class="btn-link mr-2"
+                    @click="previewFile(file.url)"
+                  >预览</a>
                   <a :href="file.url" class="btn-link" target="_blank">下载</a>
                 </td>
               </tr>
@@ -258,6 +342,127 @@
             </li>
           </ul>
         </div>
+        <div class="result-detail-content" v-if="detail.type === 7">
+          <ul>
+            <li v-for="(record, index) in detail.data" :key="index" class="mb-3">
+              <div class="record-created mb-2">
+                <cite>
+                  <i>{{record['created_by'] + '想' + record.to_members_str + '展示了' + record['doc_name'] + '文件'}}</i>
+                </cite>
+              </div>
+              <div
+                class="record-seen"
+                v-for="(m, m_index) in record.members"
+                :key="'m_index_' + m_index"
+              >{{m + '签收了' + record['doc_name'] + '文件'}}</div>
+            </li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 8">
+          <p v-html="detail.data.content" />
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 9">
+          <div class="mb-2">
+            <cite>
+              <i>{{'表决内容:' + detail.data['title']}}</i>
+            </cite>
+          </div>
+          <ul>
+            <li v-for="(record, index) in detail.data.items" :key="index" class="mb-3">
+              <div
+                class="record-seen"
+                v-for="(log_user, log_index) in record.voted_users"
+                :key="'log_index' + log_index"
+              >{{log_user + '参与表决，表决选择是：' + record['text']}}</div>
+            </li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 10">
+          <div class="mb-2">
+            <b>选择题</b>
+          </div>
+          <ul>
+            <li
+              v-for="(question, index) in detail.data.select_questions"
+              :key="'sel' + index"
+              class="mb-3"
+            >
+              <div v-if="question.select_option == 0">
+                <div
+                  v-for="(qcase, case_index) in question.question_cases"
+                  :key="'qcase' + case_index"
+                >{{'◎ ' + qcase['case']}}</div>
+              </div>
+              <div v-else>
+                <div
+                  v-for="(qcase, case_index) in question.question_cases"
+                  :key="'qcase' + case_index"
+                >{{'□ ' + qcase['case']}}</div>
+              </div>
+            </li>
+          </ul>
+          <div class="mb-2">
+            <b>填空题</b>
+          </div>
+          <ul>
+            <li
+              v-for="(question, index) in detail.data.blank_questions"
+              :key="'blank' + index"
+              class="mb-3"
+            >
+              <div v-html="question.title" />
+            </li>
+          </ul>
+          <div class="mb-2">
+            <b>问答题</b>
+          </div>
+          <ul>
+            <li
+              v-for="(question, index) in detail.data.normal_questions"
+              :key="'normal' + index"
+              class="mb-3"
+            >
+              <div v-html="question.title" />
+            </li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 11">
+          <ul>
+            <li
+              v-for="(record, index) in detail.data.answer_users"
+              :key="index"
+              class="mb-3"
+            >{{record + '参与了调查问卷的填写'}}</li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 12">
+          <ul>
+            <li
+              v-for="(bdt, index) in detail.data"
+              :key="index"
+              class="mb-3"
+            >{{bdt['created_by'] + '上传了' + bdt['doc_name'] + '文件'}}</li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 13">
+          <ul>
+            <li v-for="(bdt, index) in detail.data" :key="index" class="mb-3">
+              <div
+                v-for="(m, m_index) in bdt.members"
+                :key="'m' + m_index"
+              >{{m + '签收了' + bdt['doc_name'] + '文件'}}</div>
+            </li>
+          </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 14">
+          <ul>
+            <li
+              v-for="(dr, index) in detail.data"
+              :key="index"
+              class="mb-3"
+            >{{dr['name'] + '选择了' + dr['title']}}</li>
+          </ul>
+        </div>
       </div>
     </b-modal>
     <siderUserBar></siderUserBar>
@@ -282,7 +487,7 @@ export default {
     BFormTextarea,
     BulmaAccordion,
     BulmaAccordionItem,
-    siderUserBar,
+    siderUserBar
   },
   filters: { docUsage },
   data() {
@@ -437,8 +642,7 @@ export default {
         msg: "结束业务",
         type: "cmd",
         cmd: ACTION_BUSINESS_NODE_END,
-        data: JSON.stringify({ tran_id: 0,
-          parallel: 0 })
+        data: JSON.stringify({ tran_id: 0, parallel: 0 })
       });
     }
   }
