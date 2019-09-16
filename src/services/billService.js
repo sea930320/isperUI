@@ -91,6 +91,13 @@ class BillService {
             params: data
         })
     }
+    exportDoc(data){
+        return xhr({
+            method: 'get',
+            url: '/business/bill/doc/export',
+            params: data
+        })
+    }
 
 
 
