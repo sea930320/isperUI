@@ -169,6 +169,12 @@
                     variant="outline-primary"
                     @click="commitEnd = true"
             >结束并走向</b-button>
+            <!--<b-button-->
+                    <!--:size="template_size"-->
+                    <!--class="styledBtn"-->
+                    <!--variant="outline-primary"-->
+                    <!--@click="downloadDoc()"-->
+            <!--&gt;download</b-button>-->
         </div>
         <end-node-handle :isCommit="commitEnd" @on-cancel="endNodeCancel"></end-node-handle>
         <br>
@@ -1053,6 +1059,7 @@
                         class: "text-left field-30"
                     },
                 },
+                downloadUrl: "/api/business/bill/doc/export"
             };
         },
         created() {
@@ -1090,6 +1097,8 @@
                                         this.$emit("data-failed");
                                     });
                             }
+                        } else {
+                            this.bill_data = [];
                         }
                     });
                 },
@@ -2055,6 +2064,24 @@
             endNodeCancel() {
                 this.commitEnd = false;
             },
+            downloadDoc(){
+                window.open(this.downloadUrl + "?business_id=" + this.$route.params.bid);
+//                BillService.getBillNameOnly({
+//                    business_id: this.$route.params.bid,
+//                }).then(data1 => {
+//                    if (data1.bill_name == "") {
+//                        this.$emit("data-ready");
+//                        return
+//                    }
+//                    else {
+//                        BillService.exportDoc({
+//                            business_id: this.$route.params.bid,
+//                        }).then(() => {
+//                            window.open(this.downloadUrl + "?business_id=" + this.$route.params.bid);
+//                        });
+//                    }
+//                })
+            }
         }
     };
 </script>
