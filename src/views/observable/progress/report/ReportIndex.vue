@@ -105,6 +105,19 @@
                       @click="handlerDetailClick(14,node['decide_results'])"
                     >详情</a>
                   </p>
+                  <p v-if="node.type == 14">
+                    <span>法案内容：</span>
+                    <span v-if="!node['bill_name']">无</span>
+                    <a
+                      v-else
+                      href="javascript:;"
+                      class="btn-link"
+                      @click="handlerDetailClick(15, {
+                        'bill_data': node['bill_data'],
+                        'bill_name': node['bill_name']
+                      })"
+                    >详情</a>
+                  </p>
                   <p>
                     <span v-if="node.type === 4">分析与总结：</span>
                     <span v-else>交流记录：</span>
@@ -426,6 +439,33 @@
               class="mb-3"
             >{{dr['name'] + '选择了' + dr['title']}}</li>
           </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 15">
+          <div v-if="detail.data.bill_name.edit_mode==1">
+            <div v-for="(chapter, index) in detail.data.bill_data" :key="'chapter_' + index">
+              <b style="font-size:14px; color: #3a7de0;">第{{chapter.chapter_number}}章 。</b>
+              {{chapter.chapter_title}}
+              <div v-for="(section, index) in chapter.sections" :key="'section' + index">
+                <b style="font-size: 13px; color: #3a7de0c7;">第{{section.section_number}}节 。</b>
+                {{section.section_title}}
+                <div v-for="(part, index) in section.parts" :key="'part' + index">
+                  <b style="font-size: 13px; color: #3a7de0a3;">第{{part.part_number}}条 。</b>
+                  {{part.part_title}}
+                  <p v-html="part.part_content" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <div
+              v-for="(bill_one_data, index) in detail.data.bill_data"
+              :key="'bill_one_data' + index"
+            >
+              <b style="font-size:14px; color: #3a7de0;">第{{bill_one_data.part_number}}条 。</b>
+              {{bill_one_data.part_title}}
+              <p v-html="part.part_content" />
+            </div>
+          </div>
         </div>
       </div>
     </b-modal>

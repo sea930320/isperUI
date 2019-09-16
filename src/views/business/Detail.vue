@@ -28,151 +28,164 @@
               </b-col>
             </b-row>
             <b-card-text>
-            <BulmaAccordion v-if="report.nodes" :dropdown="false" :icon="'custom'">
-              <BulmaAccordionItem
-                class="linkpoint"
-                v-for="(node,index) in report.nodes"
-                :key="index"
-              >
-                <h4 slot="title" class="align-self-center float-left">
-                  <icon name="angle-right"></icon>
-                  {{node.node_name}}
-                </h4>
-                <div slot="content" style="text-align: left;padding:20px">
-                  <p v-if="node.type == 3">
-                    <span>展示内容：</span>
-                    <span v-if="node['bdts_list'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(7,node['bdts_list'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 7">
-                    <span>公示结果展示：</span>
-                    <span v-if="!node['bpost']">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(8,node['bpost'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 8">
-                    <span>表决记录：</span>
-                    <span v-if="!node['vote_data'] || node['vote_data']['items'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(9,node['vote_data'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 10">
-                    <span>交付模块：</span>
-                    <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(12,node['bdts_list'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 10">
-                    <span>签收模块：</span>
-                    <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(13,node['bdts_list'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 11">
-                    <span>问卷调查内容：</span>
-                    <span v-if="!node['bsurvey']">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(10,node['bsurvey'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 11">
-                    <span>执行记录：</span>
-                    <span v-if="!node['bsurvey'] || node['bsurvey']['answer_users'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(11,node['bsurvey'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type == 12">
-                    <span>判断与选择记录：</span>
-                    <span v-if="!node['decide_results'] || node['decide_results'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(14,node['decide_results'])"
-                    >详情</a>
-                  </p>
-                  <p>
-                    <span v-if="node.type === 4">分析与总结：</span>
-                    <span v-else>交流记录：</span>
-                    <span v-if="node['messages'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(1,node['messages'])"
-                    >详情</a>
-                  </p>
-                  <p v-if="node.type === 5">
-                    <span>投票结果：</span>
-                    <span v-if="!node['vote_status'] || node['vote_status'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(6, node['vote_status'])"
-                    >详情</a>
-                  </p>
-                  <p>
-                    <span v-if="node.type === 3">展示文件：</span>
-                    <span v-else>提交文件：</span>
-                    <span v-if="node['docs'] && node['docs'].length == 0">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(2, node['docs'])"
-                    >详情</a>
-                  </p>
-                  <p>
-                    自我备忘：
-                    <span v-if="node['note'] == null">无</span>
-                    <a
-                      v-else
-                      href="javascript:;"
-                      class="btn-link"
-                      @click="handlerDetailClick(3, node['note'])"
-                    >详情</a>
-                  </p>
-                  <template>
-                    <p>
-                      操作指南：
-                      <span v-if="node['guides'].length == 0">无</span>
+              <BulmaAccordion v-if="report.nodes" :dropdown="false" :icon="'custom'">
+                <BulmaAccordionItem
+                  class="linkpoint"
+                  v-for="(node,index) in report.nodes"
+                  :key="index"
+                >
+                  <h4 slot="title" class="align-self-center float-left">
+                    <icon name="angle-right"></icon>
+                    {{node.node_name}}
+                  </h4>
+                  <div slot="content" style="text-align: left;padding:20px">
+                    <p v-if="node.type == 3">
+                      <span>展示内容：</span>
+                      <span v-if="node['bdts_list'].length == 0">无</span>
                       <a
                         v-else
                         href="javascript:;"
                         class="btn-link"
-                        @click="handlerDetailClick(4, node['guides'])"
+                        @click="handlerDetailClick(7,node['bdts_list'])"
                       >详情</a>
                     </p>
-                    <!-- <p>
+                    <p v-if="node.type == 7">
+                      <span>公示结果展示：</span>
+                      <span v-if="!node['bpost']">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(8,node['bpost'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 8">
+                      <span>表决记录：</span>
+                      <span v-if="!node['vote_data'] || node['vote_data']['items'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(9,node['vote_data'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 10">
+                      <span>交付模块：</span>
+                      <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(12,node['bdts_list'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 10">
+                      <span>签收模块：</span>
+                      <span v-if="!node['bdts_list'] || node['bdts_list'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(13,node['bdts_list'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 11">
+                      <span>问卷调查内容：</span>
+                      <span v-if="!node['bsurvey']">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(10,node['bsurvey'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 11">
+                      <span>执行记录：</span>
+                      <span v-if="!node['bsurvey'] || node['bsurvey']['answer_users'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(11,node['bsurvey'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 12">
+                      <span>判断与选择记录：</span>
+                      <span v-if="!node['decide_results'] || node['decide_results'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(14,node['decide_results'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type == 14">
+                      <span>法案内容：</span>
+                      <span v-if="!node['bill_name']">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(15, {
+                        'bill_data': node['bill_data'],
+                        'bill_name': node['bill_name']
+                      })"
+                      >详情</a>
+                    </p>
+                    <p>
+                      <span v-if="node.type === 4">分析与总结：</span>
+                      <span v-else>交流记录：</span>
+                      <span v-if="node['messages'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(1,node['messages'])"
+                      >详情</a>
+                    </p>
+                    <p v-if="node.type === 5">
+                      <span>投票结果：</span>
+                      <span v-if="!node['vote_status'] || node['vote_status'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(6, node['vote_status'])"
+                      >详情</a>
+                    </p>
+                    <p>
+                      <span v-if="node.type === 3">展示文件：</span>
+                      <span v-else>提交文件：</span>
+                      <span v-if="node['docs'] && node['docs'].length == 0">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(2, node['docs'])"
+                      >详情</a>
+                    </p>
+                    <p>
+                      自我备忘：
+                      <span v-if="node['note'] == null">无</span>
+                      <a
+                        v-else
+                        href="javascript:;"
+                        class="btn-link"
+                        @click="handlerDetailClick(3, node['note'])"
+                      >详情</a>
+                    </p>
+                    <template>
+                      <p>
+                        操作指南：
+                        <span v-if="node['guides'].length == 0">无</span>
+                        <a
+                          v-else
+                          href="javascript:;"
+                          class="btn-link"
+                          @click="handlerDetailClick(4, node['guides'])"
+                        >详情</a>
+                      </p>
+                      <!-- <p>
                         项目素材：
                         <span v-if="node.project_docs.length == 0">无</span>
                         <a
@@ -181,11 +194,11 @@
                           class="btn-link"
                           @click="handlerDetailClick(5, node.project_docs)"
                         >详情</a>
-                    </p>-->
-                  </template>
-                </div>
-              </BulmaAccordionItem>
-            </BulmaAccordion>
+                      </p>-->
+                    </template>
+                  </div>
+                </BulmaAccordionItem>
+              </BulmaAccordion>
             </b-card-text>
           </b-card>
         </div>
@@ -195,7 +208,7 @@
       </b-col>
     </b-row>
     <b-button variant="primary" size="lg" class="float-center" @click="backPage()">返回</b-button>
-    
+
     <b-modal v-model="modalShow" title="查看详情" size="lg" :showPerson="true" :hide-footer="true">
       <div class="result-detail-wrapper text-left">
         <div class="result-detail-content" v-if="detail.type === 1">
@@ -429,6 +442,33 @@
               class="mb-3"
             >{{dr['name'] + '选择了' + dr['title']}}</li>
           </ul>
+        </div>
+        <div class="result-detail-content" v-if="detail.type === 15">
+          <div v-if="detail.data.bill_name.edit_mode==1">
+            <div v-for="(chapter, index) in detail.data.bill_data" :key="'chapter_' + index">
+              <b style="font-size:14px; color: #3a7de0;">第{{chapter.chapter_number}}章 。</b>
+              {{chapter.chapter_title}}
+              <div v-for="(section, index) in chapter.sections" :key="'section' + index">
+                <b style="font-size: 13px; color: #3a7de0c7;">第{{section.section_number}}节 。</b>
+                {{section.section_title}}
+                <div v-for="(part, index) in section.parts" :key="'part' + index">
+                  <b style="font-size: 13px; color: #3a7de0a3;">第{{part.part_number}}条 。</b>
+                  {{part.part_title}}
+                  <p v-html="part.part_content" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <div
+              v-for="(bill_one_data, index) in detail.data.bill_data"
+              :key="'bill_one_data' + index"
+            >
+              <b style="font-size:14px; color: #3a7de0;">第{{bill_one_data.part_number}}条 。</b>
+              {{bill_one_data.part_title}}
+              <p v-html="part.part_content" />
+            </div>
+          </div>
         </div>
       </div>
     </b-modal>
