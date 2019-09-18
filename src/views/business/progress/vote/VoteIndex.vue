@@ -65,8 +65,8 @@
                     </b-card>
                     <!-- Control buttons-->
                     <div class="text-center mt-4">
-                        <b-button variant="primary" @click="tabIndex--" class="mr-5">下一步</b-button>
-                        <b-button variant="primary" @click="tabIndex++" :disabled="check_voteData || voteMode === null">上一步</b-button>
+                        <b-button variant="primary" @click="tabIndex--" :disabled="check_voteData || voteMode === null">上一步</b-button>
+                        <b-button variant="primary" @click="tabIndex++" class="mr-5">下一步</b-button>
                     </div>
                 </b-tab>
                 <b-tab title="设置表决属性" :disabled="check_voteData || voteMode === null">
@@ -140,7 +140,7 @@
                     </b-card>
                     <!-- Control buttons-->
                     <div class="text-center mt-4">
-                        <b-button variant="primary" @click="tabIndex--" class="mr-5">下一步</b-button>
+                        <b-button variant="primary" @click="tabIndex--" class="mr-5">上一步</b-button>
                         <b-button variant="success" @click="saveVoteData" class="mr-5" :disabled="check_allSetting">确&emsp;定</b-button>
                     </div>
                 </b-tab>
